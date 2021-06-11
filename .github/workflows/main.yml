@@ -1,0 +1,25 @@
+
+name: github pages
+
+# 当 master 分支发生 push 事件时执行下面任务
+on:
+  push:
+    branches:
+      - master
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+jobs:  
+  sync:    
+    runs-on: ubuntu-latest
+    steps:
+    - name: Sync to Gitee
+      uses: wearerequired/git-mirror-action@v1
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.GITTE_ACTIONS_DEPLOY_KEY }}
+      with:
+        # 来源仓库
+        source-repo: "git@github.com:BeanHsiang/beanhsiang.github.io.git"
+        # 目标仓库
+        destination-repo: "git@gitee.com:BeanHsiang/BeanHsiang.git"

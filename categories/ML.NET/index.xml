@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Innovation with tech</title>
-    <link>https://beanhsiang.github.io/post/</link>
-    <description>Recent content in Posts on Innovation with tech</description>
+    <title>ML.NET on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/categories/ML.NET/</link>
+    <description>Recent content in ML.NET on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 07 Aug 2021 19:53:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 07 Aug 2021 19:53:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/categories/ML.NET/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ML.NET v1.6 中有趣的内容</title>
       <link>https://beanhsiang.github.io/post/2021-08-07-mlnet-1_6-interesting-content/</link>

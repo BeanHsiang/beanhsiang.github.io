@@ -6,7 +6,16 @@
     <description>Recent content on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 18 Dec 2019 21:55:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 07 Aug 2021 19:53:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ML.NET v1.6 中有趣的内容</title>
+      <link>https://beanhsiang.github.io/post/2021-08-07-mlnet-1_6-interesting-content/</link>
+      <pubDate>Sat, 07 Aug 2021 19:53:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2021-08-07-mlnet-1_6-interesting-content/</guid>
+      <description>ML.NET v1.6 发布有一段时间了，所有详细信息在此，可以了解到更多细节或实现，本文把比较新鲜有趣的内容摘要出来。 此版本中增加了很多东西，但它们确实注意到，添加的所有内容都没有中断更改。 支持 ARM 这次更新最令人兴奋的部分是对ARM架构的新支持。这将允许在 ML.NET 进行大多数场景的训练和推论项目。ARM架构</description>
+    </item>
+    
     <item>
       <title>关于我</title>
       <link>https://beanhsiang.github.io/about/</link>
@@ -14,33 +23,6 @@
       
       <guid>https://beanhsiang.github.io/about/</guid>
       <description>《PyTorch机器学习从入门到实战》联名作者 购买入口 微软 MVP（AI）</description>
-    </item>
-    
-    <item>
-      <title>Golang Gin 实战（五）| 接收数组和 Map</title>
-      <link>https://beanhsiang.github.io/2019/12/18/golang-gin-query-parameters-array-map.html</link>
-      <pubDate>Wed, 18 Dec 2019 21:55:00 +0800</pubDate>
-      
-      <guid>https://beanhsiang.github.io/2019/12/18/golang-gin-query-parameters-array-map.html</guid>
-      <description>标题 段落内容 标题 段落内容 标题 段落内容 标题 段落内容 标题 段落内容</description>
-    </item>
-    
-    <item>
-      <title>Golang Gin 实战（三）| 路由参数</title>
-      <link>https://beanhsiang.github.io/post/2019-12-13-golang-gin-parameters-in-path/</link>
-      <pubDate>Fri, 13 Dec 2019 21:00:00 +0800</pubDate>
-      
-      <guid>https://beanhsiang.github.io/post/2019-12-13-golang-gin-parameters-in-path/</guid>
-      <description>标题 段落内容 标题 段落内容 标题 段落内容 标题 段落内容 标题 段落内容</description>
-    </item>
-    
-    <item>
-      <title>Golang Gin 实战（三）| 路由参数</title>
-      <link>https://beanhsiang.github.io/post/2019-12-15-golang-gin-query-parameters-source-code-analysis/</link>
-      <pubDate>Fri, 13 Dec 2019 21:00:00 +0800</pubDate>
-      
-      <guid>https://beanhsiang.github.io/post/2019-12-15-golang-gin-query-parameters-source-code-analysis/</guid>
-      <description>标题 段落内容 标题 段落内容 标题 段落内容 标题 段落内容 标题 段落内容</description>
     </item>
     
     <item>

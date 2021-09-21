@@ -6,7 +6,16 @@
     <description>Recent content in Posts on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 01 Sep 2021 22:15:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 21 Sep 2021 16:43:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>有关 ML.NET 深度学习的计划</title>
+      <link>https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/</link>
+      <pubDate>Tue, 21 Sep 2021 16:43:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/</guid>
+      <description>ML.NET 最需要的功能之一是能够从零开始创建神经网络模型，以便在 ML.NET 中进行深度学习。ML.NET 团队已经采纳了用户调研的反馈，并制定了开始实施此功能的计划。 ML.NET 深度学习的现状 目前，ML.NET 没有一种方法可以创建神经网络，从零开始建立深度学习模型。然而，对于采用现有的深度学习模型并将其用于预</description>
+    </item>
+    
     <item>
       <title>ML.NET 代码速查手册，高清图手慢无！</title>
       <link>https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/</link>

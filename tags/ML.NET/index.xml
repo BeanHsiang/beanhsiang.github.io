@@ -9,10 +9,10 @@
     <lastBuildDate>Sun, 20 Nov 2022 18:12:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/tags/ML.NET/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ML.NET 2.0 更新内容</title>
-      <link>https://beanhsiang.github.io/post/2022-12-06-mlnet-2_0-content/</link>
+      <link>https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/</link>
       <pubDate>Sun, 20 Nov 2022 18:12:00 +0800</pubDate>
       
-      <guid>https://beanhsiang.github.io/post/2022-12-06-mlnet-2_0-content/</guid>
+      <guid>https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/</guid>
       <description>ML.NET v2.0 比较低调地在11月发布了，所有 ML.NET 2.0 和 Model Builder 的更新信息在此，可以从中了解到更多细节或实现，本文把值得关注的内容摘要出来。 新版本的 ML.NET 2.0 和 Model Builder 2022 目前都已发布。 Model Builder 中的文本分类场景 几个月前发布的文本分类 API 的预览版，使开发者能够训练对原始文本数据进行分类的自定义模型。它通过将 NAS-BERT 的 TorchSharp 实现集</description>
     </item>
     

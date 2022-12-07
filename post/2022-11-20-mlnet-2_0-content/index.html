@@ -20,7 +20,7 @@
     <meta name="description" content="ML.NET 2.0 更新内容">
         
     <meta name="author" content="BeanHsiang">
-    <meta property="og:url" content="https://beanhsiang.github.io/post/2022-12-06-mlnet-2_0-content/">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/">
     <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
 
     <link rel="stylesheet" href='/css/normalize.css'>
@@ -94,13 +94,13 @@
 <p>新版本的 <a href="https://www.nuget.org/packages/Microsoft.ML/2.0.0">ML.NET 2.0</a> 和 <a href="https://marketplace.visualstudio.com/items?itemName=MLNET.ModelBuilder2022">Model Builder 2022</a> 目前都已发布。</p>
 <h2 id="model-builder-中的文本分类场景">Model Builder 中的文本分类场景</h2>
 <p>几个月前发布的文本分类 API 的预览版，使开发者能够训练对原始文本数据进行分类的自定义模型。它通过将 <a href="https://arxiv.org/abs/2105.14444">NAS-BERT</a> 的 <a href="https://github.com/dotnet/TorchSharp">TorchSharp</a> 实现集成到 ML.NET 中来实现。文本分类 API 基于此模型的预训练版本，使用数据来微调模型。Model Builder 中的文本分类场景正式由 ML.NET 文本分类 API 提供支持。</p>
-<p>借助这个新的支持，可以使用 Model Builder 中 微软研究院的最新深度学习技术来训练自定义文本分类模型。</p>
+<p>借助这个新的支持，可以使用 Model Builder 中微软研究院的最新深度学习技术来训练自定义文本分类模型。</p>
 <p>此场景支持在 CPU 和 GPU 上进行本地训练。如果使用 GPU，您需要确保与 CUDA 兼容，建议至少使用 6 GB 的专用内存。有关设置 GPU 的更多详细信息，请参阅 <a href="https://learn.microsoft.com/zh-cn/dotnet/machine-learning/how-to-guides/install-gpu-model-builder?WT.mc_id=AI-MVP-5003172">ML.NET GPU 指南</a>。</p>
 <p>若要开始使用文本分类，请按照<a href="https://learn.microsoft.com/zh-cn/dotnet/machine-learning/tutorials/sentiment-analysis-model-builder?WT.mc_id=AI-MVP-5003172">情绪分析教程</a>进行操作。</p>
 <p>
         <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/205861137-102aeae6-0519-4309-998b-7f1cb72440fd.png" />   
     </p>
-<h2 id="句子相似性接口">句子相似性接口</h2>
+<h2 id="句子相似性">句子相似性</h2>
 <p>在 ML.NET 2.0 中引入了一个新的句子相似性 API。此 API 使用与文本分类 API 相同的底层, 也是 NAS-BERT 模型的 TorchSharp 实现。但主要区别在于，该模型不是预测类别，而是计算一个数值，该数值表示两个短语的相似程度。</p>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -305,7 +305,7 @@
 <div class="post-archive">
     <ul class="post-copyright">
         <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
-        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2022-12-06-mlnet-2_0-content/">https://beanhsiang.github.io/post/2022-12-06-mlnet-2_0-content/</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/">https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/</a></li>
         <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
     </ul>
 </div>
@@ -413,7 +413,7 @@
 <ul class="widget-list">
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2022-12-06-mlnet-2_0-content/" title="ML.NET 2.0 更新内容">ML.NET 2.0 更新内容</a>
+        <a href="https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/" title="ML.NET 2.0 更新内容">ML.NET 2.0 更新内容</a>
     </li>
     
     <li>

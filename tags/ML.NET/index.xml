@@ -6,7 +6,16 @@
     <description>Recent content in ML.NET on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 20 Nov 2022 18:12:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/tags/ML.NET/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 02 Mar 2023 13:23:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/tags/ML.NET/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ML.NET Model Builder 中的句子相似性</title>
+      <link>https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/</link>
+      <pubDate>Thu, 02 Mar 2023 13:23:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/</guid>
+      <description>ML.NET 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。 新版本的 Model Builder 现已发布！ 有什么新变化？ 以下是此版本的亮点。您可以在 Model Builder 发行说明中找到所有更改的列表。 要开始使用这些新功能，请安装或升级到最新版本的 Model Builder 16.14.4 或更高版本。 Model Builder中的句子相似性 句</description>
+    </item>
+    
     <item>
       <title>ML.NET 2.0 更新内容</title>
       <link>https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/</link>

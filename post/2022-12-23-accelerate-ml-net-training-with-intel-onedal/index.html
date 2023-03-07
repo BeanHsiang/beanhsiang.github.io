@@ -7,20 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
 
-    <title>ML.NET 代码速查手册，高清图手慢无！ | Innovation with tech</title>
-    <meta property="og:title" content="ML.NET 代码速查手册，高清图手慢无！ - Innovation with tech">
+    <title>使用 Intel oneDAL 加速 ML.NET 训练 | Innovation with tech</title>
+    <meta property="og:title" content="使用 Intel oneDAL 加速 ML.NET 训练 - Innovation with tech">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content='2021-09-01T22:15:00&#43;08:00'>
+    <meta property="article:published_time" content='2022-12-23T12:24:00&#43;08:00'>
         
         
-    <meta property="article:modified_time" content='2021-09-01T22:15:00&#43;08:00'>
+    <meta property="article:modified_time" content='2022-12-23T12:24:00&#43;08:00'>
         
     <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
-    <meta name="description" content="ML.NET 代码速查手册，高清图手慢无！">
+    <meta name="description" content="使用 Intel oneDAL 加速 ML.NET 训练">
         
     <meta name="author" content="BeanHsiang">
-    <meta property="og:url" content="https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/">
     <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
 
     <link rel="stylesheet" href='/css/normalize.css'>
@@ -74,10 +74,10 @@
     
     <article class="post">
         <header>
-            <h1 class="post-title">ML.NET 代码速查手册，高清图手慢无！</h1>
+            <h1 class="post-title">使用 Intel oneDAL 加速 ML.NET 训练</h1>
         </header>
         <date class="post-meta meta-date">
-            2021年9月1日
+            2022年12月23日
         </date>
         
         <div class="post-meta">
@@ -90,14 +90,58 @@
         
         
         <div class="post-content">
-            <p><a href="https://dot.net/ml?WT.mc_id=AI-MVP-5003172">ML.NET</a> 是面向.NET开发人员的跨平台机器学习框架，它具备在联机或本地环境中将机器学习模型集成到 .NET 应用程序中的能力。</p>
-<p>
-        <img class="mx-auto" alt="ML.NET" src="https://user-images.githubusercontent.com/3881276/131783402-fb40f512-19a4-46a7-b837-78ac13aaba74.jpeg" />   
-    </p>
-<p>2002 年微软启动有一个研究项目命名为 TMSN，其意在“Test mining search and navigation”，后来它被改名为 TLC（The learning code）。ML.NET 正是派生自 TLC 库，最初被用于微软的内部产品。</p>
-<p>ML.NET 的核心既可以通过指定算法来训练自定义机器学习模型，也可以导入预训练的 TensorFlow 和 ONNX 模型继续训练。生成模型后，可以将其添加到应用程序中进行预测。ML.NET 支持在使用 .NET Core/.NET Framework 的 Windows、Linux 和 macOS 上运行，所有平台均支持 64 位，此外 Windows 平台支持 32 位，但 TensorFlow、LightGBM 和 ONNX 相关功能除外。</p>
-<p>ML.NET 集成了众多主流的转换器、算法库，通过 API 提供了丰富的数据处理对象和算法评估器，并且对 Infer.NET、NimbusML、Scikit-Learn、TensorFlow 等机器学习相关的包提供了方便地扩展机制。如果您是一位 .NET 开发者，您将很轻松地上手使用，并且将成果无缝集成到 .NET Core 应用程序中，特别是 ASP.NET Core 的 Web 应用中实现一些高级的智能服务。</p>
-<p>简单示例训练一个用于二分类的逻辑回归模型代码如下：</p>
+            <p><a href="https://dot.net/ml?WT.mc_id=AI-MVP-5003172">ML.NET</a> 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。</p>
+<p>ML.NET 3.0 的第一个预览版带来了多项硬件加速改进，使你可以在训练期间充分利用计算资源。安装最新的 <a href="https://aka.ms/mlnet-3-preview1">ML.NET 3.0</a> 和<a href="https://aka.ms/mlnet-onedal-nuget">Intel oneDAL</a> 预览包，试用由 Intel oneDAL 提供支持的最新改进。</p>
+<h2 id="什么是-oneapi-data-analytics-libraryonedal">什么是 oneAPI Data Analytics Library（oneDAL）</h2>
+<p>Intel oneAPI Data Analytics Library 是一个通过为数据分析和机器学习过程的所有阶段提供高度优化的算法构建模块，帮助加快数据分析速度的库。oneDAL 利用 64 位架构中的 SIMD 扩展，这些扩展在 Intel 和 AMD CPU 中都有。</p>
+<h2 id="mlnet-中的-onedal-组件">ML.NET 中的 oneDAL 组件</h2>
+<p>oneDAL 通过在训练期间加速现有训练器来集成到 ML.NET 中。目前以下 ML.NET 训练器提供 oneDAL 支持。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">训练器</th>
+<th style="text-align:left">机器学习任务</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Ordinary Least Squares</td>
+<td style="text-align:left">Regression</td>
+</tr>
+<tr>
+<td style="text-align:left">L-BGFS</td>
+<td style="text-align:left">Classification</td>
+</tr>
+<tr>
+<td style="text-align:left">FastTree</td>
+<td style="text-align:left">Regression &amp; Classification</td>
+</tr>
+<tr>
+<td style="text-align:left">FastForest</td>
+<td style="text-align:left">Regression &amp; Classification</td>
+</tr>
+</tbody>
+</table>
+<h2 id="开始使用-onedal-mlnet">开始使用 oneDAL ML.NET</h2>
+<ol>
+<li>
+<p>安装最新的<a href="https://aka.ms/mlnet-3-preview1">Microsoft.ML 3.0 预览版</a>。</p>
+<p>dotnet add package Microsoft.ML &ndash;prerelease</p>
+<p>如果您使用的是 OLS 或 FastTree，则必须安装其他软件包。</p>
+<p># Ordinary Least Squares (OLS)
+dotnet add package Microsoft.ML.Mkl.Components &ndash;prerelease</p>
+<p># FastTree
+dotnet add package Microsoft.ML.FastTree &ndash;prerelease</p>
+</li>
+<li>
+<p>安装 Microsoft.ML.OneDal NuGet 包。</p>
+<p>dotnet add package Microsoft.ML.OneDal &ndash;prerelease</p>
+</li>
+<li>
+<p>将环境变量 MLNET_BACKEND 设置为 ONEDAL。如果您使用的是 oneDAL 支持的训练器之一，则无需更改代码。</p>
+</li>
+<li>
+<p>使用 oneDAL 支持的 ML.NET 训练器之一创建管道。在此示例中，它用于 LbfgsLogisticRegression 训练二元分类模型来预测 oneDAL 支持。</p>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -123,52 +167,50 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#998;font-style:italic">//Step 1. Create an ML Context</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Initialize MLContext</span>
 </span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> ctx = <span style="color:#000;font-weight:bold">new</span> MLContext();
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">//Step 2. Read in the input data from a text file for model training</span>
-</span></span><span style="display:flex;"><span>IDataView trainingData = ctx.Data
-</span></span><span style="display:flex;"><span>    .LoadFromTextFile&lt;ModelInput&gt;(dataPath, hasHeader: <span style="color:#000;font-weight:bold">true</span>);
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Define data</span>
+</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> trainingData = <span style="color:#000;font-weight:bold">new</span> [] 
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">new</span> {Arch=<span style="color:#d14">&#34;ARM&#34;</span>, Trainer=<span style="color:#d14">&#34;LightGBM&#34;</span>, oneDALSupport=<span style="color:#000;font-weight:bold">false</span>},
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">new</span> {Arch=<span style="color:#d14">&#34;x86&#34;</span>, Trainer=<span style="color:#d14">&#34;FastTree&#34;</span>, oneDALSupport=<span style="color:#000;font-weight:bold">true</span>},
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">new</span> {Arch=<span style="color:#d14">&#34;x86&#34;</span>, Trainer=<span style="color:#d14">&#34;LbfgsLogisticRegression&#34;</span>, oneDALSupport=<span style="color:#000;font-weight:bold">true</span>},
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">new</span> {Arch=<span style="color:#d14">&#34;ARM&#34;</span>, Trainer=<span style="color:#d14">&#34;FastTree&#34;</span>, oneDALSupport=<span style="color:#000;font-weight:bold">false</span>}
+</span></span><span style="display:flex;"><span>};
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">//Step 3. Build your data processing and training pipeline</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> pipeline = ctx.Transforms.Text
-</span></span><span style="display:flex;"><span>    .FeaturizeText(<span style="color:#d14">&#34;Features&#34;</span>, nameof(SentimentIssue.Text))
-</span></span><span style="display:flex;"><span>    .Append(ctx.BinaryClassification.Trainers
-</span></span><span style="display:flex;"><span>        .LbfgsLogisticRegression(<span style="color:#d14">&#34;Label&#34;</span>, <span style="color:#d14">&#34;Features&#34;</span>));
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Load data into IDataView</span>
+</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> trainingDv = ctx.Data.LoadFromEnumerable(trainingData);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">//Step 4. Train your model</span>
-</span></span><span style="display:flex;"><span>ITransformer trainedModel = pipeline.Fit(trainingData);
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Define data processing pipeline &amp; trainer</span>
+</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> pipeline = 
+</span></span><span style="display:flex;"><span>    ctx.Transforms.Categorical.OneHotEncoding(<span style="color:#000;font-weight:bold">new</span> [] {
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">new</span> InputOutputColumnPair(<span style="color:#d14">&#34;ArchEncoded&#34;</span>, <span style="color:#d14">&#34;Arch&#34;</span>),
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">new</span> InputOutputColumnPair(<span style="color:#d14">&#34;TrainerEncoded&#34;</span>, <span style="color:#d14">&#34;Trainer&#34;</span>)})
+</span></span><span style="display:flex;"><span>        .Append(ctx.Transforms.Concatenate(<span style="color:#d14">&#34;Features&#34;</span>, <span style="color:#d14">&#34;ArchEncoded&#34;</span>, <span style="color:#d14">&#34;TrainerEncoded&#34;</span>))
+</span></span><span style="display:flex;"><span>        .Append(ctx.BinaryClassification.Trainers.LbfgsLogisticRegression(labelColumnName:<span style="color:#d14">&#34;oneDALSupport&#34;</span>));
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">//Step 5. Make predictions using your trained model</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> predictionEngine = ctx.Model
-</span></span><span style="display:flex;"><span>    .CreatePredictionEngine&lt;ModelInput, ModelOutput&gt;(trainedModel);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> sampleStatement = <span style="color:#000;font-weight:bold">new</span> ModelInput() { Text = <span style="color:#d14">&#34;This is a horrible movie&#34;</span> };
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> prediction = predictionEngine.Predict(sampleStatement);
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Train model</span>
+</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> model = pipeline.Fit(trainingDv)
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>ML.NET 目前在 Github 上以<a href="https://github.com/dotnet/machinelearning">开源项目</a>(<a href="https://github.com/dotnet/machinelearning">https://github.com/dotnet/machinelearning</a>)进行迭代，最新的版本为1.6。</p>
-<p>ML.NET 支持的热门机器学习任务覆盖众多，包括了传统的分类、回归、聚类，也支持了有关时序和图像神经网络。目前已知的应用场景例如：情绪分析、产品推荐、价格预测、客户分层、对象检测、欺诈检测、峰值检测、图像分类、销量预测等等。</p>
-<p>
-        <img class="mx-auto" alt="ML TASK" src="https://user-images.githubusercontent.com/3881276/131783404-1e457de9-c750-48d5-8bd7-1d53b971f88d.jpeg" />   
-    </p>
-<p>ML.NET 对 .NET 开发者非常友好，它提供了 Visual Studio 扩展 Model Builder， 这是一个可视化的工具套件，以非常低门槛的操作要求即可快速训练出指定任务类型的机器学习模型，并且自动生成相关的源码，方便后续修改和维护。对于喜欢通过代码方式进行机器学习任务的伙伴，官方提供了丰富的文档(<a href="https://docs.microsoft.com/en-us/dotnet/machine-learning/?WT.mc_id=AI-MVP-5003172">https://docs.microsoft.com/en-us/dotnet/machine-learning/</a>)和示例代码库(<a href="https://github.com/dotnet/machinelearning-samples">https://github.com/dotnet/machinelearning-samples</a>)。</p>
-<p>
-        <img class="mx-auto" alt="Model Buidler" src="https://user-images.githubusercontent.com/3881276/131783384-3790c19e-5448-4f33-93bc-437af8863304.gif" />   
-    </p>
-<p>另外，ML.NET 针对 CLI 也提供了命令行工具，而且是支持 AutoML 的，使得常见的机器学习场景实现零编码。</p>
-<p>
-        <img class="mx-auto" alt="ML.NET CLI" src="https://user-images.githubusercontent.com/3881276/131783486-02c5f505-7c20-497f-b6b7-715c6671b60f.gif" />   
-    </p>
-<p>通过 AutoML 生成的代码一开始阅读起来会有一点点不习惯，如果从来没有接触过机器学习的开发者，可能会担心记不住 ML.NET API 中密密麻麻基于专业术语的对象和方法，作者将 ML.NET API 按经典的机器学习实现步骤，把常用的方法整理成一份速查手册，添加了一些代码片段用来帮助快速理解，以高清矢量格式的图片分享出来，在编码的时候放在习惯的地方，像开发其他 .NET 应用一样可随时查看，一目了然。</p>
-<p>
-        <img class="mx-auto" alt="CHEAT SHEET" src="https://user-images.githubusercontent.com/3881276/131784152-74f74cc4-061b-4978-a328-cd9215e5aee5.png" />   
-    </p>
-<p>希望通过介绍有更多 .NET 开发者能够加入到机器学习的行列中来，在扩展自己技术领域的同时也创造出丰富的智能化产品功能服务于社会。</p>
-<p><a href="/mlnet.svg">速查手册下载</a></p>
+</div></li>
+<li>
+<p>训练模型。</p>
+</li>
+</ol>
+<p>有关更完整的示例，请参阅此<a href="https://aka.ms/onedal-sample">示例</a>。</p>
+<h2 id="已知问题">已知问题</h2>
+<p>在 Windows 上，您可能会看到库加载错误。若要取消阻断错误，请将应用程序 bin 目录中的“runtimes\win-x64\native”目录添加到 PATH 环境变量中。</p>
+<h2 id="入门和资源">入门和资源</h2>
+<p>在 <a href="https://learn.microsoft.com/dotnet/machine-learning/?WT.mc_id=AI-MVP-5003172">Microsoft Docs</a> 中了解有关 ML.NET、Model Builder 和 ML.NET CLI 的更多信息。</p>
+<p>如果遇到任何问题、功能请求或反馈，请在 <a href="https://github.com/dotnet/machinelearning/issues">ML.NET</a> 和 <a href="https://github.com/dotnet/machinelearning-modelbuilder/issues">Model Builder</a> 存储库中提交问题。</p>
+<p>加入 <a href="https://aka.ms/dotnet-discord">.NET 开发 Discord</a> 上的 <a href="https://aka.ms/virtual-mlnet-community-discord">ML.NET 社区 Discord </a>或#machine-learning 频道。</p>
+<p>收听<a href="https://dotnet.microsoft.com/live/community-standup">.NET 社区机器学习站立会议</a>。</p>
 
         </div>
 
@@ -176,7 +218,7 @@
 <div class="post-archive">
     <ul class="post-copyright">
         <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
-        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/">https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/">https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/</a></li>
         <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
     </ul>
 </div>
@@ -190,13 +232,15 @@
     <h2>See Also</h2>
     <ul class="listing">
         
+        <li><a href="/post/2022-11-20-mlnet-2_0-content/">ML.NET 2.0 更新内容</a></li>
+        
+        <li><a href="/post/2021-09-21-mlnet-deep-learning-plans/">有关 ML.NET 深度学习的计划</a></li>
+        
+        <li><a href="/post/2021-09-02-mlnet-cheatsheet/">ML.NET 代码速查手册，高清图手慢无！</a></li>
+        
         <li><a href="/post/2021-08-07-mlnet-1_6-interesting-content/">ML.NET v1.6 中有趣的内容</a></li>
         
         <li><a href="/about/">关于我</a></li>
-        
-        <li><a href="/archives/">归档</a></li>
-        
-        <li><a href="/search/">搜索</a></li>
         
     </ul>
 </div>

@@ -17,6 +17,15 @@
     </item>
     
     <item>
+      <title>使用 Intel oneDAL 加速 ML.NET 训练</title>
+      <link>https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/</link>
+      <pubDate>Fri, 23 Dec 2022 12:24:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/</guid>
+      <description>ML.NET 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。 ML.NET 3.0 的第一个预览版带来了多项硬件加速改进，使你可以在训练期间充分利用计算资源。安装最新的 ML.NET 3.0 和Intel oneDAL 预览包，试用由 Intel oneDAL 提供支持的最新改进。 什么是 oneAPI Data Analytics Library（oneDAL） Intel oneAPI Data Analytics</description>
+    </item>
+    
+    <item>
       <title>ML.NET 2.0 更新内容</title>
       <link>https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/</link>
       <pubDate>Sun, 20 Nov 2022 18:12:00 +0800</pubDate>

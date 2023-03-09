@@ -25,5 +25,14 @@
       <description>Microsoft Azure 认知语音服务平台是技术和服务的综合集合，旨在加速将语音整合到应用程序中，从而扩大市场差异化。可用的服务包括语音转文本、文本转语音、自定义神经语音 （CNV） 对话听录服务、说话人识别、语音翻译、语音 SDK 和语音设备开发工具包 （DDK）。 人工智能教育是一项新兴技术，有可能彻底改变我们教</description>
     </item>
     
+    <item>
+      <title>Azure 机器学习与 H2O.ai 的新集成</title>
+      <link>https://beanhsiang.github.io/post/2022-06-22-azure-machine-learning-s-new-integration-with-h2o-ai/</link>
+      <pubDate>Wed, 22 Jun 2022 10:00:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2022-06-22-azure-machine-learning-s-new-integration-with-h2o-ai/</guid>
+      <description>在当今复杂的云环境中，公司使用来自多个来源的技术是很常见的。云计算平台通常是企业IT环境的基础，由独立软件供应商和满足业务和工业垂直需求的产品补充。通过 H2O.ai 和 Azure 机器学习之间的集成，我们使客户能够使用类似 SaaS 的工具实现模型创建民主化，并选择符合其企业要求的部署技术。 使用 H2O.ai 的 AzureML 集成，H2</description>
+    </item>
+    
   </channel>
 </rss>

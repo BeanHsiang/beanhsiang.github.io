@@ -53,6 +53,15 @@
     </item>
     
     <item>
+      <title>Azure 机器学习与 H2O.ai 的新集成</title>
+      <link>https://beanhsiang.github.io/post/2022-06-22-azure-machine-learning-s-new-integration-with-h2o-ai/</link>
+      <pubDate>Wed, 22 Jun 2022 10:00:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2022-06-22-azure-machine-learning-s-new-integration-with-h2o-ai/</guid>
+      <description>在当今复杂的云环境中，公司使用来自多个来源的技术是很常见的。云计算平台通常是企业IT环境的基础，由独立软件供应商和满足业务和工业垂直需求的产品补充。通过 H2O.ai 和 Azure 机器学习之间的集成，我们使客户能够使用类似 SaaS 的工具实现模型创建民主化，并选择符合其企业要求的部署技术。 使用 H2O.ai 的 AzureML 集成，H2</description>
+    </item>
+    
+    <item>
       <title>有关 ML.NET 深度学习的计划</title>
       <link>https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/</link>
       <pubDate>Tue, 21 Sep 2021 16:43:00 +0800</pubDate>

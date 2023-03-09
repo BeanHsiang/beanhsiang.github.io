@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+
+    <title>ML.NET Model Builder 中的句子相似性 | Innovation with tech</title>
+    <meta property="og:title" content="ML.NET Model Builder 中的句子相似性 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2023-03-02T13:23:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2023-03-02T13:23:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="ML.NET Model Builder 中的句子相似性">
+        
+    <meta name="author" content="BeanHsiang">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+    
+    
+    
+</head>
+
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">ML.NET Model Builder 中的句子相似性</h1>
+        </header>
+        <date class="post-meta meta-date">
+            2023年3月2日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='/categories/Azure-AI'>Azure AI</a></span>
+            
+        </div>
+        
+        
+        
+        <div class="post-content">
+            <p><a href="https://azure.microsoft.com/products/cognitive-services/speech-services">Microsoft Azure 认知语音服务</a>平台是技术和服务的综合集合，旨在加速将语音整合到应用程序中，从而扩大市场差异化。可用的服务包括语音转文本、文本转语音、自定义神经语音 （CNV） 对话听录服务、说话人识别、语音翻译、语音 SDK 和语音设备开发工具包 （DDK）。</p>
+<p>人工智能教育是一项新兴技术，有可能彻底改变我们教授和学习语言的方式。语言学习最重要的方面之一是准确发音的能力，这就是 Azure 认知语音服务的新<a href="https://learn.microsoft.com/azure/cognitive-services/speech-service/how-to-pronunciation-assessment?pivots=programming-language-python">发音评估</a>功能的用武之地。另一个关键机会是开发合成双语语音，用于使用自定义神经语音进行语言学习体验，以及我们的语音转文本功能。</p>
+<h1 id="发音评估">发音评估</h1>
+<p>新功能旨在向用户提供有关学习新语言时语音的准确性、流畅性和韵律的即时反馈。该服务利用 <a href="https://azure.microsoft.com/products/cognitive-services/text-to-speech">Azure 神经文本转语音</a>和转换器模型，以及顺序回归和层次结构来提高单词级别评估的准确性。该服务目前提供 10 多种语言版本，包括美式英语、英式英语、澳大利亚英语、法语、西班牙语和中文，其他语言以预览版提供。</p>
+<p>发音评估功能为教育工作者、服务提供商和学生提供了多种好处：</p>
+<ul>
+<li>对于教育工作者来说，它提供即时反馈，消除了耗时的口头语言评估的需要，并提供一致和全面的评估。</li>
+<li>对于服务提供商，它提供高实时功能、全球语音认知服务，并支持不断增长的全球业务。</li>
+<li>对于学生和学习者来说，它提供了一种方便的练习和接收反馈的方式，权威评分与母语发音进行比较，并有助于遵循长句子或完整文档的确切文本顺序。</li>
+<li></li>
+</ul>
+<p>发音评估是语言学习和教学的有力工具。通过利用 TTS、转换器和序数回归等人工智能技术，它提供有关语音发音的即时准确反馈。凭借其广泛的支持语言和与低资源区域设置合作的能力，它为各种背景的语言学习者提供了提高语言技能的机会。通过发音评估，教育工作者可以提供更具吸引力和可访问性的学习体验，服务提供商可以提高教育客户的工作效率，学生可以随时随地更方便地练习。</p>
+<p>在2023年2月9日的 <a href="https://www.microsoft.com/education/reimagine">Microsoft Reimagine Education</a> 活动中，我们宣布了几项新功能，以支持学生取得成功。语音发音评估用于沉浸式阅读器上的<a href="https://techcommunity.microsoft.com/t5/education-blog/reading-coach-in-immersive-reader-plus-new-features-coming-to/ba-p/3734079">阅读教练</a>和 Microsoft 团队中的<a href="https://learn.microsoft.com/training/educator-center/product-guides/reading-progress/">演讲者进度</a>。它可以在课堂内外使用，以节省教师的时间，并提高学生阅读流利度的学习成果，所有学习者都可以使用。</p>
+<h1 id="语音转文本">语音转文本</h1>
+<p>教师和语言学习者在学习对话中自然会混合母语和学习语言。<a href="https://azure.microsoft.com/products/cognitive-services/speech-to-text/">Azure 语音转文本</a>支持多语言学习方案的实时语言识别，并通过更好的理解和可读上下文帮助人与人交互。</p>
+<p>最新的多语言建模技术和迁移学习技术被用于开发基于大量数据的新的语音转文本（STT）语言。这些模型经过了不同语言的声学和语言知识训练，可以处理各种语言领域的听写和对话。输出包括反向文本规范化 （ITN）、大写（如果适用）和自动标点符号，以增强可读性。开发人员可以使用实时流式应用程序编程接口 （API） 或批量转录轻松地将这些语言集成到他们的项目中。在所有语言中使用统一模型的好处将立即显现出来。</p>
+<h1 id="预生成和自定义神经语音-cnv">预生成和自定义神经语音 （CNV）</h1>
+<p>神经语音（文本转语音）可以本地读出学习材料，并随时随地实现自助学习。<a href="https://azure.microsoft.com/solutions/ai/">Microsoft Azure AI</a> 提供超过 449 种预构建的神经语音，跨 147 种语言和差异，使用户能够获得 AI 教师、内容朗读功能等。</p>
+<p>自定义神经语音 （CNV） 是 Azure AI 提供的一项功能，使用户能够为其应用程序创建独特的自定义合成语音。此功能使用人类语音样本作为训练数据，为品牌或角色生成听起来非常自然的声音。教育公司正在使用这项技术来个性化语言学习，通过创建具有与目标受众文化和背景相匹配的独特声音的独特角色。例如，Duolingo 使用自定义神经语音帮助在语言学习平台中将九个新角色变为现实，Pearson 使用它来改进发音评估。CNV 基于神经文本转语音技术，允许用户创建具有丰富说话风格、跨语言和适应性强的合成语音。逼真自然的声音非常适合代表品牌和拟人化机器，以便与用户进行对话互动。</p>
+<h2 id="客户灵感">客户灵感</h2>
+<p>随着技术的不断进步，越来越明显的是，教育的未来在于人工智能的整合。Azure AI 处于这场革命的最前沿，为教育公司提供了强大的工具来改善学习体验并推动学生参与和成就。我们受到教育领域五位客户的启发：</p>
+<ol>
+<li><a href="https://customers.microsoft.com/en-us/story/1379625676815325642-pearson-education-azure-cognitive-services">Pearson</a>：该公司希望使用 AI 为学生提供更好的服务，并为教师提供高度准确的评估，使用 Azure 为语言学习者开发基于 AI 的服务。他们采用了新的 Microsoft 算法和领先的发音评估功能，这是语音转文本功能的一部分。</li>
+<li><a href="https://news.microsoft.com/apac/features/hongdandan_audiobooks/">北京红丹丹视障服务中心</a>：该组织正在与微软和志愿者团队合作生成AI音频内容，这些内容将用于改善盲人或低视力人士的资源。他们使用 Azure 自定义神经语音（一种文本转语音工具，允许用户创建自定义语音字体）来生成音频内容。</li>
+<li><a href="https://startups.microsoft.com/blog/duolingo-makes-learning-language-fun-with-help-from-ai/">Duolingo</a>：这家语言学习公司正在使用自定义神经语音，通过在平台内引入一系列角色来个性化语言学习。Duolingo 经历了数百次角色迭代，旨在让他们反映世界各地文化的用户群，同时在视觉上与应用程序的长期主角保持一致。他们使用自定义神经语音在语言学习平台中使角色栩栩如生。他们还使用 Azure 帮助在语言学习平台中将九个新角色变为现实。</li>
+<li><a href="https://www.hellotalk.com/">HelloTalk</a>：创新的移动应用程序通过将用户与来自世界各地的母语人士联系起来，提供了一种愉快而轻松的方式来学习一门新语言。凭借其直观的语言工具，包括发音评估功能和社区功能，它使用户能够练习并沉浸在目标语言的文化中，提高发音并在此过程中结交新朋友。</li>
+<li><a href="https://www.berlitz.com/">贝立兹</a>：这家全球领导力和语言培训公司提供使用 Azure 语音识别和发音评估的语言学习产品。通过这些创新工具，学习者可以立即收到有关新语言语音的准确性和流畅性的详细反馈。这使得贝立兹的学习者可以灵活地随时随地练习和完善他们的发音，然后用英语、德语、西班牙语等与母语人士交谈。</li>
+</ol>
+<h2 id="人工智能对教育的未来影响">人工智能对教育的未来影响</h2>
+<p>人工智能，特别是<a href="https://azure.microsoft.com/products/cognitive-services/speech-services/">语音服务</a>，与教育部门的整合变得越来越重要，因为它可以大大增强学习体验并提高教学效率。Azure 发音评估和自定义神经语音等语音服务在教育平台中提供个性化、自动化和分析，从而提高学生的参与度和成就。这些服务还使教育工作者能够提供有关语音准确性、流畅性和完整性的即时反馈，从而帮助语言学习者提高发音和流利度。凭借实时评估发音的能力，人工智能驱动的语音服务可以帮助所有背景的学习者都能使用语言评估。此外，这些服务还可以根据个别学生的需求提供个性化的反馈和建议，从而帮助每个学生的学习体验个性化。将人工智能整合到教育部门可以帮助教育工作者赋予学生权力，并帮助学生充分发挥潜力。</p>
+<h2 id="azure-认知服务入门">Azure 认知服务入门</h2>
+<p>使用无代码方法在语音工作室中查看这些功能。语音工作室是一组基于 UI 的工具，用于将 AI 服务构建到应用程序中。</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/how-to-pronunciation-assessment?pivots=programming-language-python">如何使用发音评估</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-to-text">语音转文本概述</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/text-to-speech">文本转语音概述</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/custom-neural-voice">自定义神经语音概述</a></li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/">https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2023-03-02-sentence-similarity-mlnet-model-builder/">ML.NET Model Builder 中的句子相似性</a></li>
+        
+        <li><a href="/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/">使用 Intel oneDAL 加速 ML.NET 训练</a></li>
+        
+        <li><a href="/post/2022-11-20-mlnet-2_0-content/">ML.NET 2.0 更新内容</a></li>
+        
+        <li><a href="/post/2021-09-21-mlnet-deep-learning-plans/">有关 ML.NET 深度学习的计划</a></li>
+        
+        <li><a href="/post/2021-09-02-mlnet-cheatsheet/">ML.NET 代码速查手册，高清图手慢无！</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Azure-AI'>Azure AI</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2023 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search/' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/" title="ML.NET Model Builder 中的句子相似性">ML.NET Model Builder 中的句子相似性</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性">ML.NET Model Builder 中的句子相似性</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/" title="使用 Intel oneDAL 加速 ML.NET 训练">使用 Intel oneDAL 加速 ML.NET 训练</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/" title="ML.NET 2.0 更新内容">ML.NET 2.0 更新内容</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/" title="有关 ML.NET 深度学习的计划">有关 ML.NET 深度学习的计划</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/" title="ML.NET 代码速查手册，高清图手慢无！">ML.NET 代码速查手册，高清图手慢无！</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2021-08-07-mlnet-1_6-interesting-content/" title="ML.NET v1.6 中有趣的内容">ML.NET v1.6 中有趣的内容</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://www.xiaobaoonline.com/" title="校宝在线">校宝在线</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

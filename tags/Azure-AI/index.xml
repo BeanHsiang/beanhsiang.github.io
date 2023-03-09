@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Azure AI on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/tags/Azure-AI/</link>
+    <description>Recent content in Azure AI on Innovation with tech</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 02 Mar 2023 13:23:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/tags/Azure-AI/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ML.NET Model Builder 中的句子相似性</title>
+      <link>https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/</link>
+      <pubDate>Thu, 02 Mar 2023 13:23:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/</guid>
+      <description>Microsoft Azure 认知语音服务平台是技术和服务的综合集合，旨在加速将语音整合到应用程序中，从而扩大市场差异化。可用的服务包括语音转文本、文本转语音、自定义神经语音 （CNV） 对话听录服务、说话人识别、语音翻译、语音 SDK 和语音设备开发工具包 （DDK）。 人工智能教育是一项新兴技术，有可能彻底改变我们教</description>
+    </item>
+    
+  </channel>
+</rss>

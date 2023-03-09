@@ -2,6 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://beanhsiang.github.io/tags/Azure-AI/</loc>
+    <lastmod>2023-03-02T13:23:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
+    <lastmod>2023-03-02T13:23:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
     <lastmod>2023-03-02T13:23:00+08:00</lastmod>
   </url><url>
@@ -12,6 +18,9 @@
     <lastmod>2023-03-02T13:23:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/ML.NET/</loc>
+    <lastmod>2023-03-02T13:23:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/</loc>
     <lastmod>2023-03-02T13:23:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/</loc>

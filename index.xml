@@ -53,6 +53,15 @@
     </item>
     
     <item>
+      <title>利用 AutomatedML 模型背后的训练代码</title>
+      <link>https://beanhsiang.github.io/post/2022-10-14-make-use-of-the-training-code-behind-your-automatedml-model/</link>
+      <pubDate>Fri, 14 Oct 2022 11:00:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2022-10-14-make-use-of-the-training-code-behind-your-automatedml-model/</guid>
+      <description>概述 我们很高兴地宣布正式发布自动化机器学习 （AutoML） 训练代码生成。借助此功能，用户可以查看其 AutoML 模型背后的训练脚本，以确保他们对模型的训练方式完全透明。用户还可以使用该脚本根据其用例的需要自定义/调整训练，从而使他们能够快速将 AutoML 模型转移到生产环境中。 为什么这很重要？ AutoM</description>
+    </item>
+    
+    <item>
       <title>在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习</title>
       <link>https://beanhsiang.github.io/post/2022-10-13-enabling-deep-learning-with-azure-container-for-pytorch-in-azure/</link>
       <pubDate>Thu, 13 Oct 2022 11:00:00 +0800</pubDate>

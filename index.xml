@@ -9,20 +9,20 @@
     <lastBuildDate>Thu, 02 Mar 2023 13:23:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ML.NET Model Builder 中的句子相似性</title>
-      <link>https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/</link>
-      <pubDate>Thu, 02 Mar 2023 13:23:00 +0800</pubDate>
-      
-      <guid>https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/</guid>
-      <description>Microsoft Azure 认知语音服务平台是技术和服务的综合集合，旨在加速将语音整合到应用程序中，从而扩大市场差异化。可用的服务包括语音转文本、文本转语音、自定义神经语音 （CNV） 对话听录服务、说话人识别、语音翻译、语音 SDK 和语音设备开发工具包 （DDK）。 人工智能教育是一项新兴技术，有可能彻底改变我们教</description>
-    </item>
-    
-    <item>
-      <title>ML.NET Model Builder 中的句子相似性</title>
       <link>https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/</link>
       <pubDate>Thu, 02 Mar 2023 13:23:00 +0800</pubDate>
       
       <guid>https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/</guid>
       <description>ML.NET 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。 新版本的 Model Builder 现已发布！ 有什么新变化？ 以下是此版本的亮点。您可以在 Model Builder 发行说明中找到所有更改的列表。 要开始使用这些新功能，请安装或升级到最新版本的 Model Builder 16.14.4 或更高版本。 Model Builder中的句子相似性 句</description>
+    </item>
+    
+    <item>
+      <title>3个加速语言学习的微软 Azure AI 产品功能</title>
+      <link>https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/</link>
+      <pubDate>Sat, 25 Feb 2023 09:12:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/</guid>
+      <description>Microsoft Azure 认知语音服务平台是技术和服务的综合集合，旨在加速将语音整合到应用程序中，从而扩大市场差异化。可用的服务包括语音转文本、文本转语音、自定义神经语音 （CNV） 对话听录服务、说话人识别、语音翻译、语音 SDK 和语音设备开发工具包 （DDK）。 人工智能教育是一项新兴技术，有可能彻底改变我们教</description>
     </item>
     
     <item>

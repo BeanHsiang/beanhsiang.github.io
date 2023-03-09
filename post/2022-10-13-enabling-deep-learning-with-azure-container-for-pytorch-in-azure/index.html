@@ -7,20 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
 
-    <title>有关 ML.NET 深度学习的计划 | Innovation with tech</title>
-    <meta property="og:title" content="有关 ML.NET 深度学习的计划 - Innovation with tech">
+    <title>在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习 | Innovation with tech</title>
+    <meta property="og:title" content="在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习 - Innovation with tech">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content='2021-09-21T16:43:00&#43;08:00'>
+    <meta property="article:published_time" content='2022-10-13T11:00:00&#43;08:00'>
         
         
-    <meta property="article:modified_time" content='2021-09-21T16:43:00&#43;08:00'>
+    <meta property="article:modified_time" content='2022-10-13T11:00:00&#43;08:00'>
         
     <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
-    <meta name="description" content="有关 ML.NET 深度学习的计划">
+    <meta name="description" content="在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习">
         
     <meta name="author" content="BeanHsiang">
-    <meta property="og:url" content="https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2022-10-13-enabling-deep-learning-with-azure-container-for-pytorch-in-azure/">
     <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
 
     <link rel="stylesheet" href='/css/normalize.css'>
@@ -74,54 +74,62 @@
     
     <article class="post">
         <header>
-            <h1 class="post-title">有关 ML.NET 深度学习的计划</h1>
+            <h1 class="post-title">在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习</h1>
         </header>
         <date class="post-meta meta-date">
-            2021年9月21日
+            2022年10月13日
         </date>
         
         <div class="post-meta">
             <span>|</span>
             
-            <span class="meta-category"><a href='/categories/ML.NET'>ML.NET</a></span>
+            <span class="meta-category"><a href='/categories/Azure-AI'>Azure AI</a></span>
             
         </div>
         
         
         
         <div class="post-content">
-            <p>ML.NET 最需要的功能之一是能够从零开始创建神经网络模型，以便在 ML.NET 中进行深度学习。ML.NET 团队已经采纳了用户调研的反馈，并制定了开始实施此功能的计划。</p>
-<h2 id="mlnet-深度学习的现状">ML.NET 深度学习的现状</h2>
-<p>目前，ML.NET 没有一种方法可以创建神经网络，从零开始建立深度学习模型。然而，对于采用现有的深度学习模型并将其用于预测，框架给予极大的支持。如果您有 TensorFlow 或 ONNX 模型，则这些模型可用于 ML.NET 进行预测。</p>
-<p>ML.NET 对迁移学习也有很好的支持。这允许您获取自己的数据，并针对预先训练的模型进行训练，以便为您提供自己的模型。</p>
-<p>但是如前所述，ML.NET 尚不能让您从零开始创建自己的深度学习模型。让我们来看看有什么计划。</p>
-<h2 id="未来深度学习计划">未来深度学习计划</h2>
-<p>ML.NET 在 GitHub 代码仓库中，最近提交了一个 <a href="https://github.com/dotnet/machinelearning/issues/5918">issue</a>，即在 ML.NET 实施创建深度学习模型的计划。</p>
-<p>原因有二：</p>
-<ol>
-<li>向社区传达计划的内容，并正在制定中。</li>
-<li>获取社区对当前计划的反馈。</li>
-</ol>
-<p>本文触及的主要要点，你可以通过这个 issue 给出任何反馈或问题，帮助 ML.NET 团队规划或实施计划。</p>
-<p>该 issue 详细介绍了三个部分，以便在 ML.NET 中提供创建深度学习模型：</p>
-<ol>
-<li>使消费 ONNX 模型更加容易</li>
-<li>支持 TorchSharp 随时可投入生产</li>
-<li>在 ML.NET 创建支持 TorchSharp 的 API</li>
-</ol>
-<p>让我们更详细地逐个讨论。</p>
-<h2 id="更易于使用-onnx-模型">更易于使用 ONNX 模型</h2>
-<p>虽然您目前可以在 ML.NET 中使用 ONNX 模型，但您必须了解输入和输出名称才能使用它。现在，我们依靠 <a href="https://netron.app/">Netron</a> 应用程序加载 ONNX 模型，为我们提供输入和输出名称。虽然这还不错，但团队希望公开从内部获取这些的方法，而不必依赖单独的应用程序。</p>
-<p>当然，随着获得 ONNX 模型输入和输出名称的新方法，文档肯定会更新以反映这一点。我相信不仅是文档，还会有示例来说明如何做到这一点。</p>
-<h2 id="支持-torchsharp">支持 TorchSharp</h2>
-<p>TorchSharp 是 ML.NET 进行深度学习的核心。与 Tensorfow.NET支持在 ML.NET 中用 TensorFlow 模型完成评分任务类似，它将提供对 Python 库的访问。PyTorch 在研究和行业中建立深度学习模型非常常见，因此作为 ML.NET 的底层是有意义的。</p>
-<p>事实上，建立深度学习模式的热门库之一是 FastAI。FastAI 是学习深度学习的最佳课程之一。然而在引擎覆盖下，FastAI 使用PyTorch 来实际构建它生产的模型，这不是偶然的。FastAI 开发人员认为 PyTorch 是达成简化的最佳途径。</p>
-<p>TensorFlow 非常适合使用现有模型预测，但对于从零开始构建新模型，我真的认为 PyTorch 和 TorchSharp 是首选方式。要做到这一点，TorchSharp 将帮助 ML.NET 成为引领者。</p>
-<h2 id="将-torchsharp-应用到-mlnet">将 TorchSharp 应用到 ML.NET</h2>
-<p>从零开始训练深度学习模型最后阶段是，一旦 TorchSharp 训练就绪，用 ML.NET 能够创建一个高阶的 API。这是基于 TensorFlow 的 API，以帮助构建模型更容易。我相信 ML.NET 能用 TorchSharp 做到这一点。</p>
-<p>这是绝对值得一试的重大任务。这是用 API 来建立模型的最佳方式。从长远来看，让我们以最琐碎又耗时的方式构建我们的模型是值得的，结果上看这将使我们更有生产力。</p>
-<h2 id="结论">结论</h2>
-<p>从零开始创建深度学习模型是迄今为止 ML.NET 最需要的功能之一，他们推出如此计划肯定会达到这个目标。事实上，我认为它会超过这个目标，因为它已经在考虑使用 PyTorch 作为后端，这是研究和行业领域所趋。</p>
+            <h2 id="概述">概述</h2>
+<p>由于AzureML是许多PyTorch开发人员的首选平台，我们开发了新的Azure Container for PyTorch（ACPT），这是一个精心策划的环境，包括最好的Microsoft技术，用于在Azure上使用PyTorch进行训练。我们很高兴地宣布 Azure 机器学习 （AzureML） 中的 ACPT 公共预览版。这个新的特选环境是一个轻量级的独立环境，其中包含在 AzureML 上有效运行大型模型优化训练所需的组件。默认情况下，AzureML 特选环境在用户的工作区中可用，并由使用最新版本的 AzureML SDK 的缓存 Docker 映像提供支持。它有助于降低准备成本并缩短部署时间。</p>
+<p>ACPT策划环境扩展了我们现有的 PyTorch 策划环境 ，包括最新的PyTorch版本，针对数十种生产模型进行了测试和验证，以确保高质量，同时还提供各种用于训练和优化的Microsoft技术，例如 ONNX Runtime 和 DeepSpeed。 所有组件都已安装并经过验证，以降低设置成本并加快客户计量机的训练时间。</p>
+<p>
+        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/223963780-315d551c-1553-4831-934c-842ce096c976.png" />   
+    </p>
+<p><em>ACPT 精选的环境属性和说明。</em></p>
+<h2 id="优点">优点</h2>
+<p>使用 ACPT 特选环境的优点包括：</p>
+<ul>
+<li>优化的训练框架，用于在大型工作负载上设置、开发和加速 PyTorch 模型。</li>
+<li>最新的堆栈，包含Ubuntu，Python，PyTorch，CUDA\RocM等的最新兼容版本。</li>
+<li>易用性：针对数十个 Microsoft 工作负载安装和验证所有组件，以降低设置成本并加快价值实现速度</li>
+<li>最新的训练优化技术：Onnx / Onnx Runtime / Onnx Runtime Training，ORT MoE，DeepSpeed， MSCCL等。</li>
+<li>与 Azure ML 集成：在 ML Studio 上或使用 AML SDK 跟踪 PyTorch 实验</li>
+<li>按原样与预安装的软件包一起使用，或在精选环境之上构建</li>
+<li>该映像也可用作 DSVM</li>
+<li>Azure 客户支持</li>
+</ul>
+<h2 id="指标和数据">指标和数据</h2>
+<p>ACPT 环境使我们的客户能够有效地训练 PyTorch 模型。容器中组合的 ONNX Runtime 和 DeepSpeed 等优化库可以将生产速度从常规 PyTorch 工作负载提高到 54% 到 163%，如在各种 HuggingFace 模型上看到的那样。</p>
+<p>
+        <img class="mx-auto" alt="image2" src="https://user-images.githubusercontent.com/3881276/223964283-7a9f5bbe-a370-4c98-8605-7b98b82145b5.png" />   
+    </p>
+<p><em>拥抱面部模型的指标</em></p>
+<p>ACPT 通过在更短的时间内执行相同的训练作业来降低计算成本。训练运行也很容易跟踪，因为特选环境与AzureML工具（如Azure机器学习工作室和AzureML SDK）集成在一起。</p>
+<p>下面是一个 NLP 产品审查微调训练运行的示例，大约需要两个小时才能完成。</p>
+<p>
+        <img class="mx-auto" alt="image3" src="https://user-images.githubusercontent.com/3881276/223964393-ff6233e5-6aa3-4cfa-94eb-a96fce0b8731.png" />   
+    </p>
+<p>使用ACPT策划的环境，我们观察到使用DeepSpeed的Finetune HuggingFace分类器将整体训练时间减少到45分钟多一点。 在此模型上，训练时间减少了 62%。</p>
+<p>
+        <img class="mx-auto" alt="image4" src="https://user-images.githubusercontent.com/3881276/223964523-91a43eb0-fccd-4680-8ade-398d2172af51.png" />   
+    </p>
+<h2 id="客户评价">客户评价</h2>
+<p>“ACPT 映像帮助我们在 100 多个 GPU 上成功运行大规模作业。它提供了不同加速包的集成，例如 OFED 和 APEX。更重要的是，它减轻了我们在 构建图像方面的工程工作。它使我们能够更专注于研究工作。“</p>
+<ul>
+<li>佛罗伦萨项目，微软人工智能认知服务计划</li>
+</ul>
+<p>“ACPT环境帮助我们通过分布式数据并行（DDP）实现运行我们的模型。我们能够成功地使用多个节点运行模型，并有效且高效地获得结果。当使用ACPT以外的环境时，我们无法实现这一目标。“- Orlando Ribas Fernandes，Fashable联合创始人兼首席执行官</p>
 
         </div>
 
@@ -129,7 +137,7 @@
 <div class="post-archive">
     <ul class="post-copyright">
         <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
-        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/">https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2022-10-13-enabling-deep-learning-with-azure-container-for-pytorch-in-azure/">https://beanhsiang.github.io/post/2022-10-13-enabling-deep-learning-with-azure-container-for-pytorch-in-azure/</a></li>
         <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
     </ul>
 </div>
@@ -143,15 +151,15 @@
     <h2>See Also</h2>
     <ul class="listing">
         
+        <li><a href="/post/2022-06-22-azure-machine-learning-s-new-integration-with-h2o-ai/">Azure 机器学习与 H2O.ai 的新集成</a></li>
+        
+        <li><a href="/post/2021-09-21-mlnet-deep-learning-plans/">有关 ML.NET 深度学习的计划</a></li>
+        
         <li><a href="/post/2021-09-02-mlnet-cheatsheet/">ML.NET 代码速查手册，高清图手慢无！</a></li>
         
         <li><a href="/post/2021-08-07-mlnet-1_6-interesting-content/">ML.NET v1.6 中有趣的内容</a></li>
         
         <li><a href="/about/">关于我</a></li>
-        
-        <li><a href="/archives/">归档</a></li>
-        
-        <li><a href="/search/">搜索</a></li>
         
     </ul>
 </div>
@@ -161,7 +169,7 @@
             
             <ul class="clearfix">
                 
-                <li><a href='/tags/ML.NET'>ML.NET</a></li>
+                <li><a href='/tags/Azure-AI'>Azure AI</a></li>
                 
             </ul>
             

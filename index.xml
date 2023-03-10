@@ -80,6 +80,15 @@
     </item>
     
     <item>
+      <title>Azure Cognitive Search 支持交换索引</title>
+      <link>https://beanhsiang.github.io/post/2022-07-02-azure-cognitive-search-now-supports-swapping-indexes/</link>
+      <pubDate>Sat, 02 Jul 2022 10:00:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2022-07-02-azure-cognitive-search-now-supports-swapping-indexes/</guid>
+      <description>搜索索引是不可变的，这意味着如果需要更新索引，通常需要删除并重新生成索引或创建新索引，然后迁移应用程序。像这样交换搜索索引会增加管理搜索索引的复杂性，如果最终需要在多个位置更新应用程序设置或需要重新部署代码，则可能会很困难。 为了帮助更轻松地交换索引，Azure 认知搜索现在支持预览</description>
+    </item>
+    
+    <item>
       <title>Azure 机器学习与 H2O.ai 的新集成</title>
       <link>https://beanhsiang.github.io/post/2022-06-22-azure-machine-learning-s-new-integration-with-h2o-ai/</link>
       <pubDate>Wed, 22 Jun 2022 10:00:00 +0800</pubDate>

@@ -26,6 +26,15 @@
     </item>
     
     <item>
+      <title>AI 预测你在视频中可能购买哪些服装</title>
+      <link>https://beanhsiang.github.io/post/2022-12-10-the-ai-technology-that-predicts-which-clothing-items-appearing/</link>
+      <pubDate>Sat, 10 Dec 2022 09:00:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2022-12-10-the-ai-technology-that-predicts-which-clothing-items-appearing/</guid>
+      <description>Azure 视频索引器很高兴地宣布推出一项名为“特色服装”的新功能，该功能现已推出公共预览版。 借助此功能，发布商和广告主可以利用深入的上下文理解，在观看者最容易接受与广告互动的最相关时间投放最相关的广告。 这种洞察力使用先进的人工智能来深入了解关键时刻、主要角色、重要场景和所显示的情感，所有</description>
+    </item>
+    
+    <item>
       <title>使用 Azure 表单识别器生成可搜索的 PDF</title>
       <link>https://beanhsiang.github.io/post/2022-10-18-generate-searchable-pdfs-with-azure-form-recognizer/</link>
       <pubDate>Tue, 18 Oct 2022 11:00:00 +0800</pubDate>

@@ -109,7 +109,9 @@
     </p>
 <h2 id="预安装要求">预安装要求</h2>
 <p>请在运行可搜索的 pdf 脚本之前安装以下软件包：</p>
-<p>Python 包：</p>
+<ol>
+<li>Python 包：</li>
+</ol>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
@@ -118,7 +120,9 @@
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install azure-ai-formrecognizer pypdf2&gt;<span style="color:#000;font-weight:bold">=</span>3.0 reportlab pillow pdf2image​​
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>软件包 pdf2image 需要 Poppler 安装。请按照说明 <a href="https://pypi.org/project/pdf2image/">https://pypi.org/project/pdf2image/</a> 根据您的 平台或使用Conda安装：</p>
+</div><ol>
+<li>软件包 pdf2image 需要 Poppler 安装。请按照说明 <a href="https://pypi.org/project/pdf2image/">https://pypi.org/project/pdf2image/</a> 根据您的 平台或使用Conda安装：</li>
+</ol>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
@@ -128,8 +132,15 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="如何运行可搜索的-pdf-脚本">如何运行可搜索的 PDF 脚本</h2>
-<p>使用以下代码创建一个 Python 文件，并将其作为fr_generate_searchable_pdf.py保存在本地计算机上。
-使用 Azure 门户表单识别器实例中的值更新密钥和终结点变量（有关更多详细信息，请参阅快速入门：表单识别器 SDK）。</p>
+<ol>
+<li>
+<p>使用以下代码创建一个 Python 文件，并将其作为fr_generate_searchable_pdf.py保存在本地计算机上。</p>
+</li>
+<li>
+<p>使用 Azure 门户表单识别器实例中的值更新密钥和终结点变量（有关更多详细信息，请参阅快速入门：表单识别器 SDK）。</p>
+</li>
+<li>
+<p>执行脚本并将输入文件（pdf或图像）作为参数传递：</p>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
@@ -147,7 +158,6 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">(</span>base<span style="color:#000;font-weight:bold">)</span> C:<span style="color:#d14">\t</span>emp&gt;python fr_generate_searchable_pdf_v1.1_with_key.py input.jpg
@@ -156,10 +166,14 @@
 </span></span><span style="display:flex;"><span>Azure Form Recognizer finished OCR text <span style="color:#000;font-weight:bold">for</span> <span style="color:#099">1</span> pages.
 </span></span><span style="display:flex;"><span>Generating searchable PDF...
 </span></span><span style="display:flex;"><span>Searchable PDF is created: input.jpg.ocr.pdf
-</span></span><span style="display:flex;"><span>脚本生成后缀为 .ocr.pdf 的可搜索 PDF 文件。 
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="可搜索的-pdf-python-脚本">可搜索的 PDF Python 脚本</h2>
+</div></li>
+<li>
+<p>脚本生成后缀为 .ocr.pdf 的可搜索 PDF 文件。</p>
+</li>
+</ol>
+<h2 id="可搜索的-pdf-python-脚本">可搜索的 PDF Python 脚本</h2>
 <p>复制下面的代码并在本地计算机上创建 Python 脚本。该脚本将扫描的 PDF 或图像作为输入，并使用表单识别器生成相应的可搜索 PDF 文档，该文档将可搜索图层添加到 PDF，并使您能够搜索、复制、粘贴和访问 PDF 中的文本。</p>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">

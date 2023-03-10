@@ -26,6 +26,15 @@
     </item>
     
     <item>
+      <title>训练自定义表单识别器并对其进行基准测试</title>
+      <link>https://beanhsiang.github.io/post/2023-02-21-train-and-benchmark-a-custom-forms-recognizer-using-forms/</link>
+      <pubDate>Tue, 21 Feb 2023 09:00:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2023-02-21-train-and-benchmark-a-custom-forms-recognizer-using-forms/</guid>
+      <description>步骤概述 定制的 OCR 解决方案提供了在文档或图像中定义唯一类别的功能。通过与各种客户合作开发定制 OCR 解决方案，我们经常听到这样的问题：“此解决方案在我的数据上表现如何？我们开发了一种方法，允许使用表单识别器工作室根据自定义数据对 Microsoft 的表单识别器进行基准测试，并在一个过程中使用基本事实批注训</description>
+    </item>
+    
+    <item>
       <title>AI 预测你在视频中可能购买哪些服装</title>
       <link>https://beanhsiang.github.io/post/2022-12-10-the-ai-technology-that-predicts-which-clothing-items-appearing/</link>
       <pubDate>Sat, 10 Dec 2022 09:00:00 +0800</pubDate>

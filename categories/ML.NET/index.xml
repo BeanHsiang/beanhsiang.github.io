@@ -5,7 +5,7 @@
     <link>https://beanhsiang.github.io/categories/ML.NET/</link>
     <description>Recent content in ML.NET on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-CN</language>
+    <language>zh-Hans</language>
     <lastBuildDate>Thu, 02 Mar 2023 13:23:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/categories/ML.NET/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ML.NET Model Builder 中的句子相似性</title>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-Hans">
 <head>
 
     <meta charset="utf-8">
@@ -47,7 +47,7 @@
             </div>
             <div>
                 <nav id="nav-menu" class="clearfix">
-                    <a class="" href="https://beanhsiang.github.io/">Home</a>
+                    <a class="" href="https://beanhsiang.github.io/">首页</a>
                     
                     <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
                     
@@ -68,9 +68,9 @@
                 <div class="col-8" id="main">
                     <div class="res-cons">
     <h3 class="archive-title">
-        Search: 
-        <span class="keyword">Keyword</span>
-        results
+        搜索
+        <span class="keyword">哈哈</span>
+        的结果
     </h3>
 
     <article class="post">
@@ -82,7 +82,7 @@
         
         <div class="post-content">
             概要……
-            <p class="readmore"><a href="链接" target="_blank">Continue reading</a></p>
+            <p class="readmore"><a href="链接" target="_blank">阅读全文</a></p>
         </div>
     </article>
 
@@ -121,7 +121,7 @@
                         var searchItem = `<article class="post"><header><h1 class="post-title"><a href="` + url + `" target="_blank">` + title + `</a></h1></header>`;
                         var pubDate = new Date(item.find("pubDate").text())
                         searchItem += `<time class="post-meta meta-date">` + pubDate.getFullYear() + `-` + (pubDate.getMonth() + 1) + `-` + pubDate.getDate() + `</time>`;
-                        searchItem += `<div class="post-content">` + item.find("description").text() + `……<p class="readmore"><a href="` + url + `" target="_blank">"Continue reading"</a></p></div></article>`;
+                        searchItem += `<div class="post-content">` + item.find("description").text() + `……<p class="readmore"><a href="` + url + `" target="_blank">"阅读全文"</a></p></div></article>`;
 
                         $("div.res-cons").append(searchItem);
                     }
@@ -182,7 +182,7 @@
     </section>
 
     <section class="widget">
-        <h3 class="widget-title">Latest articles</h3>
+        <h3 class="widget-title">最近文章</h3>
 <ul class="widget-list">
     
     <li>
@@ -231,7 +231,7 @@
     
 
     <section class="widget">
-        <h3 class="widget-title"><a href='/categories/'>Categories</a></h3>
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
     <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (9)</a></li>
@@ -242,7 +242,7 @@
     </section>
 
     <section class="widget">
-        <h3 class="widget-title"><a href='/tags/'>Tags</a></h3>
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
@@ -254,7 +254,7 @@
 
     
 <section class="widget">
-    <h3 class="widget-title">Links</h3>
+    <h3 class="widget-title">友情链接</h3>
     <ul class="widget-list">
         
         <li>
@@ -266,9 +266,9 @@
 
 
     <section class="widget">
-        <h3 class="widget-title">Meta</h3>
+        <h3 class="widget-title">其它</h3>
         <ul class="widget-list">
-            <li><a href="https://beanhsiang.github.io/index.xml">RSS</a></li>
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
         </ul>
     </section>
 </div>

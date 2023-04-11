@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
 
     <title>ML.NET 代码速查手册，高清图手慢无！ | Innovation with tech</title>
     <meta property="og:title" content="ML.NET 代码速查手册，高清图手慢无！ - Innovation with tech">
@@ -35,7 +37,6 @@
     
 </head>
 
-
 <body>
     <header id="header" class="clearfix">
     <div class="container">
@@ -50,7 +51,7 @@
             </div>
             <div>
                 <nav id="nav-menu" class="clearfix">
-                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    <a class="current" href="https://beanhsiang.github.io/">Home</a>
                     
                     <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
                     
@@ -76,17 +77,26 @@
         <header>
             <h1 class="post-title">ML.NET 代码速查手册，高清图手慢无！</h1>
         </header>
-        <date class="post-meta meta-date">
-            2021年9月1日
-        </date>
+        
+  <time datetime="2021-09-01T14:15:00Z" class="post-meta meta-date dt-published">
+    2021-09-01
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/ML.NET' target="_blank">ML.NET</a>
+  
+</div>
+
+
         
         <div class="post-meta">
-            <span>|</span>
-            
-            <span class="meta-category"><a href='/categories/ML.NET'>ML.NET</a></span>
-            
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>reads</span>
+            </span>
         </div>
-        
         
         
         <div class="post-content">
@@ -175,9 +185,9 @@
         
 <div class="post-archive">
     <ul class="post-copyright">
-        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
-        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/">https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/</a></li>
-        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+        <li><strong>Author: </strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>Link: </strong><a href="https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/">https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/</a></li>
+        <li><strong>License: </strong>This work is under a <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. Kindly fulfill the requirements of the aforementioned License when adapting or creating a derivative of this work.</li>
     </ul>
 </div>
 <br/>
@@ -206,7 +216,7 @@
             
             <ul class="clearfix">
                 
-                <li><a href='/tags/ML.NET'>ML.NET</a></li>
+                <li><a href='/tags/ML.NET' target="_blank">ML.NET</a></li>
                 
             </ul>
             
@@ -227,6 +237,9 @@
       </script>
     </div>
     
+    
+    
+
 </div>
 
                     <footer id="footer">
@@ -247,6 +260,7 @@
 
 
     
+    
     <script type="text/javascript">
         window.MathJax = {
             tex2jax: {
@@ -255,12 +269,87 @@
                 }
             };
     </script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
 
 
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
 
 
 
@@ -269,56 +358,56 @@
 
                 <div id="secondary">
     <section class="widget">
-        <form id="search" action='https://beanhsiang.github.io/search/' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
       
       <input type="text" name="q" maxlength="20" placeholder="Search">
       <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
       <button type="submit" class="submit icon-search"></button>
 </form>
     </section>
-    
+
     <section class="widget">
-        <h3 class="widget-title">最近文章</h3>
+        <h3 class="widget-title">Latest articles</h3>
 <ul class="widget-list">
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性">ML.NET Model Builder 中的句子相似性</a>
+        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性" target="_blank">ML.NET Model Builder 中的句子相似性</a>
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2023-02-25-introducing-scalable-and-enterprise-grade-genomics-workflows-in/" title="在 Azure ML 中引入可缩放的企业级基因学工作流">在 Azure ML 中引入可缩放的企业级基因学工作流</a>
+        <a href="https://beanhsiang.github.io/post/2023-02-25-introducing-scalable-and-enterprise-grade-genomics-workflows-in/" title="在 Azure ML 中引入可缩放的企业级基因学工作流" target="_blank">在 Azure ML 中引入可缩放的企业级基因学工作流</a>
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/" title="3个加速语言学习的微软 Azure AI 产品功能">3个加速语言学习的微软 Azure AI 产品功能</a>
+        <a href="https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/" title="3个加速语言学习的微软 Azure AI 产品功能" target="_blank">3个加速语言学习的微软 Azure AI 产品功能</a>
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2023-02-21-train-and-benchmark-a-custom-forms-recognizer-using-forms/" title="训练自定义表单识别器并对其进行基准测试">训练自定义表单识别器并对其进行基准测试</a>
+        <a href="https://beanhsiang.github.io/post/2023-02-21-train-and-benchmark-a-custom-forms-recognizer-using-forms/" title="训练自定义表单识别器并对其进行基准测试" target="_blank">训练自定义表单识别器并对其进行基准测试</a>
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/" title="使用 Intel oneDAL 加速 ML.NET 训练">使用 Intel oneDAL 加速 ML.NET 训练</a>
+        <a href="https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/" title="使用 Intel oneDAL 加速 ML.NET 训练" target="_blank">使用 Intel oneDAL 加速 ML.NET 训练</a>
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2022-12-10-the-ai-technology-that-predicts-which-clothing-items-appearing/" title="AI 预测你在视频中可能购买哪些服装">AI 预测你在视频中可能购买哪些服装</a>
+        <a href="https://beanhsiang.github.io/post/2022-12-10-the-ai-technology-that-predicts-which-clothing-items-appearing/" title="AI 预测你在视频中可能购买哪些服装" target="_blank">AI 预测你在视频中可能购买哪些服装</a>
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/" title="ML.NET 2.0 更新内容">ML.NET 2.0 更新内容</a>
+        <a href="https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/" title="ML.NET 2.0 更新内容" target="_blank">ML.NET 2.0 更新内容</a>
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2022-10-18-generate-searchable-pdfs-with-azure-form-recognizer/" title="使用 Azure 表单识别器生成可搜索的 PDF">使用 Azure 表单识别器生成可搜索的 PDF</a>
+        <a href="https://beanhsiang.github.io/post/2022-10-18-generate-searchable-pdfs-with-azure-form-recognizer/" title="使用 Azure 表单识别器生成可搜索的 PDF" target="_blank">使用 Azure 表单识别器生成可搜索的 PDF</a>
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2022-10-14-make-use-of-the-training-code-behind-your-automatedml-model/" title="利用 AutomatedML 模型背后的训练代码">利用 AutomatedML 模型背后的训练代码</a>
+        <a href="https://beanhsiang.github.io/post/2022-10-14-make-use-of-the-training-code-behind-your-automatedml-model/" title="利用 AutomatedML 模型背后的训练代码" target="_blank">利用 AutomatedML 模型背后的训练代码</a>
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2022-10-13-enabling-deep-learning-with-azure-container-for-pytorch-in-azure/" title="在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习">在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习</a>
+        <a href="https://beanhsiang.github.io/post/2022-10-13-enabling-deep-learning-with-azure-container-for-pytorch-in-azure/" title="在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习" target="_blank">在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习</a>
     </li>
     
 </ul>
@@ -327,7 +416,7 @@
     
 
     <section class="widget">
-        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+        <h3 class="widget-title"><a href='/categories/'>Categories</a></h3>
 <ul class="widget-list">
     
     <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (9)</a></li>
@@ -338,7 +427,7 @@
     </section>
 
     <section class="widget">
-        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+        <h3 class="widget-title"><a href='/tags/'>Tags</a></h3>
 <div class="tagcloud">
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
@@ -350,7 +439,7 @@
 
     
 <section class="widget">
-    <h3 class="widget-title">友情链接</h3>
+    <h3 class="widget-title">Links</h3>
     <ul class="widget-list">
         
         <li>
@@ -362,9 +451,9 @@
 
 
     <section class="widget">
-        <h3 class="widget-title">其它</h3>
+        <h3 class="widget-title">Meta</h3>
         <ul class="widget-list">
-            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+            <li><a href="https://beanhsiang.github.io/index.xml">RSS</a></li>
         </ul>
     </section>
 </div>

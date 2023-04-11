@@ -6,7 +6,16 @@
     <description>Recent content in Azure AI on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Sun, 26 Feb 2023 11:15:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/categories/Azure-AI/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 11 Apr 2023 14:00:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/categories/Azure-AI/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>基于 LangChain 实现问答</title>
+      <link>https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/</link>
+      <pubDate>Tue, 11 Apr 2023 14:00:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/</guid>
+      <description>您是否有兴趣与自己的文档聊天，无论是文本文件、PDF 还是网站？LangChain 使您可以轻松地使用文档进行问答。在这篇博文中，我们将探讨四种不同的问答方法，以及您可以为案例考虑的各种选项。 在我们实现问答之前，您可能想知道：什么是 LangChain？简单来说，LangChain 是一</description>
+    </item>
+    
     <item>
       <title>在 Azure ML 中引入可缩放的企业级基因学工作流</title>
       <link>https://beanhsiang.github.io/post/2023-02-25-introducing-scalable-and-enterprise-grade-genomics-workflows-in/</link>

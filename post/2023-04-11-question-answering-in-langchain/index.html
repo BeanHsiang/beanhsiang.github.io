@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>基于 LangChain 实现问答 | Innovation with tech</title>
+    <meta property="og:title" content="基于 LangChain 实现问答 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2023-04-11T14:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2023-04-11T14:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="基于 LangChain 实现问答">
+        
+    <meta name="author" content="BeanHsiang">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">基于 LangChain 实现问答</h1>
+        </header>
+        
+  <time datetime="2023-04-11T06:00:00Z" class="post-meta meta-date dt-published">
+    2023年4月11日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>您是否有兴趣与自己的文档聊天，无论是文本文件、PDF 还是网站？LangChain 使您可以轻松地使用文档进行问答。在这篇博文中，我们将探讨四种不同的问答方法，以及您可以为案例考虑的各种选项。</p>
+<p>在我们实现问答之前，您可能想知道：什么是 <a href="https://python.langchain.com/en/latest/">LangChain</a>？简单来说，LangChain 是一种快速与语言模型交互和构建应用程序的开源框架，方便集成许多主流的 LLM 和组件扩展。</p>
+<p>现在让我们开始使用 LangChain 实现文档问答功能。</p>
+<h2 id="设置-openai-api">设置 OpenAI API</h2>
+<p>在 OpenAI 上创建一个帐户并创建一个API密钥：https://platform.openai.com/account 。您需要创建 Key 才能使用 OpenAI API。由于它太火爆了，因此使用起来不太理想。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">os</span> 
+</span></span><span style="display:flex;"><span>os<span style="color:#000;font-weight:bold">.</span>environ[<span style="color:#d14">&#34;OPENAI_API_KEY&#34;</span>] <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;COPY AND PASTE YOUR API KEY HERE&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当然还有一个对我们更友好的选择是 Azure OpenAI：https://azure.microsoft.com/zh-cn/products/cognitive-services/openai-service/ ，虽然也需要开通帐户付费，但它有很好的稳定性保障，还可以结合 Azure Functions 快速构建网络服务增加我们的应用能力。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>os<span style="color:#000;font-weight:bold">.</span>environ[<span style="color:#d14">&#34;OPENAI_API_TYPE&#34;</span>] <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;azure&#34;</span>
+</span></span><span style="display:flex;"><span>os<span style="color:#000;font-weight:bold">.</span>environ[<span style="color:#d14">&#34;OPENAI_API_BASE&#34;</span>] <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;https://your-resource-name.openai.azure.com&#34;</span>
+</span></span><span style="display:flex;"><span>os<span style="color:#000;font-weight:bold">.</span>environ[<span style="color:#d14">&#34;OPENAI_API_VERSION&#34;</span>] <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;RELEASED VERSION BASE ON YOUR MODEL&#34;</span>
+</span></span><span style="display:flex;"><span>os<span style="color:#000;font-weight:bold">.</span>environ[<span style="color:#d14">&#34;OPENAI_API_KEY&#34;</span>] <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;COPY AND PASTE YOUR Azure OpenAI API KEY HERE&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>或者，您可以使用 HuggingFace Hub 或其他地方的模型。</p>
+<h2 id="加载文档">加载文档</h2>
+<p>LangChain 支持许多文档加载器，如 Notion，YouTube 和 Figma。在此示例中，我想与我的 PDF 文件聊天。因此，我使用PyPDFLoader 来加载我的文件。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># load document</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.document_loaders</span> <span style="color:#000;font-weight:bold">import</span> PyPDFLoader
+</span></span><span style="display:flex;"><span>loader <span style="color:#000;font-weight:bold">=</span> PyPDFLoader(<span style="color:#d14">&#34;materials/example.pdf&#34;</span>)
+</span></span><span style="display:flex;"><span>documents <span style="color:#000;font-weight:bold">=</span> loader<span style="color:#000;font-weight:bold">.</span>load()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="方法一-load_qa_chain">方法一 load_qa_chain</h2>
+<p>load_qa_chain 提供用于回答问题的最通用界面。您可以输入问题，针对文档中的任意文本进行 QA。</p>
+<p>
+        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112027-2a4a2ef0-1fb7-46ee-8a64-adf9ddc47d17.png" />   
+    </p>
+<p>它还允许您对一组文档进行 QA：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#998;font-style:italic">### For multiple documents </span>
+</span></span><span style="display:flex;"><span>loaders <span style="color:#000;font-weight:bold">=</span> [<span style="color:#000;font-weight:bold">....</span>]
+</span></span><span style="display:flex;"><span>documents <span style="color:#000;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">for</span> loader <span style="color:#000;font-weight:bold">in</span> loaders:
+</span></span><span style="display:flex;"><span>    documents<span style="color:#000;font-weight:bold">.</span>extend(loader<span style="color:#000;font-weight:bold">.</span>load())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>但是，如果我的文档超长以至于超过了 Token 限制怎么办？</p>
+<p>有两种方法可以修复它：</p>
+<h4 id="解决方案1chain-type">解决方案1：Chain Type</h4>
+<p>默认 chain_type=&ldquo;stuff&rdquo; 会使用文档中的所有文本。它实际上不适用于我们的示例，因为它超出了 Token 限制并导致 rate-limiting 错误。这就是为什么在这个例子中，我们不得不使用其他 Chain Type，例如 &ldquo;map_reduce&rdquo;。其他 Chain Type 有哪些？</p>
+<ul>
+<li>map_reduce: 它将文本分成批（例如，您可以在 llm=OpenAI(batch_size=5) 中定义批大小），将每个批次的问题分别提供给 LLM，并根据每批的答案提出最终答案。</li>
+<li>refine: 它将文本分成几批，将第一批提供给 LLM，并将答案和第二批提供给 LLM。它通过遍历所有批次来细化答案。</li>
+<li>map-rerank: 它将文本分成几批，将每批提供给 LLM，返回它回答问题的完整程度的分数，并根据每批的高分答案提出最终答案。</li>
+</ul>
+<h4 id="解决方案2-retrievalqa">解决方案2: RetrievalQA</h4>
+<p>使用所有文本的一个问题是，它可能非常昂贵，因为您将所有文本提供给OpenAI API，并且API按 Token 数量收费。更好的解决方案是先检索相关文本块，然后仅在语言模型中使用相关文本块。接下来，我将详细介绍 RetrievalQA。</p>
+<h2 id="方法二-retrievalqa">方法二 RetrievalQA</h2>
+<p>RetrievalQA Chain 实际上在 load_qa_chain 下使用。我们检索最相关的文本块，并将其提供给语言模型。</p>
+<p>以下是它的工作原理：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.chains</span> <span style="color:#000;font-weight:bold">import</span> RetrievalQA
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.indexes</span> <span style="color:#000;font-weight:bold">import</span> VectorstoreIndexCreator
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.text_splitter</span> <span style="color:#000;font-weight:bold">import</span> CharacterTextSplitter
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.embeddings</span> <span style="color:#000;font-weight:bold">import</span> OpenAIEmbeddings
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.vectorstores</span> <span style="color:#000;font-weight:bold">import</span> Chroma
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># split the documents into chunks</span>
+</span></span><span style="display:flex;"><span>text_splitter <span style="color:#000;font-weight:bold">=</span> CharacterTextSplitter(chunk_size<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1000</span>, chunk_overlap<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0</span>)
+</span></span><span style="display:flex;"><span>texts <span style="color:#000;font-weight:bold">=</span> text_splitter<span style="color:#000;font-weight:bold">.</span>split_documents(documents)
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># select which embeddings we want to use</span>
+</span></span><span style="display:flex;"><span>embeddings <span style="color:#000;font-weight:bold">=</span> OpenAIEmbeddings()
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># create the vectorestore to use as the index</span>
+</span></span><span style="display:flex;"><span>db <span style="color:#000;font-weight:bold">=</span> Chroma<span style="color:#000;font-weight:bold">.</span>from_documents(texts, embeddings)
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># expose this index in a retriever interface</span>
+</span></span><span style="display:flex;"><span>retriever <span style="color:#000;font-weight:bold">=</span> db<span style="color:#000;font-weight:bold">.</span>as_retriever(search_type<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;similarity&#34;</span>, search_kwargs<span style="color:#000;font-weight:bold">=</span>{<span style="color:#d14">&#34;k&#34;</span>:<span style="color:#099">2</span>})
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># create a chain to answer questions </span>
+</span></span><span style="display:flex;"><span>qa <span style="color:#000;font-weight:bold">=</span> RetrievalQA<span style="color:#000;font-weight:bold">.</span>from_chain_type(
+</span></span><span style="display:flex;"><span>    llm<span style="color:#000;font-weight:bold">=</span>OpenAI(), chain_type<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;stuff&#34;</span>, retriever<span style="color:#000;font-weight:bold">=</span>retriever, return_source_documents<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>)
+</span></span><span style="display:flex;"><span>query <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;How many AI publications in 2021?&#34;</span>
+</span></span><span style="display:flex;"><span>result <span style="color:#000;font-weight:bold">=</span> qa({<span style="color:#d14">&#34;query&#34;</span>: query})
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在结果中，我们可以看到答案和两个源文档，因为我们将 k 定义为 2，这意味着我们只对获取两个相关的文本块感兴趣。
+
+        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112219-fa99d5cc-a649-404f-bfa3-325584c3d5e2.png" />   
+    </p>
+<h3 id="可选">可选</h3>
+<p>在此过程中，有多种选项供您选择：</p>
+<ul>
+<li>embeddings: 在示例中，我们使用了 OpenAI 嵌入。但是还有许多其他嵌入选项，例如来自特定模型的 Cohere Embeddings 和 HuggingFace Embeddings。</li>
+<li>TextSplitter: 我们在文本按单个字符拆分的示例中使用了字符文本拆分器。您还可以使用本文档中提到的不同文本拆分器和不同标记。</li>
+<li>VectorStore: 我们使用 Chroma 作为我们的 Vector 数据库，我们在其中存储我们的嵌入的 Vector。另外受欢迎的选择是 FAISS，Milvus 和 Pinecone。</li>
+<li>Retrievers: 我们使用了 VectoreStoreRetriver，它由 VectorStore 支持。要检索文本，您可以选择两种 search_type 搜索类型：“similarity” 或 “mmr”。search_type=&ldquo;similarity&rdquo; 在检索器对象中使用相似性搜索，在其中选择与问题向量最相似的文本块向量。search_type=&ldquo;mmr&rdquo; 使用最大边际相关性搜索，其中优化相似性以查询所选文档之间的多样性。</li>
+<li>Chain Type: 与方法1相同。您还可以将链类型定义为四个选项之一： “stuff”, “map reduce”, “refine”, “map_rerank”。</li>
+</ul>
+<h2 id="方法三-vectorstoreindexcreator">方法三 VectorstoreIndexCreator</h2>
+<p>VectorstoreIndexCreator 是上述功能的包装器。它只是公开了一个更高级别的接口，让您从三行代码开始：
+
+        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112253-432c8711-4b61-42af-a002-a7dbf27c78d4.png" />   
+    </p>
+<p>当然，您也可以在此包装器中指定不同的选项：
+
+        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112289-f0a3f94f-47e5-4e18-9533-732d1e271b94.png" />   
+    </p>
+<h2 id="方法四-conversationalretrievalchain">方法四 ConversationalRetrievalChain</h2>
+<p>ConversationalRetrievalChain 与方法二 RetrievalQA 非常相似。它添加了一个附加参数 chat_history 来传入聊天记录，可用于后续问题。</p>
+<p>ConversationalRetrievalChain = conversation memory + RetrievalQAChain</p>
+<p>如果希望语言模型具有上一个对话的记忆，请使用此方法。在下面的例子中，我询问了AI出版物的数量，并得到了500，000的结果。然后我要求 LLM 将这个数字除以2。由于它有所有的聊天记录，模型知道我所指的数字是 500，000，返回的结果是 250，000。
+
+        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112325-ac4b8d2e-e619-48ca-b0c8-c5c73eceb3a3.png" />   
+    </p>
+<h2 id="小结">小结</h2>
+<p>现在您知道了在 LangChain 中使用 LLM 进行问答的四种方法。总之，load_qa_chain 使用所有文本并接受多个文档。检索 QA 在后台使用 load_qa_chain，但首先检索相关的文本块。VectorstoreIndexCreator 与 RetrievalQA 相同，具有更高级别的接口。当您想要将聊天记录传递给模型时，ConversationalRetrievalChain 非常有用。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/">https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2023-02-25-introducing-scalable-and-enterprise-grade-genomics-workflows-in/">在 Azure ML 中引入可缩放的企业级基因学工作流</a></li>
+        
+        <li><a href="/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/">3个加速语言学习的微软 Azure AI 产品功能</a></li>
+        
+        <li><a href="/post/2023-02-21-train-and-benchmark-a-custom-forms-recognizer-using-forms/">训练自定义表单识别器并对其进行基准测试</a></li>
+        
+        <li><a href="/post/2022-12-10-the-ai-technology-that-predicts-which-clothing-items-appearing/">AI 预测你在视频中可能购买哪些服装</a></li>
+        
+        <li><a href="/post/2022-10-18-generate-searchable-pdfs-with-azure-form-recognizer/">使用 Azure 表单识别器生成可搜索的 PDF</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Azure-AI' target="_blank">Azure AI</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2023 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/" title="基于 LangChain 实现问答" target="_blank">基于 LangChain 实现问答</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性" target="_blank">ML.NET Model Builder 中的句子相似性</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-02-25-introducing-scalable-and-enterprise-grade-genomics-workflows-in/" title="在 Azure ML 中引入可缩放的企业级基因学工作流" target="_blank">在 Azure ML 中引入可缩放的企业级基因学工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/" title="3个加速语言学习的微软 Azure AI 产品功能" target="_blank">3个加速语言学习的微软 Azure AI 产品功能</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-02-21-train-and-benchmark-a-custom-forms-recognizer-using-forms/" title="训练自定义表单识别器并对其进行基准测试" target="_blank">训练自定义表单识别器并对其进行基准测试</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/" title="使用 Intel oneDAL 加速 ML.NET 训练" target="_blank">使用 Intel oneDAL 加速 ML.NET 训练</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2022-12-10-the-ai-technology-that-predicts-which-clothing-items-appearing/" title="AI 预测你在视频中可能购买哪些服装" target="_blank">AI 预测你在视频中可能购买哪些服装</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/" title="ML.NET 2.0 更新内容" target="_blank">ML.NET 2.0 更新内容</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2022-10-18-generate-searchable-pdfs-with-azure-form-recognizer/" title="使用 Azure 表单识别器生成可搜索的 PDF" target="_blank">使用 Azure 表单识别器生成可搜索的 PDF</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2022-10-14-make-use-of-the-training-code-behind-your-automatedml-model/" title="利用 AutomatedML 模型背后的训练代码" target="_blank">利用 AutomatedML 模型背后的训练代码</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (10)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://www.xiaobaoonline.com/" title="校宝在线">校宝在线</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

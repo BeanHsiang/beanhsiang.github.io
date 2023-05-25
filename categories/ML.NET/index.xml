@@ -6,7 +6,16 @@
     <description>Recent content in ML.NET on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Thu, 02 Mar 2023 13:23:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/categories/ML.NET/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 May 2023 12:20:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/categories/ML.NET/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ML.NET Model Builder 中的对象检测</title>
+      <link>https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/</link>
+      <pubDate>Sat, 20 May 2023 12:20:00 +0800</pubDate>
+      
+      <guid>https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/</guid>
+      <description>ML.NET 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。 新版本的 Model Builder 现已推出，其中包括对使用本地 CPU 或 GPU 进行对象检测的支持。 什么是对象检测？ 物体检测是一个计算机视觉问题。虽然与图像分类密切相关，但对象检测以更精细的规模执行图像分类。对象检测可对图像中的</description>
+    </item>
+    
     <item>
       <title>ML.NET Model Builder 中的句子相似性</title>
       <link>https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/</link>

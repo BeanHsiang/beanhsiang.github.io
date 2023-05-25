@@ -9,20 +9,20 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
     
 
-    <title>在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习 | Innovation with tech</title>
-    <meta property="og:title" content="在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习 - Innovation with tech">
+    <title>ML.NET Model Builder 中的对象检测 | Innovation with tech</title>
+    <meta property="og:title" content="ML.NET Model Builder 中的对象检测 - Innovation with tech">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content='2022-10-13T11:00:00&#43;08:00'>
+    <meta property="article:published_time" content='2023-05-20T12:20:00&#43;08:00'>
         
         
-    <meta property="article:modified_time" content='2022-10-13T11:00:00&#43;08:00'>
+    <meta property="article:modified_time" content='2023-05-20T12:20:00&#43;08:00'>
         
     <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
-    <meta name="description" content="在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习">
+    <meta name="description" content="ML.NET Model Builder 中的对象检测">
         
     <meta name="author" content="BeanHsiang">
-    <meta property="og:url" content="https://beanhsiang.github.io/post/2022-10-13-enabling-deep-learning-with-azure-container-for-pytorch-in-azure/">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/">
     <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
 
     <link rel="stylesheet" href='/css/normalize.css'>
@@ -75,18 +75,18 @@
     
     <article class="post">
         <header>
-            <h1 class="post-title">在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习</h1>
+            <h1 class="post-title">ML.NET Model Builder 中的对象检测</h1>
         </header>
         
-  <time datetime="2022-10-13T03:00:00Z" class="post-meta meta-date dt-published">
-    2022年10月13日
+  <time datetime="2023-05-20T04:20:00Z" class="post-meta meta-date dt-published">
+    2023年5月20日
   </time>
 
 
 <div class="post-meta meta-category">
   <span>&nbsp;|</span>
   
-    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+    <a href='/categories/ML.NET' target="_blank">ML.NET</a>
   
 </div>
 
@@ -100,40 +100,75 @@
         
         
         <div class="post-content">
-            <h2 id="概述">概述</h2>
-<p>由于AzureML是许多PyTorch开发人员的首选平台，我们开发了新的Azure Container for PyTorch（ACPT），这是一个精心策划的环境，包括最好的Microsoft技术，用于在Azure上使用PyTorch进行训练。我们很高兴地宣布 Azure 机器学习 （AzureML） 中的 ACPT 公共预览版。这个新的特选环境是一个轻量级的独立环境，其中包含在 AzureML 上有效运行大型模型优化训练所需的组件。默认情况下，AzureML 特选环境在用户的工作区中可用，并由使用最新版本的 AzureML SDK 的缓存 Docker 映像提供支持。它有助于降低准备成本并缩短部署时间。</p>
-<p>ACPT策划环境扩展了我们现有的 PyTorch 策划环境 ，包括最新的PyTorch版本，针对数十种生产模型进行了测试和验证，以确保高质量，同时还提供各种用于训练和优化的Microsoft技术，例如 ONNX Runtime 和 DeepSpeed。 所有组件都已安装并经过验证，以降低设置成本并加快客户计量机的训练时间。</p>
+            <p><a href="https://dot.net/ml?WT.mc_id=AI-MVP-5003172">ML.NET</a> 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。</p>
+<p>新版本的 <a href="https://marketplace.visualstudio.com/items?itemName=MLNET.ModelBuilder2022">Model Builder</a> 现已推出，其中包括对使用本地 CPU 或 GPU 进行对象检测的支持。</p>
+<h2 id="什么是对象检测">什么是对象检测？</h2>
+<p>物体检测是一个计算机视觉问题。虽然与图像分类密切相关，但对象检测以更精细的规模执行图像分类。对象检测可对图像中的实体进行定位和分类。当图像包含多个不同类型的对象时，使用对象检测。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/223963780-315d551c-1553-4831-934c-842ce096c976.png" />   
+        <img class="mx-auto" alt="image" src="https://github.com/BeanHsiang/minesite/assets/3881276/e7015863-b456-42c5-aba5-31943cbdb370" />   
     </p>
-<p><em>ACPT 精选的环境属性和说明。</em></p>
-<h2 id="优点">优点</h2>
-<p>使用 ACPT 特选环境的优点包括：</p>
+<p>对象检测的一些用例包括：</p>
 <ul>
-<li>优化的训练框架，用于在大型工作负载上设置、开发和加速 PyTorch 模型。</li>
-<li>最新的堆栈，包含Ubuntu，Python，PyTorch，CUDA\RocM等的最新兼容版本。</li>
-<li>易用性：针对数十个 Microsoft 工作负载安装和验证所有组件，以降低设置成本并加快价值实现速度</li>
-<li>最新的训练优化技术：Onnx / Onnx Runtime / Onnx Runtime Training，ORT MoE，DeepSpeed， MSCCL等。</li>
-<li>与 Azure ML 集成：在 ML Studio 上或使用 AML SDK 跟踪 PyTorch 实验</li>
-<li>按原样与预安装的软件包一起使用，或在精选环境之上构建</li>
-<li>该映像也可用作 DSVM</li>
-<li>Azure 客户支持</li>
+<li>工作场所安全</li>
+<li>对象计数</li>
+<li>活动识别</li>
+<li>机器人</li>
+<li>自动驾驶汽车</li>
 </ul>
-<h2 id="指标和数据">指标和数据</h2>
-<p>ACPT 环境使我们的客户能够有效地训练 PyTorch 模型。容器中组合的 ONNX Runtime 和 DeepSpeed 等优化库可以将生产速度从常规 PyTorch 工作负载提高到 54% 到 163%，如在各种 HuggingFace 模型上看到的那样。</p>
+<h2 id="model-builder-中的对象检测">Model Builder 中的对象检测</h2>
+<p>我们很高兴地宣布，您现在可以使用本地 CPU 或 GPU 在 Model Builder 中训练对象检测模型。</p>
+<p>Model Builder 中的本地对象检测方案由 ML.NET 中的对象检测 API 提供支持。</p>
+<p>与文本分类和句子相似性等 ML.NET 中的其他深度学习 API 类似，对象检测 API 是一个高级抽象，只需提供数据和一些参数即可帮助指导模型训练过程。</p>
+<p>在幕后，对象检测API利用了微软研究院的一些最新技术，并由使用TorchSharp构建的基于变压器的神经网络架构提供支持。有关基础模型的更多详细信息，请参阅<a href="https://arxiv.org/pdf/2111.14725.pdf">搜索视觉转换器的空间论文</a>。</p>
+<p>通过将对象检测 API 集成到 Model Builder 等工具中，我们使开始使用对象检测 API 的过程变得更加容易。</p>
+<p>如果没有 GPU 或需要比设备上可用的计算更强大的计算，还可以选择使用 Azure。</p>
+<h2 id="本地对象检测入门">本地对象检测入门</h2>
+<p>下载或更新到最新版本的 Model Builder</p>
+<ol>
+<li>
+<p>通过右键单击 .NET 项目启动 Model Builder ，然后选择“添加机器学习模型&gt;</p>
 <p>
-        <img class="mx-auto" alt="image2" src="https://user-images.githubusercontent.com/3881276/223964283-7a9f5bbe-a370-4c98-8605-7b98b82145b5.png" />   
+        <img class="mx-auto" alt="image" src="https://github.com/BeanHsiang/minesite/assets/3881276/3b66fe44-b7ba-458f-bf40-bb027b08321f" />   
     </p>
-<p><em>拥抱面部模型的指标</em></p>
-<p>ACPT 通过在更短的时间内执行相同的训练作业来降低计算成本。训练运行也很容易跟踪，因为特选环境与AzureML工具（如Azure机器学习工作室和AzureML SDK）集成在一起。</p>
-<p>下面是一个 NLP 产品审查微调训练运行的示例，大约需要两个小时才能完成。</p>
+</li>
+<li>
+<p>选择对象检测方案。</p>
 <p>
-        <img class="mx-auto" alt="image3" src="https://user-images.githubusercontent.com/3881276/223964393-ff6233e5-6aa3-4cfa-94eb-a96fce0b8731.png" />   
+        <img class="mx-auto" alt="image" src="https://github.com/BeanHsiang/minesite/assets/3881276/4abe3cf1-3b6a-40ad-9e28-fcbbe9ad1c58" />   
     </p>
-<p>使用ACPT策划的环境，我们观察到使用DeepSpeed的Finetune HuggingFace分类器将整体训练时间减少到45分钟多一点。 在此模型上，训练时间减少了 62%。</p>
+</li>
+<li>
+<p>选择其中一个本地环境或 Azure。如果您有 GPU，我们强烈建议您使用。有关在 Model Builder 中使用 GPU 的更多详细信息，请参阅 <a href="https://learn.microsoft.com/dotnet/machine-learning/how-to-guides/install-gpu-model-builder?WT.mc_id=AI-MVP-5003172">Model Builder GPU 指南</a>。</p>
 <p>
-        <img class="mx-auto" alt="image4" src="https://user-images.githubusercontent.com/3881276/223964523-91a43eb0-fccd-4680-8ade-398d2172af51.png" />   
+        <img class="mx-auto" alt="image" src="https://github.com/BeanHsiang/minesite/assets/3881276/7902d43c-f214-4a04-86b5-30eb3bed0161" />   
     </p>
+</li>
+<li>
+<p>添加您的数据。Model Builder 同时支持 VoTT 和 COCO 格式。</p>
+<p>
+        <img class="mx-auto" alt="image" src="https://github.com/BeanHsiang/minesite/assets/3881276/1074bb26-d99d-49bf-9684-42efbbb539bb" />   
+    </p>
+</li>
+<li>
+<p>训练模型。这可能需要几分钟时间，具体取决于你拥有的数据量以及用于训练模型的硬件。</p>
+<p>
+        <img class="mx-auto" alt="image" src="https://github.com/BeanHsiang/minesite/assets/3881276/db2d550a-939b-46b3-9bd0-a6d3ad466c06" />   
+    </p>
+</li>
+<li>
+<p>尝试一些图像，以查看模型是否按预期工作。</p>
+<p>
+        <img class="mx-auto" alt="image" src="https://github.com/BeanHsiang/minesite/assets/3881276/cb5e6653-2fa9-4b3c-9aac-75ee6f1cbf3b" />   
+    </p>
+</li>
+</ol>
+<p>此时，可以转到后续步骤，并在 .NET 应用程序中使用模型。</p>
+<p>有关更多详细信息，请查看 <a href="https://learn.microsoft.com/dotnet/machine-learning/tutorials/object-detection-model-builder?WT.mc_id=AI-MVP-5003172">Model Builder 对象检测教程</a></p>
+<h2 id="入门和资源">入门和资源</h2>
+<p>在 <a href="https://learn.microsoft.com/dotnet/machine-learning/?WT.mc_id=AI-MVP-5003172">Microsoft Docs</a> 中了解有关 ML.NET、Model Builder 和 ML.NET CLI 的更多信息。</p>
+<p>如果遇到任何问题、功能请求或反馈，请在 <a href="https://github.com/dotnet/machinelearning/issues">ML.NET</a> 和 <a href="https://github.com/dotnet/machinelearning-modelbuilder/issues">Model Builder</a> 存储库中提交问题。</p>
+<p>加入 <a href="https://aka.ms/dotnet-discord">.NET 开发 Discord</a> 上的 <a href="https://aka.ms/virtual-mlnet-community-discord">ML.NET 社区 Discord </a>或#machine-learning 频道。</p>
+<p>收听<a href="https://dotnet.microsoft.com/live/community-standup">.NET 社区机器学习站立会议</a>。</p>
 
         </div>
 
@@ -141,7 +176,7 @@
 <div class="post-archive">
     <ul class="post-copyright">
         <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
-        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2022-10-13-enabling-deep-learning-with-azure-container-for-pytorch-in-azure/">https://beanhsiang.github.io/post/2022-10-13-enabling-deep-learning-with-azure-container-for-pytorch-in-azure/</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/">https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/</a></li>
         <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
     </ul>
 </div>
@@ -155,15 +190,15 @@
     <h2>相关文章</h2>
     <ul class="listing">
         
-        <li><a href="/post/2022-07-02-azure-cognitive-search-now-supports-swapping-indexes/">Azure Cognitive Search 支持交换索引</a></li>
+        <li><a href="/post/2023-03-02-sentence-similarity-mlnet-model-builder/">ML.NET Model Builder 中的句子相似性</a></li>
         
-        <li><a href="/post/2022-06-22-azure-machine-learning-s-new-integration-with-h2o-ai/">Azure 机器学习与 H2O.ai 的新集成</a></li>
+        <li><a href="/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/">使用 Intel oneDAL 加速 ML.NET 训练</a></li>
+        
+        <li><a href="/post/2022-11-20-mlnet-2_0-content/">ML.NET 2.0 更新内容</a></li>
         
         <li><a href="/post/2021-09-21-mlnet-deep-learning-plans/">有关 ML.NET 深度学习的计划</a></li>
         
         <li><a href="/post/2021-09-02-mlnet-cheatsheet/">ML.NET 代码速查手册，高清图手慢无！</a></li>
-        
-        <li><a href="/post/2021-08-07-mlnet-1_6-interesting-content/">ML.NET v1.6 中有趣的内容</a></li>
         
     </ul>
 </div>
@@ -173,7 +208,7 @@
             
             <ul class="clearfix">
                 
-                <li><a href='/tags/Azure-AI' target="_blank">Azure AI</a></li>
+                <li><a href='/tags/ML.NET' target="_blank">ML.NET</a></li>
                 
             </ul>
             

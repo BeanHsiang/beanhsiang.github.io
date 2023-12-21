@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Sat, 20 May 2023 12:20:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 09 Dec 2023 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>多种环境部署 Azure 机器学习 Prompt Flow</title>
+      <link>https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/</link>
+      <pubDate>Sat, 09 Dec 2023 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/</guid>
+      <description>Prompt Flow 在 Azure 机器学习工作室、Azure AI Studio 和本地开发笔记本电脑上提供，是一种开发工具，旨在简化由 LLM（大型语言模型）提供支持的 AI 应用程序的整个开发周期。Prompt Flow 使提示处于前端和中心，而不是像其他工具那样混淆它们或将它们深埋在抽象层中。这种方法不仅允许开发人员构建编排，还可以像</description>
+    </item>
     <item>
       <title>ML.NET Model Builder 中的对象检测</title>
       <link>https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/</link>
@@ -126,13 +133,6 @@
       <pubDate>Sat, 07 Aug 2021 19:53:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2021-08-07-mlnet-1_6-interesting-content/</guid>
       <description>ML.NET v1.6 发布有一段时间了，所有详细信息在此，可以了解到更多细节或实现，本文把比较新鲜有趣的内容摘要出来。 此版本中增加了很多东西，但它们确实注意到，添加的所有内容都没有中断更改。 支持 ARM 这次更新最令人兴奋的部分是对ARM架构的新支持。这将允许在 ML.NET 进行大多数场景的训练和推论项目。ARM架构</description>
-    </item>
-    <item>
-      <title>多种环境部署 Azure 机器学习 Prompt Flow</title>
-      <link>https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/</guid>
-      <description>Prompt Flow 在 Azure 机器学习工作室、Azure AI Studio 和本地开发笔记本电脑上提供，是一种开发工具，旨在简化由 LLM（大型语言模型）提供支持的 AI 应用程序的整个开发周期。Prompt Flow 使提示处于前端和中心，而不是像其他工具那样混淆它们或将它们深埋在抽象层中。这种方法不仅允许开发人员构建编排，还可以像</description>
     </item>
   </channel>
 </rss>

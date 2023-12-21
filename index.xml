@@ -6,8 +6,15 @@
     <description>Recent content on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Sat, 20 May 2023 12:20:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 09 Dec 2023 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>多种环境部署 Azure 机器学习 Prompt Flow</title>
+      <link>https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/</link>
+      <pubDate>Sat, 09 Dec 2023 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/</guid>
+      <description>Prompt Flow 在 Azure 机器学习工作室、Azure AI Studio 和本地开发笔记本电脑上提供，是一种开发工具，旨在简化由 LLM（大型语言模型）提供支持的 AI 应用程序的整个开发周期。Prompt Flow 使提示处于前端和中心，而不是像其他工具那样混淆它们或将它们深埋在抽象层中。这种方法不仅允许开发人员构建编排，还可以像</description>
+    </item>
     <item>
       <title>ML.NET Model Builder 中的对象检测</title>
       <link>https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/</link>
@@ -133,13 +140,6 @@
       <pubDate>Tue, 15 Jun 2021 10:08:43 +0800</pubDate>
       <guid>https://beanhsiang.github.io/about/</guid>
       <description>《PyTorch机器学习从入门到实战》联名作者 购买入口 微软 MVP（AI）</description>
-    </item>
-    <item>
-      <title>多种环境部署 Azure 机器学习 Prompt Flow</title>
-      <link>https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/</guid>
-      <description>Prompt Flow 在 Azure 机器学习工作室、Azure AI Studio 和本地开发笔记本电脑上提供，是一种开发工具，旨在简化由 LLM（大型语言模型）提供支持的 AI 应用程序的整个开发周期。Prompt Flow 使提示处于前端和中心，而不是像其他工具那样混淆它们或将它们深埋在抽象层中。这种方法不仅允许开发人员构建编排，还可以像</description>
     </item>
     <item>
       <title>归档</title>

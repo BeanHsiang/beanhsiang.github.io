@@ -6,69 +6,56 @@
     <description>Recent content in ML.NET on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Sat, 20 May 2023 12:20:00 +0800</lastBuildDate><atom:link href="https://beanhsiang.github.io/tags/ML.NET/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 May 2023 12:20:00 +0800</lastBuildDate>
+    <atom:link href="https://beanhsiang.github.io/tags/ML.NET/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>ML.NET Model Builder 中的对象检测</title>
       <link>https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/</link>
       <pubDate>Sat, 20 May 2023 12:20:00 +0800</pubDate>
-      
       <guid>https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/</guid>
       <description>ML.NET 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。 新版本的 Model Builder 现已推出，其中包括对使用本地 CPU 或 GPU 进行对象检测的支持。 什么是对象检测？ 物体检测是一个计算机视觉问题。虽然与图像分类密切相关，但对象检测以更精细的规模执行图像分类。对象检测可对图像中的</description>
     </item>
-    
     <item>
       <title>ML.NET Model Builder 中的句子相似性</title>
       <link>https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/</link>
       <pubDate>Thu, 02 Mar 2023 13:23:00 +0800</pubDate>
-      
       <guid>https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/</guid>
       <description>ML.NET 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。 新版本的 Model Builder 现已发布！ 有什么新变化？ 以下是此版本的亮点。您可以在 Model Builder 发行说明中找到所有更改的列表。 要开始使用这些新功能，请安装或升级到最新版本的 Model Builder 16.14.4 或更高版本。 Model Builder中的句子相似性 句</description>
     </item>
-    
     <item>
       <title>使用 Intel oneDAL 加速 ML.NET 训练</title>
       <link>https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/</link>
       <pubDate>Fri, 23 Dec 2022 12:24:00 +0800</pubDate>
-      
       <guid>https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/</guid>
       <description>ML.NET 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。 ML.NET 3.0 的第一个预览版带来了多项硬件加速改进，使你可以在训练期间充分利用计算资源。安装最新的 ML.NET 3.0 和Intel oneDAL 预览包，试用由 Intel oneDAL 提供支持的最新改进。 什么是 oneAPI Data Analytics Library（oneDAL） Intel oneAPI Data Analytics</description>
     </item>
-    
     <item>
       <title>ML.NET 2.0 更新内容</title>
       <link>https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/</link>
       <pubDate>Sun, 20 Nov 2022 18:12:00 +0800</pubDate>
-      
       <guid>https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/</guid>
       <description>ML.NET v2.0 比较低调地在11月发布了，所有 ML.NET 2.0 和 Model Builder 的更新信息在此，可以从中了解到更多细节或实现，本文把值得关注的内容摘要出来。 新版本的 ML.NET 2.0 和 Model Builder 2022 目前都已发布。 Model Builder 中的文本分类场景 几个月前发布的文本分类 API 的预览版，使开发者能够训练对原始文本数据进行分类的自定义模型。它通过将 NAS-BERT 的 TorchSharp 实现集</description>
     </item>
-    
     <item>
       <title>有关 ML.NET 深度学习的计划</title>
       <link>https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/</link>
       <pubDate>Tue, 21 Sep 2021 16:43:00 +0800</pubDate>
-      
       <guid>https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/</guid>
       <description>ML.NET 最需要的功能之一是能够从零开始创建神经网络模型，以便在 ML.NET 中进行深度学习。ML.NET 团队已经采纳了用户调研的反馈，并制定了开始实施此功能的计划。 ML.NET 深度学习的现状 目前，ML.NET 没有一种方法可以创建神经网络，从零开始建立深度学习模型。然而，对于采用现有的深度学习模型并将其用于预</description>
     </item>
-    
     <item>
       <title>ML.NET 代码速查手册，高清图手慢无！</title>
       <link>https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/</link>
       <pubDate>Wed, 01 Sep 2021 22:15:00 +0800</pubDate>
-      
       <guid>https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/</guid>
       <description>ML.NET 是面向.NET开发人员的跨平台机器学习框架，它具备在联机或本地环境中将机器学习模型集成到 .NET 应用程序中的能力。 2002 年微软启动有一个研究项目命名为 TMSN，其意在“Test mining search and navigation”，后来它被改名为 TLC（The learning code）。ML.NET 正是派生自 TLC 库，最初被用于微</description>
     </item>
-    
     <item>
       <title>ML.NET v1.6 中有趣的内容</title>
       <link>https://beanhsiang.github.io/post/2021-08-07-mlnet-1_6-interesting-content/</link>
       <pubDate>Sat, 07 Aug 2021 19:53:00 +0800</pubDate>
-      
       <guid>https://beanhsiang.github.io/post/2021-08-07-mlnet-1_6-interesting-content/</guid>
       <description>ML.NET v1.6 发布有一段时间了，所有详细信息在此，可以了解到更多细节或实现，本文把比较新鲜有趣的内容摘要出来。 此版本中增加了很多东西，但它们确实注意到，添加的所有内容都没有中断更改。 支持 ARM 这次更新最令人兴奋的部分是对ARM架构的新支持。这将允许在 ML.NET 进行大多数场景的训练和推论项目。ARM架构</description>
     </item>
-    
   </channel>
 </rss>

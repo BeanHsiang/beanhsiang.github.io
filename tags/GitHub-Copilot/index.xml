@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GitHub Copilot on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/tags/GitHub-Copilot/</link>
+    <description>Recent content in GitHub Copilot on Innovation with tech</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-Hans</language>
+    <lastBuildDate>Wed, 07 Jun 2023 12:00:00 +0800</lastBuildDate>
+    <atom:link href="https://beanhsiang.github.io/tags/GitHub-Copilot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 GitHub Copilot 的自动错误检测和纠正增强调试</title>
+      <link>https://beanhsiang.github.io/post/2023-06-07-enhancing-debugging-with-github-copilot/</link>
+      <pubDate>Wed, 07 Jun 2023 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2023-06-07-enhancing-debugging-with-github-copilot/</guid>
+      <description>GitHub Copilot 的自动错误检测和纠正如何帮助简化调试 对于软件开发人员来说，调试可能是一个繁琐且耗时的过程。它需要仔细分析代码以识别和修复错误，并且通常需要数小时或数天才能完成。幸运的是，GitHub Copilot 开发了一个自动错误检测和纠正系统，可以帮助简化调试过程。 GitHub Copilot 的自动错误检测和纠正系统使用机器</description>
+    </item>
+  </channel>
+</rss>

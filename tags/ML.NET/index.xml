@@ -6,8 +6,15 @@
     <description>Recent content in ML.NET on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Sat, 20 May 2023 12:20:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 03 Dec 2023 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/ML.NET/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ML.NET 3.0 更新内容</title>
+      <link>https://beanhsiang.github.io/post/2023-12-03-announcing-ml-net-3-0/</link>
+      <pubDate>Sun, 03 Dec 2023 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2023-12-03-announcing-ml-net-3-0/</guid>
+      <description>由于大模型的爆火，ML.NET 似乎快被遗忘在角落了，这次3.0版本的发布意外中带着些欣喜。总结其新特性和改进主要包括以下几个方面： 深度学习场景的扩展 ML.NET 3.0增加了对象检测、命名实体识别和问答等深度学习场景的支持，这些场景都是基于 TorchSharp 和 ONNX 模型的集成和互操作性实现的。此外，还更新了与 LightGBM</description>
+    </item>
     <item>
       <title>ML.NET Model Builder 中的对象检测</title>
       <link>https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/</link>

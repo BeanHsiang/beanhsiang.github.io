@@ -16,6 +16,13 @@
       <description>Prompt Flow 在 Azure 机器学习工作室、Azure AI Studio 和本地开发笔记本电脑上提供，是一种开发工具，旨在简化由 LLM（大型语言模型）提供支持的 AI 应用程序的整个开发周期。Prompt Flow 使提示处于前端和中心，而不是像其他工具那样混淆它们或将它们深埋在抽象层中。这种方法不仅允许开发人员构建编排，还可以像</description>
     </item>
     <item>
+      <title>ML.NET 3.0 更新内容</title>
+      <link>https://beanhsiang.github.io/post/2023-12-03-announcing-ml-net-3-0/</link>
+      <pubDate>Sun, 03 Dec 2023 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2023-12-03-announcing-ml-net-3-0/</guid>
+      <description>由于大模型的爆火，ML.NET 似乎快被遗忘在角落了，这次3.0版本的发布意外中带着些欣喜。总结其新特性和改进主要包括以下几个方面： 深度学习场景的扩展 ML.NET 3.0增加了对象检测、命名实体识别和问答等深度学习场景的支持，这些场景都是基于 TorchSharp 和 ONNX 模型的集成和互操作性实现的。此外，还更新了与 LightGBM</description>
+    </item>
+    <item>
       <title>在 VS Code 里用 GitHub Copilot 编写代码</title>
       <link>https://beanhsiang.github.io/post/2023-11-27-coding-with-github-copilot-in-vs-code/</link>
       <pubDate>Mon, 27 Nov 2023 12:00:00 +0800</pubDate>

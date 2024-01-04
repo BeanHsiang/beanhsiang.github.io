@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>FireUG on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/categories/FireUG/</link>
+    <description>Recent content in FireUG on Innovation with tech</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-Hans</language>
+    <lastBuildDate>Sat, 30 Dec 2023 12:00:00 +0800</lastBuildDate>
+    <atom:link href="https://beanhsiang.github.io/categories/FireUG/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FireUG 2023 年度回顾</title>
+      <link>https://beanhsiang.github.io/post/2023-12-30-fireug-review-2023/</link>
+      <pubDate>Sat, 30 Dec 2023 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2023-12-30-fireug-review-2023/</guid>
+      <description>2023 年 FireUG 技术社区在内容方面做了一些调整，把程序员的日常关注和专业技能的提升分开，这样便于利用不同的时间段观看自己感兴趣的内容。 系列公开课的内容如下： 公开课｜DDD领域驱动设计 讲师：肖伟宇 期数：共14期（完结） 入口：去观看 公开课｜AzureDevOps实战 讲师：骆姜斌 期数：共5期（未</description>
+    </item>
+  </channel>
+</rss>

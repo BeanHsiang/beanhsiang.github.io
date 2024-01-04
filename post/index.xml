@@ -16,6 +16,13 @@
       <description>Azure 机器学习 （AzureML） 与价值驱动 AI 领导者 DataRobot 之间的突破性集成，这是最近宣布的合作伙伴关系的结果。这种集成将 Azure 机器学习功能的强大功能与 DataRobot 在加速构建、部署和监视企业级 AI 解决方案的整个生命周期方面的专业知识结合在一起。 DataRobot AI 平台独特地将生成式和预测性 AI 功能结合在一个统一、开放和端到端</description>
     </item>
     <item>
+      <title>FireUG 2023 年度回顾</title>
+      <link>https://beanhsiang.github.io/post/2023-12-30-fireug-review-2023/</link>
+      <pubDate>Sat, 30 Dec 2023 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2023-12-30-fireug-review-2023/</guid>
+      <description>2023 年 FireUG 技术社区在内容方面做了一些调整，把程序员的日常关注和专业技能的提升分开，这样便于利用不同的时间段观看自己感兴趣的内容。 系列公开课的内容如下： 公开课｜DDD领域驱动设计 讲师：肖伟宇 期数：共14期（完结） 入口：去观看 公开课｜AzureDevOps实战 讲师：骆姜斌 期数：共5期（未</description>
+    </item>
+    <item>
       <title>多种环境部署 Azure 机器学习 Prompt Flow</title>
       <link>https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/</link>
       <pubDate>Sat, 09 Dec 2023 12:00:00 +0800</pubDate>

@@ -6,8 +6,15 @@
     <description>Recent content in Azure AI on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Wed, 03 Jan 2024 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jan 2024 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/Azure-AI/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GPTs action 中使用 Azure AI Search</title>
+      <link>https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/</link>
+      <pubDate>Mon, 22 Jan 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/</guid>
+      <description>OpenAI 的 GPTs 上线有一段时间了，在实际应用中发现 GPTs 内置对知识库的检索能力很一般，对话过程中经常拿不到期望的反馈内容。如果利用 GPTs 的 action 能很好地弥补这个缺陷。 总所周知加强检索知识库离不开 RAG，如果自建 RAG 将会是一个很大的工作量，而且还要考虑到知识库的更新问题。于是想到 Azure AI Search 提供了一个很好的解决</description>
+    </item>
     <item>
       <title>Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值</title>
       <link>https://beanhsiang.github.io/post/2024-01-03-azure-machine-learning-and-datarobot-team-up-to-accelerate-value/</link>

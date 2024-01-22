@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>GPTs action 中使用 Azure AI Search | Innovation with tech</title>
+    <meta property="og:title" content="GPTs action 中使用 Azure AI Search - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2024-01-22T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2024-01-22T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="GPTs action 中使用 Azure AI Search">
+        
+    <meta name="author" content="BeanHsiang">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">GPTs action 中使用 Azure AI Search</h1>
+        </header>
+        
+  <time datetime="2024-01-22T04:00:00Z" class="post-meta meta-date dt-published">
+    2024年1月22日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>OpenAI 的 GPTs 上线有一段时间了，在实际应用中发现 GPTs 内置对知识库的检索能力很一般，对话过程中经常拿不到期望的反馈内容。如果利用 GPTs 的 action 能很好地弥补这个缺陷。</p>
+<p>
+        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/298524312-b7943f56-db58-4735-901b-7bbaf97386b8.png" />   
+    </p>
+<p>总所周知加强检索知识库离不开 RAG，如果自建 RAG 将会是一个很大的工作量，而且还要考虑到知识库的更新问题。于是想到 Azure AI Search 提供了一个很好的解决方案，可以很方便地将知识库导入到 Azure AI Search 中，然后通过 API 调用来检索知识库。整个过程都不需要编码，所以将 Azure AI Search 与 GPTs action 结合起来是个不错的主意。</p>
+<h2 id="配置-gpts-action-的-schema">配置 GPTs action 的 Schema</h2>
+<p>Schema 要求是一个符合 <a href="https://spec.openapis.org/oas/latest.html">OpenAPI</a> 标准的配置说明，这里示例使用 json 格式。</p>
+<p>其中把几个关键的参数改成 Azure AI Search 里实际的值即可。这里使用的是混合了索引和矢量查询的请求方式。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">132
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">133
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">134
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">135
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">136
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">137
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">138
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">139
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">140
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;openapi&#34;</span>: <span style="color:#d14">&#34;3.1.0&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;info&#34;</span>: { 
+</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;title&#34;</span>: <span style="color:#d14">&#34;Azure AI Search&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Retrieves knowledges for a question.&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;version&#34;</span>: <span style="color:#d14">&#34;v1.0.0&#34;</span>
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;servers&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;url&#34;</span>: <span style="color:#d14">&#34;https://{your-search-name}.search.windows.net&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ],
+</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;paths&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;/indexes/{your-index-name}/docs/search&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;post&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Search knowledges for keywords&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;operationId&#34;</span>: <span style="color:#d14">&#34;Search&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;parameters&#34;</span>: [
+</span></span><span style="display:flex;"><span>          {
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;name&#34;</span>: <span style="color:#d14">&#34;api-version&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;in&#34;</span>: <span style="color:#d14">&#34;query&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;the version of api.&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;required&#34;</span>: <span style="color:#000;font-weight:bold">true</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;schema&#34;</span>: {
+</span></span><span style="display:flex;"><span>              <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>              <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;2023-10-01-Preview&#34;</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        ],
+</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;requestBody&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;required&#34;</span>: <span style="color:#000;font-weight:bold">true</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Information about a new query&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;content&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;application/json&#34;</span>: {
+</span></span><span style="display:flex;"><span>              <span style="color:#000080">&#34;schema&#34;</span>: {
+</span></span><span style="display:flex;"><span>                <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;object&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#000080">&#34;required&#34;</span>: [
+</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;top&#34;</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;select&#34;</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;search&#34;</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;vectorQueries&#34;</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;queryType&#34;</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;semanticConfiguration&#34;</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;captions&#34;</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;answers&#34;</span>,
+</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;queryLanguage&#34;</span>
+</span></span><span style="display:flex;"><span>                ],
+</span></span><span style="display:flex;"><span>                <span style="color:#000080">&#34;properties&#34;</span>: {
+</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;top&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;integer&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#099">2</span>
+</span></span><span style="display:flex;"><span>                  },
+</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;select&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;chunk,title&#34;</span>
+</span></span><span style="display:flex;"><span>                  },
+</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;search&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>
+</span></span><span style="display:flex;"><span>                  },
+</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;vectorQueries&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;array about query&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;array&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;items&#34;</span>: {
+</span></span><span style="display:flex;"><span>                      <span style="color:#000080">&#34;$ref&#34;</span>: <span style="color:#d14">&#34;#/components/schemas/VectorQuery&#34;</span>
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                  },
+</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;queryType&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;semantic&#34;</span>
+</span></span><span style="display:flex;"><span>                  },
+</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;semanticConfiguration&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: {<span style="color:#a61717;background-color:#e3d2d2">your-semantic-configuration</span>}
+</span></span><span style="display:flex;"><span>                  },
+</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;captions&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;extractive&#34;</span>
+</span></span><span style="display:flex;"><span>                  },
+</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;answers&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;extractive|count-3&#34;</span>
+</span></span><span style="display:flex;"><span>                  },
+</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;queryLanguage&#34;</span>: {
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;zh-CN&#34;</span>
+</span></span><span style="display:flex;"><span>                  }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>              }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;responses&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;200&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Get the result&#34;</span>
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;deprecated&#34;</span>: <span style="color:#000;font-weight:bold">false</span>
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;components&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;schemas&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;VectorQuery&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;object&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;required&#34;</span>: [
+</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;kind&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;text&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;k&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;fields&#34;</span>
+</span></span><span style="display:flex;"><span>        ],
+</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;properties&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;kind&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;string type, value is alway default&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;text&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;enum&#34;</span>: [
+</span></span><span style="display:flex;"><span>              <span style="color:#d14">&#34;text&#34;</span>
+</span></span><span style="display:flex;"><span>            ]
+</span></span><span style="display:flex;"><span>          },
+</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;text&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;string equals to query search&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>
+</span></span><span style="display:flex;"><span>          },
+</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;k&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;integer&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#099">5</span>
+</span></span><span style="display:flex;"><span>          },
+</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;fields&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;string type, value is alway default&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;vector&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;enum&#34;</span>: [
+</span></span><span style="display:flex;"><span>              <span style="color:#d14">&#34;vector&#34;</span>
+</span></span><span style="display:flex;"><span>            ]
+</span></span><span style="display:flex;"><span>          }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>
+        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/298523782-d59470f1-aab4-4285-8b39-4c2534c3dc2e.png.png" />   
+    </p>
+<h2 id="相关文档">相关文档</h2>
+<p>Azure AI Search 介绍：
+<a href="https://learn.microsoft.com/zh-cn/azure/search/search-what-is-azure-search?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/zh-cn/azure/search/search-what-is-azure-search?WT.mc_id=AI-MVP-5003172</a></p>
+<p>在 Azure AI 搜索中创建混合查询
+<a href="https://learn.microsoft.com/zh-cn/azure/search/hybrid-search-how-to-query?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/zh-cn/azure/search/hybrid-search-how-to-query?WT.mc_id=AI-MVP-5003172</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/">https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2024-01-03-azure-machine-learning-and-datarobot-team-up-to-accelerate-value/">Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值</a></li>
+        
+        <li><a href="/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/">多种环境部署 Azure 机器学习 Prompt Flow</a></li>
+        
+        <li><a href="/post/2023-04-11-question-answering-in-langchain/">基于 LangChain 实现问答</a></li>
+        
+        <li><a href="/post/2023-02-25-introducing-scalable-and-enterprise-grade-genomics-workflows-in/">在 Azure ML 中引入可缩放的企业级基因学工作流</a></li>
+        
+        <li><a href="/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/">3个加速语言学习的微软 Azure AI 产品功能</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Azure-AI' target="_blank">Azure AI</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2024 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" title="GPTs action 中使用 Azure AI Search" target="_blank">GPTs action 中使用 Azure AI Search</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-03-azure-machine-learning-and-datarobot-team-up-to-accelerate-value/" title="Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值" target="_blank">Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-12-30-fireug-review-2023/" title="FireUG 2023 年度回顾" target="_blank">FireUG 2023 年度回顾</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/" title="多种环境部署 Azure 机器学习 Prompt Flow" target="_blank">多种环境部署 Azure 机器学习 Prompt Flow</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-12-03-announcing-ml-net-3-0/" title="ML.NET 3.0 更新内容" target="_blank">ML.NET 3.0 更新内容</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-11-27-coding-with-github-copilot-in-vs-code/" title="在 VS Code 里用 GitHub Copilot 编写代码" target="_blank">在 VS Code 里用 GitHub Copilot 编写代码</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-06-07-enhancing-debugging-with-github-copilot/" title="使用 GitHub Copilot 的自动错误检测和纠正增强调试" target="_blank">使用 GitHub Copilot 的自动错误检测和纠正增强调试</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/" title="ML.NET Model Builder 中的对象检测" target="_blank">ML.NET Model Builder 中的对象检测</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/" title="基于 LangChain 实现问答" target="_blank">基于 LangChain 实现问答</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性" target="_blank">ML.NET Model Builder 中的句子相似性</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (13)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

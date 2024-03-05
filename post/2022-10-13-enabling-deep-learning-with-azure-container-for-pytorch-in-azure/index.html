@@ -32,6 +32,8 @@
     
     
     
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
     
     
     
@@ -104,7 +106,9 @@
 <p>由于AzureML是许多PyTorch开发人员的首选平台，我们开发了新的Azure Container for PyTorch（ACPT），这是一个精心策划的环境，包括最好的Microsoft技术，用于在Azure上使用PyTorch进行训练。我们很高兴地宣布 Azure 机器学习 （AzureML） 中的 ACPT 公共预览版。这个新的特选环境是一个轻量级的独立环境，其中包含在 AzureML 上有效运行大型模型优化训练所需的组件。默认情况下，AzureML 特选环境在用户的工作区中可用，并由使用最新版本的 AzureML SDK 的缓存 Docker 映像提供支持。它有助于降低准备成本并缩短部署时间。</p>
 <p>ACPT策划环境扩展了我们现有的 PyTorch 策划环境 ，包括最新的PyTorch版本，针对数十种生产模型进行了测试和验证，以确保高质量，同时还提供各种用于训练和优化的Microsoft技术，例如 ONNX Runtime 和 DeepSpeed。 所有组件都已安装并经过验证，以降低设置成本并加快客户计量机的训练时间。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/223963780-315d551c-1553-4831-934c-842ce096c976.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223963780-315d551c-1553-4831-934c-842ce096c976.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/223963780-315d551c-1553-4831-934c-842ce096c976.png" />
+        </a>
     </p>
 <p><em>ACPT 精选的环境属性和说明。</em></p>
 <h2 id="优点">优点</h2>
@@ -122,17 +126,23 @@
 <h2 id="指标和数据">指标和数据</h2>
 <p>ACPT 环境使我们的客户能够有效地训练 PyTorch 模型。容器中组合的 ONNX Runtime 和 DeepSpeed 等优化库可以将生产速度从常规 PyTorch 工作负载提高到 54% 到 163%，如在各种 HuggingFace 模型上看到的那样。</p>
 <p>
-        <img class="mx-auto" alt="image2" src="https://user-images.githubusercontent.com/3881276/223964283-7a9f5bbe-a370-4c98-8605-7b98b82145b5.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223964283-7a9f5bbe-a370-4c98-8605-7b98b82145b5.png">
+            <img class="mx-auto" alt="image2" src="https://user-images.githubusercontent.com/3881276/223964283-7a9f5bbe-a370-4c98-8605-7b98b82145b5.png" />
+        </a>
     </p>
 <p><em>拥抱面部模型的指标</em></p>
 <p>ACPT 通过在更短的时间内执行相同的训练作业来降低计算成本。训练运行也很容易跟踪，因为特选环境与AzureML工具（如Azure机器学习工作室和AzureML SDK）集成在一起。</p>
 <p>下面是一个 NLP 产品审查微调训练运行的示例，大约需要两个小时才能完成。</p>
 <p>
-        <img class="mx-auto" alt="image3" src="https://user-images.githubusercontent.com/3881276/223964393-ff6233e5-6aa3-4cfa-94eb-a96fce0b8731.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223964393-ff6233e5-6aa3-4cfa-94eb-a96fce0b8731.png">
+            <img class="mx-auto" alt="image3" src="https://user-images.githubusercontent.com/3881276/223964393-ff6233e5-6aa3-4cfa-94eb-a96fce0b8731.png" />
+        </a>
     </p>
 <p>使用ACPT策划的环境，我们观察到使用DeepSpeed的Finetune HuggingFace分类器将整体训练时间减少到45分钟多一点。 在此模型上，训练时间减少了 62%。</p>
 <p>
-        <img class="mx-auto" alt="image4" src="https://user-images.githubusercontent.com/3881276/223964523-91a43eb0-fccd-4680-8ade-398d2172af51.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223964523-91a43eb0-fccd-4680-8ade-398d2172af51.png">
+            <img class="mx-auto" alt="image4" src="https://user-images.githubusercontent.com/3881276/223964523-91a43eb0-fccd-4680-8ade-398d2172af51.png" />
+        </a>
     </p>
 
         </div>
@@ -226,7 +236,7 @@
                 }
             };
     </script>
-    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
@@ -328,6 +338,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/" title="FireUG x .NET Conf China - Watch Party" target="_blank">FireUG x .NET Conf China - Watch Party</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" title="GPTs action 中使用 Azure AI Search" target="_blank">GPTs action 中使用 Azure AI Search</a>
     </li>
     
@@ -363,10 +377,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/" title="基于 LangChain 实现问答" target="_blank">基于 LangChain 实现问答</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性" target="_blank">ML.NET Model Builder 中的句子相似性</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -378,7 +388,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (13)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (1)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
     

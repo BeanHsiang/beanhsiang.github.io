@@ -32,6 +32,8 @@
     
     
     
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
     
     
     
@@ -107,52 +109,76 @@
 <p>如果要在您的环境中部署此解决方案，您将在此存储库 <a href="https://github.com/rom212/benefitspromptflow">rom212/benefitspromptflow（github.com）</a> 中找到代码。请注意，必须在 Azure AI 搜索索引中为自己的权益手册编制索引。</p>
 <p>我喜欢在我的开发计算机上通过 Visual Studio Code 本地使用 Prompt Flow，以及可在此处找到的 Prompt Flow 扩展：VS Code 的 <a href="https://marketplace.visualstudio.com/items?itemName=prompt-flow.prompt-flow">Prompt Flow - Visual Studio Marketplace</a>。 尽管表示流的有向无环图 （DAG） 是 yaml 文件，但 Visual Studio Code 扩展提供了 DAG 的可视化表示形式，使各个步骤和整个流的业务流程清晰明了。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292193346-b0d44b00-30de-4f92-a290-2d74f55dbc28.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292193346-b0d44b00-30de-4f92-a290-2d74f55dbc28.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292193346-b0d44b00-30de-4f92-a290-2d74f55dbc28.png" />
+        </a>
     </p>
 <p>在上面，我们可以看到执行从输入开始;这是用户的第一个问题。此问题将矢量化，然后将该向量和初始问题作为文本发送到执行混合搜索并从 Azure AI 搜索中检索最相关的一个或多个块的 Python 节点。然后，我们有一个提示节点，它通过将块填充到初始问题旁边来为 LLM 准备输入。最后，LLM 接收此扩充的提示，并返回答案作为 Prompt Flow 的最终输出。请注意左侧显示的 Prompt Flow 扩展。另请注意，Prompt Flow 是一个快速迭代的工具，如果您在发布日期几个月后阅读这篇介绍，您肯定会获得不同的体验。</p>
 <p>我们可以从 Visual Studio Code 体验中本地运行流。这使我们能够建立它应该如何表现的基线。我们可以单击播放按钮或按 Shift+F5 打开对话框并在交互模式下运行 Prompt Flow。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292193799-22937593-28df-4053-9975-1d9b0417eb6f.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292193799-22937593-28df-4053-9975-1d9b0417eb6f.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292193799-22937593-28df-4053-9975-1d9b0417eb6f.png" />
+        </a>
     </p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292194245-7523f747-d8c9-417e-8b64-fb1473961da8.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292194245-7523f747-d8c9-417e-8b64-fb1473961da8.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292194245-7523f747-d8c9-417e-8b64-fb1473961da8.png" />
+        </a>
     </p>
 <p>在上面，我们可以看到用户可以提出问题并从聊天机器人那里得到明确的答案。我们现在在开发中有一个正常运行的后端，可以为 HR 副驾驶类型的应用程序提供支持，并允许员工询问有关其福利的具体问题！不过，我们这篇博文的目标是了解如何将其部署在生产级计算平台上，该平台几乎可以在任何地方甚至本地部署。为此，我们将使用 Microsoft Visual Studio Code 的 Prompt Flow 扩展中的生成功能，查看它如何生成 docker 文件以及生成和推送容器映像所需的项目。</p>
 <p>启用可视化编辑器后，您可以在顶部导航栏上看到五个菜单选项。在“调试”和“排序”按钮之间是“构建”按钮，它为我们提供了将流程构建为 docker 的选项。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292194381-c2db0127-5b75-4587-807b-621110c61985.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292194381-c2db0127-5b75-4587-807b-621110c61985.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292194381-c2db0127-5b75-4587-807b-621110c61985.png" />
+        </a>
     </p>
 <p>这提示我们为决定称为“build”的工件选择输出目录。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292194631-5ee9352f-2170-4c96-bf10-cf9e182e72cd.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292194631-5ee9352f-2170-4c96-bf10-cf9e182e72cd.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292194631-5ee9352f-2170-4c96-bf10-cf9e182e72cd.png" />
+        </a>
     </p>
 <p>最后，我们可以通过单击“创建 Dockerfile”按钮来要求 Prompt Flow 扩展继续进行构建。请注意，在撰写本文时，这不适用于 Visual Studio Code 扩展的 1.6.0 版本，但适用于 1.5.0 版本。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292194731-34ddbab2-5c0c-4274-b754-aeafff4bfe8e.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292194731-34ddbab2-5c0c-4274-b754-aeafff4bfe8e.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292194731-34ddbab2-5c0c-4274-b754-aeafff4bfe8e.png" />
+        </a>
     </p>
 <p>浏览生成文件夹会显示工件，尤其是 Dockerfile，它显示了如何生成映像。它将基于 miniconda3 基础映像构建，并实例化 gunicorn 服务器以在端口 8080 上处理推理请求。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292194945-d58f7523-dadb-4032-9be8-f2dfe63023c0.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292194945-d58f7523-dadb-4032-9be8-f2dfe63023c0.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292194945-d58f7523-dadb-4032-9be8-f2dfe63023c0.png" />
+        </a>
     </p>
 <p>值得注意的是，我们在开发中使用的 API 密钥并未融入构建中。相反，与 Azure AI 搜索或 Azure Open AI 的各种连接现在希望将其密钥作为环境变量查找。这使我们能够保护机密的安全，并在运行时动态注入它们。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292195046-0d491ae8-3751-4344-8a9c-bc5c2930feae.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292195046-0d491ae8-3751-4344-8a9c-bc5c2930feae.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292195046-0d491ae8-3751-4344-8a9c-bc5c2930feae.png" />
+        </a>
     </p>
 <p>为了构建和运行这个基于 Linux 的映像，我们将构建文件夹移动到 Linux 主机。在我们的例子中，为了简单起见，我们将在本地使用 <a href="https://learn.microsoft.com/en-us/windows/wsl/about">WSL2（适用于 Linux 2 的 Windows 子系统）</a>。WSL2 允许我们轻松地在 Windows 机器上运行 Linux 环境，但以下步骤在另一台启用了 docker 的 Linux 主机上同样有效。导航到我们的 build 文件夹后，我们可以调用 docker build 命令。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292195141-b0e49f2e-94f2-4035-b01f-3b04acb941cb.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292195141-b0e49f2e-94f2-4035-b01f-3b04acb941cb.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292195141-b0e49f2e-94f2-4035-b01f-3b04acb941cb.png" />
+        </a>
     </p>
 <p>现在，我们可以标记映像并将其推送到我们选择的容器注册表，例如 Docker Hub。在本例中，我们决定将其推送到 Microsoft Azure 容器注册表服务。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292195251-200b0bb2-fcb2-4f5a-b6a6-630e4f1499df.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292195251-200b0bb2-fcb2-4f5a-b6a6-630e4f1499df.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292195251-200b0bb2-fcb2-4f5a-b6a6-630e4f1499df.png" />
+        </a>
     </p>
 <p>现在它像往常一样基于容器的部署。我们可以将映像部署到 Kubernetes 集群或任何运行 docker 的计算机上。由于我们的 Prompt Flow 使用了连接，因此我们必须记住将所需的机密作为环境变量传递，以访问 Azure AI 搜索和 Azure Open AI。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292195334-07b7f978-b812-46a8-afc7-99774b673a84.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292195334-07b7f978-b812-46a8-afc7-99774b673a84.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292195334-07b7f978-b812-46a8-afc7-99774b673a84.png" />
+        </a>
     </p>
 <p>我们的应用程序正在运行，API 已准备好将问题作为 Prompt Flow 的输入。在我们的例子中，我们甚至有一个小的 Web 前端，可用于测试目的。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292195458-5cdf30da-b113-4e57-97aa-a331409bc3f7.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/292195458-5cdf30da-b113-4e57-97aa-a331409bc3f7.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/292195458-5cdf30da-b113-4e57-97aa-a331409bc3f7.png" />
+        </a>
     </p>
 <p>我们看到了 Prompt Flow 为开发人员提供的一些便捷功能。我们还看到，尽管 Prompt Flow 可以很容易地将编排的流部署到托管终结点，但对于我们实际应该在哪里部署它，它并没有硬性要求。事实上，构建功能允许您打包应用程序并在几乎任何平台上执行它。</p>
 
@@ -247,7 +273,7 @@
                 }
             };
     </script>
-    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
@@ -349,6 +375,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/" title="FireUG x .NET Conf China - Watch Party" target="_blank">FireUG x .NET Conf China - Watch Party</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" title="GPTs action 中使用 Azure AI Search" target="_blank">GPTs action 中使用 Azure AI Search</a>
     </li>
     
@@ -384,10 +414,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/" title="基于 LangChain 实现问答" target="_blank">基于 LangChain 实现问答</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性" target="_blank">ML.NET Model Builder 中的句子相似性</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -399,7 +425,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (13)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (1)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
     

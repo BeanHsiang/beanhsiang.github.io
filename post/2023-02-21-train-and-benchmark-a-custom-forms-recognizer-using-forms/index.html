@@ -32,6 +32,8 @@
     
     
     
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
     
     
     
@@ -101,36 +103,50 @@
         
         <div class="post-content">
             <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/224236800-0136cc55-510b-497f-a5e0-1c1d5c0eae74.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224236800-0136cc55-510b-497f-a5e0-1c1d5c0eae74.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/224236800-0136cc55-510b-497f-a5e0-1c1d5c0eae74.png" />
+        </a>
     </p>
 <h2 id="步骤概述">步骤概述</h2>
 <p>定制的 OCR 解决方案提供了在文档或图像中定义唯一类别的功能。通过与各种客户合作开发定制 OCR 解决方案，我们经常听到这样的问题：“此解决方案在我的数据上表现如何？我们开发了一种方法，允许使用<a href="https://formrecognizer.appliedai.azure.com/studio">表单识别器工作室</a>根据自定义数据对 <a href="https://azure.microsoft.com/en-us/products/form-recognizer/">Microsoft 的表单识别器</a>进行基准测试，并在一个过程中使用基本事实批注训练自定义模型。</p>
 <h2 id="使用表单识别器工作室批注基本事实">使用表单识别器工作室批注基本事实</h2>
 <p>在训练自定义表单识别器模型之前，必须具有标记或批注的数据集，也称为基本事实。为了提供注释过程的示例，我们创建了一个扫描的手写邮政地址的示例图像。真实名称为“John Doe”，地址为“000 Fifth Ave， NY 10065， USA”，如下图所示：</p>
 <p>
-        <img class="mx-auto" alt="image2" src="https://user-images.githubusercontent.com/3881276/224237225-91bdf375-0271-4840-bc00-6aabd0e88835.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224237225-91bdf375-0271-4840-bc00-6aabd0e88835.png">
+            <img class="mx-auto" alt="image2" src="https://user-images.githubusercontent.com/3881276/224237225-91bdf375-0271-4840-bc00-6aabd0e88835.png" />
+        </a>
     </p>
 <p>步骤 1：定义范围内的字段。这取决于您的特定应用。在我们的玩具图像示例中，我们预先定义了 3 个字段：“名称”、“地址”和“Missed”（包含不可识别/无法识别的内容（如果有的话）。</p>
 <p>步骤 2：打开表单识别器工作室，选择“自定义模型”，然后创建一个新项目（按照<a href="https://learn.microsoft.com/en-us/azure/applied-ai-services/form-recognizer/quickstarts/try-v3-form-recognizer-studio?view=form-recog-3.0.0#custom-models">文档</a>中的说明填写所有必填字段，例如 Azure 订阅和存储帐户）。项目创建完成后，我们可以通过“拖放”上传我们的玩具图片。请注意，单击图像时，内置表单识别器模型将在后台自动触发 OCR 图像（通常每个图像需要 1 或 2 秒）。</p>
 <p>
-        <img class="mx-auto" alt="image3" src="https://user-images.githubusercontent.com/3881276/224237380-7cb5a0d4-5a5d-4890-b152-a391dfb2e9b4.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224237380-7cb5a0d4-5a5d-4890-b152-a391dfb2e9b4.png">
+            <img class="mx-auto" alt="image3" src="https://user-images.githubusercontent.com/3881276/224237380-7cb5a0d4-5a5d-4890-b152-a391dfb2e9b4.png" />
+        </a>
     </p>
 <p>步骤 3：点击右上角的“+”按钮，创建预定义字段。例如，我们在场景中创建了 3 个字段，包括一个“Missed”字段来捕获丢失/非 OCR 的内容。</p>
 <p>
-        <img class="mx-auto" alt="image4" src="https://user-images.githubusercontent.com/3881276/224237567-d4f4a82b-a32a-46e9-ae02-7770d0aab6f4.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224237567-d4f4a82b-a32a-46e9-ae02-7770d0aab6f4.png">
+            <img class="mx-auto" alt="image4" src="https://user-images.githubusercontent.com/3881276/224237567-d4f4a82b-a32a-46e9-ae02-7770d0aab6f4.png" />
+        </a>
     </p>
 <p>步骤 4：通过将相关的 OCR 内容分配给关联字段来开始注释图像。例如，我们将“John Doe”分配给提交的“名称”，方法是将鼠标悬停在相关字符上：</p>
 <p>
-        <img class="mx-auto" alt="image5" src="https://user-images.githubusercontent.com/3881276/224237678-140b9333-0b73-48b2-8901-ac618bdeef3a.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224237678-140b9333-0b73-48b2-8901-ac618bdeef3a.png">
+            <img class="mx-auto" alt="image5" src="https://user-images.githubusercontent.com/3881276/224237678-140b9333-0b73-48b2-8901-ac618bdeef3a.png" />
+        </a>
     </p>
 <p>同时，会在 Blob 容器中自动创建一个 JSON 文件，以动态反映批注进度。此文件将我们的注释结果捕获为标签值对。可以使用 Azure 存储资源管理器查找和编辑此文件</p>
 <p>
-        <img class="mx-auto" alt="image6" src="https://user-images.githubusercontent.com/3881276/224237750-cd30703f-e010-47f1-aa1f-e9a2aff314fd.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224237750-cd30703f-e010-47f1-aa1f-e9a2aff314fd.png">
+            <img class="mx-auto" alt="image6" src="https://user-images.githubusercontent.com/3881276/224237750-cd30703f-e010-47f1-aa1f-e9a2aff314fd.png" />
+        </a>
     </p>
 <p>步骤 5（可选）：更正错误的 OCR 字段和遗漏的内容（如果有）。</p>
 <p>更正错误的 OCR 字段。在我们的示例中，OCR识别的邮政编码是“&hellip;， NY 6005， &hellip;”，而事实为 “&hellip;， NY 10065， &hellip;”，如下面的蓝色条突出显示：</p>
 <p>
-        <img class="mx-auto" alt="image7" src="https://user-images.githubusercontent.com/3881276/224237810-754f1769-4d2f-4cd3-b645-ee854f6c4801.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224237810-754f1769-4d2f-4cd3-b645-ee854f6c4801.png">
+            <img class="mx-auto" alt="image7" src="https://user-images.githubusercontent.com/3881276/224237810-754f1769-4d2f-4cd3-b645-ee854f6c4801.png" />
+        </a>
     </p>
 <p>在这种情况下，我们需要手动更正“地址”字段中的邮政编码：</p>
 <ol>
@@ -140,18 +156,24 @@
 </ol>
 <p>以下屏幕截图说明了错误 OCR 方案的更正过程：</p>
 <p>
-        <img class="mx-auto" alt="image8" src="https://user-images.githubusercontent.com/3881276/224237907-7d30e4ab-5e5c-492f-b47f-1d2d7c17a14a.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224237907-7d30e4ab-5e5c-492f-b47f-1d2d7c17a14a.png">
+            <img class="mx-auto" alt="image8" src="https://user-images.githubusercontent.com/3881276/224237907-7d30e4ab-5e5c-492f-b47f-1d2d7c17a14a.png" />
+        </a>
     </p>
 <p>更正遗漏的内容。在我们的示例中，遗漏的内容是邮政编码中的初始字符“1”，由下面的蓝色圆圈突出显示：</p>
 <p>
-        <img class="mx-auto" alt="image9" src="https://user-images.githubusercontent.com/3881276/224237988-f5d4caad-b9bb-4695-826b-40179ef35e2e.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224237988-f5d4caad-b9bb-4695-826b-40179ef35e2e.png">
+            <img class="mx-auto" alt="image9" src="https://user-images.githubusercontent.com/3881276/224237988-f5d4caad-b9bb-4695-826b-40179ef35e2e.png" />
+        </a>
     </p>
 <p>在这种情况下，我们需要手动将其添加到“Missed”字段中：</p>
 <ol>
 <li>
 <p>点击左上角的“区域”按钮，在字符“1”周围画一个边界框，并将其分配给“Missed”字段，如下所示：
 
-        <img class="mx-auto" alt="image10" src="https://user-images.githubusercontent.com/3881276/224238053-7a32ad1c-c529-4257-84bb-8d24cbcc2942.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224238053-7a32ad1c-c529-4257-84bb-8d24cbcc2942.png">
+            <img class="mx-auto" alt="image10" src="https://user-images.githubusercontent.com/3881276/224238053-7a32ad1c-c529-4257-84bb-8d24cbcc2942.png" />
+        </a>
     </p>
 </li>
 <li>
@@ -166,7 +188,9 @@
 </ol>
 <p>以下屏幕截图说明了丢失内容方案的更正过程：</p>
 <p>
-        <img class="mx-auto" alt="image11" src="https://user-images.githubusercontent.com/3881276/224238121-28ad9ef5-1ffe-4af1-b22a-77cba556cb54.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224238121-28ad9ef5-1ffe-4af1-b22a-77cba556cb54.png">
+            <img class="mx-auto" alt="image11" src="https://user-images.githubusercontent.com/3881276/224238121-28ad9ef5-1ffe-4af1-b22a-77cba556cb54.png" />
+        </a>
     </p>
 <p>我们更正了错误的 OCR 字段和遗漏的内容，以确保注释质量（可以刷新表单识别器工作室以查看仪表板中更正的更改）。</p>
 <p>步骤 6： 移动到下一个图像并重复注释过程（即步骤 4 或步骤 4 + 步骤 5）。</p>
@@ -176,7 +200,9 @@
 <h2 id="从-azure-存储资源管理器中提取批注项目">从 Azure 存储资源管理器中提取批注项目</h2>
 <p>若要执行 OCR 基准测试，可以直接从 Azure 存储资源管理器下载输出。您可以在以下<a href="https://github.com/Azure/Forms-Recognizer-Benchmarking">存储库</a>下访问基准测试代码。只需将存储资源管理器中下载的数据目录粘贴到从 GitHub 下载的项目的根目录中即可。使用存储资源管理器时，订阅级别文档树可能如下所示：</p>
 <p>
-        <img class="mx-auto" alt="image12" src="https://user-images.githubusercontent.com/3881276/224238217-1c50b80f-5f42-4230-8f96-e4e323f93449.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224238217-1c50b80f-5f42-4230-8f96-e4e323f93449.png">
+            <img class="mx-auto" alt="image12" src="https://user-images.githubusercontent.com/3881276/224238217-1c50b80f-5f42-4230-8f96-e4e323f93449.png" />
+        </a>
     </p>
 <h2 id="测量-ocr-和现场识别的性能">测量 OCR 和现场识别的性能</h2>
 <p>在本节中，我们将区分在两个级别上测量自定义表单识别器的性能：</p>
@@ -204,7 +230,9 @@
 <h3 id="字段实体级别">字段/实体级别</h3>
 <p>若要从字段/实体识别访问图像，必须首先训练自定义表单识别器模型。训练后，您可以在“测试”选项卡下找到训练好的模型。提供的图像说明了训练模型在工作室中的位置以及自定义模型输出的下载按钮的位置。您可以选择从用户界面下载文件，也可以导航到“result”旁边的代码磁贴，然后使用 IDE 通过 API 调用检索结果。</p>
 <p>
-        <img class="mx-auto" alt="image13" src="https://user-images.githubusercontent.com/3881276/224238283-a47585f1-db6d-4d81-a434-8863c1b1e2c5.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224238283-a47585f1-db6d-4d81-a434-8863c1b1e2c5.png">
+            <img class="mx-auto" alt="image13" src="https://user-images.githubusercontent.com/3881276/224238283-a47585f1-db6d-4d81-a434-8863c1b1e2c5.png" />
+        </a>
     </p>
 <p>提供的 <a href="https://github.com/Azure/Forms-Recognizer-Benchmarking/blob/main/README.md">README.md</a> 文件说明了预期的输出和可能的自定义。</p>
 <h2 id="将您的知识付诸实践并执行基准计算">将您的知识付诸实践并执行基准计算</h2>
@@ -332,7 +360,7 @@
                 }
             };
     </script>
-    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
@@ -434,6 +462,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/" title="FireUG x .NET Conf China - Watch Party" target="_blank">FireUG x .NET Conf China - Watch Party</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" title="GPTs action 中使用 Azure AI Search" target="_blank">GPTs action 中使用 Azure AI Search</a>
     </li>
     
@@ -469,10 +501,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/" title="基于 LangChain 实现问答" target="_blank">基于 LangChain 实现问答</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性" target="_blank">ML.NET Model Builder 中的句子相似性</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -484,7 +512,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (13)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (1)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
     

@@ -32,6 +32,8 @@
     
     
     
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
     
     
     
@@ -102,7 +104,9 @@
         <div class="post-content">
             <p><a href="https://dot.net/ml?WT.mc_id=AI-MVP-5003172">ML.NET</a> 是面向.NET开发人员的跨平台机器学习框架，它具备在联机或本地环境中将机器学习模型集成到 .NET 应用程序中的能力。</p>
 <p>
-        <img class="mx-auto" alt="ML.NET" src="https://user-images.githubusercontent.com/3881276/131783402-fb40f512-19a4-46a7-b837-78ac13aaba74.jpeg" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/131783402-fb40f512-19a4-46a7-b837-78ac13aaba74.jpeg">
+            <img class="mx-auto" alt="ML.NET" src="https://user-images.githubusercontent.com/3881276/131783402-fb40f512-19a4-46a7-b837-78ac13aaba74.jpeg" />
+        </a>
     </p>
 <p>2002 年微软启动有一个研究项目命名为 TMSN，其意在“Test mining search and navigation”，后来它被改名为 TLC（The learning code）。ML.NET 正是派生自 TLC 库，最初被用于微软的内部产品。</p>
 <p>ML.NET 的核心既可以通过指定算法来训练自定义机器学习模型，也可以导入预训练的 TensorFlow 和 ONNX 模型继续训练。生成模型后，可以将其添加到应用程序中进行预测。ML.NET 支持在使用 .NET Core/.NET Framework 的 Windows、Linux 和 macOS 上运行，所有平台均支持 64 位，此外 Windows 平台支持 32 位，但 TensorFlow、LightGBM 和 ONNX 相关功能除外。</p>
@@ -163,19 +167,27 @@
 </div><p>ML.NET 目前在 Github 上以<a href="https://github.com/dotnet/machinelearning">开源项目</a>(<a href="https://github.com/dotnet/machinelearning">https://github.com/dotnet/machinelearning</a>)进行迭代，最新的版本为1.6。</p>
 <p>ML.NET 支持的热门机器学习任务覆盖众多，包括了传统的分类、回归、聚类，也支持了有关时序和图像神经网络。目前已知的应用场景例如：情绪分析、产品推荐、价格预测、客户分层、对象检测、欺诈检测、峰值检测、图像分类、销量预测等等。</p>
 <p>
-        <img class="mx-auto" alt="ML TASK" src="https://user-images.githubusercontent.com/3881276/131783404-1e457de9-c750-48d5-8bd7-1d53b971f88d.jpeg" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/131783404-1e457de9-c750-48d5-8bd7-1d53b971f88d.jpeg">
+            <img class="mx-auto" alt="ML TASK" src="https://user-images.githubusercontent.com/3881276/131783404-1e457de9-c750-48d5-8bd7-1d53b971f88d.jpeg" />
+        </a>
     </p>
 <p>ML.NET 对 .NET 开发者非常友好，它提供了 Visual Studio 扩展 Model Builder， 这是一个可视化的工具套件，以非常低门槛的操作要求即可快速训练出指定任务类型的机器学习模型，并且自动生成相关的源码，方便后续修改和维护。对于喜欢通过代码方式进行机器学习任务的伙伴，官方提供了丰富的文档(<a href="https://docs.microsoft.com/en-us/dotnet/machine-learning/?WT.mc_id=AI-MVP-5003172">https://docs.microsoft.com/en-us/dotnet/machine-learning/</a>)和示例代码库(<a href="https://github.com/dotnet/machinelearning-samples">https://github.com/dotnet/machinelearning-samples</a>)。</p>
 <p>
-        <img class="mx-auto" alt="Model Buidler" src="https://user-images.githubusercontent.com/3881276/131783384-3790c19e-5448-4f33-93bc-437af8863304.gif" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/131783384-3790c19e-5448-4f33-93bc-437af8863304.gif">
+            <img class="mx-auto" alt="Model Buidler" src="https://user-images.githubusercontent.com/3881276/131783384-3790c19e-5448-4f33-93bc-437af8863304.gif" />
+        </a>
     </p>
 <p>另外，ML.NET 针对 CLI 也提供了命令行工具，而且是支持 AutoML 的，使得常见的机器学习场景实现零编码。</p>
 <p>
-        <img class="mx-auto" alt="ML.NET CLI" src="https://user-images.githubusercontent.com/3881276/131783486-02c5f505-7c20-497f-b6b7-715c6671b60f.gif" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/131783486-02c5f505-7c20-497f-b6b7-715c6671b60f.gif">
+            <img class="mx-auto" alt="ML.NET CLI" src="https://user-images.githubusercontent.com/3881276/131783486-02c5f505-7c20-497f-b6b7-715c6671b60f.gif" />
+        </a>
     </p>
 <p>通过 AutoML 生成的代码一开始阅读起来会有一点点不习惯，如果从来没有接触过机器学习的开发者，可能会担心记不住 ML.NET API 中密密麻麻基于专业术语的对象和方法，作者将 ML.NET API 按经典的机器学习实现步骤，把常用的方法整理成一份速查手册，添加了一些代码片段用来帮助快速理解，以高清矢量格式的图片分享出来，在编码的时候放在习惯的地方，像开发其他 .NET 应用一样可随时查看，一目了然。</p>
 <p>
-        <img class="mx-auto" alt="CHEAT SHEET" src="https://user-images.githubusercontent.com/3881276/131784152-74f74cc4-061b-4978-a328-cd9215e5aee5.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/131784152-74f74cc4-061b-4978-a328-cd9215e5aee5.png">
+            <img class="mx-auto" alt="CHEAT SHEET" src="https://user-images.githubusercontent.com/3881276/131784152-74f74cc4-061b-4978-a328-cd9215e5aee5.png" />
+        </a>
     </p>
 <p>希望通过介绍有更多 .NET 开发者能够加入到机器学习的行列中来，在扩展自己技术领域的同时也创造出丰富的智能化产品功能服务于社会。</p>
 <p><a href="/mlnet.svg">速查手册下载</a></p>
@@ -269,7 +281,7 @@
                 }
             };
     </script>
-    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
@@ -371,6 +383,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/" title="FireUG x .NET Conf China - Watch Party" target="_blank">FireUG x .NET Conf China - Watch Party</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" title="GPTs action 中使用 Azure AI Search" target="_blank">GPTs action 中使用 Azure AI Search</a>
     </li>
     
@@ -406,10 +422,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/" title="基于 LangChain 实现问答" target="_blank">基于 LangChain 实现问答</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性" target="_blank">ML.NET Model Builder 中的句子相似性</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -421,7 +433,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (13)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (1)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
     

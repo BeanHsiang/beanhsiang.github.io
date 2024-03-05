@@ -32,6 +32,8 @@
     
     
     
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
     
     
     
@@ -104,17 +106,23 @@
 <p>Azure 机器学习 （Azure ML） 是一个基于云的平台，提供一组全面的工具和服务，用于开发、部署和管理机器学习模型。Azure ML 原生提供出色的可重复性和可审核性功能，而没有多少工作流解决方案提供这些功能。它为运行工作流提供了一个高度集成和标准化的环境，确保每个步骤都以一致且可重复的方式执行。此功能对于需要使用具有特定依赖项的某些版本的多个工具和软件包的基因学工作流特别有用。</p>
 <p>在这篇博文中，我们将展示 Azure ML 如何高效且有效地运行基因学工作流，以及作为机器学习模型训练和部署的端到端平台。图 1 说明了此类工作流的示例。</p>
 <p>
-        <img class="mx-auto" alt="image1" src="https://user-images.githubusercontent.com/3881276/223907592-895d908b-41f1-4b66-b9b4-2a52824e54c9.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223907592-895d908b-41f1-4b66-b9b4-2a52824e54c9.png">
+            <img class="mx-auto" alt="image1" src="https://user-images.githubusercontent.com/3881276/223907592-895d908b-41f1-4b66-b9b4-2a52824e54c9.png" />
+        </a>
     </p>
 <p>图 1：在 Azure ML 中运行的示例基因学工作流，包含 3 个步骤。参考基因组输入数据集流入索引器步骤，而序列质量步骤从DNA序列文件夹（“.fastq”文件）获取数据。</p>
 <p>Azure ML 具有全面的审核和日志记录功能，可跟踪和记录工作流的每个步骤，确保可跟踪性和可重复性。Azure ML 实现这些功能的关键功能之一是它支持用户能够为每个工作流步骤指定 Docker 和 Conda 环境，从而保证一致的环境执行。这些环境可以进行版本控制和集中共享。然后，管道中的工作流步骤可以引用特定环境。图 2 显示了一个这样的环境，bwa，版本“5”。当我们对环境定义进行修改时，新版本将被注册为“6”，但是，我们仍然可以继续使用旧版本。</p>
 <p>
-        <img class="mx-auto" alt="image2" src="https://user-images.githubusercontent.com/3881276/223907826-ae6136ca-e055-4b0c-8ebe-0029f23e2574.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223907826-ae6136ca-e055-4b0c-8ebe-0029f23e2574.png">
+            <img class="mx-auto" alt="image2" src="https://user-images.githubusercontent.com/3881276/223907826-ae6136ca-e055-4b0c-8ebe-0029f23e2574.png" />
+        </a>
     </p>
 <p>图 2：一个示例 Azure ML 环境，定义包含 BWA 生物信息学软件包的 Docker 映像。这是此环境的第 5 个版本，以“bwa”的名称注册。</p>
 <p>与环境一样，Azure ML 支持用户创建的管道组件，这些组件可以集中注册以便在其他管道中重复使用，也可以进行版本控制，并带有其使用情况的审核日志。运行与基础进程生成的标准输出流和错误流一起自动记录。 还支持 MLflow 日志记录以及向所有资产和运行添加自定义标记。此功能可确保结果一致且可重复，从而节省用户的时间。示例版本化组件如图 3 所示。</p>
 <p>
-        <img class="mx-auto" alt="image3" src="https://user-images.githubusercontent.com/3881276/223907932-5760a2c4-358d-43ac-9e1b-984e829776da.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223907932-5760a2c4-358d-43ac-9e1b-984e829776da.png">
+            <img class="mx-auto" alt="image3" src="https://user-images.githubusercontent.com/3881276/223907932-5760a2c4-358d-43ac-9e1b-984e829776da.png" />
+        </a>
     </p>
 <p>图 3：名为“BWA 索引器”的 Azure ML 组件。它是一段独立的、可重用的、受版本控制的代码段，在机器学习管道中执行一个步骤：在此实例中运行 bwa 索引器命令。</p>
 <p>版本控制不限于环境和管道组件。Azure ML 的另一个基本功能是它支持对所有输入数据集和基因组数据进行版本控制，包括整体管道输入，以及中间步骤和最终输出（如果需要）。此功能使用户能够跟踪数据集更改，并确保在工作流的不同运行或其他运行中一致地使用相同的版本。</p>
@@ -217,7 +225,7 @@
                 }
             };
     </script>
-    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
@@ -319,6 +327,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/" title="FireUG x .NET Conf China - Watch Party" target="_blank">FireUG x .NET Conf China - Watch Party</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" title="GPTs action 中使用 Azure AI Search" target="_blank">GPTs action 中使用 Azure AI Search</a>
     </li>
     
@@ -354,10 +366,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/" title="基于 LangChain 实现问答" target="_blank">基于 LangChain 实现问答</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性" target="_blank">ML.NET Model Builder 中的句子相似性</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -369,7 +377,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (13)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (1)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
     

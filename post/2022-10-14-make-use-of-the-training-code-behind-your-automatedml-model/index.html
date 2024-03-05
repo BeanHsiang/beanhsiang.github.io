@@ -32,6 +32,8 @@
     
     
     
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
     
     
     
@@ -108,7 +110,9 @@
 <h2 id="此功能如何工作">此功能如何工作？</h2>
 <p>默认情况下，会为所有 AutoML 模型生成训练代码。可以访问两个主要资产 - script.py（训练代码），（用于在 AzureML 中将 script.py 作为作业提交的样板 jupyter 笔记本）。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/223970109-6ad42de2-2525-45de-9f31-a69589e11707.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223970109-6ad42de2-2525-45de-9f31-a69589e11707.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/223970109-6ad42de2-2525-45de-9f31-a69589e11707.png" />
+        </a>
     </p>
 <h2 id="scriptpy">Script.py</h2>
 <p>此文件包含训练模型所需的核心逻辑。虽然旨在在 Azure ML 命令作业的上下文中执行，但经过一些修改，模型的训练代码也可以在用户选择的环境中作为独立脚本运行。</p>
@@ -117,7 +121,9 @@
 <p>函数 prepare_data() 清理数据，拆分特征和样本权重列，并准备数据以用于训练。此函数可能因数据集类型和 AutoML 试验任务类型（分类、回归、时序预测）而异。</p>
 <p>以下示例显示，通常传入数据加载步骤中的数据框。提取标签列和样本权重（如果最初指定），并从输入数据中删除包含 NaN 的行。</p>
 <p>
-        <img class="mx-auto" alt="image2" src="https://user-images.githubusercontent.com/3881276/223970436-8cc4ee01-3e37-43ff-a552-dbd934953cf7.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223970436-8cc4ee01-3e37-43ff-a552-dbd934953cf7.png">
+            <img class="mx-auto" alt="image2" src="https://user-images.githubusercontent.com/3881276/223970436-8cc4ee01-3e37-43ff-a552-dbd934953cf7.png" />
+        </a>
     </p>
 <p>可以根据需要将自定义数据准备添加到上述代码中。</p>
 <h3 id="数据特征化代码">数据特征化代码</h3>
@@ -125,18 +131,24 @@
 <p>例如，在此函数中可能发生的数据转换可以基于SimpleImputer()和CatImputer()等估算器，也可以基于StringCastTransformer()和LabelEncoderTransformer()等转换器。</p>
 <p>下面的示例是 StringCastTransformer() 类型的转换器，可用于转换一组列。在这种情况下，由 column_names 表示的集合。</p>
 <p>
-        <img class="mx-auto" alt="image3" src="https://user-images.githubusercontent.com/3881276/223970524-31ad9f0d-b412-44a1-9339-f1998677a311.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223970524-31ad9f0d-b412-44a1-9339-f1998677a311.png">
+            <img class="mx-auto" alt="image3" src="https://user-images.githubusercontent.com/3881276/223970524-31ad9f0d-b412-44a1-9339-f1998677a311.png" />
+        </a>
     </p>
 <h3 id="算法和超参数规范代码">算法和超参数规范代码</h3>
 <p>算法和超参数规范代码可能是许多数据科学家最感兴趣的。</p>
 <p>以下示例使用具有特定超参数的 XGBoostClassifier 算法。在大多数情况下，生成的代码使用开源软件包和类（例如，XGBoost分类器和其他常用的库，如LightGBM或Scikit-Learn算法）。数据科学家可以根据自己的技能和专业知识根据需要调整其超参数，从而自定义该算法的配置代码。</p>
 <p>
-        <img class="mx-auto" alt="image4" src="https://user-images.githubusercontent.com/3881276/223970669-685636a1-abd7-43d7-b260-36723ce7008a.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223970669-685636a1-abd7-43d7-b260-36723ce7008a.png">
+            <img class="mx-auto" alt="image4" src="https://user-images.githubusercontent.com/3881276/223970669-685636a1-abd7-43d7-b260-36723ce7008a.png" />
+        </a>
     </p>
 <h2 id="script_run_notebookipynb">Script_run_notebook.ipynb</h2>
 <p>此笔记本是使用 Azure ML 计算执行 script.py 的简单方法。此笔记本类似于现有的自动化 ML 示例笔记本，具有用于连接到工作区、创建/使用 AzureML 计算和提交 AzureML 命令作业运行的单元格（如下图所示）。</p>
 <p>
-        <img class="mx-auto" alt="image5" src="https://user-images.githubusercontent.com/3881276/223970766-97b499bf-a41e-4c87-9532-74fb3f9edd1f.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223970766-97b499bf-a41e-4c87-9532-74fb3f9edd1f.png">
+            <img class="mx-auto" alt="image5" src="https://user-images.githubusercontent.com/3881276/223970766-97b499bf-a41e-4c87-9532-74fb3f9edd1f.png" />
+        </a>
     </p>
 
         </div>
@@ -230,7 +242,7 @@
                 }
             };
     </script>
-    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
@@ -332,6 +344,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/" title="FireUG x .NET Conf China - Watch Party" target="_blank">FireUG x .NET Conf China - Watch Party</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" title="GPTs action 中使用 Azure AI Search" target="_blank">GPTs action 中使用 Azure AI Search</a>
     </li>
     
@@ -367,10 +383,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/" title="基于 LangChain 实现问答" target="_blank">基于 LangChain 实现问答</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性" target="_blank">ML.NET Model Builder 中的句子相似性</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -382,7 +394,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (13)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (1)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
     

@@ -32,6 +32,8 @@
     
     
     
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
     
     
     
@@ -150,7 +152,9 @@
 </div><h2 id="方法一-load_qa_chain">方法一 load_qa_chain</h2>
 <p>load_qa_chain 提供用于回答问题的最通用界面。您可以输入问题，针对文档中的任意文本进行 QA。</p>
 <p>
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112027-2a4a2ef0-1fb7-46ee-8a64-adf9ddc47d17.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/231112027-2a4a2ef0-1fb7-46ee-8a64-adf9ddc47d17.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112027-2a4a2ef0-1fb7-46ee-8a64-adf9ddc47d17.png" />
+        </a>
     </p>
 <p>它还允许您对一组文档进行 QA：</p>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -231,7 +235,9 @@
 </div>
 </div><p>在结果中，我们可以看到答案和两个源文档，因为我们将 k 定义为 2，这意味着我们只对获取两个相关的文本块感兴趣。
 
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112219-fa99d5cc-a649-404f-bfa3-325584c3d5e2.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/231112219-fa99d5cc-a649-404f-bfa3-325584c3d5e2.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112219-fa99d5cc-a649-404f-bfa3-325584c3d5e2.png" />
+        </a>
     </p>
 <h3 id="可选">可选</h3>
 <p>在此过程中，有多种选项供您选择：</p>
@@ -245,18 +251,24 @@
 <h2 id="方法三-vectorstoreindexcreator">方法三 VectorstoreIndexCreator</h2>
 <p>VectorstoreIndexCreator 是上述功能的包装器。它只是公开了一个更高级别的接口，让您从三行代码开始：
 
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112253-432c8711-4b61-42af-a002-a7dbf27c78d4.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/231112253-432c8711-4b61-42af-a002-a7dbf27c78d4.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112253-432c8711-4b61-42af-a002-a7dbf27c78d4.png" />
+        </a>
     </p>
 <p>当然，您也可以在此包装器中指定不同的选项：
 
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112289-f0a3f94f-47e5-4e18-9533-732d1e271b94.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/231112289-f0a3f94f-47e5-4e18-9533-732d1e271b94.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112289-f0a3f94f-47e5-4e18-9533-732d1e271b94.png" />
+        </a>
     </p>
 <h2 id="方法四-conversationalretrievalchain">方法四 ConversationalRetrievalChain</h2>
 <p>ConversationalRetrievalChain 与方法二 RetrievalQA 非常相似。它添加了一个附加参数 chat_history 来传入聊天记录，可用于后续问题。</p>
 <p>ConversationalRetrievalChain = conversation memory + RetrievalQAChain</p>
 <p>如果希望语言模型具有上一个对话的记忆，请使用此方法。在下面的例子中，我询问了AI出版物的数量，并得到了500，000的结果。然后我要求 LLM 将这个数字除以2。由于它有所有的聊天记录，模型知道我所指的数字是 500，000，返回的结果是 250，000。
 
-        <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112325-ac4b8d2e-e619-48ca-b0c8-c5c73eceb3a3.png" />   
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/231112325-ac4b8d2e-e619-48ca-b0c8-c5c73eceb3a3.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/231112325-ac4b8d2e-e619-48ca-b0c8-c5c73eceb3a3.png" />
+        </a>
     </p>
 <h2 id="小结">小结</h2>
 <p>现在您知道了在 LangChain 中使用 LLM 进行问答的四种方法。总之，load_qa_chain 使用所有文本并接受多个文档。检索 QA 在后台使用 load_qa_chain，但首先检索相关的文本块。VectorstoreIndexCreator 与 RetrievalQA 相同，具有更高级别的接口。当您想要将聊天记录传递给模型时，ConversationalRetrievalChain 非常有用。</p>
@@ -352,7 +364,7 @@
                 }
             };
     </script>
-    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
@@ -454,6 +466,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/" title="FireUG x .NET Conf China - Watch Party" target="_blank">FireUG x .NET Conf China - Watch Party</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" title="GPTs action 中使用 Azure AI Search" target="_blank">GPTs action 中使用 Azure AI Search</a>
     </li>
     
@@ -489,10 +505,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2023-04-11-question-answering-in-langchain/" title="基于 LangChain 实现问答" target="_blank">基于 LangChain 实现问答</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性" target="_blank">ML.NET Model Builder 中的句子相似性</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -504,7 +516,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (13)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (1)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
     

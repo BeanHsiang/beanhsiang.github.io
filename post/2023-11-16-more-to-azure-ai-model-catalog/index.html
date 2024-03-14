@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>新加入 Azure AI Model Catalog 的模型 | Innovation with tech</title>
+    <meta property="og:title" content="新加入 Azure AI Model Catalog 的模型 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2023-11-16T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2023-11-16T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="新加入 Azure AI Model Catalog 的模型">
+        
+    <meta name="author" content="BeanHsiang">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2023-11-16-more-to-azure-ai-model-catalog/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">新加入 Azure AI Model Catalog 的模型</h1>
+        </header>
+        
+  <time datetime="2023-11-16T04:00:00Z" class="post-meta meta-date dt-published">
+    2023年11月16日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>我们很高兴地看到，在 Azure AI Model Catalog 中增加了几个新的基础和生成AI模型。从 Hugging Face 我们已经推出了一系列稳定的 stable diffusion 模型，falcon 模型，CLIP, Whisper V3, BLIP 和 SAM 模型。除了 Hugging Face 模型，我们还分别添加了 Meta 和 NVIDIA 的 Code Llama 和 Nemotron 模型。我们还将介绍微软研究中心的尖端 Phi 模型。Model Catalog 产生了40个新模型和4个新模式，包括文本到图像和图像嵌入。专业开发人员很快就可以轻松地将最新的 AI 模型(如Meta 的 Llama 2、Cohere 的 Command、G42 的 Jais 以及 Mistral 的高级模型)作为 API 集成到他们的应用程序中。他们还可以使用自己的数据对这些模型进行微调，而无需担心设置和管理GPU基础设施，从而帮助消除配置资源和管理主机的复杂性。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/ignite_models_2.gif">
+            <img class="mx-auto" alt="Azure AI studio model catalog" src="/uploads/ignite_models_2.gif" />
+        </a>
+    </p>
+<h2 id="模型即服务maas-中的新模型">模型即服务(MaaS) 中的新模型</h2>
+<h3 id="command">Command</h3>
+<p>Command 是 Cohere 的首要文本生成模型，旨在有效响应用户命令并立即满足实际业务应用。它提供了一系列默认功能，但可以针对特定的公司语言或高级用例进行定制。Command的功能包括编写产品描述、起草电子邮件、建议新闻稿示例、对文档进行分类、提取信息和回答一般查询。我们将很快支持 MaaS 中的 Command。</p>
+<h3 id="jais">Jais</h3>
+<p>Jais 是一个由 G42 开发的130亿个参数模型，并在3950亿个token数据集上进行了训练，其中包括1160亿个阿拉伯语和2790亿个英语token。值得注意的是，贾伊斯是在秃鹰银河1人工智能超级计算机上训练的，这是一台由 G42 和 Cerebras Systems 共同开发的 multi-exaFLOP 人工智能超级计算机。这个模型代表了阿拉伯世界在人工智能方面的重大进步，为超过4亿阿拉伯语使用者提供了探索生成式人工智能潜力的机会。Jais 还将在 MaaS 中作为推理 api 和托管微调提供。</p>
+<h3 id="mistral">Mistral</h3>
+<p>Mistral 是一个拥有73亿个参数的大型语言模型。它在能够生成连贯文本和执行各种自然语言处理任务的数据上进行训练。与之前的模型相比，这是一个重大飞跃，在各种基准测试中都优于许多现有的人工智能模型。Mistral 7B模型的关键特性之一是使用分组查询注意和滑动窗口注意，这允许更快的推理和更长的响应序列。Azure AI Model Catalog 将很快通过推理 api 和托管微调提供 Mistral 在模型即服务(MaaS)中的高级模型。</p>
+<ul>
+<li>Mistral-7B-V01</li>
+<li>Mistral-7B-Instruct-V01</li>
+</ul>
+<h2 id="azure-ai-model-catalog-中的新模型">Azure AI Model Catalog 中的新模型</h2>
+<h3 id="phi">Phi</h3>
+<p>Phi-1-5 是一个拥有13亿个参数的变形金刚。它使用与 Phi-1 相同的数据源进行训练，并使用由各种NLP合成文本组成的新数据源进行增强。当根据测试常识、语言理解和逻辑推理的基准进行评估时，Phi-1.5 在参数少于100亿个的模型中表现出近乎最先进的性能。Phi-1.5 可以写诗，起草电子邮件，创建故事，总结文本，编写 Python 代码等。</p>
+<p>Phi-2 是一款具有27亿个参数的变压器，与 Phi-1-5 相比它在推理能力和安全措施方面有了显着改善，但与业内其他变压器相比，它仍然相对较小。通过适当的微调和定制，这些 SLMs 对于云上和边缘上的应用程序来说都是非常强大的工具。</p>
+<ul>
+<li>Phi 1.5</li>
+<li>Phi 2</li>
+</ul>
+<h3 id="whisper-v3">Whisper V3</h3>
+<p>Whisper 是一个基于 Transformer 的编码器-解码器模型，也称为 sequence-to-sequence 模型。使用 Whisper large-v2 收集的100万小时弱标记音频和400万小时伪标记音频对其进行了训练。这些模型要么在纯英语数据上训练，要么在多语言数据上训练。只讲英语的模型接受了语音识别任务的训练。多语言模型在语音识别和语音翻译两方面进行了训练。对于语音识别，该模型预测相同语言的转录作为音频。对于语音翻译，该模型预测到音频的不同语言的转录。</p>
+<ul>
+<li>OpenAI-Whisper-Large-V3</li>
+</ul>
+<h3 id="blip">BLIP</h3>
+<p>BLIP (Bootstrapping Language-Image Pre-training) 是一种能够执行各种多模态任务的模型，包括:视觉问答、图像-文本检索(图像-文本匹配)、图像字幕。由 Salesforce 创建的 BLIP 模型基于视觉语言预训练(VLP)的概念，它结合了预训练的视觉模型和用于视觉语言任务的大型语言模型(llm)。BLIP通过引导标题有效地利用了带有噪声的web数据，其中标题生成合成标题，滤波器去除噪声。它在广泛的视觉语言任务上实现了最先进的结果，例如图像文本检索、图像字幕和VQA。Model Catalog 中提供以下变体:</p>
+<ul>
+<li>Salesforce-BLIP-VQA-Base</li>
+<li>Salesforce-BLIP-Image-Captioning-Base</li>
+<li>Salesforce-BLIP-2-OPT-2-7b-VQA</li>
+<li>Salesforce-BLIP-2-OPT-2-7b-Image-To-Text</li>
+</ul>
+<h3 id="clip">CLIP</h3>
+<p>CLIP (contrast language - image Pre-Training，对比语言-图像预训练) 是一种基于多种图像-文本对进行训练的神经网络，由 OpenAI 创建，用于从自然语言监督中高效学习视觉概念。CLIP只需提供要识别的视觉类别的名称，就可以应用于任何视觉分类基准，类似于GPT-2和 GPT-3的“零射击”功能。CLIP还可用于提取用于下游任务(如信息检索)的视觉和文本嵌入。包括这个模型增加了我们在 Model Catalog 中可用的其他不断增长的 OpenAI 模型列表，包括 GPT 和 Dall-E。如前所述，这些 Azure 机器学习策划模型经过了彻底的测试。可用的 CLIP 变体包括:</p>
+<ul>
+<li>OpenAI-CLIP-Image-Text-Embeddings-ViT-Base-Patch32</li>
+<li>OpenAI-CLIP-ViT-Base-Patch32</li>
+<li>OpenAI-CLIP-ViT-Large-Patch14</li>
+</ul>
+<h3 id="code-llama">Code Llama</h3>
+<p>作为微软和 Meta 合作的结果，我们很高兴在 Azure AI Model Catalog 中提供新的 Code Llama 模型及其变体。Code Llama 是一个预先训练和微调的生成文本模型的集合，其规模从70亿到340亿个参数不等。Code Llama 是llm最先进的代码任务，有可能使当前开发人员的工作流程更快、更高效，并降低学习代码的人的进入门槛。Code Llama 有潜力作为一种生产力和教育工具来帮助程序员编写更健壮、文档更完善的软件。可用的 Code Llama 变体包括:</p>
+<ul>
+<li>CodeLlama-34b-Python</li>
+<li>CodeLlama-34b-Instruct</li>
+<li>CodeLlama-13b</li>
+<li>CodeLlama-13b-Python</li>
+<li>CodeLlama-13b-Instruct</li>
+<li>CodeLlama-7b</li>
+<li>CodeLlama-7b-Python</li>
+<li>CodeLlama-7b-Instruct</li>
+</ul>
+<h3 id="falcon-models">Falcon models</h3>
+<p>下一组模型是由技术创新研究所(TII)创建的。Falcon-7b 是一个有70亿个参数的大型语言模型，Falcon-40b 有400亿个参数。它是一个由TII开发的纯因果解码器模型，分别在 RefinedWeb 数据集的1.5亿个token和1万亿个token上进行了训练，并使用策划语料库进行了增强。该模型在Apache 2.0许可下可用。它优于可比较的开源模型，并具有针对推理进行优化的体系结构。Falcon 模型包括:</p>
+<ul>
+<li>Falcon-40b</li>
+<li>Falcon-40b-Instruct</li>
+<li>Falcon-7b-Instruct</li>
+<li>Falcon-7b</li>
+</ul>
+<h3 id="nvidia-nemotron">NVIDIA Nemotron</h3>
+<p>另一个额外的更新是推出新的 NVIDIA AI 模型和注册表集合。此次合作也是NVIDIA 推出名为 Nemotron-3 的新型8B LLM的地方，该LLM有三种变体，包括预训练、聊天和问答。 Nemotron-3，这是一个家族企业准备基于 gpt 解码器的生成文本模型兼容 NVIDIA NeMo 框架。</p>
+<ul>
+<li>Nemotron-3-8B-Base-4k</li>
+<li>Nemotron-3-8B-Chat-4k-SFT</li>
+<li>Nemotron-3-8B-Chat-4k-RLHF</li>
+<li>Nemotron-3-8B-Chat-4kSteerLM</li>
+<li>Nemotron-3-8B-QA-4k</li>
+</ul>
+<h3 id="sam">SAM</h3>
+<p>分割任何模型(SAM)是一种创新的图像分割工具，能够从简单的输入提示创建高质量的对象蒙版。在包含1100万张图像和11亿个masks的庞大数据集上进行训练，SAM展示了强大的零射击能力，无需事先进行特定训练即可有效地适应新的图像分割任务。该模型由 Meta 创建，其令人印象深刻的性能与之前在完全监督下运行的模型相当或超过。</p>
+<ul>
+<li>Facebook-Sam-Vit-Large</li>
+<li>Facebook-Sam-Vit-Huge</li>
+<li>Facebook-Sam-Vit-Base</li>
+</ul>
+<h3 id="stable-diffusion-models">Stable Diffusion Models</h3>
+<p>最新增加的Model Catalog包括由Stability AI和CompVis开发的用于文本到图像和喷漆任务的稳定扩散模型。这些前沿模型为生成式人工智能提供了显著的进步，在从文本描述生成图像时提供了更大的鲁棒性和一致性。通过将这些稳定扩散模型纳入我们的目录，我们增强了可用模式和模型的多样性，使用户能够访问最先进的功能，为创意内容生成、设计和解决问题开辟了新的可能性。在Azure AI Model Catalog 中增加稳定扩散模型反映了我们致力于提供最先进和稳定的人工智能模型，以增强数据科学家和开发人员在机器学习项目、应用程序和工作流程中的能力。现有的稳定扩散模型包括:</p>
+<ul>
+<li>Stable-Diffusion-V1-4</li>
+<li>Stable-Diffusion-2-1</li>
+<li>Stable-Diffusion-V1-5</li>
+<li>Stable-Diffusion-Inpainting</li>
+<li>Stable-Diffusion-2-Inpainting</li>
+</ul>
+<h2 id="model-catalog-推理优化">Model Catalog 推理优化</h2>
+<p>除了上述人工智能模型，我们还希望通过有意义的方式优化目录及其功能来改善整体用户体验。Azure AI Model Catalog 上的模型由自定义推理容器提供支持，以满足对高性能推理和基础模型服务日益增长的需求。该容器配备了多个后端推理引擎，包括vLLM, DeepSpeed-FastGen 和 Hugging Face，以覆盖各种模型架构。我们对服务模型的默认选择是vLLM，它通过连续批处理和分页注意提供高吞吐量和高效的内存管理。我们也很高兴能够支持 DeepSpeed 团队的最新产品 DeepSpeed-FastGen，它引入了动态 SplitFuse 技术，以提供更高的吞吐量。你可以用我们的 Llama-2 系列模型来尝试 DeepSpeed-FastGen 的alpha版本。从这里了解更多关于 DeepSpeed-FastGen 的信息:</p>
+<p><a href="https://github.com/microsoft/DeepSpeed/tree/master/blogs/deepspeed-fastgen">https://github.com/microsoft/DeepSpeed/tree/master/blogs/deepspeed-fastgen</a></p>
+<p>对于无法使用 vLLM 或 DeepSpeed-MII 的模型，该容器还附带了 Hugging Face 引擎。</p>
+<p>为了进一步最大化 GPU 利用率并实现更高的吞吐量，容器基于可用硬件战略性地部署多个模型副本，并将传入的请求路由到可用副本。这允许高效地处理更多并发用户请求。此外，我们集成了 Azure AI 内容安全，以简化检测人工智能生成的应用程序和服务中潜在有害内容的过程。这种整合旨在加强负责任的人工智能实践和安全使用我们的先进人工智能模型。您可以开始看到将我们的容器与 Llama-2 系列模型一起使用的好处。我们计划扩展对更多模型的支持，包括其他模式，如 Stable Diffusion 和 Falcon。</p>
+<h3 id="fine-tuning-optimizations">Fine-tuning Optimizations</h3>
+<p>训练更大的llm(如具有70B及以上参数的llm)需要大量GPU内存，并且在微调期间可能会耗尽内存，如果GPU内存很小，有时甚至无法加载它们。在大多数现实生活用例中，我们需要上下文长度尽可能接近模型允许的最大上下文长度，这进一步推高了内存需求。为了解决这个问题，我们很高兴为用户提供一些最新的微调优化-低秩自适应(LoRA)， DeepSpeed ZeRO 和梯度检查点。</p>
+<p>梯度检查点通过仅存储在向前传递期间计算的选择激活并在向后传递期间重新计算它们来降低GPU内存需求。众所周知，这将使GPU内存减少sqrt(n)(其中n是层数)，同时由于重新计算某些激活而增加了适度的额外计算成本。</p>
+<p>LoRA 在微调期间冻结预训练模型中的大多数模型参数，只修改一小部分权重(LoRA适配器)。这减少了所需的GPU内存，也减少了微调时间。LoRA通过数量级减少可训练参数的数量，而对微调模型的质量没有太大影响</p>
+<p>DeepSpeed’s Zero Redundancy Optimizer (ZeRO)实现了数据和模型并行的优点，同时减轻了两者的局限性。DeepSpeed ZeRO 有三个阶段，它们跨GPU划分模型状态——参数、梯度和优化器状态，并使用动态通信调度在GPU之间共享必要的模型状态。GPU内存的减少允许用户微调llm，如LLAMA-2-70B，单个节点为8xv100，用于许多用例中遇到的典型数据序列长度。所有这些优化都是正交的，可以在任何组合中一起使用，使我们的客户能够在多GPU集群上以混合精度训练大型模型，以获得最佳的微调精度。</p>
+<h2 id="ai-safety-and-responsible-ai">AI safety and Responsible AI</h2>
+<p>Responsible AI 是微软人工智能方法以及如何合作的核心。多年来投入了大量资金使 Azure 成为负责任的、尖端的人工智能创新场所，无论客户是构建自己的模型，还是使用来自微软、Meta、OpenAI 和开源生态系统的预构建和可定制模型。</p>
+<p>我们很高兴地看到稳定扩散模型现在支持 Azure AI 内容安全。Azure AI 内容安全检测应用程序和服务中有害的用户生成和AI生成的内容。内容安全包括允许您检测有害材料的文本和图像api。我们还有一个交互式内容安全工作室，允许您查看、探索和尝试样本代码，以检测不同模式下的有害内容。你可以通过下面的链接了解更多。我们迫不及待地想见证我们的用户将使用这些最先进的模型创建令人难以置信的应用程序和解决方案。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2023-11-16-more-to-azure-ai-model-catalog/">https://beanhsiang.github.io/post/2023-11-16-more-to-azure-ai-model-catalog/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2023-04-11-question-answering-in-langchain/">基于 LangChain 实现问答</a></li>
+        
+        <li><a href="/post/2023-02-25-introducing-scalable-and-enterprise-grade-genomics-workflows-in/">在 Azure ML 中引入可缩放的企业级基因学工作流</a></li>
+        
+        <li><a href="/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/">3个加速语言学习的微软 Azure AI 产品功能</a></li>
+        
+        <li><a href="/post/2023-02-21-train-and-benchmark-a-custom-forms-recognizer-using-forms/">训练自定义表单识别器并对其进行基准测试</a></li>
+        
+        <li><a href="/post/2022-12-10-the-ai-technology-that-predicts-which-clothing-items-appearing/">AI 预测你在视频中可能购买哪些服装</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Azure-AI' target="_blank">Azure AI</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2024 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/" title="FireUG x .NET Conf China - Watch Party" target="_blank">FireUG x .NET Conf China - Watch Party</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" title="GPTs action 中使用 Azure AI Search" target="_blank">GPTs action 中使用 Azure AI Search</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-03-azure-machine-learning-and-datarobot-team-up-to-accelerate-value/" title="Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值" target="_blank">Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-12-30-fireug-review-2023/" title="FireUG 2023 年度回顾" target="_blank">FireUG 2023 年度回顾</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/" title="多种环境部署 Azure 机器学习 Prompt Flow" target="_blank">多种环境部署 Azure 机器学习 Prompt Flow</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-12-03-announcing-ml-net-3-0/" title="ML.NET 3.0 更新内容" target="_blank">ML.NET 3.0 更新内容</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-11-27-coding-with-github-copilot-in-vs-code/" title="在 VS Code 里用 GitHub Copilot 编写代码" target="_blank">在 VS Code 里用 GitHub Copilot 编写代码</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-11-16-more-to-azure-ai-model-catalog/" title="新加入 Azure AI Model Catalog 的模型" target="_blank">新加入 Azure AI Model Catalog 的模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-06-07-enhancing-debugging-with-github-copilot/" title="使用 GitHub Copilot 的自动错误检测和纠正增强调试" target="_blank">使用 GitHub Copilot 的自动错误检测和纠正增强调试</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/" title="ML.NET Model Builder 中的对象检测" target="_blank">ML.NET Model Builder 中的对象检测</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (14)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

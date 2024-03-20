@@ -2,8 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://beanhsiang.github.io/tags/Azure-AI/</loc>
+    <lastmod>2024-03-17T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
+    <lastmod>2024-03-17T12:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2024-01-27T12:00:00+08:00</lastmod>
+    <lastmod>2024-03-17T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/</loc>
+    <lastmod>2024-03-17T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2024-03-17T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2024-03-17T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel/</loc>
+    <lastmod>2024-03-17T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/FireUG/</loc>
     <lastmod>2024-01-27T12:00:00+08:00</lastmod>
@@ -13,21 +31,6 @@
   </url><url>
     <loc>https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/</loc>
     <lastmod>2024-01-27T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2024-01-27T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2024-01-27T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
-    <lastmod>2024-01-27T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Azure-AI/</loc>
-    <lastmod>2024-01-22T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
-    <lastmod>2024-01-22T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/</loc>
     <lastmod>2024-01-22T12:00:00+08:00</lastmod>

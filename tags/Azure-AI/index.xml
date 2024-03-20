@@ -6,8 +6,15 @@
     <description>Recent content in Azure AI on Innovation with tech</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Mon, 22 Jan 2024 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 17 Mar 2024 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/Azure-AI/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 Semantic Kernel 构建自定义 Copilot</title>
+      <link>https://beanhsiang.github.io/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel/</link>
+      <pubDate>Sun, 17 Mar 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel/</guid>
+      <description>本文重点介绍如何使用由 Azure OpenAI 服务提供支持的 Semantic Kernel 创建自己的 Copilot。我们将尝试利用大型语言模型（LLM）的优势与外部服务的集成。这将使您了解如何真正实现您的 Copilot 目标，不仅与零售业，而且与任何行业，无论是电力和公用事业，政府和公共部门等。它的整体功能和潜在的应用场景都远超于聊天机器</description>
+    </item>
     <item>
       <title>GPTs action 中使用 Azure AI Search</title>
       <link>https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/</link>

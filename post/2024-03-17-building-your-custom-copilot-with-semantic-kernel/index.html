@@ -175,6 +175,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.SemanticKernel</span>;
@@ -201,7 +202,8 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic">// Create chat history</span>
 </span></span><span style="display:flex;"><span>            ChatHistory history = [];
-</span></span><span style="display:flex;"><span>            history.AddSystemMessage(<span style="color:#d14">@&#34;You&#39;re a virtual assistant that helps people find information.&#34;</span>);
+</span></span><span style="display:flex;"><span>            history.AddSystemMessage(
+</span></span><span style="display:flex;"><span>              <span style="color:#d14">@&#34;You&#39;re a virtual assistant that helps people find information.&#34;</span>);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic">// Get chat completion service</span>
 </span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">var</span> chatCompletionService = kernel.GetRequiredService&lt;IChatCompletionService&gt;();
@@ -271,6 +273,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Create a kernel with the Azure OpenAI chat completion service</span>
@@ -279,7 +282,8 @@
 </span></span><span style="display:flex;"><span>     GetEnvironmentVariable(<span style="color:#d14">&#34;AOI_ENDPOINT_SWDN&#34;</span>)!,
 </span></span><span style="display:flex;"><span>     GetEnvironmentVariable(<span style="color:#d14">&#34;AOI_KEY_SWDN&#34;</span>)!);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span> <span style="color:#998;font-style:italic">// Load the plugins &lt;br&gt; // add this namespace to use OOB plugins Microsoft.SemanticKernel.Plugins.Core;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#998;font-style:italic">// Load the plugins</span>
+</span></span><span style="display:flex;"><span> <span style="color:#998;font-style:italic">// add this namespace Microsoft.SemanticKernel.Plugins.Core;</span>
 </span></span><span style="display:flex;"><span> <span style="color:#999;font-weight:bold;font-style:italic">#pragma</span> warning disable SKEXP0050
 </span></span><span style="display:flex;"><span> builder.Plugins.AddFromType&lt;TimePlugin&gt;();
 </span></span><span style="display:flex;"><span> 
@@ -340,8 +344,8 @@
         <a data-fancybox="gallery" href="/uploads/custom-copilot3.png">
             <img class="mx-auto" alt="Semantic Kernel" src="/uploads/custom-copilot3.png" />
         </a>
-    
-
+    </p>
+<p>
         <a data-fancybox="gallery" href="/uploads/custom-copilot4.png">
             <img class="mx-auto" alt="Semantic Kernel" src="/uploads/custom-copilot4.png" />
         </a>
@@ -382,6 +386,8 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.SemanticKernel</span>;
@@ -406,7 +412,9 @@
 </span></span><span style="display:flex;"><span><span style="color:#008080">        [Description(&#34;IATA code for the flight&#34;)]</span> <span style="color:#458;font-weight:bold">string</span> flightNumber,
 </span></span><span style="display:flex;"><span><span style="color:#008080">        [Description(&#34;Count of flights&#34;)]</span> <span style="color:#458;font-weight:bold">int</span> limit)
 </span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">string</span> url = <span style="color:#d14">$&#34;http://api.aviationstack.com/v1/flights?access_key={apiKey}&amp;dep_iata={source}&amp;arr_iata={destination}&amp;limit={limit}&amp;flight_iata={flightNumber}&#34;</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">string</span> url = <span style="color:#d14">$&#34;&#34;&#34;http://api.aviationstack.com/v1/flights
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">            ?access_key={apiKey}&amp;dep_iata={source}&amp;arr_iata={destination}
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">            &amp;limit={limit}&amp;flight_iata={flightNumber}&#34;&#34;&#34;</span>;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>            HttpResponseMessage response = <span style="color:#000;font-weight:bold">await</span> client.GetAsync(url);
 </span></span><span style="display:flex;"><span>            response.EnsureSuccessStatusCode();
@@ -424,9 +432,13 @@
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder.Plugins.AddFromObject(<span style="color:#000;font-weight:bold">new</span> FlightTrackerPlugin(GetEnvironmentVariable(<span style="color:#d14">&#34;AVIATIONSTACK_KEY&#34;</span>)!), nameof(FlightTrackerPlugin));
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder.Plugins.AddFromObject(<span style="color:#000;font-weight:bold">new</span> FlightTrackerPlugin(
+</span></span><span style="display:flex;"><span>  GetEnvironmentVariable(<span style="color:#d14">&#34;AVIATIONSTACK_KEY&#34;</span>)!), 
+</span></span><span style="display:flex;"><span>  nameof(FlightTrackerPlugin));
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>添加此行代码后。我的建议是将系统提示更改为 “You&rsquo;re a virtual assistant that helps people track flight and find information. ”。 执行并查看是否得到类似的响应：</p>
@@ -434,8 +446,8 @@
         <a data-fancybox="gallery" href="/uploads/custom-copilot5.png">
             <img class="mx-auto" alt="Semantic Kernel" src="/uploads/custom-copilot5.png" />
         </a>
-    
-
+    </p>
+<p>
         <a data-fancybox="gallery" href="/uploads/custom-copilot6.png">
             <img class="mx-auto" alt="Semantic Kernel" src="/uploads/custom-copilot6.png" />
         </a>
@@ -474,6 +486,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.SemanticKernel</span>;
@@ -495,7 +508,8 @@
 </span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">async</span> Task&lt;<span style="color:#458;font-weight:bold">string</span>&gt; GetWeatherAsync(
 </span></span><span style="display:flex;"><span><span style="color:#008080">        [Description(&#34;name of the location&#34;)]</span> <span style="color:#458;font-weight:bold">string</span> locationName)
 </span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">string</span> url = <span style="color:#d14">$&#34;http://api.weatherapi.com/v1/current.json?key={apiKey}&amp;q={locationName}&amp;aqi=no&#34;</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">string</span> url = <span style="color:#d14">$&#34;&#34;&#34;http://api.weatherapi.com/v1/current.json
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">            ?key={apiKey}&amp;q={locationName}&amp;aqi=no&#34;&#34;&#34;</span>;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>            HttpResponseMessage response = <span style="color:#000;font-weight:bold">await</span> client.GetAsync(url);
 </span></span><span style="display:flex;"><span>            response.EnsureSuccessStatusCode();
@@ -511,9 +525,13 @@
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder.Plugins.AddFromObject(<span style="color:#000;font-weight:bold">new</span> WeatherPlugin(GetEnvironmentVariable(<span style="color:#d14">&#34;WEATHERAPI_KEY&#34;</span>)!), nameof(WeatherPlugin));
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder.Plugins.AddFromObject(<span style="color:#000;font-weight:bold">new</span> WeatherPlugin(
+</span></span><span style="display:flex;"><span>  GetEnvironmentVariable(<span style="color:#d14">&#34;WEATHERAPI_KEY&#34;</span>)!), 
+</span></span><span style="display:flex;"><span>  nameof(WeatherPlugin));
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>现在如果您再次运行它，您将能够看到即将到来的天气。这是因为您的 Copilot 现在正在与外部服务交互。</p>
@@ -521,8 +539,8 @@
         <a data-fancybox="gallery" href="/uploads/custom-copilot7.png">
             <img class="mx-auto" alt="Semantic Kernel" src="/uploads/custom-copilot7.png" />
         </a>
-    
-
+    </p>
+<p>
         <a data-fancybox="gallery" href="/uploads/custom-copilot8.png">
             <img class="mx-auto" alt="Semantic Kernel" src="/uploads/custom-copilot8.png" />
         </a>
@@ -532,9 +550,19 @@
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>You&#39;re a virtual assistant responsible for only flight tracking, weather updates and finding out the right places within Australia after inquiring about the proximity or city. You should not talk anything outside of your scope. Your response should be very concise and to the point. For each correct answer, you will get some $10 from me as a reward. Be nice with people. 
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>You&#39;re a virtual assistant responsible for only flight tracking, 
+</span></span><span style="display:flex;"><span>weather updates and finding out the right places within Australia 
+</span></span><span style="display:flex;"><span>after inquiring about the proximity or city. You should not talk 
+</span></span><span style="display:flex;"><span>anything outside of your scope. Your response should be very concise 
+</span></span><span style="display:flex;"><span>and to the point. For each correct answer, you will get some $10 
+</span></span><span style="display:flex;"><span>from me as a reward. Be nice with people. 
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>这就是零售搜索插件代码的样子。</p>
@@ -654,9 +682,13 @@
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder.Plugins.AddFromObject(<span style="color:#000;font-weight:bold">new</span> PlaceSuggestionsPlugin(GetEnvironmentVariable(<span style="color:#d14">&#34;AZUREMAPS_SUBSCRIPTION_KEY&#34;</span>)!), nameof(PlaceSuggestionsPlugin));
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder.Plugins.AddFromObject(<span style="color:#000;font-weight:bold">new</span> PlaceSuggestionsPlugin(
+</span></span><span style="display:flex;"><span>  GetEnvironmentVariable(<span style="color:#d14">&#34;AZUREMAPS_SUBSCRIPTION_KEY&#34;</span>)!), 
+</span></span><span style="display:flex;"><span>  nameof(PlaceSuggestionsPlugin));
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>再次启动控制台应用，现在应看到类似于以下内容的内容：</p>
@@ -664,8 +696,8 @@
         <a data-fancybox="gallery" href="/uploads/custom-copilot9.png">
             <img class="mx-auto" alt="Semantic Kernel" src="/uploads/custom-copilot9.png" />
         </a>
-    
-
+    </p>
+<p>
         <a data-fancybox="gallery" href="/uploads/custom-copilot10.png">
             <img class="mx-auto" alt="Semantic Kernel" src="/uploads/custom-copilot10.png" />
         </a>

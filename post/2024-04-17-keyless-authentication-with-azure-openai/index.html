@@ -158,7 +158,7 @@
 </div>
 </div><p>和基于密钥的代码的区别:</p>
 <ul>
-<li>该代码使用 <code>DefaultAzureCredential</code> 与 Azure 进行身份验证，它会遍历许多可能的<a href="https://learn.microsoft.com/python/api/azure-identity/azure.identity.defaultazurecredential?view=azure-python&amp;WT.mc_id=AI-MVP-5003172">凭据类型</a>，直到找到有效的Azure登录。</li>
+<li>该代码使用 <code>DefaultAzureCredential</code> 与 Azure 进行身份验证，它会遍历许多可能的<a href="https://learn.microsoft.com/python/api/azure-identity/azure.identity.defaultazurecredential?view=azure-python&amp;WT.mc_id=AI-MVP-5003172">凭据类型</a>，直到找到一个有效的 Azure 登录身份。</li>
 <li>代码根据凭据获取 Azure OpenAI 令牌提供商，并将其设置为  <code>azure_ad_token_provider</code> ，SDK 将在必要时使用该令牌提供商获取访问令牌，甚至为我们刷新令牌。</li>
 </ul>
 <h2 id="本地访问-azure-openai">本地访问 Azure OpenAI</h2>

@@ -228,6 +228,20 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">os</span>
@@ -295,36 +309,50 @@
 </span></span><span style="display:flex;"><span>                    <span style="color:#000;font-weight:bold">if</span> text <span style="color:#000;font-weight:bold">!=</span> <span style="color:#d14">&#39;&#39;</span>: 
 </span></span><span style="display:flex;"><span>                        <span style="color:#998;font-style:italic"># if sentence only have \n or space, we could skip</span>
 </span></span><span style="display:flex;"><span>                        <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;Speech synthesized to speaker for: </span><span style="color:#d14">{</span>text<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
-</span></span><span style="display:flex;"><span>                        last_tts_request <span style="color:#000;font-weight:bold">=</span> speech_synthesizer<span style="color:#000;font-weight:bold">.</span>speak_text_async(text)
+</span></span><span style="display:flex;"><span>                        last_tts_request <span style="color:#000;font-weight:bold">=</span> speech_synthesizer
+</span></span><span style="display:flex;"><span>                                                    <span style="color:#000;font-weight:bold">.</span>speak_text_async(text)
 </span></span><span style="display:flex;"><span>                        collected_messages<span style="color:#000;font-weight:bold">.</span>clear()
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">if</span> last_tts_request:
 </span></span><span style="display:flex;"><span>        last_tts_request<span style="color:#000;font-weight:bold">.</span>get()
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Continuously listens for speech input to recognize and send as text to Azure OpenAI</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Continuously listens for speech input to recognize </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># and send as text to Azure OpenAI</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">chat_with_open_ai</span>():
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">while</span> <span style="color:#000;font-weight:bold">True</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Azure OpenAI is listening. Say &#39;Stop&#39; or press Ctrl-Z to end the conversation.&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;&#34;&#34;Azure OpenAI is listening. 
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">               Say &#39;Stop&#39; or press Ctrl-Z to end the conversation.&#34;&#34;&#34;</span>)
 </span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">try</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># Get audio from the microphone and then send it to the TTS service.</span>
-</span></span><span style="display:flex;"><span>            speech_recognition_result <span style="color:#000;font-weight:bold">=</span> speech_recognizer<span style="color:#000;font-weight:bold">.</span>recognize_once_async()<span style="color:#000;font-weight:bold">.</span>get()
+</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># Get audio from the microphone and </span>
+</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># then send it to the TTS service.</span>
+</span></span><span style="display:flex;"><span>            speech_recognition_result <span style="color:#000;font-weight:bold">=</span> speech_recognizer<span style="color:#000;font-weight:bold">.</span>
+</span></span><span style="display:flex;"><span>                                           recognize_once_async()<span style="color:#000;font-weight:bold">.</span>get()
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># If speech is recognized, send it to Azure OpenAI and listen for the response.</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">if</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason<span style="color:#000;font-weight:bold">.</span>RecognizedSpeech:
+</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># If speech is recognized, send it to Azure OpenAI </span>
+</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># and listen for the response.</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">if</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason
+</span></span><span style="display:flex;"><span>                                                         <span style="color:#000;font-weight:bold">.</span>RecognizedSpeech:
 </span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">if</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;Stop.&#34;</span> 
-</span></span><span style="display:flex;"><span>                                            <span style="color:#000;font-weight:bold">or</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;Stop。&#34;</span>:
+</span></span><span style="display:flex;"><span>                             <span style="color:#000;font-weight:bold">or</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;Stop。&#34;</span>:
 </span></span><span style="display:flex;"><span>                    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Conversation ended.&#34;</span>)
 </span></span><span style="display:flex;"><span>                    <span style="color:#000;font-weight:bold">break</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Recognized speech: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text))
+</span></span><span style="display:flex;"><span>                <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Recognized speech: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(
+</span></span><span style="display:flex;"><span>                                            speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text))
 </span></span><span style="display:flex;"><span>                ask_openai(speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text)
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">elif</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason<span style="color:#000;font-weight:bold">.</span>NoMatch:
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">elif</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason
+</span></span><span style="display:flex;"><span>                                                                  <span style="color:#000;font-weight:bold">.</span>NoMatch:
 </span></span><span style="display:flex;"><span>                <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;No speech could be recognized: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(
-</span></span><span style="display:flex;"><span>                                           speech_recognition_result<span style="color:#000;font-weight:bold">.</span>no_match_details))
+</span></span><span style="display:flex;"><span>                                speech_recognition_result<span style="color:#000;font-weight:bold">.</span>no_match_details))
 </span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">break</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">elif</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason<span style="color:#000;font-weight:bold">.</span>Canceled:
-</span></span><span style="display:flex;"><span>                cancellation_details <span style="color:#000;font-weight:bold">=</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>cancellation_details
-</span></span><span style="display:flex;"><span>                <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Speech Recognition canceled: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(cancellation_details<span style="color:#000;font-weight:bold">.</span>reason))
-</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">if</span> cancellation_details<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>CancellationReason<span style="color:#000;font-weight:bold">.</span>Error:
-</span></span><span style="display:flex;"><span>                    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Error details: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(cancellation_details<span style="color:#000;font-weight:bold">.</span>error_details))
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">elif</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason
+</span></span><span style="display:flex;"><span>                                                                  <span style="color:#000;font-weight:bold">.</span>Canceled:
+</span></span><span style="display:flex;"><span>                cancellation_details <span style="color:#000;font-weight:bold">=</span> speech_recognition_result
+</span></span><span style="display:flex;"><span>                                                      <span style="color:#000;font-weight:bold">.</span>cancellation_details
+</span></span><span style="display:flex;"><span>                <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Speech Recognition canceled: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(
+</span></span><span style="display:flex;"><span>                                               cancellation_details<span style="color:#000;font-weight:bold">.</span>reason))
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">if</span> cancellation_details<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>CancellationReason
+</span></span><span style="display:flex;"><span>                                                                    <span style="color:#000;font-weight:bold">.</span>Error:
+</span></span><span style="display:flex;"><span>                    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Error details: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(
+</span></span><span style="display:flex;"><span>                                        cancellation_details<span style="color:#000;font-weight:bold">.</span>error_details))
 </span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">EOFError</span>:
 </span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">break</span>
 </span></span><span style="display:flex;"><span>
@@ -384,11 +412,11 @@
         
         <li><a href="/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel/">使用 Semantic Kernel 构建自定义 Copilot</a></li>
         
-        <li><a href="/post/2024-01-27-fireug-net-conf-china-2023-watch-party/">FireUG x .NET Conf China - Watch Party</a></li>
-        
         <li><a href="/post/2024-01-22-gpts-action-with-azure-ai-search/">GPTs action 中使用 Azure AI Search</a></li>
         
         <li><a href="/post/2024-01-03-azure-machine-learning-and-datarobot-team-up-to-accelerate-value/">Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值</a></li>
+        
+        <li><a href="/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/">多种环境部署 Azure 机器学习 Prompt Flow</a></li>
         
     </ul>
 </div>
@@ -399,6 +427,8 @@
             <ul class="clearfix">
                 
                 <li><a href='/tags/Azure-OpenAI' target="_blank">Azure OpenAI</a></li>
+                
+                <li><a href='/tags/Azure-AI' target="_blank">Azure AI</a></li>
                 
             </ul>
             

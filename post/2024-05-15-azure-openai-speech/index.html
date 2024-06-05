@@ -9,20 +9,20 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
     
 
-    <title>GPTs action 中使用 Azure AI Search | Innovation with tech</title>
-    <meta property="og:title" content="GPTs action 中使用 Azure AI Search - Innovation with tech">
+    <title>Azure OpenAI 语音聊天 | Innovation with tech</title>
+    <meta property="og:title" content="Azure OpenAI 语音聊天 - Innovation with tech">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content='2024-01-22T12:00:00&#43;08:00'>
+    <meta property="article:published_time" content='2024-05-15T12:00:00&#43;08:00'>
         
         
-    <meta property="article:modified_time" content='2024-01-22T12:00:00&#43;08:00'>
+    <meta property="article:modified_time" content='2024-05-15T12:00:00&#43;08:00'>
         
     <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
-    <meta name="description" content="GPTs action 中使用 Azure AI Search">
+    <meta name="description" content="Azure OpenAI 语音聊天">
         
     <meta name="author" content="BeanHsiang">
-    <meta property="og:url" content="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/">
     <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
 
     <link rel="stylesheet" href='/css/normalize.css'>
@@ -77,11 +77,11 @@
     
     <article class="post">
         <header>
-            <h1 class="post-title">GPTs action 中使用 Azure AI Search</h1>
+            <h1 class="post-title">Azure OpenAI 语音聊天</h1>
         </header>
         
-  <time datetime="2024-01-22T04:00:00Z" class="post-meta meta-date dt-published">
-    2024年1月22日
+  <time datetime="2024-05-15T04:00:00Z" class="post-meta meta-date dt-published">
+    2024年5月15日
   </time>
 
 
@@ -102,11 +102,27 @@
         
         
         <div class="post-content">
-            <p>OpenAI 的 GPTs 上线有一段时间了，在实际应用中发现 GPTs 内置对知识库的检索能力很一般，对话过程中经常拿不到期望的反馈内容。如果利用 GPTs 的 action 能很好地弥补这个缺陷。</p>
-<p>总所周知加强检索知识库离不开 RAG，如果自建 RAG 将会是一个很大的工作量，而且还要考虑到知识库的更新问题。于是想到 Azure AI Search 提供了一个很好的解决方案，可以很方便地将知识库导入到 Azure AI Search 中，然后通过 API 调用来检索知识库。整个过程都不需要编码，所以将 Azure AI Search 与 GPTs action 结合起来是个不错的主意。</p>
-<h2 id="配置-gpts-action-的-schema">配置 GPTs action 的 Schema</h2>
-<p>Schema 要求是一个符合 <a href="https://spec.openapis.org/oas/latest.html">OpenAPI</a> 标准的配置说明，这里示例使用 json 格式。</p>
-<p>其中把几个关键的参数改成 Azure AI Search 里实际的值即可。这里使用的是混合了索引和矢量查询的请求方式。</p>
+            <p>本文介绍使用 Azure AI 语音与 Azure OpenAI 服务实现全语音对话聊天，以及如何改进非阻塞式的对话。</p>
+<h3 id="要点">要点</h3>
+<ul>
+<li>Azure AI 语音服务识别文本</li>
+<li>将文本发送到 Azure OpenAI，获取流式回复</li>
+<li>Azure AI 语音服务对流式响应的文本合成语音</li>
+</ul>
+<h3 id="代码示例python">代码示例（Python）</h3>
+<p>以下是 Python 版本的示例，想要了解更多语言的示例，请参考 <a href="https://learn.microsoft.com/zh-cn/azure/ai-services/speech-service/openai-speech?WT.mc_id=AI-MVP-5003172">OpenAI-Speech</a></p>
+<h4 id="安装依赖">安装依赖</h4>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install azure-cognitiveservices-speech
+</span></span><span style="display:flex;"><span>pip install openai
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="添加代码">添加代码</h4>
 <div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
@@ -212,192 +228,137 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">132
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">133
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">134
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">135
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">136
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">137
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">138
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">139
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">140
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;openapi&#34;</span>: <span style="color:#d14">&#34;3.1.0&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;info&#34;</span>: { 
-</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;title&#34;</span>: <span style="color:#d14">&#34;Azure AI Search&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Retrieves knowledges for a question.&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;version&#34;</span>: <span style="color:#d14">&#34;v1.0.0&#34;</span>
-</span></span><span style="display:flex;"><span>  },
-</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;servers&#34;</span>: [
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;url&#34;</span>: <span style="color:#d14">&#34;https://{your-search-name}.search.windows.net&#34;</span>
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  ],
-</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;paths&#34;</span>: {
-</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;/indexes/{your-index-name}/docs/search&#34;</span>: {
-</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;post&#34;</span>: {
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Search knowledges for keywords&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;operationId&#34;</span>: <span style="color:#d14">&#34;Search&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;parameters&#34;</span>: [
-</span></span><span style="display:flex;"><span>          {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;name&#34;</span>: <span style="color:#d14">&#34;api-version&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;in&#34;</span>: <span style="color:#d14">&#34;query&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;the version of api.&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;required&#34;</span>: <span style="color:#000;font-weight:bold">true</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;schema&#34;</span>: {
-</span></span><span style="display:flex;"><span>              <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>              <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;2023-10-01-Preview&#34;</span>
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>        ],
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;requestBody&#34;</span>: {
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;required&#34;</span>: <span style="color:#000;font-weight:bold">true</span>,
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Information about a new query&#34;</span>,
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;content&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;application/json&#34;</span>: {
-</span></span><span style="display:flex;"><span>              <span style="color:#000080">&#34;schema&#34;</span>: {
-</span></span><span style="display:flex;"><span>                <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;object&#34;</span>,
-</span></span><span style="display:flex;"><span>                <span style="color:#000080">&#34;required&#34;</span>: [
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;top&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;select&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;search&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;vectorQueries&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;queryType&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;semanticConfiguration&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;captions&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;answers&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;queryLanguage&#34;</span>
-</span></span><span style="display:flex;"><span>                ],
-</span></span><span style="display:flex;"><span>                <span style="color:#000080">&#34;properties&#34;</span>: {
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;top&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;integer&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#099">2</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;select&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;chunk,title&#34;</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;search&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;vectorQueries&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;array about query&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;array&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;items&#34;</span>: {
-</span></span><span style="display:flex;"><span>                      <span style="color:#000080">&#34;$ref&#34;</span>: <span style="color:#d14">&#34;#/components/schemas/VectorQuery&#34;</span>
-</span></span><span style="display:flex;"><span>                    }
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;queryType&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;semantic&#34;</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;semanticConfiguration&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: {<span style="color:#a61717;background-color:#e3d2d2">your-semantic-configuration</span>}
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;captions&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;extractive&#34;</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;answers&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;extractive|count-3&#34;</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;queryLanguage&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;zh-CN&#34;</span>
-</span></span><span style="display:flex;"><span>                  }
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>              }
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>        },
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;responses&#34;</span>: {
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;200&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Get the result&#34;</span>
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>        },
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;deprecated&#34;</span>: <span style="color:#000;font-weight:bold">false</span>
-</span></span><span style="display:flex;"><span>      }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  },
-</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;components&#34;</span>: {
-</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;schemas&#34;</span>: {
-</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;VectorQuery&#34;</span>: {
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;object&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;required&#34;</span>: [
-</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;kind&#34;</span>,
-</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;text&#34;</span>,
-</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;k&#34;</span>,
-</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;fields&#34;</span>
-</span></span><span style="display:flex;"><span>        ],
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;properties&#34;</span>: {
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;kind&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;string type, value is alway default&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;text&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;enum&#34;</span>: [
-</span></span><span style="display:flex;"><span>              <span style="color:#d14">&#34;text&#34;</span>
-</span></span><span style="display:flex;"><span>            ]
-</span></span><span style="display:flex;"><span>          },
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;text&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;string equals to query search&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>
-</span></span><span style="display:flex;"><span>          },
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;k&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;integer&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#099">5</span>
-</span></span><span style="display:flex;"><span>          },
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;fields&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;string type, value is alway default&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;vector&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;enum&#34;</span>: [
-</span></span><span style="display:flex;"><span>              <span style="color:#d14">&#34;vector&#34;</span>
-</span></span><span style="display:flex;"><span>            ]
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>      }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">os</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">azure.cognitiveservices.speech</span> <span style="color:#000;font-weight:bold">as</span> <span style="color:#555">speechsdk</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">openai</span> <span style="color:#000;font-weight:bold">import</span> AzureOpenAI
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># This example requires environment variables named </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># &#34;OPEN_AI_KEY&#34;, &#34;OPEN_AI_ENDPOINT&#34; and &#34;OPEN_AI_DEPLOYMENT_NAME&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Your endpoint should look like the following:</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># https://YOUR_OPEN_AI_RESOURCE_NAME.openai.azure.com/</span>
+</span></span><span style="display:flex;"><span>client <span style="color:#000;font-weight:bold">=</span> AzureOpenAI(
+</span></span><span style="display:flex;"><span>azure_endpoint<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>environ<span style="color:#000;font-weight:bold">.</span>get(<span style="color:#d14">&#39;OPEN_AI_ENDPOINT&#39;</span>),
+</span></span><span style="display:flex;"><span>api_key<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>environ<span style="color:#000;font-weight:bold">.</span>get(<span style="color:#d14">&#39;OPEN_AI_KEY&#39;</span>),
+</span></span><span style="display:flex;"><span>api_version<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;2024-05-01-preview&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># This will correspond to the custom name you chose for </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># your deployment when you deployed a model.</span>
+</span></span><span style="display:flex;"><span>deployment_id<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>environ<span style="color:#000;font-weight:bold">.</span>get(<span style="color:#d14">&#39;OPEN_AI_DEPLOYMENT_NAME&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># This example requires environment variables </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># named &#34;SPEECH_KEY&#34; and &#34;SPEECH_REGION&#34;</span>
+</span></span><span style="display:flex;"><span>speech_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechConfig(subscription<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>environ<span style="color:#000;font-weight:bold">.</span>get(<span style="color:#d14">&#39;SPEECH_KEY&#39;</span>), 
+</span></span><span style="display:flex;"><span>                                       region<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>environ<span style="color:#000;font-weight:bold">.</span>get(<span style="color:#d14">&#39;SPEECH_REGION&#39;</span>))
+</span></span><span style="display:flex;"><span>audio_output_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>audio<span style="color:#000;font-weight:bold">.</span>AudioOutputConfig(use_default_speaker<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>)
+</span></span><span style="display:flex;"><span>audio_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>audio<span style="color:#000;font-weight:bold">.</span>AudioConfig(use_default_microphone<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Should be the locale for the speaker&#39;s language.</span>
+</span></span><span style="display:flex;"><span>speech_config<span style="color:#000;font-weight:bold">.</span>speech_recognition_language<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;zh-CN&#34;</span>
+</span></span><span style="display:flex;"><span>speech_recognizer <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechRecognizer(speech_config<span style="color:#000;font-weight:bold">=</span>speech_config, 
+</span></span><span style="display:flex;"><span>                                               audio_config<span style="color:#000;font-weight:bold">=</span>audio_config)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># The language of the voice that responds on behalf of Azure OpenAI.</span>
+</span></span><span style="display:flex;"><span>speech_config<span style="color:#000;font-weight:bold">.</span>speech_synthesis_voice_name<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#39;zh-CN-YunyiMultilingualNeural&#39;</span>
+</span></span><span style="display:flex;"><span>speech_synthesizer <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechSynthesizer(speech_config<span style="color:#000;font-weight:bold">=</span>speech_config, 
+</span></span><span style="display:flex;"><span>                                                 audio_config<span style="color:#000;font-weight:bold">=</span>audio_output_config)
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># tts sentence end mark</span>
+</span></span><span style="display:flex;"><span>tts_sentence_end <span style="color:#000;font-weight:bold">=</span> [ <span style="color:#d14">&#34;.&#34;</span>, <span style="color:#d14">&#34;!&#34;</span>, <span style="color:#d14">&#34;?&#34;</span>, <span style="color:#d14">&#34;;&#34;</span>, <span style="color:#d14">&#34;。&#34;</span>, <span style="color:#d14">&#34;！&#34;</span>, <span style="color:#d14">&#34;？&#34;</span>, <span style="color:#d14">&#34;；&#34;</span>, <span style="color:#d14">&#34;</span><span style="color:#d14">\n</span><span style="color:#d14">&#34;</span> ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Prompts Azure OpenAI with a request and synthesizes the response.</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">ask_openai</span>(prompt):
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Ask Azure OpenAI in streaming way</span>
+</span></span><span style="display:flex;"><span>    response <span style="color:#000;font-weight:bold">=</span> client<span style="color:#000;font-weight:bold">.</span>chat<span style="color:#000;font-weight:bold">.</span>completions<span style="color:#000;font-weight:bold">.</span>create(model<span style="color:#000;font-weight:bold">=</span>deployment_id, 
+</span></span><span style="display:flex;"><span>                                              max_tokens<span style="color:#000;font-weight:bold">=</span><span style="color:#099">200</span>, 
+</span></span><span style="display:flex;"><span>                                              stream<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>, 
+</span></span><span style="display:flex;"><span>                                              messages<span style="color:#000;font-weight:bold">=</span>[
+</span></span><span style="display:flex;"><span>                                                {<span style="color:#d14">&#34;role&#34;</span>: <span style="color:#d14">&#34;user&#34;</span>, <span style="color:#d14">&#34;content&#34;</span>: prompt}
+</span></span><span style="display:flex;"><span>                                              ])
+</span></span><span style="display:flex;"><span>    collected_messages <span style="color:#000;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>    last_tts_request <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># iterate through the stream response stream</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">for</span> chunk <span style="color:#000;font-weight:bold">in</span> response:
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">if</span> <span style="color:#0086b3">len</span>(chunk<span style="color:#000;font-weight:bold">.</span>choices) <span style="color:#000;font-weight:bold">&gt;</span> <span style="color:#099">0</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># extract the message</span>
+</span></span><span style="display:flex;"><span>            chunk_message <span style="color:#000;font-weight:bold">=</span> chunk<span style="color:#000;font-weight:bold">.</span>choices[<span style="color:#099">0</span>]<span style="color:#000;font-weight:bold">.</span>delta<span style="color:#000;font-weight:bold">.</span>content  
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">if</span> chunk_message <span style="color:#000;font-weight:bold">is</span> <span style="color:#000;font-weight:bold">not</span> <span style="color:#000;font-weight:bold">None</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#998;font-style:italic"># save the message</span>
+</span></span><span style="display:flex;"><span>                collected_messages<span style="color:#000;font-weight:bold">.</span>append(chunk_message)  
+</span></span><span style="display:flex;"><span>                <span style="color:#998;font-style:italic"># sentence end found</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">if</span> chunk_message <span style="color:#000;font-weight:bold">in</span> tts_sentence_end: 
+</span></span><span style="display:flex;"><span>                    <span style="color:#998;font-style:italic"># join the recieved message together to build a sentence</span>
+</span></span><span style="display:flex;"><span>                    text <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;&#39;</span><span style="color:#000;font-weight:bold">.</span>join(collected_messages)<span style="color:#000;font-weight:bold">.</span>strip() 
+</span></span><span style="display:flex;"><span>                    <span style="color:#000;font-weight:bold">if</span> text <span style="color:#000;font-weight:bold">!=</span> <span style="color:#d14">&#39;&#39;</span>: 
+</span></span><span style="display:flex;"><span>                        <span style="color:#998;font-style:italic"># if sentence only have \n or space, we could skip</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;Speech synthesized to speaker for: </span><span style="color:#d14">{</span>text<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
+</span></span><span style="display:flex;"><span>                        last_tts_request <span style="color:#000;font-weight:bold">=</span> speech_synthesizer<span style="color:#000;font-weight:bold">.</span>speak_text_async(text)
+</span></span><span style="display:flex;"><span>                        collected_messages<span style="color:#000;font-weight:bold">.</span>clear()
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">if</span> last_tts_request:
+</span></span><span style="display:flex;"><span>        last_tts_request<span style="color:#000;font-weight:bold">.</span>get()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Continuously listens for speech input to recognize and send as text to Azure OpenAI</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">chat_with_open_ai</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">while</span> <span style="color:#000;font-weight:bold">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Azure OpenAI is listening. Say &#39;Stop&#39; or press Ctrl-Z to end the conversation.&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># Get audio from the microphone and then send it to the TTS service.</span>
+</span></span><span style="display:flex;"><span>            speech_recognition_result <span style="color:#000;font-weight:bold">=</span> speech_recognizer<span style="color:#000;font-weight:bold">.</span>recognize_once_async()<span style="color:#000;font-weight:bold">.</span>get()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># If speech is recognized, send it to Azure OpenAI and listen for the response.</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">if</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason<span style="color:#000;font-weight:bold">.</span>RecognizedSpeech:
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">if</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;Stop.&#34;</span> 
+</span></span><span style="display:flex;"><span>                                            <span style="color:#000;font-weight:bold">or</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;Stop。&#34;</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Conversation ended.&#34;</span>)
+</span></span><span style="display:flex;"><span>                    <span style="color:#000;font-weight:bold">break</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Recognized speech: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text))
+</span></span><span style="display:flex;"><span>                ask_openai(speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text)
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">elif</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason<span style="color:#000;font-weight:bold">.</span>NoMatch:
+</span></span><span style="display:flex;"><span>                <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;No speech could be recognized: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(
+</span></span><span style="display:flex;"><span>                                           speech_recognition_result<span style="color:#000;font-weight:bold">.</span>no_match_details))
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">break</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">elif</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason<span style="color:#000;font-weight:bold">.</span>Canceled:
+</span></span><span style="display:flex;"><span>                cancellation_details <span style="color:#000;font-weight:bold">=</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>cancellation_details
+</span></span><span style="display:flex;"><span>                <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Speech Recognition canceled: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(cancellation_details<span style="color:#000;font-weight:bold">.</span>reason))
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">if</span> cancellation_details<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>CancellationReason<span style="color:#000;font-weight:bold">.</span>Error:
+</span></span><span style="display:flex;"><span>                    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Error details: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(cancellation_details<span style="color:#000;font-weight:bold">.</span>error_details))
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">EOFError</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Main</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">try</span>:
+</span></span><span style="display:flex;"><span>    chat_with_open_ai()
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">Exception</span> <span style="color:#000;font-weight:bold">as</span> err:
+</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Encountered exception. </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(err))
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="相关文档">相关文档</h2>
-<p>Azure AI Search 介绍：
-<a href="https://learn.microsoft.com/zh-cn/azure/search/search-what-is-azure-search?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/zh-cn/azure/search/search-what-is-azure-search?WT.mc_id=AI-MVP-5003172</a></p>
-<p>在 Azure AI 搜索中创建混合查询
-<a href="https://learn.microsoft.com/zh-cn/azure/search/hybrid-search-how-to-query?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/zh-cn/azure/search/hybrid-search-how-to-query?WT.mc_id=AI-MVP-5003172</a></p>
+</div><h3 id="非阻塞式改进">非阻塞式改进</h3>
+<p>前面的示例运行起来的效果是固定一问一答交流的，如果希望实现对话的过程是可以被打断的，可以改变识别语音的代码为非阻塞式。
+即把调用 ask_openai 的地方改为创建另一个线程来执行。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">threading</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">time</span> <span style="color:#000;font-weight:bold">import</span> sleep
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>t1 <span style="color:#000;font-weight:bold">=</span> threading<span style="color:#000;font-weight:bold">.</span>Thread(target<span style="color:#000;font-weight:bold">=</span>ask_openai, 
+</span></span><span style="display:flex;"><span>                      args<span style="color:#000;font-weight:bold">=</span>(speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text,))
+</span></span><span style="display:flex;"><span>t1<span style="color:#000;font-weight:bold">.</span>start()
+</span></span><span style="display:flex;"><span>sleep(<span style="color:#099">1</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>需要注意的是，<code>sleep(1)</code> 这里不能省略，否则会导致主线程假死，无法正常监听。</p>
 
         </div>
 
@@ -405,7 +366,7 @@
 <div class="post-archive">
     <ul class="post-copyright">
         <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
-        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/">https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/">https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/</a></li>
         <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
     </ul>
 </div>
@@ -419,15 +380,15 @@
     <h2>相关文章</h2>
     <ul class="listing">
         
+        <li><a href="/post/2024-04-17-keyless-authentication-with-azure-openai/">实现 Azure OpenAI 无密钥身份验证</a></li>
+        
+        <li><a href="/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel/">使用 Semantic Kernel 构建自定义 Copilot</a></li>
+        
+        <li><a href="/post/2024-01-27-fireug-net-conf-china-2023-watch-party/">FireUG x .NET Conf China - Watch Party</a></li>
+        
+        <li><a href="/post/2024-01-22-gpts-action-with-azure-ai-search/">GPTs action 中使用 Azure AI Search</a></li>
+        
         <li><a href="/post/2024-01-03-azure-machine-learning-and-datarobot-team-up-to-accelerate-value/">Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值</a></li>
-        
-        <li><a href="/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/">多种环境部署 Azure 机器学习 Prompt Flow</a></li>
-        
-        <li><a href="/post/2023-11-16-more-to-azure-ai-model-catalog/">新加入 Azure AI Model Catalog 的模型</a></li>
-        
-        <li><a href="/post/2023-04-11-question-answering-in-langchain/">基于 LangChain 实现问答</a></li>
-        
-        <li><a href="/post/2023-02-25-introducing-scalable-and-enterprise-grade-genomics-workflows-in/">在 Azure ML 中引入可缩放的企业级基因学工作流</a></li>
         
     </ul>
 </div>
@@ -437,7 +398,7 @@
             
             <ul class="clearfix">
                 
-                <li><a href='/tags/Azure-AI' target="_blank">Azure AI</a></li>
+                <li><a href='/tags/Azure-OpenAI' target="_blank">Azure OpenAI</a></li>
                 
             </ul>
             

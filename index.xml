@@ -4,10 +4,17 @@
     <title>Innovation with tech</title>
     <link>https://beanhsiang.github.io/</link>
     <description>Recent content on Innovation with tech</description>
-    <generator>Hugo 0.125.0</generator>
+    <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Wed, 17 Apr 2024 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 15 May 2024 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Azure OpenAI 语音聊天</title>
+      <link>https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/</link>
+      <pubDate>Wed, 15 May 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/</guid>
+      <description>本文介绍使用 Azure AI 语音与 Azure OpenAI 服务实现全语音对话聊天，以及如何改进非阻塞式的对话。 要点 Azure AI 语音服务识别文本 将文本发送到 Azure OpenAI，获取流式回复 Azure AI 语音服务对流式响应的文本合成语音 代码示例（Python） 以下是 Python 版本的示例，想要了解更多语言的示例，请参考 OpenAI-Speech 安装依赖 1 2 pip install azure-cognitiveservices-speech pip install openai 添</description>
+    </item>
     <item>
       <title>实现 Azure OpenAI 无密钥身份验证</title>
       <link>https://beanhsiang.github.io/post/2024-04-17-keyless-authentication-with-azure-openai/</link>

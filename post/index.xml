@@ -30,6 +30,13 @@
       <description>本文重点介绍如何使用由 Azure OpenAI 服务提供支持的 Semantic Kernel 创建自己的 Copilot。我们将尝试利用大型语言模型（LLM）的优势与外部服务的集成。这将使您了解如何真正实现您的 Copilot 目标，不仅与零售业，而且与任何行业，无论是电力和公用事业，政府和公共部门等。它的整体功能和潜在的应用场景都远超于聊天机器</description>
     </item>
     <item>
+      <title>从引导程序说起</title>
+      <link>https://beanhsiang.github.io/post/2024-03-07-lets-start-with-the-bootloader/</link>
+      <pubDate>Thu, 07 Mar 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2024-03-07-lets-start-with-the-bootloader/</guid>
+      <description>盛传埃隆·马斯克说过“基于碳基生命体的人类是硅基生命的引导程序”这句话，也因为当下人工智能在大模型的加持下被推向了一波新的热潮，人们对于智慧和生命形态有了更多的想象。 我的感觉是，现在提引导程序启动为时尚早。以当下我们的科技水平和认知，还有许多课题要探索，比如宇宙中是否有其他的生命</description>
+    </item>
+    <item>
       <title>FireUG x .NET Conf China - Watch Party</title>
       <link>https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/</link>
       <pubDate>Sat, 27 Jan 2024 12:00:00 +0800</pubDate>

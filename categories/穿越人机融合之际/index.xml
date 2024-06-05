@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>穿越人机融合之际 on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/</link>
+    <description>Recent content in 穿越人机融合之际 on Innovation with tech</description>
+    <generator>Hugo</generator>
+    <language>zh-Hans</language>
+    <lastBuildDate>Thu, 07 Mar 2024 12:00:00 +0800</lastBuildDate>
+    <atom:link href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>从引导程序说起</title>
+      <link>https://beanhsiang.github.io/post/2024-03-07-lets-start-with-the-bootloader/</link>
+      <pubDate>Thu, 07 Mar 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2024-03-07-lets-start-with-the-bootloader/</guid>
+      <description>盛传埃隆·马斯克说过“基于碳基生命体的人类是硅基生命的引导程序”这句话，也因为当下人工智能在大模型的加持下被推向了一波新的热潮，人们对于智慧和生命形态有了更多的想象。 我的感觉是，现在提引导程序启动为时尚早。以当下我们的科技水平和认知，还有许多课题要探索，比如宇宙中是否有其他的生命</description>
+    </item>
+  </channel>
+</rss>

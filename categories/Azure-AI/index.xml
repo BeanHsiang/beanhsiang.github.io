@@ -6,8 +6,15 @@
     <description>Recent content in Azure AI on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Wed, 15 May 2024 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 07 Jun 2024 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/categories/Azure-AI/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</title>
+      <link>https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/</link>
+      <pubDate>Fri, 07 Jun 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/</guid>
+      <description>Phi-3 是由微软研究团队开发的小型语言模型。在多个公开基准测试（例如在 MMLU 上 Phi-3 达到了69%的成绩）中，Phi-3 表现良好并且可以支持长达128k的上下文。Phi-3-mini 3.8B版于2024年4月末首次发布，而 Phi-3-small、Phi-3-medium 和 Phi-3-vision 于5月在微软 Build 大会上揭</description>
+    </item>
     <item>
       <title>Azure OpenAI 语音聊天</title>
       <link>https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/</link>

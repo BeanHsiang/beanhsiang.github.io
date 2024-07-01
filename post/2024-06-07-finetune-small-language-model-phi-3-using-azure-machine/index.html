@@ -489,6 +489,13 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">209
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">210
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">211
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">212
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">213
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">214
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">215
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">216
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">217
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">218
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">os</span>
@@ -565,8 +572,10 @@
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Log on each process a small summary</span>
 </span></span><span style="display:flex;"><span>logger<span style="color:#000;font-weight:bold">.</span>warning(
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">f</span><span style="color:#d14">&#34;Process rank: </span><span style="color:#d14">{</span>train_conf<span style="color:#000;font-weight:bold">.</span>local_rank<span style="color:#d14">}</span><span style="color:#d14">, device: </span><span style="color:#d14">{</span>train_conf<span style="color:#000;font-weight:bold">.</span>device<span style="color:#d14">}</span><span style="color:#d14">, n_gpu: </span><span style="color:#d14">{</span>train_conf<span style="color:#000;font-weight:bold">.</span>n_gpu<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">+</span> <span style="color:#d14">f</span><span style="color:#d14">&#34; distributed training: </span><span style="color:#d14">{</span><span style="color:#0086b3">bool</span>(train_conf<span style="color:#000;font-weight:bold">.</span>local_rank <span style="color:#000;font-weight:bold">!=</span> <span style="color:#000;font-weight:bold">-</span><span style="color:#099">1</span>)<span style="color:#d14">}</span><span style="color:#d14">, 16-bits training: </span><span style="color:#d14">{</span>train_conf<span style="color:#000;font-weight:bold">.</span>fp16<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#d14">f</span><span style="color:#d14">&#34;Process rank: </span><span style="color:#d14">{</span>train_conf<span style="color:#000;font-weight:bold">.</span>local_rank<span style="color:#d14">}</span><span style="color:#d14">, </span>
+</span></span><span style="display:flex;"><span>    device: {train_conf<span style="color:#000;font-weight:bold">.</span>device}, n_gpu: {train_conf<span style="color:#000;font-weight:bold">.</span>n_gpu}<span style="color:#d14">&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">+</span> <span style="color:#d14">f</span><span style="color:#d14">&#34; distributed training: </span><span style="color:#d14">{</span><span style="color:#0086b3">bool</span>(train_conf<span style="color:#000;font-weight:bold">.</span>local_rank <span style="color:#000;font-weight:bold">!=</span> <span style="color:#000;font-weight:bold">-</span><span style="color:#099">1</span>)<span style="color:#d14">}</span><span style="color:#d14">, </span>
+</span></span><span style="display:flex;"><span>    <span style="color:#099">16</span><span style="color:#000;font-weight:bold">-</span>bits training: {train_conf<span style="color:#000;font-weight:bold">.</span>fp16}<span style="color:#d14">&#34;</span>
 </span></span><span style="display:flex;"><span>)
 </span></span><span style="display:flex;"><span>logger<span style="color:#000;font-weight:bold">.</span>info(<span style="color:#d14">f</span><span style="color:#d14">&#34;Training/evaluation parameters </span><span style="color:#d14">{</span>train_conf<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
 </span></span><span style="display:flex;"><span>logger<span style="color:#000;font-weight:bold">.</span>info(<span style="color:#d14">f</span><span style="color:#d14">&#34;PEFT parameters </span><span style="color:#d14">{</span>peft_conf<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
@@ -579,14 +588,16 @@
 </span></span><span style="display:flex;"><span>model_kwargs <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">dict</span>(
 </span></span><span style="display:flex;"><span>    use_cache<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">False</span>,
 </span></span><span style="display:flex;"><span>    trust_remote_code<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>,
-</span></span><span style="display:flex;"><span>    attn_implementation<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;flash_attention_2&#34;</span>,  <span style="color:#998;font-style:italic"># loading the model with flash-attenstion support</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># loading the model with flash-attenstion support</span>
+</span></span><span style="display:flex;"><span>    attn_implementation<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;flash_attention_2&#34;</span>,
 </span></span><span style="display:flex;"><span>    torch_dtype<span style="color:#000;font-weight:bold">=</span>torch<span style="color:#000;font-weight:bold">.</span>bfloat16,
 </span></span><span style="display:flex;"><span>    device_map<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">None</span>
 </span></span><span style="display:flex;"><span>)
 </span></span><span style="display:flex;"><span>model <span style="color:#000;font-weight:bold">=</span> AutoModelForCausalLM<span style="color:#000;font-weight:bold">.</span>from_pretrained(checkpoint_path, <span style="color:#000;font-weight:bold">**</span>model_kwargs)
 </span></span><span style="display:flex;"><span>tokenizer <span style="color:#000;font-weight:bold">=</span> AutoTokenizer<span style="color:#000;font-weight:bold">.</span>from_pretrained(checkpoint_path)
 </span></span><span style="display:flex;"><span>tokenizer<span style="color:#000;font-weight:bold">.</span>model_max_length <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">2048</span>
-</span></span><span style="display:flex;"><span>tokenizer<span style="color:#000;font-weight:bold">.</span>pad_token <span style="color:#000;font-weight:bold">=</span> tokenizer<span style="color:#000;font-weight:bold">.</span>unk_token  <span style="color:#998;font-style:italic"># use unk rather than eos token to prevent endless generation</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># use unk rather than eos token to prevent endless generation</span>
+</span></span><span style="display:flex;"><span>tokenizer<span style="color:#000;font-weight:bold">.</span>pad_token <span style="color:#000;font-weight:bold">=</span> tokenizer<span style="color:#000;font-weight:bold">.</span>unk_token
 </span></span><span style="display:flex;"><span>tokenizer<span style="color:#000;font-weight:bold">.</span>pad_token_id <span style="color:#000;font-weight:bold">=</span> tokenizer<span style="color:#000;font-weight:bold">.</span>convert_tokens_to_ids(tokenizer<span style="color:#000;font-weight:bold">.</span>pad_token)
 </span></span><span style="display:flex;"><span>tokenizer<span style="color:#000;font-weight:bold">.</span>padding_side <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;right&#39;</span>
 </span></span><span style="display:flex;"><span>
@@ -672,7 +683,8 @@
 </span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># add arguments</span>
 </span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--train-file&#34;</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">str</span>, help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Input data for training&#34;</span>)
 </span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--eval-file&#34;</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">str</span>, help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Input data for eval&#34;</span>)
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--model-dir&#34;</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">str</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;./&#34;</span>, help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;output directory for model&#34;</span>)
+</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--model-dir&#34;</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">str</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;./&#34;</span>, 
+</span></span><span style="display:flex;"><span>    help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;output directory for model&#34;</span>)
 </span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--epochs&#34;</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#099">10</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">int</span>, help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;number of epochs&#34;</span>)
 </span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(
 </span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;--batch-size&#34;</span>,
@@ -680,8 +692,10 @@
 </span></span><span style="display:flex;"><span>        <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">int</span>,
 </span></span><span style="display:flex;"><span>        help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;mini batch size for each gpu/process&#34;</span>,
 </span></span><span style="display:flex;"><span>    )
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--learning-rate&#34;</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0.001</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">float</span>, help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;learning rate&#34;</span>)
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--momentum&#34;</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0.9</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">float</span>, help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;momentum&#34;</span>)
+</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--learning-rate&#34;</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0.001</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">float</span>, 
+</span></span><span style="display:flex;"><span>    help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;learning rate&#34;</span>)
+</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--momentum&#34;</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0.9</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">float</span>, 
+</span></span><span style="display:flex;"><span>    help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;momentum&#34;</span>)
 </span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(
 </span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;--print-freq&#34;</span>,
 </span></span><span style="display:flex;"><span>        default<span style="color:#000;font-weight:bold">=</span><span style="color:#099">200</span>,
@@ -731,20 +745,27 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.entities</span> <span style="color:#000;font-weight:bold">import</span> AmlCompute
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># If you have a specific compute size to work with change it here. By default we use the 1 x A100 compute from the above list</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># If you have a specific compute size to work with change it here. </span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># By default we use the 1 x A100 compute from the above list</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>compute_cluster_size <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;Standard_NC24ads_A100_v4&#34;</span>  <span style="color:#998;font-style:italic"># 1 x A100 (80GB)</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># If you already have a gpu cluster, mention it here. Else will create a new one with the name &#39;gpu-cluster-big&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># If you already have a gpu cluster, mention it here. </span>
+</span></span><span style="display:flex;"><span>Else will create a new one <span style="color:#000;font-weight:bold">with</span> the name <span style="color:#d14">&#39;gpu-cluster-big&#39;</span>
 </span></span><span style="display:flex;"><span>compute_cluster <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;gpu-a100&#34;</span>
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">try</span>:
 </span></span><span style="display:flex;"><span>    compute <span style="color:#000;font-weight:bold">=</span> ml_client<span style="color:#000;font-weight:bold">.</span>compute<span style="color:#000;font-weight:bold">.</span>get(compute_cluster)
 </span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;The compute cluster already exists! Reusing it for the current run&#34;</span>)
 </span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">Exception</span> <span style="color:#000;font-weight:bold">as</span> ex:
 </span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">f</span><span style="color:#d14">&#34;Looks like the compute cluster doesn&#39;t exist. Creating a new one with compute size </span><span style="color:#d14">{</span>compute_cluster_size<span style="color:#d14">}</span><span style="color:#d14">!&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#d14">f</span><span style="color:#d14">&#34;Looks like the compute cluster doesn&#39;t exist. Creating a new one </span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">with</span> compute size {compute_cluster_size}<span style="color:#a61717;background-color:#e3d2d2">!</span><span style="color:#d14">&#34;</span>
 </span></span><span style="display:flex;"><span>    )
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">try</span>:
 </span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Attempt #1 - Trying to create a dedicated compute&#34;</span>)
@@ -752,7 +773,8 @@
 </span></span><span style="display:flex;"><span>            name<span style="color:#000;font-weight:bold">=</span>compute_cluster,
 </span></span><span style="display:flex;"><span>            size<span style="color:#000;font-weight:bold">=</span>compute_cluster_size,
 </span></span><span style="display:flex;"><span>            tier<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Dedicated&#34;</span>,
-</span></span><span style="display:flex;"><span>            max_instances<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1</span>,  <span style="color:#998;font-style:italic"># For multi node training set this to an integer value more than 1</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># For multi node training set this to an integer value more than 1</span>
+</span></span><span style="display:flex;"><span>            max_instances<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1</span>,
 </span></span><span style="display:flex;"><span>        )
 </span></span><span style="display:flex;"><span>        ml_client<span style="color:#000;font-weight:bold">.</span>compute<span style="color:#000;font-weight:bold">.</span>begin_create_or_update(compute)<span style="color:#000;font-weight:bold">.</span>wait()
 </span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">Exception</span> <span style="color:#000;font-weight:bold">as</span> e:
@@ -802,6 +824,10 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml</span> <span style="color:#000;font-weight:bold">import</span> command
@@ -827,7 +853,11 @@
 </span></span><span style="display:flex;"><span>    ),
 </span></span><span style="display:flex;"><span>    code<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;./src&#34;</span>,  <span style="color:#998;font-style:italic"># local path where the code is stored</span>
 </span></span><span style="display:flex;"><span>    compute <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;gpu-a100&#39;</span>,
-</span></span><span style="display:flex;"><span>    command<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;accelerate launch train.py --train-file ${{inputs.train_file}} --eval-file ${{inputs.eval_file}} --epochs ${{inputs.epoch}} --batch-size ${{inputs.batchsize}} --learning-rate ${{inputs.lr}} --momentum ${{inputs.momentum}} --print-freq ${{inputs.prtfreq}} --model-dir ${{inputs.output}}&#34;</span>,
+</span></span><span style="display:flex;"><span>    command<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;&#34;&#34;accelerate launch train.py --train-file ${{inputs.train_file}} 
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">    --eval-file ${{inputs.eval_file}} --epochs ${{inputs.epoch}} 
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">    --batch-size ${{inputs.batchsize}} --learning-rate ${{inputs.lr}} 
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">    --momentum ${{inputs.momentum}} --print-freq ${{inputs.prtfreq}} 
+</span></span></span><span style="display:flex;"><span><span style="color:#d14">    --model-dir ${{inputs.output}}&#34;&#34;&#34;</span>,
 </span></span><span style="display:flex;"><span>    environment<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;azureml://registries/azureml/environments/acft-hf-nlp-gpu/versions/52&#34;</span>,
 </span></span><span style="display:flex;"><span>    distribution<span style="color:#000;font-weight:bold">=</span>{
 </span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;type&#34;</span>: <span style="color:#d14">&#34;PyTorch&#34;</span>,

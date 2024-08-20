@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>语音识别与合成中的延迟问题及解决策略 | Innovation with tech</title>
+    <meta property="og:title" content="语音识别与合成中的延迟问题及解决策略 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2024-08-09T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2024-08-09T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="语音识别与合成中的延迟问题及解决策略">
+        
+    <meta name="author" content="BeanHsiang">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">语音识别与合成中的延迟问题及解决策略</h1>
+        </header>
+        
+  <time datetime="2024-08-09T04:00:00Z" class="post-meta meta-date dt-published">
+    2024年8月9日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>语音识别和合成的延迟可能是创建无缝和高效应用程序的一个重大障碍。减少延迟不仅可以改善用户体验，还可以提升实时应用程序的整体性能。本文将探讨在一般转录、实时转录、文件转录和语音合成中减少延迟的策略。</p>
+<h2 id="1-网络延迟将语音资源移近应用程序">1. 网络延迟：将语音资源移近应用程序</h2>
+<p>导致语音识别延迟的主要因素之一是网络延迟。为了减轻这一延迟，关键是减少应用程序与语音识别资源之间的距离。以下是一些建议：</p>
+<ul>
+<li>
+<p><strong>语音容器</strong> ：它提供了在本地或边缘运行模型的灵活性，从而无需将音频数据发送到云端，进而减少网络延迟。</p>
+<p><a href="https://learn.microsoft.com/en-us/azure/ai-services/speech-service/speech-container-howto?WT.mc_id=AI-MVP-5003172">在 Docker 中安装和运行语音容器 - Speech 服务 - Azure AI 服务 | Microsoft Learn</a></p>
+</li>
+<li>
+<p><strong>利用云服务提供商</strong>：选择在靠近用户地区的区域拥有数据中心的云服务提供商。这样可以显著减少网络延迟。</p>
+</li>
+<li>
+<p><strong>使用嵌入式语音</strong>：这是一种专为在设备上场景设计的紧凑型模型，在这些场景中互联网连接有限或不可用，从而显著减少网络延迟。然而，这可能会导致准确度略有下降。因此，为了获得最佳准确度，考虑采用混合方法：在有网络连接时通过云端使用 Azure AI 语音，在没有网络时切换到嵌入式语音。这提供了高质量、准确的语音处理以及可靠的备份选项。</p>
+<p><a href="https://learn.microsoft.com/en-us/azure/ai-services/speech-service/embedded-speech?WT.mc_id=AI-MVP-5003172&amp;tabs=android-target%2Cjre&amp;pivots=programming-language-csharp">嵌入式语音 - Speech 服务 - Azure AI 服务 | Microsoft Learn</a></p>
+</li>
+</ul>
+<h2 id="2-实时转录">2. 实时转录：</h2>
+<p>实时转录需要立即处理音频输入以提供即时反馈。以下是一些建议，以实现低延迟的实时转录：</p>
+<p><strong>2.1 使用实时流</strong><br>
+不要录制整个音频然后处理，而是使用实时流将音频数据以小片段的形式发送到语音识别服务。这允许立即处理并减少整体延迟。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">speech_recognize_continuous_async_from_microphone</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;&#34;&#34;异步从麦克风输入进行连续语音识别&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    speech_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechConfig(subscription<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>getenv(<span style="color:#d14">&#34;SUBSCRIPTION_KEY&#34;</span>), 
+</span></span><span style="display:flex;"><span>    region<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;centralIndia&#34;</span>)
+</span></span><span style="display:flex;"><span>    speech_recognizer <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechRecognizer(speech_config<span style="color:#000;font-weight:bold">=</span>speech_config)
+</span></span><span style="display:flex;"><span>    done <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">False</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">recognized_cb</span>(evt: speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechRecognitionEventArgs):
+</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#39;RECOGNIZED: </span><span style="color:#d14">{}</span><span style="color:#d14">&#39;</span><span style="color:#000;font-weight:bold">.</span>format(evt<span style="color:#000;font-weight:bold">.</span>result<span style="color:#000;font-weight:bold">.</span>text))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">stop_cb</span>(evt: speechsdk<span style="color:#000;font-weight:bold">.</span>SessionEventArgs):
+</span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;&#34;&#34;回调函数，用于停止连续识别&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#39;CLOSING on </span><span style="color:#d14">{}</span><span style="color:#d14">&#39;</span><span style="color:#000;font-weight:bold">.</span>format(evt))
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">nonlocal</span> done
+</span></span><span style="display:flex;"><span>        done <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 连接语音识别器触发的事件的回调函数</span>
+</span></span><span style="display:flex;"><span>    speech_recognizer<span style="color:#000;font-weight:bold">.</span>recognized<span style="color:#000;font-weight:bold">.</span>connect(recognized_cb)
+</span></span><span style="display:flex;"><span>    speech_recognizer<span style="color:#000;font-weight:bold">.</span>session_stopped<span style="color:#000;font-weight:bold">.</span>connect(stop_cb)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 在识别开始时，可以在此线程上执行其他任务...</span>
+</span></span><span style="display:flex;"><span>    result_future <span style="color:#000;font-weight:bold">=</span> speech_recognizer<span style="color:#000;font-weight:bold">.</span>start_continuous_recognition_async()
+</span></span><span style="display:flex;"><span>    result_future<span style="color:#000;font-weight:bold">.</span>get()  <span style="color:#998;font-style:italic"># 等待 voidfuture，这样我们就知道引擎初始化已完成。</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#39;Continuous Recognition is now running, say something.&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">while</span> <span style="color:#000;font-weight:bold">not</span> done:
+</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#39;type &#34;stop&#34; then enter when done&#39;</span>)
+</span></span><span style="display:flex;"><span>        stop <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">input</span>()
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">if</span> (stop<span style="color:#000;font-weight:bold">.</span>lower() <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;stop&#34;</span>):
+</span></span><span style="display:flex;"><span>            <span style="color:#0086b3">print</span>(<span style="color:#d14">&#39;Stopping async recognition.&#39;</span>)
+</span></span><span style="display:flex;"><span>            speech_recognizer<span style="color:#000;font-weight:bold">.</span>stop_continuous_recognition_async()
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">break</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;recognition stopped, main thread can exit now.&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>speech_recognize_continuous_async_from_microphone()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Azure Speech SDK 还提供了将音频流输入识别器的方式，作为对麦克风或文件输入的替代。您可以根据需求选择 PushAudioInputStream 和 PullAudioInputStream。</p>
+<p>详情请见 - <a href="https://learn.microsoft.com/en-us/azure/ai-services/speech-service/how-to-use-audio-input-streams?WT.mc_id=AI-MVP-5003172">Speech SDK 音频输入流概念 - Azure AI 服务 | Microsoft Learn</a></p>
+<p><strong>2.2 定义默认语言</strong><br>
+如果已知默认语言，请在转录过程开始时定义。这样可以消除检测输入语言所需的额外处理时间。如果不知道默认语言，请使用 &ldquo;SpeechServiceConnection_LanguageIdMode&rdquo; 在转录开始时检测语言，并指定预期语言的列表以减少处理时间</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>speech_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechConfig(subscription<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;YourSubscriptionKey&#34;</span>, 
+</span></span><span style="display:flex;"><span>region<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;YourServiceRegion&#34;</span>) 
+</span></span><span style="display:flex;"><span>speech_config<span style="color:#000;font-weight:bold">.</span>speech_recognition_language <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;zh-CN&#34;</span> <span style="color:#998;font-style:italic"># 设置默认语言</span>
+</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">## 或者 </span>
+</span></span><span style="display:flex;"><span>speech_config<span style="color:#000;font-weight:bold">.</span>set_property(property_id<span style="color:#000;font-weight:bold">=</span>speechsdk<span style="color:#000;font-weight:bold">.</span>PropertyId
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">.</span>SpeechServiceConnection_LanguageIdMode, value <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;AtStart&#34;</span>)
+</span></span><span style="display:flex;"><span>auto_detect_source_language_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>languageconfig
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">.</span>AutoDetectSourceLanguageConfig(languages<span style="color:#000;font-weight:bold">=</span>[<span style="color:#d14">&#34;zh-CN&#34;</span>, <span style="color:#d14">&#34;en-US&#34;</span>])
+</span></span><span style="display:flex;"><span>speech_recognizer <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechRecognizer(speech_config<span style="color:#000;font-weight:bold">=</span>speech_config, 
+</span></span><span style="display:flex;"><span>audio_config<span style="color:#000;font-weight:bold">=</span>audio_config,
+</span></span><span style="display:flex;"><span>auto_detect_source_language_config<span style="color:#000;font-weight:bold">=</span>auto_detect_source_language_config)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>2.3 使用异步方法</strong><br>
+使用 <code>start_continuous_recognition_async</code> 而不是 <code>start_continuous_recognition</code>，以及 <code>stop_continuous_recognition_async</code> 而不是 <code>stop_continuous_recognition</code> 等异步方法。这些方法允许非阻塞操作并减少延迟。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>speech_recognizer<span style="color:#000;font-weight:bold">.</span>start_continuous_recognition_async(); <span style="color:#998;font-style:italic"># 执行其他任务</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>speech_recognizer<span style="color:#000;font-weight:bold">.</span>stop_continuous_recognition_async()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>2.4 使用快速转录</strong><br>
+快速转录比实时流转录快得多，适用于需要即时转录的场景，如呼叫中心分析、会议摘要、语音配音等。它可以在不到一分钟的时间内转录 30 分钟的音频。尽管这还在公共预览中，并且只支持少数语言环境。支持的完整语言列表，请查看 <a href="https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support?WT.mc_id=AI-MVP-5003172&amp;tabs=stt">语言支持 - Speech 服务 - Azure AI 服务 | Microsoft Learn</a></p>
+<h2 id="3-文件转录">3. 文件转录</h2>
+<p>对于文件转录，处理大型音频文件可能会引入显著的延迟。以下是一些减少延迟的策略：</p>
+<p><strong>3.1 将音频分割成小片段</strong><br>
+将音频文件分割成更小的片段，并并行运行每个片段的转录。这允许更快地处理并减少整体转录时间。音频分块的一个缺点是，根据分块策略，它可能会导致转录质量略有下降，但如果转录层之后是用于分析洞察、后期处理等的 LLM 智能层，那么质量下降应该会被 LLM 智能抵消。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">pydub</span> <span style="color:#000;font-weight:bold">import</span> AudioSegment  
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">concurrent.futures</span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">transcribe_chunk</span>(chunk):  
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 每个片段的转录逻辑  </span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">pass</span>  
+</span></span><span style="display:flex;"><span>audio <span style="color:#000;font-weight:bold">=</span> AudioSegment<span style="color:#000;font-weight:bold">.</span>from_file(<span style="color:#d14">&#34;large_audio_file.wav&#34;</span>)  
+</span></span><span style="display:flex;"><span>chunk_length_ms <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">10000</span>  <span style="color:#998;font-style:italic"># 10秒  </span>
+</span></span><span style="display:flex;"><span>chunks <span style="color:#000;font-weight:bold">=</span> [audio[i:i <span style="color:#000;font-weight:bold">+</span> chunk_length_ms] 
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">for</span> i <span style="color:#000;font-weight:bold">in</span> <span style="color:#0086b3">range</span>(<span style="color:#099">0</span>, <span style="color:#0086b3">len</span>(audio), chunk_length_ms)]  
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">with</span> concurrent<span style="color:#000;font-weight:bold">.</span>futures<span style="color:#000;font-weight:bold">.</span>ThreadPoolExecutor() <span style="color:#000;font-weight:bold">as</span> executor:  
+</span></span><span style="display:flex;"><span>    futures <span style="color:#000;font-weight:bold">=</span> [executor<span style="color:#000;font-weight:bold">.</span>submit(transcribe_chunk, chunk) <span style="color:#000;font-weight:bold">for</span> chunk <span style="color:#000;font-weight:bold">in</span> chunks]  
+</span></span><span style="display:flex;"><span>    results <span style="color:#000;font-weight:bold">=</span> [f<span style="color:#000;font-weight:bold">.</span>result() <span style="color:#000;font-weight:bold">for</span> f <span style="color:#000;font-weight:bold">in</span> concurrent<span style="color:#000;font-weight:bold">.</span>futures<span style="color:#000;font-weight:bold">.</span>as_completed(futures)]  
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>3.2 提高音频速度</strong><br>
+在发送转录之前，提高音频文件的播放速度。这样可以减少处理整个文件的时间，而对转录的准确性影响很小。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">increase_audio_speed</span>(filename, 
+</span></span><span style="display:flex;"><span>output_filename <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;modified_audio_file.wav&#34;</span>, speed_change_factor <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1.7</span>):  
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 加载音频文件  </span>
+</span></span><span style="display:flex;"><span>    audio <span style="color:#000;font-weight:bold">=</span> AudioSegment<span style="color:#000;font-weight:bold">.</span>from_file(filename)  <span style="color:#998;font-style:italic"># 更改为您的文件格式  </span>
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 改变速度：加速（例如，1.5倍）  </span>
+</span></span><span style="display:flex;"><span>    speed_change_factor <span style="color:#000;font-weight:bold">=</span> speed_change_factor  <span style="color:#998;font-style:italic"># 增加，使其变快，减少以放慢  </span>
+</span></span><span style="display:flex;"><span>    new_audio <span style="color:#000;font-weight:bold">=</span> audio<span style="color:#000;font-weight:bold">.</span>_spawn(audio<span style="color:#000;font-weight:bold">.</span>raw_data, 
+</span></span><span style="display:flex;"><span>    overrides<span style="color:#000;font-weight:bold">=</span>{<span style="color:#d14">&#39;frame_rate&#39;</span>: <span style="color:#0086b3">int</span>(audio<span style="color:#000;font-weight:bold">.</span>frame_rate <span style="color:#000;font-weight:bold">*</span> speed_change_factor)})  
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 设置新音频的帧率  </span>
+</span></span><span style="display:flex;"><span>    new_audio <span style="color:#000;font-weight:bold">=</span> new_audio<span style="color:#000;font-weight:bold">.</span>set_frame_rate(audio<span style="color:#000;font-weight:bold">.</span>frame_rate)  
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 导出修改后的音频  </span>
+</span></span><span style="display:flex;"><span>    new_audio<span style="color:#000;font-weight:bold">.</span>export(output_filename, <span style="color:#0086b3">format</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;wav&#34;</span>)  <span style="color:#998;font-style:italic"># 更改为您所需的格式  </span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>3.3 压缩输入音频</strong><br>
+在发送转录之前，压缩输入音频。这可以减少文件大小，以实现更快的传输，优化带宽使用和存储效率。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">pydub</span> <span style="color:#000;font-weight:bold">import</span> AudioSegment
+</span></span><span style="display:flex;"><span>input_audio <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;raw_tts.wav&#39;</span>
+</span></span><span style="display:flex;"><span>output_audio <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;compressed_audio.mp3&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">try</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 加载音频文件</span>
+</span></span><span style="display:flex;"><span>    audio <span style="color:#000;font-weight:bold">=</span> AudioSegment<span style="color:#000;font-weight:bold">.</span>from_file(input_audio)  
+</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 导出音频文件，使用较低的比特率进行压缩</span>
+</span></span><span style="display:flex;"><span>    audio<span style="color:#000;font-weight:bold">.</span>export(output_audio, <span style="color:#0086b3">format</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;mp3&#34;</span>, bitrate<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;64k&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;Compressed audio saved as </span><span style="color:#d14">{</span>output_audio<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">Exception</span> <span style="color:#000;font-weight:bold">as</span> e:
+</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;An error occurred: </span><span style="color:#d14">{</span>e<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-语音合成">4. 语音合成</h2>
+<p>语音合成的延迟在实时应用程序中可能是一个瓶颈。以下是一些建议，以减少延迟：</p>
+<p><strong>4.1 使用异步方法</strong><br>
+不要使用 <code>speak_text_async</code> 进行语音合成，因为它会阻塞流直到整个音频被处理完毕，而是切换到 <code>start_speaking_text_async</code> 方法。此方法在接收到第一个音频块时就开始流式传输音频输出，从而显著减少延迟。</p>
+<p><strong>4.2 文本流</strong><br>
+流式传输文本允许 TTS 系统在收到文本的初始部分后立即开始处理和生成语音，而不是等待整个文本可用。这减少了语音输出开始前的初始延迟，使其成为交互式应用程序、现场活动和响应式 AI 驱动的对话的理想选择。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># tts 句子结束标记</span>
+</span></span><span style="display:flex;"><span>tts_sentence_end <span style="color:#000;font-weight:bold">=</span> [ <span style="color:#d14">&#34;.&#34;</span>, <span style="color:#d14">&#34;!&#34;</span>, <span style="color:#d14">&#34;?&#34;</span>, <span style="color:#d14">&#34;;&#34;</span>, <span style="color:#d14">&#34;。&#34;</span>, <span style="color:#d14">&#34;！&#34;</span>, <span style="color:#d14">&#34;？&#34;</span>, <span style="color:#d14">&#34;；&#34;</span>, <span style="color:#d14">&#34;</span><span style="color:#d14">\
+</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span><span style="color:#d14">&#34;</span> ]
+</span></span><span style="display:flex;"><span>completion <span style="color:#000;font-weight:bold">=</span> gpt_client<span style="color:#000;font-weight:bold">.</span>chat<span style="color:#000;font-weight:bold">.</span>completions<span style="color:#000;font-weight:bold">.</span>create(
+</span></span><span style="display:flex;"><span>        model<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;gpt-4o&#34;</span>,
+</span></span><span style="display:flex;"><span>    messages<span style="color:#000;font-weight:bold">=</span>[,
+</span></span><span style="display:flex;"><span>        {<span style="color:#d14">&#34;role&#34;</span>: <span style="color:#d14">&#34;user&#34;</span>, <span style="color:#d14">&#34;content&#34;</span>: <span style="color:#000;font-weight:bold">&lt;</span>prompt<span style="color:#000;font-weight:bold">&gt;</span>}
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    stream<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>collected_messages <span style="color:#000;font-weight:bold">=</span> []
+</span></span><span style="display:flex;"><span>last_tts_request <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">for</span> chunk <span style="color:#000;font-weight:bold">in</span> completion:
+</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">if</span> <span style="color:#0086b3">len</span>(chunk<span style="color:#000;font-weight:bold">.</span>choices) <span style="color:#000;font-weight:bold">&gt;</span> <span style="color:#099">0</span>:
+</span></span><span style="display:flex;"><span>        chunk_text <span style="color:#000;font-weight:bold">=</span> chunk<span style="color:#000;font-weight:bold">.</span>choices[<span style="color:#099">0</span>]<span style="color:#000;font-weight:bold">.</span>delta<span style="color:#000;font-weight:bold">.</span>content
+</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">if</span> chunk_text:
+</span></span><span style="display:flex;"><span>            collected_messages<span style="color:#000;font-weight:bold">.</span>append(chunk_text)
+</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">if</span> chunk_text <span style="color:#000;font-weight:bold">in</span> tts_sentence_end:
+</span></span><span style="display:flex;"><span>                text <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;&#34;</span><span style="color:#000;font-weight:bold">.</span>join(collected_messages)
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">.</span>strip() <span style="color:#998;font-style:italic"># 将收到的消息一起连接起来构成一个句子</span>
+</span></span><span style="display:flex;"><span>                last_tts_request <span style="color:#000;font-weight:bold">=</span> speech_synthesizer
+</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">.</span>start_speaking_text_async(text)<span style="color:#000;font-weight:bold">.</span>get()
+</span></span><span style="display:flex;"><span>                collected_messages<span style="color:#000;font-weight:bold">.</span>clear()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>4.3 优化音频输出格式</strong><br>
+负载大小影响延迟。使用压缩音频格式来节省网络带宽，这在网络不稳定或带宽有限时至关重要。切换到 <code>Riff-48Khz-16Bit-Mono-Pcm</code> 格式，该格式具有 384 kbps 的比特率，自动使用压缩输出格式进行转录，从而减少延迟。</p>
+<p>通过遵循这些策略，您可以在 STT 和 TTS 应用程序中显著减少延迟，从而提供更流畅、更高效的用户体验。实施这些技术将确保您的应用程序即使在实时场景中也能保持响应性和高性能。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/">https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2024-05-15-azure-openai-speech/">Azure OpenAI 语音聊天</a></li>
+        
+        <li><a href="/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel/">使用 Semantic Kernel 构建自定义 Copilot</a></li>
+        
+        <li><a href="/post/2024-01-22-gpts-action-with-azure-ai-search/">GPTs action 中使用 Azure AI Search</a></li>
+        
+        <li><a href="/post/2024-01-03-azure-machine-learning-and-datarobot-team-up-to-accelerate-value/">Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值</a></li>
+        
+        <li><a href="/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/">多种环境部署 Azure 机器学习 Prompt Flow</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Azure-AI' target="_blank">Azure AI</a></li>
+                
+                <li><a href='/tags/Azure-Speech' target="_blank">Azure Speech</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2024 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/" title="语音识别与合成中的延迟问题及解决策略" target="_blank">语音识别与合成中的延迟问题及解决策略</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-04-25-why-is-it-difficult-to-land-large-models/" title="为什么大模型难落地？" target="_blank">为什么大模型难落地？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-04-17-keyless-authentication-with-azure-openai/" title="实现 Azure OpenAI 无密钥身份验证" target="_blank">实现 Azure OpenAI 无密钥身份验证</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel/" title="使用 Semantic Kernel 构建自定义 Copilot" target="_blank">使用 Semantic Kernel 构建自定义 Copilot</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-03-07-lets-start-with-the-bootloader/" title="从引导程序说起" target="_blank">从引导程序说起</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/" title="FireUG x .NET Conf China - Watch Party" target="_blank">FireUG x .NET Conf China - Watch Party</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" title="GPTs action 中使用 Azure AI Search" target="_blank">GPTs action 中使用 Azure AI Search</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-03-azure-machine-learning-and-datarobot-team-up-to-accelerate-value/" title="Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值" target="_blank">Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (19)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (2)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -2,32 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
-    <lastmod>2024-06-07T12:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/tags/Azure-AI/</loc>
+    <lastmod>2024-08-09T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/tags/Azure-Machine-Learning/</loc>
-    <lastmod>2024-06-07T12:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
+    <lastmod>2024-08-09T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Azure-Speech/</loc>
+    <lastmod>2024-08-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2024-06-07T12:00:00+08:00</lastmod>
+    <lastmod>2024-08-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
+    <lastmod>2024-08-09T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2024-08-09T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2024-08-09T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/</loc>
+    <lastmod>2024-08-09T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Azure-Machine-Learning/</loc>
     <lastmod>2024-06-07T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Phi-3/</loc>
     <lastmod>2024-06-07T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2024-06-07T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
-    <lastmod>2024-06-07T12:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/</loc>
     <lastmod>2024-06-07T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Azure-AI/</loc>
-    <lastmod>2024-05-15T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Azure-OpenAI/</loc>
     <lastmod>2024-05-15T12:00:00+08:00</lastmod>

@@ -13,56 +13,56 @@
       <link>https://beanhsiang.github.io/post/2023-12-03-announcing-ml-net-3-0/</link>
       <pubDate>Sun, 03 Dec 2023 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2023-12-03-announcing-ml-net-3-0/</guid>
-      <description>由于大模型的爆火，ML.NET 似乎快被遗忘在角落了，这次3.0版本的发布意外中带着些欣喜。总结其新特性和改进主要包括以下几个方面： 深度学习场景的扩展 ML.NET 3.0增加了对象检测、命名实体识别和问答等深度学习场景的支持，这些场景都是基于 TorchSharp 和 ONNX 模型的集成和互操作性实现的。此外，还更新了与 LightGBM</description>
+      <description>&lt;p&gt;由于大模型的爆火，ML.NET 似乎快被遗忘在角落了，这次3.0版本的发布意外中带着些欣喜。总结其新特性和改进主要包括以下几个方面：&lt;/p&gt;&#xA;&lt;h3 id=&#34;深度学习场景的扩展&#34;&gt;深度学习场景的扩展&lt;/h3&gt;&#xA;&lt;p&gt;ML.NET 3.0增加了对象检测、命名实体识别和问答等深度学习场景的支持，这些场景都是基于 TorchSharp 和 ONNX 模型的集成和互操作性实现的。此外，还更新了与 LightGBM 的集成，使用了最新版本。&lt;/p&gt;</description>
     </item>
     <item>
       <title>ML.NET Model Builder 中的对象检测</title>
       <link>https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/</link>
       <pubDate>Sat, 20 May 2023 12:20:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2023-05-20-object-detection-ml-dotnet-model-builder/</guid>
-      <description>ML.NET 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。 新版本的 Model Builder 现已推出，其中包括对使用本地 CPU 或 GPU 进行对象检测的支持。 什么是对象检测？ 物体检测是一个计算机视觉问题。虽然与图像分类密切相关，但对象检测以更精细的规模执行图像分类。对象检测可对图像中的</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://dot.net/ml?WT.mc_id=AI-MVP-5003172&#34;&gt;ML.NET&lt;/a&gt; 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。&lt;/p&gt;&#xA;&lt;p&gt;新版本的 &lt;a href=&#34;https://marketplace.visualstudio.com/items?itemName=MLNET.ModelBuilder2022&#34;&gt;Model Builder&lt;/a&gt; 现已推出，其中包括对使用本地 CPU 或 GPU 进行对象检测的支持。&lt;/p&gt;&#xA;&lt;h2 id=&#34;什么是对象检测&#34;&gt;什么是对象检测？&lt;/h2&gt;&#xA;&lt;p&gt;物体检测是一个计算机视觉问题。虽然与图像分类密切相关，但对象检测以更精细的规模执行图像分类。对象检测可对图像中的实体进行定位和分类。当图像包含多个不同类型的对象时，使用对象检测。&lt;/p&gt;</description>
     </item>
     <item>
       <title>ML.NET Model Builder 中的句子相似性</title>
       <link>https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/</link>
       <pubDate>Thu, 02 Mar 2023 13:23:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/</guid>
-      <description>ML.NET 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。 新版本的 Model Builder 现已发布！ 有什么新变化？ 以下是此版本的亮点。您可以在 Model Builder 发行说明中找到所有更改的列表。 要开始使用这些新功能，请安装或升级到最新版本的 Model Builder 16.14.4 或更高版本。 Model Builder中的句子相似性 句</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://dot.net/ml?WT.mc_id=AI-MVP-5003172&#34;&gt;ML.NET&lt;/a&gt; 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。&lt;/p&gt;&#xA;&lt;p&gt;新版本的 &lt;a href=&#34;https://marketplace.visualstudio.com/items?itemName=MLNET.ModelBuilder2022&#34;&gt;Model Builder&lt;/a&gt; 现已发布！&lt;/p&gt;&#xA;&lt;h2 id=&#34;有什么新变化&#34;&gt;有什么新变化？&lt;/h2&gt;&#xA;&lt;p&gt;以下是此版本的亮点。您可以在 &lt;a href=&#34;https://github.com/dotnet/machinelearning-modelbuilder/blob/main/docs/release-notes/16.14.4.md&#34;&gt;Model Builder 发行说明&lt;/a&gt;中找到所有更改的列表。&lt;/p&gt;&#xA;&lt;p&gt;要开始使用这些新功能，请&lt;a href=&#34;https://learn.microsoft.com/dotnet/machine-learning/how-to-guides/install-model-builder?tabs=visual-studio-2022&amp;amp;WT.mc_id=AI-MVP-5003172&#34;&gt;安装或升级到&lt;/a&gt;最新版本的 Model Builder 16.14.4 或更高版本。&lt;/p&gt;&#xA;&lt;h3 id=&#34;model-builder中的句子相似性&#34;&gt;Model Builder中的句子相似性&lt;/h3&gt;&#xA;&lt;p&gt;句子相似性是一项比较两个文本彼此相似程度的任务。&lt;/p&gt;&#xA;&lt;p&gt;句子相似性的常见用例是信息检索。例如，给出一个搜索查询，返回最相似（相关）的文档。&lt;/p&gt;</description>
     </item>
     <item>
       <title>使用 Intel oneDAL 加速 ML.NET 训练</title>
       <link>https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/</link>
       <pubDate>Fri, 23 Dec 2022 12:24:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/</guid>
-      <description>ML.NET 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。 ML.NET 3.0 的第一个预览版带来了多项硬件加速改进，使你可以在训练期间充分利用计算资源。安装最新的 ML.NET 3.0 和Intel oneDAL 预览包，试用由 Intel oneDAL 提供支持的最新改进。 什么是 oneAPI Data Analytics Library（oneDAL） Intel oneAPI Data Analytics</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://dot.net/ml?WT.mc_id=AI-MVP-5003172&#34;&gt;ML.NET&lt;/a&gt; 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。&lt;/p&gt;&#xA;&lt;p&gt;ML.NET 3.0 的第一个预览版带来了多项硬件加速改进，使你可以在训练期间充分利用计算资源。安装最新的 &lt;a href=&#34;https://aka.ms/mlnet-3-preview1&#34;&gt;ML.NET 3.0&lt;/a&gt; 和&lt;a href=&#34;https://aka.ms/mlnet-onedal-nuget&#34;&gt;Intel oneDAL&lt;/a&gt; 预览包，试用由 Intel oneDAL 提供支持的最新改进。&lt;/p&gt;&#xA;&lt;h2 id=&#34;什么是-oneapi-data-analytics-libraryonedal&#34;&gt;什么是 oneAPI Data Analytics Library（oneDAL）&lt;/h2&gt;&#xA;&lt;p&gt;Intel oneAPI Data Analytics Library 是一个通过为数据分析和机器学习过程的所有阶段提供高度优化的算法构建模块，帮助加快数据分析速度的库。oneDAL 利用 64 位架构中的 SIMD 扩展，这些扩展在 Intel 和 AMD CPU 中都有。&lt;/p&gt;</description>
     </item>
     <item>
       <title>ML.NET 2.0 更新内容</title>
       <link>https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/</link>
       <pubDate>Sun, 20 Nov 2022 18:12:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2022-11-20-mlnet-2_0-content/</guid>
-      <description>ML.NET v2.0 比较低调地在11月发布了，所有 ML.NET 2.0 和 Model Builder 的更新信息在此，可以从中了解到更多细节或实现，本文把值得关注的内容摘要出来。 新版本的 ML.NET 2.0 和 Model Builder 2022 目前都已发布。 Model Builder 中的文本分类场景 几个月前发布的文本分类 API 的预览版，使开发者能够训练对原始文本数据进行分类的自定义模型。它通过将 NAS-BERT 的 TorchSharp 实现集</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://dot.net/ml?WT.mc_id=AI-MVP-5003172&#34;&gt;ML.NET&lt;/a&gt; v2.0 比较低调地在11月发布了，所有 &lt;a href=&#34;https://github.com/dotnet/machinelearning/blob/main/docs/release-notes/2.0/release-2.0.0.md&#34;&gt;ML.NET 2.0&lt;/a&gt; 和 &lt;a href=&#34;https://github.com/dotnet/machinelearning-modelbuilder/blob/main/docs/release-notes/16.14.0.md&#34;&gt;Model Builder&lt;/a&gt; 的更新信息在此，可以从中了解到更多细节或实现，本文把值得关注的内容摘要出来。&lt;/p&gt;&#xA;&lt;p&gt;新版本的 &lt;a href=&#34;https://www.nuget.org/packages/Microsoft.ML/2.0.0&#34;&gt;ML.NET 2.0&lt;/a&gt; 和 &lt;a href=&#34;https://marketplace.visualstudio.com/items?itemName=MLNET.ModelBuilder2022&#34;&gt;Model Builder 2022&lt;/a&gt; 目前都已发布。&lt;/p&gt;&#xA;&lt;h2 id=&#34;model-builder-中的文本分类场景&#34;&gt;Model Builder 中的文本分类场景&lt;/h2&gt;&#xA;&lt;p&gt;几个月前发布的文本分类 API 的预览版，使开发者能够训练对原始文本数据进行分类的自定义模型。它通过将 &lt;a href=&#34;https://arxiv.org/abs/2105.14444&#34;&gt;NAS-BERT&lt;/a&gt; 的 &lt;a href=&#34;https://github.com/dotnet/TorchSharp&#34;&gt;TorchSharp&lt;/a&gt; 实现集成到 ML.NET 中来实现。文本分类 API 基于此模型的预训练版本，使用数据来微调模型。Model Builder 中的文本分类场景正式由 ML.NET 文本分类 API 提供支持。&lt;/p&gt;</description>
     </item>
     <item>
       <title>有关 ML.NET 深度学习的计划</title>
       <link>https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/</link>
       <pubDate>Tue, 21 Sep 2021 16:43:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/</guid>
-      <description>ML.NET 最需要的功能之一是能够从零开始创建神经网络模型，以便在 ML.NET 中进行深度学习。ML.NET 团队已经采纳了用户调研的反馈，并制定了开始实施此功能的计划。 ML.NET 深度学习的现状 目前，ML.NET 没有一种方法可以创建神经网络，从零开始建立深度学习模型。然而，对于采用现有的深度学习模型并将其用于预</description>
+      <description>&lt;p&gt;ML.NET 最需要的功能之一是能够从零开始创建神经网络模型，以便在 ML.NET 中进行深度学习。ML.NET 团队已经采纳了用户调研的反馈，并制定了开始实施此功能的计划。&lt;/p&gt;&#xA;&lt;h2 id=&#34;mlnet-深度学习的现状&#34;&gt;ML.NET 深度学习的现状&lt;/h2&gt;&#xA;&lt;p&gt;目前，ML.NET 没有一种方法可以创建神经网络，从零开始建立深度学习模型。然而，对于采用现有的深度学习模型并将其用于预测，框架给予极大的支持。如果您有 TensorFlow 或 ONNX 模型，则这些模型可用于 ML.NET 进行预测。&lt;/p&gt;</description>
     </item>
     <item>
       <title>ML.NET 代码速查手册，高清图手慢无！</title>
       <link>https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/</link>
       <pubDate>Wed, 01 Sep 2021 22:15:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/</guid>
-      <description>ML.NET 是面向.NET开发人员的跨平台机器学习框架，它具备在联机或本地环境中将机器学习模型集成到 .NET 应用程序中的能力。 2002 年微软启动有一个研究项目命名为 TMSN，其意在“Test mining search and navigation”，后来它被改名为 TLC（The learning code）。ML.NET 正是派生自 TLC 库，最初被用于微</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://dot.net/ml?WT.mc_id=AI-MVP-5003172&#34;&gt;ML.NET&lt;/a&gt; 是面向.NET开发人员的跨平台机器学习框架，它具备在联机或本地环境中将机器学习模型集成到 .NET 应用程序中的能力。&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://user-images.githubusercontent.com/3881276/131783402-fb40f512-19a4-46a7-b837-78ac13aaba74.jpeg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;ML.NET&#34; src=&#34;https://user-images.githubusercontent.com/3881276/131783402-fb40f512-19a4-46a7-b837-78ac13aaba74.jpeg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;2002 年微软启动有一个研究项目命名为 TMSN，其意在“Test mining search and navigation”，后来它被改名为 TLC（The learning code）。ML.NET 正是派生自 TLC 库，最初被用于微软的内部产品。&lt;/p&gt;</description>
     </item>
     <item>
       <title>ML.NET v1.6 中有趣的内容</title>
       <link>https://beanhsiang.github.io/post/2021-08-07-mlnet-1_6-interesting-content/</link>
       <pubDate>Sat, 07 Aug 2021 19:53:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2021-08-07-mlnet-1_6-interesting-content/</guid>
-      <description>ML.NET v1.6 发布有一段时间了，所有详细信息在此，可以了解到更多细节或实现，本文把比较新鲜有趣的内容摘要出来。 此版本中增加了很多东西，但它们确实注意到，添加的所有内容都没有中断更改。 支持 ARM 这次更新最令人兴奋的部分是对ARM架构的新支持。这将允许在 ML.NET 进行大多数场景的训练和推论项目。ARM架构</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://dot.net/ml?WT.mc_id=AI-MVP-5003172&#34;&gt;ML.NET&lt;/a&gt; v1.6 发布有一段时间了，所有&lt;a href=&#34;https://github.com/dotnet/machinelearning/blob/main/docs/release-notes/1.6.0/release-1.6.0.md&#34;&gt;详细信息&lt;/a&gt;在此，可以了解到更多细节或实现，本文把比较新鲜有趣的内容摘要出来。&lt;/p&gt;&#xA;&lt;p&gt;此版本中增加了很多东西，但它们确实注意到，添加的所有内容都没有中断更改。&lt;/p&gt;&#xA;&lt;h3 id=&#34;支持-arm&#34;&gt;支持 ARM&lt;/h3&gt;&#xA;&lt;p&gt;这次更新最令人兴奋的部分是&lt;a href=&#34;https://github.com/dotnet/machinelearning/pull/5789&#34;&gt;对ARM架构的新支持&lt;/a&gt;。这将允许在 &lt;a href=&#34;https://dot.net/ml?WT.mc_id=AI-MVP-5003172&#34;&gt;ML.NET&lt;/a&gt; 进行大多数场景的训练和推论项目。ARM架构几乎无处不在。如&lt;a href=&#34;https://devblogs.microsoft.com/dotnet/ml-net-june-updates-model-builder/?WT.mc_id=AI-MVP-5003172#ml-net-on-arm&#34;&gt;六月更新博客&lt;/a&gt;文章中所述，此 ARM 架构包含在移动和嵌入式设备上。这可以为手机和 IoT 设备的 &lt;a href=&#34;https://dot.net/ml?WT.mc_id=AI-MVP-5003172&#34;&gt;ML.NET&lt;/a&gt; 开辟全新的世界。&lt;/p&gt;&#xA;&lt;h3 id=&#34;dataframe-更新&#34;&gt;DataFrame 更新&lt;/h3&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.nuget.org/packages/Microsoft.Data.Analysis/&#34;&gt;DataFrame API&lt;/a&gt; 可能是目前处于早期阶段的特性之一。主要还是由于 .NET 与 Python 中常见库 pandas 在数据分析上面不存在竞争，在将数据发送到 &lt;a href=&#34;https://dot.net/ml?WT.mc_id=AI-MVP-5003172&#34;&gt;ML.NET&lt;/a&gt; 进行建模之前，你可能需要处理一些预处理。现在 DataFrame API 已经进入 &lt;a href=&#34;https://github.com/dotnet/machinelearning/pull/5641&#34;&gt;ML.NET 主库&lt;/a&gt; ，该代码以前作为实验包在 &lt;a href=&#34;https://github.com/dotnet/corefxlab&#34;&gt;CoreFx Lab&lt;/a&gt;存储库中，但现在它不再是实验性的，现在已是 &lt;a href=&#34;https://dot.net/ml?WT.mc_id=AI-MVP-5003172&#34;&gt;ML.NET&lt;/a&gt; 的一部分意味着项目计划持续更新。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

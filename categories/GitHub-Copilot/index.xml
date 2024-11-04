@@ -13,14 +13,14 @@
       <link>https://beanhsiang.github.io/post/2023-11-27-coding-with-github-copilot-in-vs-code/</link>
       <pubDate>Mon, 27 Nov 2023 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2023-11-27-coding-with-github-copilot-in-vs-code/</guid>
-      <description>在 AI 加持下的代码助手已经有很多了，如果你使用的是 VS Code，那么推荐安装 GitHub Copilot 来提升编码的效率。GitHub Copilot 为多种语言和各种框架提供支持建议，相信用过后就再也离不开飞一般的体验了。 安装扩展 在左侧点击扩展栏，输入“github copilot”搜索进行安装。或者由此一键安装。 强烈建议</description>
+      <description>&lt;p&gt;在 AI 加持下的代码助手已经有很多了，如果你使用的是 VS Code，那么推荐安装 GitHub Copilot 来提升编码的效率。GitHub Copilot 为多种语言和各种框架提供支持建议，相信用过后就再也离不开飞一般的体验了。&lt;/p&gt;&#xA;&lt;h2 id=&#34;安装扩展&#34;&gt;安装扩展&lt;/h2&gt;&#xA;&lt;p&gt;在左侧点击扩展栏，输入“github copilot”搜索进行安装。或者由此&lt;a href=&#34;vscode:extension/GitHub.copilot&#34;&gt;一键安装&lt;/a&gt;。&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://user-images.githubusercontent.com/3881276/292948584-a0ec29a8-34ff-42c2-a5f4-384763fb5874.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;image&#34; src=&#34;https://user-images.githubusercontent.com/3881276/292948584-a0ec29a8-34ff-42c2-a5f4-384763fb5874.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;em&gt;&lt;strong&gt;强烈建议把 Github Copilot Chat 安装上。&lt;/strong&gt;&lt;/em&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://user-images.githubusercontent.com/3881276/292949063-1e627051-2949-4056-8edf-838afe102fb0.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;image&#34; src=&#34;https://user-images.githubusercontent.com/3881276/292949063-1e627051-2949-4056-8edf-838afe102fb0.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;</description>
     </item>
     <item>
       <title>使用 GitHub Copilot 的自动错误检测和纠正增强调试</title>
       <link>https://beanhsiang.github.io/post/2023-06-07-enhancing-debugging-with-github-copilot/</link>
       <pubDate>Wed, 07 Jun 2023 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2023-06-07-enhancing-debugging-with-github-copilot/</guid>
-      <description>GitHub Copilot 的自动错误检测和纠正如何帮助简化调试 对于软件开发人员来说，调试可能是一个繁琐且耗时的过程。它需要仔细分析代码以识别和修复错误，并且通常需要数小时或数天才能完成。幸运的是，GitHub Copilot 开发了一个自动错误检测和纠正系统，可以帮助简化调试过程。 GitHub Copilot 的自动错误检测和纠正系统使用机器</description>
+      <description>&lt;h2 id=&#34;github-copilot-的自动错误检测和纠正如何帮助简化调试&#34;&gt;GitHub Copilot 的自动错误检测和纠正如何帮助简化调试&lt;/h2&gt;&#xA;&lt;p&gt;对于软件开发人员来说，调试可能是一个繁琐且耗时的过程。它需要仔细分析代码以识别和修复错误，并且通常需要数小时或数天才能完成。幸运的是，GitHub Copilot 开发了一个自动错误检测和纠正系统，可以帮助简化调试过程。&lt;/p&gt;&#xA;&lt;p&gt;GitHub Copilot 的自动错误检测和纠正系统使用机器学习算法来识别和修复代码中的错误。它可以检测语法和逻辑中的错误，还可以检测和纠正编码风格问题。该系统可用于检测任何编程语言（包括 JavaScript、Python 和 Java）中的错误。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

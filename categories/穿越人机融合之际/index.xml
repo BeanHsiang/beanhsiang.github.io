@@ -13,21 +13,21 @@
       <link>https://beanhsiang.github.io/post/2024-06-21-llm-is-the-brain-and-rpa-are-the-hands/</link>
       <pubDate>Fri, 21 Jun 2024 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2024-06-21-llm-is-the-brain-and-rpa-are-the-hands/</guid>
-      <description>LLM 是脑，RPA 是手——大模型与自动化技术的深度融合分析 一、引言 在数字化转型的浪潮中，人工智能（AI）技术正以前所未有的速度改变着我们的世界。其中，大模型（LLM，Large Language Model）和机器人流程自动化（RPA，Robotic Process Automation）作为两大关键技术，正在各自领</description>
+      <description>&lt;h2 id=&#34;llm-是脑rpa-是手大模型与自动化技术的深度融合分析&#34;&gt;LLM 是脑，RPA 是手——大模型与自动化技术的深度融合分析&lt;/h2&gt;&#xA;&lt;h3 id=&#34;一引言&#34;&gt;一、引言&lt;/h3&gt;&#xA;&lt;p&gt;在数字化转型的浪潮中，人工智能（AI）技术正以前所未有的速度改变着我们的世界。其中，大模型（LLM，Large Language Model）和机器人流程自动化（RPA，Robotic Process Automation）作为两大关键技术，正在各自领域发挥着巨大的作用。LLM以其强大的语言理解和生成能力，被誉为“智能的大脑”，而RPA则以其高效的自动化执行能力，被称为“数字的手”。当这两者结合在一起，会擦出怎样的火花？本文将从多个维度深入探讨大模型LLM与RPTA结合的必要性与可行性，并分析其带来的变革与挑战。&lt;/p&gt;</description>
     </item>
     <item>
       <title>为什么大模型难落地？</title>
       <link>https://beanhsiang.github.io/post/2024-04-25-why-is-it-difficult-to-land-large-models/</link>
       <pubDate>Thu, 25 Apr 2024 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2024-04-25-why-is-it-difficult-to-land-large-models/</guid>
-      <description>以大模型为核心的 AIGC，在推广普及的早期阶段，观望者是多数。大模型难落地的话题屡见不鲜，同时各类充满创意和创新的项目不断在互联网上涌现，大家不禁会产生疑问，到底大模型落地有多难？ 我尝试深追了一下，和身边的同事、好友以及合作伙伴谈及这个话题，慢慢有了一些切实的感受。原来大家对“落</description>
+      <description>&lt;p&gt;以大模型为核心的 AIGC，在推广普及的早期阶段，观望者是多数。大模型难落地的话题屡见不鲜，同时各类充满创意和创新的项目不断在互联网上涌现，大家不禁会产生疑问，到底大模型落地有多难？&lt;/p&gt;&#xA;&lt;p&gt;我尝试深追了一下，和身边的同事、好友以及合作伙伴谈及这个话题，慢慢有了一些切实的感受。原来大家对“落地”一词是有很多角度的理解。首先提出的一派观点就是产生收益即落地，能赚到钱说明被市场和客户认同了，道理上一看貌似也说得通。但是以收益来评价落地效果在早期阶段会有一些走样，比如 AIGC 相关的知识付费，对于提供者来说是“落地”了，可对于消费者来说这才刚刚了解和接触，能不能用到自身的工作、业务中亦未可知。于是有了第二类说法，使用 AIGC 像作个表情包，画一张宣传广告图，生成一小段音乐等等，有付费且最终被购买者使用了，这该符合“落地”了吧。有意思的是它们有个共通的特点，都是贴近生活娱乐的，产物都是被人类直接消费掉的，严肃地说它具有什么样的价值——其实心里也觉得是模模糊糊的。当然还有另外一种形式，就是所谓工具党，也称作卖铲人，比较常见于软件开发、办公效率场景，软件开发者喜欢用到 AI 编码助手，根据上下文智能地生成代码能极大提高开发效率，办公类工具就更举不胜举了，自动生成文案，润色稿件，生成 PPT 或 Excel 表的内容……传统办公应用在大模型的加持下的确焕发了新的生产力。&lt;/p&gt;</description>
     </item>
     <item>
       <title>从引导程序说起</title>
       <link>https://beanhsiang.github.io/post/2024-03-07-lets-start-with-the-bootloader/</link>
       <pubDate>Thu, 07 Mar 2024 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2024-03-07-lets-start-with-the-bootloader/</guid>
-      <description>盛传埃隆·马斯克说过“基于碳基生命体的人类是硅基生命的引导程序”这句话，也因为当下人工智能在大模型的加持下被推向了一波新的热潮，人们对于智慧和生命形态有了更多的想象。 我的感觉是，现在提引导程序启动为时尚早。以当下我们的科技水平和认知，还有许多课题要探索，比如宇宙中是否有其他的生命</description>
+      <description>&lt;p&gt;盛传埃隆·马斯克说过“基于碳基生命体的人类是硅基生命的引导程序”这句话，也因为当下人工智能在大模型的加持下被推向了一波新的热潮，人们对于智慧和生命形态有了更多的想象。&lt;/p&gt;&#xA;&lt;p&gt;我的感觉是，现在提引导程序启动为时尚早。以当下我们的科技水平和认知，还有许多课题要探索，比如宇宙中是否有其他的生命存在，是否还有更高维度的生物。 这些研究有助于人类了解生命和文明的本源，或许决定了人类有了向何种生命引导的选择。&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

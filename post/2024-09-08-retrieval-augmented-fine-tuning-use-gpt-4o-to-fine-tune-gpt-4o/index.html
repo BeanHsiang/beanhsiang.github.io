@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用 | Innovation with tech</title>
+    <meta property="og:title" content="检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2024-09-08T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2024-09-08T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用</h1>
+        </header>
+        
+  <time datetime="2024-09-08T04:00:00Z" class="post-meta meta-date dt-published">
+    2024年9月8日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>对企业来说，生成式AI最具影响力的应用之一是创建自然语言界面，这些界面已根据特定领域和使用场景的数据进行了定制，以提供更准确、更准确的响应。这意味着回答与银行、法律和医疗等特定领域相关的问题。</p>
+<p>我们经常谈到实现这一目标的两种方法：</p>
+<ol>
+<li>检索增强生成（RAG）：将这些文档存储在向量数据库中，在查询时根据它们与问题的语义相似度来检索文档，然后将它们作为LLM的上下文。</li>
+<li>监督微调（SFT）：在一组代表特定领域知识的提示和响应上对现有的基线模型进行训练。</li>
+</ol>
+<p>虽然大多数尝试使用RAG的组织都试图通过其内部知识库来扩展LLM的知识，但许多组织在没有进行显著优化的情况下未能达到预期效果。同样，精心挑选一个足够大且高质量的数据集用于微调也是一项具有挑战性的任务。这两种方法都有局限性：微调将模型限制在其已训练的数据上，使其容易受到近似和幻觉的影响，而RAG虽然可以使模型落地，但它仅根据查询与文档的语义接近程度来检索文档——这可能与查询无关，并导致给出的解释不充分。</p>
+<p>与其纠结于二选一，不如组合它们试试！可以将RAG看作是一场开卷考试：模型会查找相关的文档来生成答案。微调则像是闭卷考试：模型依赖于预先训练的知识。那么考试最好的成绩将基于运用好学习的知识和准备的笔记。</p>
+<p>检索增强微调（RAFT）是一种强大的技术，用于为特定领域的开放式环境（如域内RAG）准备微调数据。对于语言模型来说，RAFT是一项具有变革性的技术，它结合了RAG和微调的优点。RAFT通过增强模型理解和使用特定领域知识的能力，帮助模型适应特定领域。它是RAG和域特定微调之间的完美平衡点。</p>
+<p>RAFT有三个步骤：</p>
+<ol>
+<li>准备数据集，让模型学习如何回答与您的领域相关的问题。</li>
+<li>使用您准备好的数据集对模型进行微调</li>
+<li>评估您新创建的、自定义的、适配特定领域的模型的质量</li>
+</ol>
+<p>RAFT的关键在于训练数据的生成，其中每个数据点包括一个问题（Q）、一组文档（Dk）和一种“思维链”风格的答案（A）。</p>
+<p>这些文件被分为两类：标准参考文件（Do），其中包含答案；以及干扰文件（Di），其中不包含答案。微调使模型能够区分这两种文件，从而生成一个定制模型，其性能优于仅使用RAG或微调的原始模型。</p>
+<p>我们使用GPT-4o生成训练数据并微调GPT-4o mini版，以创建适合您的具体需求的成本效益更高、速度更快的模型。这种技术称为蒸馏，其中GPT-4o作为教师模型，4o-mini作为学生。</p>
+<p>接下来我们将动手操作。如果您想自行跟随操作或查看参考代码，请访问<a href="https://aka.ms/aoai-raft-workshop.">https://aka.ms/aoai-raft-workshop</a>。我们将为一个银行业务场景创建一个自定义模型，能够回答有关银行在线工具和账户的问题。</p>
+<h3 id="生成-raft-训练数据httpsgithubcomazure-samplesazure-openai-raftblobmain1_raft_datagenipynb"><a href="https://github.com/Azure-Samples/azure-openai-raft/blob/main/1_raft_datagen.ipynb">生成 RAFT 训练数据</a></h3>
+<p>首先收集特定领域的文档，例如银行文件的PDF格式。为了生成我们的训练数据，我们将PDF文件转换为Markdown文本格式。该文档为PDF格式，包含许多表格和图表，我们将使用GPT-4o将页面内容转换为Markdown格式。我们使用 Azure OpenAI GPT-4o 将所有这些信息提取到一个Markdown文件中，用于下游处理。然后，我们使用GPT-4o（我们的教师模型）生成合成的“问题-文档-答案”三元组，包括“黄金文档”（高度相关）和“干扰项”（误导性）的例子。这将确保模型能够区分相关和无关信息。RAFT采用“思维链”（CoT）过程，通过整合CoT过程，RAFT过程可以提高模型提取信息和进行逻辑推理的能力。这种方法有助于防止过拟合，提高训练的健壮性，特别适用于需要详细结构化思维的任务。然后我们将这些数据进行格式化，以便进行微调，并将其分为训练、验证和测试集。验证数据在训练过程中使用，而测试集则用于在训练结束后评估性能。</p>
+<h3 id="raft-微调httpsgithubcomazure-samplesazure-openai-raftblobmain2_raft_finetuningipynb"><a href="https://github.com/Azure-Samples/azure-openai-raft/blob/main/2_raft_finetuning.ipynb">RAFT 微调</a></h3>
+<p>在准备完训练数据和验证数据后，下一步是将这些数据上传到 Azure OpenAI 并创建微调任务。这非常简单：在 AI Studio 中，选择您的模型，上传您的训练数据和验证数据，并设置您的训练参数只需几步即可。我们将选择 4o-mini 作为我们的训练模型。在实验室里，我们会向您展示如何使用SDK上传和触发微调作业。UI提供了一种易于实验的方法，而SDK的方法则是在生产环境中实现和启用LLMops部署策略的首选方式。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/azeltov_2-1726660289683.png">
+            <img class="mx-auto" alt="azeltov2" src="/uploads/azeltov_2-1726660289683.png" />
+        </a>
+    </p>
+<p>一旦微调工作开始运行，我们可以监控其进度，完成后，可以在 Azure OpenAI Studio 中分析微调后的模型。最后，我们创建一个新的部署，其中包含微调后的模型，可用于我们的专业领域任务。</p>
+<h3 id="评估-raft-模型httpsgithubcomazure-samplesazure-openai-raftblobmain3_raft_evaluationipynb"><a href="https://github.com/Azure-Samples/azure-openai-raft/blob/main/3_raft_evaluation.ipynb">评估 RAFT 模型</a></h3>
+<p>你可以从查看AI Studio提供的内置指标开始，查看损失和准确率。我们希望看到准确率不断提高，而损失不断降低：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/azeltov_1-1726659961512.png">
+            <img class="mx-auto" alt="azeltov1" src="/uploads/azeltov_1-1726659961512.png" />
+        </a>
+    </p>
+<p>然而我们可以做更多事情来衡量模型的质量。还记得一开始我们准备的测试数据集吗？这就是我们准备它的原因！</p>
+<p>虽然有很多评估选项，包括 AI Studio 评估，但在我们的示例中，我们使用了开源库 RAGAS，它使用诸如“答案相关性”、“真实性”、“答案相似度”和“答案正确性”等指标来评估 RAG 管道。这些指标依赖于语言模型作为评判者或嵌入式模型来评估生成答案的质量和准确性。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/bank_eval.png">
+            <img class="mx-auto" alt="bank_eval" src="/uploads/bank_eval.png" />
+        </a>
+    </p>
+<p><em>gpt4o-mini vs gpt4o-mini-raft</em></p>
+<p>我们可以通过调整训练参数或生成更多的训练数据来进一步提升我们的指标。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/">https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2024-08-09-reduce-latency-for-azure-speech/">语音识别与合成中的延迟问题及解决策略</a></li>
+        
+        <li><a href="/post/2024-06-21-llm-is-the-brain-and-rpa-are-the-hands/">LLM 是脑，RPA 是手</a></li>
+        
+        <li><a href="/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a></li>
+        
+        <li><a href="/post/2024-05-15-azure-openai-speech/">Azure OpenAI 语音聊天</a></li>
+        
+        <li><a href="/post/2024-04-25-why-is-it-difficult-to-land-large-models/">为什么大模型难落地？</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/RAFT' target="_blank">RAFT</a></li>
+                
+                <li><a href='/tags/GPT-4o' target="_blank">GPT-4o</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2024 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/" title="检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用" target="_blank">检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/" title="语音识别与合成中的延迟问题及解决策略" target="_blank">语音识别与合成中的延迟问题及解决策略</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-06-21-llm-is-the-brain-and-rpa-are-the-hands/" title="LLM 是脑，RPA 是手" target="_blank">LLM 是脑，RPA 是手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-04-25-why-is-it-difficult-to-land-large-models/" title="为什么大模型难落地？" target="_blank">为什么大模型难落地？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-04-17-keyless-authentication-with-azure-openai/" title="实现 Azure OpenAI 无密钥身份验证" target="_blank">实现 Azure OpenAI 无密钥身份验证</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel/" title="使用 Semantic Kernel 构建自定义 Copilot" target="_blank">使用 Semantic Kernel 构建自定义 Copilot</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-03-07-lets-start-with-the-bootloader/" title="从引导程序说起" target="_blank">从引导程序说起</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-01-27-fireug-net-conf-china-2023-watch-party/" title="FireUG x .NET Conf China - Watch Party" target="_blank">FireUG x .NET Conf China - Watch Party</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (20)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (3)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

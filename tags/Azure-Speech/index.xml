@@ -13,7 +13,7 @@
       <link>https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/</link>
       <pubDate>Fri, 09 Aug 2024 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/</guid>
-      <description>语音识别和合成的延迟可能是创建无缝和高效应用程序的一个重大障碍。减少延迟不仅可以改善用户体验，还可以提升实时应用程序的整体性能。本文将探讨在一般转录、实时转录、文件转录和语音合成中减少延迟的策略。 1. 网络延迟：将语音资源移近应用程序 导致语音识别延迟的主要因素之一是网络延迟。为了减轻</description>
+      <description>&lt;p&gt;语音识别和合成的延迟可能是创建无缝和高效应用程序的一个重大障碍。减少延迟不仅可以改善用户体验，还可以提升实时应用程序的整体性能。本文将探讨在一般转录、实时转录、文件转录和语音合成中减少延迟的策略。&lt;/p&gt;&#xA;&lt;h2 id=&#34;1-网络延迟将语音资源移近应用程序&#34;&gt;1. 网络延迟：将语音资源移近应用程序&lt;/h2&gt;&#xA;&lt;p&gt;导致语音识别延迟的主要因素之一是网络延迟。为了减轻这一延迟，关键是减少应用程序与语音识别资源之间的距离。以下是一些建议：&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

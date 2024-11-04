@@ -13,7 +13,7 @@
       <link>https://beanhsiang.github.io/post/2024-04-17-keyless-authentication-with-azure-openai/</link>
       <pubDate>Wed, 17 Apr 2024 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2024-04-17-keyless-authentication-with-azure-openai/</guid>
-      <description>与许多 Azure API 一样，Azure OpenAI 服务允许开发人员使用API密钥或无密钥（通过Entra ID）进行身份验证。由于尽量避免使用密钥是安全最佳实践，因此我们在本文中将详细介绍如何使开发人员轻松地迁移到无密钥 Azure OpenAI 身份验证。如果您想立即行动，这里还提供了一个新的无密钥部署模板。 密钥的风险 首先让</description>
+      <description>&lt;p&gt;与许多 Azure API 一样，Azure OpenAI 服务允许开发人员使用&lt;a href=&#34;https://learn.microsoft.com/azure/ai-services/openai/chatgpt-quickstart?tabs=command-line%2Cpython-new&amp;amp;pivots=programming-language-python#retrieve-key-and-endpoint&amp;amp;WT.mc_id=AI-MVP-5003172&#34;&gt;API密钥&lt;/a&gt;或&lt;a href=&#34;https://learn.microsoft.com/azure/ai-services/openai/how-to/managed-identity?WT.mc_id=AI-MVP-5003172&#34;&gt;无密钥（通过Entra ID）&lt;/a&gt;进行身份验证。由于尽量避免使用密钥是安全最佳实践，因此我们在本文中将详细介绍如何使开发人员轻松地迁移到无密钥 Azure OpenAI 身份验证。如果您想立即行动，这里还提供了一个新的无密钥部署模板。&lt;/p&gt;&#xA;&lt;h2 id=&#34;密钥的风险&#34;&gt;密钥的风险&lt;/h2&gt;&#xA;&lt;p&gt;首先让我们来谈谈API密钥的风险，使用密钥很省心，因为设置看起来很简单——你只需要一个端点URL和密钥：&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

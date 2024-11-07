@@ -3,24 +3,30 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
-    <lastmod>2024-09-08T12:00:00+08:00</lastmod>
+    <lastmod>2024-10-15T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2024-09-08T12:00:00+08:00</lastmod>
+    <lastmod>2024-10-15T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/GPT-4o/</loc>
-    <lastmod>2024-09-08T12:00:00+08:00</lastmod>
+    <lastmod>2024-10-15T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2024-09-08T12:00:00+08:00</lastmod>
+    <lastmod>2024-10-15T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2024-09-08T12:00:00+08:00</lastmod>
+    <lastmod>2024-10-15T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/tags/RAFT/</loc>
-    <lastmod>2024-09-08T12:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/tags/Real-Time-API/</loc>
+    <lastmod>2024-10-15T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2024-10-15T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2024-10-15-building-your-first-voice-bot-with-gpt-4o-real-time-api/</loc>
+    <lastmod>2024-10-15T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/RAFT/</loc>
     <lastmod>2024-09-08T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/</loc>

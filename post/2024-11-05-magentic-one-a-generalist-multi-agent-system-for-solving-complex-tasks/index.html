@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>Magentic-One：用于解决复杂任务的通用多代理系统 | Innovation with tech</title>
+    <meta property="og:title" content="Magentic-One：用于解决复杂任务的通用多代理系统 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2024-11-05T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2024-11-05T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="Magentic-One：用于解决复杂任务的通用多代理系统">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2024-11-05-magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">Magentic-One：用于解决复杂任务的通用多代理系统</h1>
+        </header>
+        
+  <time datetime="2024-11-05T04:00:00Z" class="post-meta meta-date dt-published">
+    2024年11月5日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>微软研究团队推出了一个新开发的多智能体系统——Magentic-One。这个系统能够解决各种领域的开放性网络和文件任务，是朝着开发能够完成人们在工作和生活中遇到的各种任务的智能体迈出的重要一步。他们还在微软的AutoGen框架上发布了Magentic-One的开源实现。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/magnetic_example-2048x1155.png">
+            <img class="mx-auto" alt="现场1" src="/uploads/magnetic_example-2048x1155.png" />
+        </a>
+    </p>
+<p>未来的AI将更加注重行动。AI系统正在从简单的对话转变为实际完成任务，这将是AI价值的真正体现。比如，从推荐晚餐选项的生成性AI，到能够自主下单和安排送餐的代理助手。从总结研究论文到积极搜索和整理相关研究以完成全面的文献综述。</p>
+<p>现代AI智能体在软件工程、数据分析、科学研究和网络导航等领域表现出色。但要实现能够增强我们生产力和改变生活的代理系统，我们需要在通用代理系统上取得进步。这些系统必须能够在人们日常生活中遇到的各种场景中可靠地完成复杂的多步骤任务。</p>
+<p>Magentic-One就是这样一个高性能的通用代理系统，它采用多智能体架构，由一个主导的智能体——协调器（Orchestrator）指挥其他四个智能体来完成任务。协调器负责规划、跟踪进度和从错误中恢复，同时指导专业智能体执行任务，比如操作网络浏览器、导航本地文件或编写和执行Python代码。</p>
+<p>Magentic-One在多个具有挑战性的代理基准测试中达到了与最先进技术相竞争的性能，而且不需要修改其核心能力或架构。它建立在AutoGen框架上，模块化、多智能体的设计比单一智能体系统有许多优势。通过将不同的技能封装在不同的智能体中，它简化了开发和重用，类似于面向对象编程。Magentic-One的即插即用设计进一步支持了通过添加或移除智能体而无需重做整个系统的适应性和可扩展性。</p>
+<p>他们将Magentic-One开源，供研究人员和开发人员使用。虽然Magentic-One显示出强大的通用能力，但它还远未达到人类水平的性能，并且可能会犯错。此外，随着代理系统变得更加强大，它们的风险——比如采取不受欢迎的行动或使恶意用例成为可能——也可能增加。虽然我们仍处于现代代理AI的早期阶段，但他们邀请社区帮助解决这些开放性挑战，确保我们未来的代理系统既有帮助又安全。为此，他们还发布了AutoGenBench，这是一个带有内置重复和隔离控制的代理评估工具，用于严格测试代理基准测试和任务，同时最小化不良副作用。</p>
+<p>Magentic-One的工作基于一个多智能体架构，其中一个主导的协调器智能体负责高级规划、指导其他智能体执行子任务、跟踪整体进度，并在需要时采取纠正措施。协调器首先创建一个计划来解决任务，收集所需的事实和有根据的猜测，这些信息被维护在一个任务记录簿中。在计划的每一步中，协调器创建一个进度记录簿，其中它自我反思任务进度，并检查任务是否完成。如果任务尚未完成，它将分配Magentic-One的其他智能体之一来完成子任务。在被分配的智能体完成其子任务后，协调器更新进度记录簿，并以这种方式继续，直到任务完成。如果协调器发现进度在足够多的步骤中没有取得进展，它可以更新任务记录簿并创建一个新计划。这在上面的图中有所说明；协调器的工作因此被划分为一个外循环，它更新任务记录簿，和一个内循环来更新进度记录簿。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/magentic_orchestrator.png">
+            <img class="mx-auto" alt="现场2" src="/uploads/magentic_orchestrator.png" />
+        </a>
+    </p>
+<p>Magentic-One由以下智能体组成：</p>
+<ul>
+<li><strong>协调器（Orchestrator）</strong>：主导智能体，负责任务分解、规划、指导其他智能体执行子任务、跟踪整体进度，并在需要时采取纠正措施。</li>
+<li><strong>WebSurfer</strong>：基于LLM的智能体，擅长指挥和管理基于Chromium的网络浏览器的状态。对于每个请求，WebSurfer执行诸如导航（例如，访问URL、执行搜索）、与网页交互（例如，点击、输入）和阅读动作（例如，总结、回答问题）。然后它报告网页的新状态。WebSurfer依赖于浏览器的可访问性树和一组标记提示来执行其任务。</li>
+<li><strong>FileSurfer</strong>：基于LLM的智能体，指挥一个基于Markdown的文件预览应用程序来读取本地文件。它还可以执行常见的导航任务，例如列出目录内容并导航它们。</li>
+<li><strong>Coder</strong>：基于LLM的智能体，专门编写代码、分析从其他智能体收集的信息，并创建新的工件。</li>
+<li><strong>ComputerTerminal</strong>：提供访问控制台shell以执行程序和安装新库。</li>
+</ul>
+<p>Magentic-One的智能体为协调器提供了解决广泛开放性问题所需的工具和能力，并能够自主适应和在动态变化的网络和文件系统环境中行动。</p>
+<p>虽然所有智能体默认使用的多模态LLM是GPT-4o，但Magentic-One是模型不可知的，允许集成不同的模型以支持不同的能力或满足不同的成本要求。例如，不同的LLM和SLM或专门版本可以为不同的智能体提供动力。对于协调器，他们推荐一个强大的推理模型，如GPT-4o。在不同的配置中，他们还尝试使用OpenAI o1-preview为协调器的外循环和Coder提供动力，而其他智能体继续使用GPT-4o。</p>
+<p>为了严格评估Magentic-One的性能，他们引入了AutoGenBench，这是一个开源的独立工具，用于运行代理基准测试，允许重复和隔离，例如，控制随机LLM调用的方差和智能体在世界中采取行动的副作用。AutoGenBench促进了代理评估，并允许添加新的基准测试。使用AutoGenBench，我们可以在各种基准测试上评估Magentic-One。他们选择基准测试的标准是它们应该涉及复杂的多步骤任务，至少有一些步骤需要规划和工具使用，包括使用网络浏览器对真实或模拟网页采取行动。在这项工作中，他们考虑了满足这一标准的三个基准测试：GAIA、AssistantBench和WebArena。</p>
+<p>在下面的图中，他们展示了Magentic-One在三个基准测试上的性能，并与单独运行的GPT-4以及每个基准测试的最高性能开源基线和非开源基准特定基线进行了比较，根据2024年10月21日的公共排行榜。Magentic-One（GPT-4o，o1）在GAIA和AssistantBench上达到了与以前SOTA方法统计上可比的性能，并在WebArena上具有竞争力的性能。请注意，GAIA和AssistantBench有一个隐藏的测试集，而WebArena没有，因此WebArena的结果是自我报告的。总之，这些结果确立了Magentic-One作为一个强大的通用代理系统，用于完成复杂任务。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/benchmark-67297634410a6-1024x627.png">
+            <img class="mx-auto" alt="现场3" src="/uploads/benchmark-67297634410a6-1024x627.png" />
+        </a>
+    </p>
+<p>代理系统，如Magentic-One，标志着与AI相关的机会和风险的重大转变。Magentic-One与为人类设计的数字世界互动，采取的行动可以改变状态，并可能导致不可逆转的后果。这些固有且不可否认的风险在他们测试期间是显而易见的，例如，在开发过程中，一个配置错误导致智能体反复尝试登录WebArena网站并失败。这导致账户被暂时暂停。然后智能体尝试重置账户密码。更令人担忧的是，智能体在被明确停止之前，试图通过在社交媒体上发帖、给教科书作者发电子邮件，甚至起草向政府实体提出信息自由请求来招募人类帮助。在每种情况下，智能体都因为缺乏所需的工具或账户，或因为人类观察者干预而未能成功。</p>
+<p>与微软AI原则和负责任的AI实践一致，在部署Magentic-One之前努力识别、测量和减轻潜在风险。具体来说，他们进行了红队演习，以评估与有害内容、越狱和提示注入攻击相关的风险，发现他们的设计没有增加风险。此外，他们为安全使用Magentic-One提供了警告和指导，包括示例和适当的默认设置。建议用户保持人类在循环中进行监控，并确保所有代码执行示例、评估和基准测试工具都在沙箱化的Docker容器中运行以最小化风险。</p>
+<p>他们建议在使用Magentic-One时使用具有强大对齐、预生成和后生成过滤以及在执行期间和执行后密切监控日志的模型。在我们自己的使用中，遵循最小权限和最大监督的原则。最小化与代理AI相关的风险将需要新的想法和广泛的研究，因为仍然需要大量的工作来理解这些新兴风险并开发有效的缓解措施。</p>
+<p>展望未来，改善代理AI，特别是在安全和负责任的AI研究方面，有很多宝贵的机会。在公共网络上行动的代理可能容易受到网络钓鱼、社交工程和错误信息的威胁，就像人类用户一样。为了应对这些风险，一个重要的方向是为代理配备评估其行动可逆性的能力——区分那些容易逆转的、需要努力的和不可逆转的行动。像删除文件、发送电子邮件或提交表格这样的行动通常很难或不可能撤销。因此，系统应该被设计为在进行这些高风险行动之前暂停并寻求人类输入。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2024-11-05-magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/">https://beanhsiang.github.io/post/2024-11-05-magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2024-10-15-building-your-first-voice-bot-with-gpt-4o-real-time-api/">使用 GPT-4o 实时 API 构建一个语音机器人</a></li>
+        
+        <li><a href="/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/">检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用</a></li>
+        
+        <li><a href="/post/2024-08-09-reduce-latency-for-azure-speech/">语音识别与合成中的延迟问题及解决策略</a></li>
+        
+        <li><a href="/post/2024-06-21-llm-is-the-brain-and-rpa-are-the-hands/">LLM 是脑，RPA 是手</a></li>
+        
+        <li><a href="/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Multi-Agent' target="_blank">Multi-Agent</a></li>
+                
+                <li><a href='/tags/Magentic-One' target="_blank">Magentic-One</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2024 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-12-23-ai-agents-manipulation-engines/" title="AI 代理将成为操纵引擎" target="_blank">AI 代理将成为操纵引擎</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-11-05-magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/" title="Magentic-One：用于解决复杂任务的通用多代理系统" target="_blank">Magentic-One：用于解决复杂任务的通用多代理系统</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-10-15-building-your-first-voice-bot-with-gpt-4o-real-time-api/" title="使用 GPT-4o 实时 API 构建一个语音机器人" target="_blank">使用 GPT-4o 实时 API 构建一个语音机器人</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/" title="检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用" target="_blank">检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/" title="语音识别与合成中的延迟问题及解决策略" target="_blank">语音识别与合成中的延迟问题及解决策略</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-06-21-llm-is-the-brain-and-rpa-are-the-hands/" title="LLM 是脑，RPA 是手" target="_blank">LLM 是脑，RPA 是手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-04-25-why-is-it-difficult-to-land-large-models/" title="为什么大模型难落地？" target="_blank">为什么大模型难落地？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-04-17-keyless-authentication-with-azure-openai/" title="实现 Azure OpenAI 无密钥身份验证" target="_blank">实现 Azure OpenAI 无密钥身份验证</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (22)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (4)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

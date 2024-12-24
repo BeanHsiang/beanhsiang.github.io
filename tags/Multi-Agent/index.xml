@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Multi-Agent on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/tags/Multi-Agent/</link>
+    <description>Recent content in Multi-Agent on Innovation with tech</description>
+    <generator>Hugo</generator>
+    <language>zh-Hans</language>
+    <lastBuildDate>Tue, 05 Nov 2024 12:00:00 +0800</lastBuildDate>
+    <atom:link href="https://beanhsiang.github.io/tags/Multi-Agent/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Magentic-One：用于解决复杂任务的通用多代理系统</title>
+      <link>https://beanhsiang.github.io/post/2024-11-05-magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/</link>
+      <pubDate>Tue, 05 Nov 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2024-11-05-magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/</guid>
+      <description>&lt;p&gt;微软研究团队推出了一个新开发的多智能体系统——Magentic-One。这个系统能够解决各种领域的开放性网络和文件任务，是朝着开发能够完成人们在工作和生活中遇到的各种任务的智能体迈出的重要一步。他们还在微软的AutoGen框架上发布了Magentic-One的开源实现。&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/magnetic_example-2048x1155.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;现场1&#34; src=&#34;https://beanhsiang.github.io/uploads/magnetic_example-2048x1155.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;未来的AI将更加注重行动。AI系统正在从简单的对话转变为实际完成任务，这将是AI价值的真正体现。比如，从推荐晚餐选项的生成性AI，到能够自主下单和安排送餐的代理助手。从总结研究论文到积极搜索和整理相关研究以完成全面的文献综述。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -16,6 +16,13 @@
       <description>&lt;p&gt;在2025年，我们可能会习惯于与一个个人AI代理聊天，这个代理了解我们的日程、朋友圈和我们去过的地方。它们被设计得如此贴心，以至于我们愿意让它们深入我们生活的方方面面。通过语音交流，这种亲密感变得更加强烈。&lt;/p&gt;&#xA;&lt;p&gt;但这种亲密感其实是一种错觉，我们以为自己在和一个真正像人的代理互动，但实际上背后是一个服务于工业利益的系统，这些利益并不总是和我们的利益一致。这些AI代理拥有强大的能力，它们能微妙地影响我们的消费选择、去向和阅读内容。它们以一种几乎不易察觉的方式，让我们忘记它们真正的忠诚所在。&lt;/p&gt;</description>
     </item>
     <item>
+      <title>使用MLX调用Phi-4模型</title>
+      <link>https://beanhsiang.github.io/post/2024-12-10-phi-4-with-mlx/</link>
+      <pubDate>Tue, 10 Dec 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2024-12-10-phi-4-with-mlx/</guid>
+      <description>&lt;p&gt;在当今的AI技术浪潮中，微软推出的Phi-4模型无疑是一个令人瞩目的创新。作为小型语言模型（SLM）的最新成员，Phi-4以其14B参数的强大性能和卓越的复杂推理能力，展示了AI技术在数学、编程和长文本处理等领域的巨大潜力。本文将详细介绍如何使用MLX框架调用Phi-4模型，并探讨其在不同应用场景中的实际效果。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Magentic-One：用于解决复杂任务的通用多代理系统</title>
       <link>https://beanhsiang.github.io/post/2024-11-05-magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/</link>
       <pubDate>Tue, 05 Nov 2024 12:00:00 +0800</pubDate>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Phi-4 on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/tags/Phi-4/</link>
+    <description>Recent content in Phi-4 on Innovation with tech</description>
+    <generator>Hugo</generator>
+    <language>zh-Hans</language>
+    <lastBuildDate>Tue, 10 Dec 2024 12:00:00 +0800</lastBuildDate>
+    <atom:link href="https://beanhsiang.github.io/tags/Phi-4/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用MLX调用Phi-4模型</title>
+      <link>https://beanhsiang.github.io/post/2024-12-10-phi-4-with-mlx/</link>
+      <pubDate>Tue, 10 Dec 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2024-12-10-phi-4-with-mlx/</guid>
+      <description>&lt;p&gt;在当今的AI技术浪潮中，微软推出的Phi-4模型无疑是一个令人瞩目的创新。作为小型语言模型（SLM）的最新成员，Phi-4以其14B参数的强大性能和卓越的复杂推理能力，展示了AI技术在数学、编程和长文本处理等领域的巨大潜力。本文将详细介绍如何使用MLX框架调用Phi-4模型，并探讨其在不同应用场景中的实际效果。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

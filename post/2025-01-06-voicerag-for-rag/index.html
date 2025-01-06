@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>基于Azure AI搜索和GPT-4o实时音频的语音化RAG | Innovation with tech</title>
+    <meta property="og:title" content="基于Azure AI搜索和GPT-4o实时音频的语音化RAG - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2025-01-06T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2025-01-06T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="基于Azure AI搜索和GPT-4o实时音频的语音化RAG">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</h1>
+        </header>
+        
+  <time datetime="2025-01-06T04:00:00Z" class="post-meta meta-date dt-published">
+    2025年1月6日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>本文介绍了一种简单的语音生成式 AI 应用架构，通过结合新的 gpt-4o-realtime-preview 模型和 Azure AI Search，实现了 RAG 模式。新的 Azure OpenAI gpt-4o-realtime-preview 模型以其语音到语音的功能，为更自然的应用程序用户界面打开了大门。这种新的基于语音的界面也带来了一个有趣的新挑战：如何在使用音频作为输入和输出的系统中实现检索增强生成 (RAG)？</p>
+<p>RAG 是一种将语言模型与您自己的数据相结合的流行模式。我们将介绍一种简单的语音生成式 AI 应用架构，该架构支持在实时音频 API 之上进行 RAG，并支持来自客户端设备的全双工音频流，同时安全地处理对模型和检索系统的访问。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/talktoyourdataapp.png">
+            <img class="mx-auto" alt="stage1" src="/uploads/talktoyourdataapp.png" />
+        </a>
+    </p>
+<h3 id="支持-rag-工作流程">支持 RAG 工作流程</h3>
+<p>我们使用两个关键构建块来使语音与 RAG 一起工作：</p>
+<ul>
+<li>函数调用： gpt-4o-realtime-preview 模型支持 函数调用，允许我们在会话配置中包含用于搜索和基础的工具。模型监听音频输入，并直接使用描述它要从知识库中检索内容的参数调用这些工具。</li>
+<li>实时中间层： 我们需要区分客户端需要做什么和不能在客户端做的事情。全双工、实时音频内容需要发送到客户端设备的扬声器和麦克风。另一方面，模型配置（系统消息、最大令牌、温度等）和 RAG 对知识库的访问需要在服务器上处理，因为我们不希望客户端拥有这些资源的凭据，也不希望要求客户端具有对这些组件的网络视线。为了实现这一点，我们引入了一个中间层组件，该组件代理音频流量，同时将模型配置和函数调用等各个方面完全保留在后端。</li>
+</ul>
+<p>
+        <a data-fancybox="gallery" href="/uploads/pablocastro_1-1727739495810.png">
+            <img class="mx-auto" alt="stage2" src="/uploads/pablocastro_1-1727739495810.png" />
+        </a>
+    </p>
+<p>这两个构建块协同工作：实时 API 知道如果有未完成的函数调用，则不会继续进行对话。当模型需要来自知识库的信息来响应输入时，它会发出一个 “搜索” 函数调用。我们将该函数调用转换为 Azure AI Search “混合” 查询（向量 + 混合 + 重新排序），获取与模型需要了解的内容最相关的文档段落，并将其作为函数的输出发送回模型。一旦模型看到该输出，它就会通过音频通道响应，从而继续对话。</p>
+<p>在这个场景中，一个关键元素是快速准确的检索。搜索调用发生在用户回合和音频通道中的模型响应之间，这是一个延迟敏感的时间点。Azure AI Search 是完美的选择，因为它具有低延迟的向量和混合查询以及支持语义重新排序以最大限度地提高响应的相关性。</p>
+<h3 id="生成基础响应">生成基础响应</h3>
+<p>使用函数调用解决了如何协调针对知识库的搜索查询的问题，但这种控制反转又带来了一个新的问题：我们不知道从知识库检索到的哪些段落用于为每个响应提供基础。典型的 RAG 应用程序与模型 API 进行交互，可以要求在提示中生成带有特殊符号的引文，以便在用户体验中适当地呈现，但当模型生成音频时，我们不希望它大声说出文件名或 URL。由于生成式 AI 应用程序必须对其用于响应任何给定输入的基础数据的来源保持透明，因此我们需要一种不同的机制来识别和显示用户体验中的引文。</p>
+<p>我们也使用函数调用来实现这一点。我们引入了第二个名为 “report_grounding” 的工具，并将以下指令作为系统提示的一部分包含在内。
+使用以下逐步说明使用知识库提供简短明了的答案：</p>
+<ul>
+<li>步骤 1 - 在回答问题之前，始终使用 “search” 工具检查知识库。</li>
+<li>步骤 2 - 始终使用 “report_grounding” 工具报告来自知识库的信息来源。</li>
+<li>步骤 3 - 生成尽可能简短的答案。如果答案不在知识库中，请说你不知道。</li>
+</ul>
+<p>我们尝试了不同的方式来制定此提示，并发现将此过程明确列为逐步执行特别有效。</p>
+<p>有了这两个工具，我们现在拥有一个系统，可以将音频流传输到模型，使模型能够回调到后端的应用程序逻辑，既可以进行搜索，也可以告诉我们哪些基础数据被使用，然后将音频流传输回客户端，并带有额外的消息，让客户端知道基础信息（您可以在 UI 中看到这些信息，作为答案被说出时出现的文档引用）。</p>
+<h3 id="使用任何支持实时-api-的客户端">使用任何支持实时 API 的客户端</h3>
+<p>请注意，中间层完全抑制了与工具相关的交互，并覆盖了系统配置选项，但除此之外，它保留了相同的协议。这意味着任何直接针对 Azure OpenAI API 工作的客户端都将 “正常” 针对实时中间层工作，因为 RAG 过程完全封装在后端。</p>
+<h3 id="创建安全的生成式-ai-应用">创建安全的生成式 AI 应用</h3>
+<p>我们将所有配置元素（系统提示、最大令牌等）和所有凭据（用于访问 Azure OpenAI、Azure AI Search 等）保留在后端，并将其与客户端安全地分离。此外，Azure OpenAI 和 Azure AI Search 包含广泛的安全功能，以进一步增强后端的安全性，包括网络隔离，使模型和搜索索引的 API 端点无法通过互联网访问，Entra ID 避免跨服务使用密钥进行身份验证，以及为索引内容提供多层加密的选项。</p>
+<h3 id="参考">参考</h3>
+<p>本文中讨论的所有代码和数据都可在 GitHub 存储库 Azure-Samples/aisearch-openai-rag-audio 中获得。您可以按原样使用它，也可以轻松地将数据更改为您自己的数据并与之交谈。该存储库中的代码和本文中的描述更像是一种范式，而不是具体的解决方案。您需要尝试正确设置提示，可能需要扩展 RAG 工作流程，并需要评估其安全性和 AI 安全性。</p>
+<p>要了解有关 Azure OpenAI gpt-4o-realtime-preview 模型和实时 API 的更多信息，请参阅<a href="https://learn.microsoft.com/azure/ai-services/openai/overview?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/azure/ai-services/openai/overview</a>。有关 Azure AI Search，您可以在<a href="https://aka.ms/azureaisearch?WT.mc_id=AI-MVP-5003172">https://aka.ms/azureaisearch</a>找到大量资源，文档位于<a href="https://learn.microsoft.com/azure/search/?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/azure/search/</a>。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/">https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2024-12-23-ai-agents-manipulation-engines/">AI 代理将成为操纵引擎</a></li>
+        
+        <li><a href="/post/2024-12-10-phi-4-with-mlx/">使用MLX调用Phi-4模型</a></li>
+        
+        <li><a href="/post/2024-11-05-magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/">Magentic-One：用于解决复杂任务的通用多代理系统</a></li>
+        
+        <li><a href="/post/2024-10-15-building-your-first-voice-bot-with-gpt-4o-real-time-api/">使用 GPT-4o 实时 API 构建一个语音机器人</a></li>
+        
+        <li><a href="/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/">检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/VoiceRAG' target="_blank">VoiceRAG</a></li>
+                
+                <li><a href='/tags/RAG' target="_blank">RAG</a></li>
+                
+                <li><a href='/tags/Azure-AI-Search' target="_blank">Azure AI Search</a></li>
+                
+                <li><a href='/tags/GPT-4o-Realtime-Preview' target="_blank">GPT-4o Realtime Preview</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-12-23-ai-agents-manipulation-engines/" title="AI 代理将成为操纵引擎" target="_blank">AI 代理将成为操纵引擎</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-12-10-phi-4-with-mlx/" title="使用MLX调用Phi-4模型" target="_blank">使用MLX调用Phi-4模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-11-05-magentic-one-a-generalist-multi-agent-system-for-solving-complex-tasks/" title="Magentic-One：用于解决复杂任务的通用多代理系统" target="_blank">Magentic-One：用于解决复杂任务的通用多代理系统</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-10-15-building-your-first-voice-bot-with-gpt-4o-real-time-api/" title="使用 GPT-4o 实时 API 构建一个语音机器人" target="_blank">使用 GPT-4o 实时 API 构建一个语音机器人</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/" title="检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用" target="_blank">检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/" title="语音识别与合成中的延迟问题及解决策略" target="_blank">语音识别与合成中的延迟问题及解决策略</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-06-21-llm-is-the-brain-and-rpa-are-the-hands/" title="LLM 是脑，RPA 是手" target="_blank">LLM 是脑，RPA 是手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (4)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

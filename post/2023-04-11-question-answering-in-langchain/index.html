@@ -112,8 +112,8 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">os</span> 
-</span></span><span style="display:flex;"><span>os<span style="color:#000;font-weight:bold">.</span>environ[<span style="color:#d14">&#34;OPENAI_API_KEY&#34;</span>] <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;COPY AND PASTE YOUR API KEY HERE&#34;</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">os</span> 
+</span></span><span style="display:flex;"><span>os<span style="color:#0550ae">.</span>environ<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;OPENAI_API_KEY&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;COPY AND PASTE YOUR API KEY HERE&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>当然还有一个对我们更友好的选择是 Azure OpenAI：https://azure.microsoft.com/zh-cn/products/cognitive-services/openai-service/ ，虽然也需要开通帐户付费，但它有很好的稳定性保障，还可以结合 Azure Functions 快速构建网络服务增加我们的应用能力。</p>
@@ -125,10 +125,10 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>os<span style="color:#000;font-weight:bold">.</span>environ[<span style="color:#d14">&#34;OPENAI_API_TYPE&#34;</span>] <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;azure&#34;</span>
-</span></span><span style="display:flex;"><span>os<span style="color:#000;font-weight:bold">.</span>environ[<span style="color:#d14">&#34;OPENAI_API_BASE&#34;</span>] <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;https://your-resource-name.openai.azure.com&#34;</span>
-</span></span><span style="display:flex;"><span>os<span style="color:#000;font-weight:bold">.</span>environ[<span style="color:#d14">&#34;OPENAI_API_VERSION&#34;</span>] <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;RELEASED VERSION BASE ON YOUR MODEL&#34;</span>
-</span></span><span style="display:flex;"><span>os<span style="color:#000;font-weight:bold">.</span>environ[<span style="color:#d14">&#34;OPENAI_API_KEY&#34;</span>] <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;COPY AND PASTE YOUR Azure OpenAI API KEY HERE&#34;</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>os<span style="color:#0550ae">.</span>environ<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;OPENAI_API_TYPE&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;azure&#34;</span>
+</span></span><span style="display:flex;"><span>os<span style="color:#0550ae">.</span>environ<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;OPENAI_API_BASE&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;https://your-resource-name.openai.azure.com&#34;</span>
+</span></span><span style="display:flex;"><span>os<span style="color:#0550ae">.</span>environ<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;OPENAI_API_VERSION&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;RELEASED VERSION BASE ON YOUR MODEL&#34;</span>
+</span></span><span style="display:flex;"><span>os<span style="color:#0550ae">.</span>environ<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;OPENAI_API_KEY&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;COPY AND PASTE YOUR Azure OpenAI API KEY HERE&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>或者，您可以使用 HuggingFace Hub 或其他地方的模型。</p>
@@ -142,10 +142,10 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># load document</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.document_loaders</span> <span style="color:#000;font-weight:bold">import</span> PyPDFLoader
-</span></span><span style="display:flex;"><span>loader <span style="color:#000;font-weight:bold">=</span> PyPDFLoader(<span style="color:#d14">&#34;materials/example.pdf&#34;</span>)
-</span></span><span style="display:flex;"><span>documents <span style="color:#000;font-weight:bold">=</span> loader<span style="color:#000;font-weight:bold">.</span>load()
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># load document</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">langchain.document_loaders</span> <span style="color:#cf222e">import</span> PyPDFLoader
+</span></span><span style="display:flex;"><span>loader <span style="color:#0550ae">=</span> PyPDFLoader<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;materials/example.pdf&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>documents <span style="color:#0550ae">=</span> loader<span style="color:#0550ae">.</span>load<span style="color:#1f2328">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="方法一-load_qa_chain">方法一 load_qa_chain</h2>
@@ -165,11 +165,11 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#998;font-style:italic">### For multiple documents </span>
-</span></span><span style="display:flex;"><span>loaders <span style="color:#000;font-weight:bold">=</span> [<span style="color:#000;font-weight:bold">....</span>]
-</span></span><span style="display:flex;"><span>documents <span style="color:#000;font-weight:bold">=</span> []
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">for</span> loader <span style="color:#000;font-weight:bold">in</span> loaders:
-</span></span><span style="display:flex;"><span>    documents<span style="color:#000;font-weight:bold">.</span>extend(loader<span style="color:#000;font-weight:bold">.</span>load())
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a">### For multiple documents </span>
+</span></span><span style="display:flex;"><span>loaders <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span><span style="color:#0550ae">....</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>documents <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">for</span> loader <span style="color:#0550ae">in</span> loaders<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    documents<span style="color:#0550ae">.</span>extend<span style="color:#1f2328">(</span>loader<span style="color:#0550ae">.</span>load<span style="color:#1f2328">())</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>但是，如果我的文档超长以至于超过了 Token 限制怎么办？</p>
@@ -210,26 +210,26 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.chains</span> <span style="color:#000;font-weight:bold">import</span> RetrievalQA
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.indexes</span> <span style="color:#000;font-weight:bold">import</span> VectorstoreIndexCreator
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.text_splitter</span> <span style="color:#000;font-weight:bold">import</span> CharacterTextSplitter
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.embeddings</span> <span style="color:#000;font-weight:bold">import</span> OpenAIEmbeddings
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">langchain.vectorstores</span> <span style="color:#000;font-weight:bold">import</span> Chroma
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">langchain.chains</span> <span style="color:#cf222e">import</span> RetrievalQA
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">langchain.indexes</span> <span style="color:#cf222e">import</span> VectorstoreIndexCreator
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">langchain.text_splitter</span> <span style="color:#cf222e">import</span> CharacterTextSplitter
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">langchain.embeddings</span> <span style="color:#cf222e">import</span> OpenAIEmbeddings
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">langchain.vectorstores</span> <span style="color:#cf222e">import</span> Chroma
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># split the documents into chunks</span>
-</span></span><span style="display:flex;"><span>text_splitter <span style="color:#000;font-weight:bold">=</span> CharacterTextSplitter(chunk_size<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1000</span>, chunk_overlap<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0</span>)
-</span></span><span style="display:flex;"><span>texts <span style="color:#000;font-weight:bold">=</span> text_splitter<span style="color:#000;font-weight:bold">.</span>split_documents(documents)
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># select which embeddings we want to use</span>
-</span></span><span style="display:flex;"><span>embeddings <span style="color:#000;font-weight:bold">=</span> OpenAIEmbeddings()
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># create the vectorestore to use as the index</span>
-</span></span><span style="display:flex;"><span>db <span style="color:#000;font-weight:bold">=</span> Chroma<span style="color:#000;font-weight:bold">.</span>from_documents(texts, embeddings)
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># expose this index in a retriever interface</span>
-</span></span><span style="display:flex;"><span>retriever <span style="color:#000;font-weight:bold">=</span> db<span style="color:#000;font-weight:bold">.</span>as_retriever(search_type<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;similarity&#34;</span>, search_kwargs<span style="color:#000;font-weight:bold">=</span>{<span style="color:#d14">&#34;k&#34;</span>:<span style="color:#099">2</span>})
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># create a chain to answer questions </span>
-</span></span><span style="display:flex;"><span>qa <span style="color:#000;font-weight:bold">=</span> RetrievalQA<span style="color:#000;font-weight:bold">.</span>from_chain_type(
-</span></span><span style="display:flex;"><span>    llm<span style="color:#000;font-weight:bold">=</span>OpenAI(), chain_type<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;stuff&#34;</span>, retriever<span style="color:#000;font-weight:bold">=</span>retriever, return_source_documents<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>)
-</span></span><span style="display:flex;"><span>query <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;How many AI publications in 2021?&#34;</span>
-</span></span><span style="display:flex;"><span>result <span style="color:#000;font-weight:bold">=</span> qa({<span style="color:#d14">&#34;query&#34;</span>: query})
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># split the documents into chunks</span>
+</span></span><span style="display:flex;"><span>text_splitter <span style="color:#0550ae">=</span> CharacterTextSplitter<span style="color:#1f2328">(</span>chunk_size<span style="color:#0550ae">=</span><span style="color:#0550ae">1000</span><span style="color:#1f2328">,</span> chunk_overlap<span style="color:#0550ae">=</span><span style="color:#0550ae">0</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>texts <span style="color:#0550ae">=</span> text_splitter<span style="color:#0550ae">.</span>split_documents<span style="color:#1f2328">(</span>documents<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># select which embeddings we want to use</span>
+</span></span><span style="display:flex;"><span>embeddings <span style="color:#0550ae">=</span> OpenAIEmbeddings<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># create the vectorestore to use as the index</span>
+</span></span><span style="display:flex;"><span>db <span style="color:#0550ae">=</span> Chroma<span style="color:#0550ae">.</span>from_documents<span style="color:#1f2328">(</span>texts<span style="color:#1f2328">,</span> embeddings<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># expose this index in a retriever interface</span>
+</span></span><span style="display:flex;"><span>retriever <span style="color:#0550ae">=</span> db<span style="color:#0550ae">.</span>as_retriever<span style="color:#1f2328">(</span>search_type<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;similarity&#34;</span><span style="color:#1f2328">,</span> search_kwargs<span style="color:#0550ae">=</span><span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;k&#34;</span><span style="color:#1f2328">:</span><span style="color:#0550ae">2</span><span style="color:#1f2328">})</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># create a chain to answer questions </span>
+</span></span><span style="display:flex;"><span>qa <span style="color:#0550ae">=</span> RetrievalQA<span style="color:#0550ae">.</span>from_chain_type<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    llm<span style="color:#0550ae">=</span>OpenAI<span style="color:#1f2328">(),</span> chain_type<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;stuff&#34;</span><span style="color:#1f2328">,</span> retriever<span style="color:#0550ae">=</span>retriever<span style="color:#1f2328">,</span> return_source_documents<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>query <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;How many AI publications in 2021?&#34;</span>
+</span></span><span style="display:flex;"><span>result <span style="color:#0550ae">=</span> qa<span style="color:#1f2328">({</span><span style="color:#0a3069">&#34;query&#34;</span><span style="color:#1f2328">:</span> query<span style="color:#1f2328">})</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>在结果中，我们可以看到答案和两个源文档，因为我们将 k 定义为 2，这意味着我们只对获取两个相关的文本块感兴趣。
@@ -466,6 +466,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -501,10 +505,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -514,7 +514,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -531,6 +531,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -541,6 +543,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -550,6 +554,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

@@ -148,35 +148,35 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Add using statements</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.ML</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.ML.TorchSharp</span>;
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Add using statements</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.ML</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.ML.TorchSharp</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Initialize MLContext</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> mlContext = <span style="color:#000;font-weight:bold">new</span> MLContext();
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Initialize MLContext</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> mlContext <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> MLContext<span style="color:#1f2328">();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// (Recommended) Use GPU</span>
-</span></span><span style="display:flex;"><span>mlContext.GpuDeviceId = <span style="color:#099">0</span>;
-</span></span><span style="display:flex;"><span>mlContext.FallbackToCpu = <span style="color:#000;font-weight:bold">false</span>;
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// (Recommended) Use GPU</span>
+</span></span><span style="display:flex;"><span>mlContext<span style="color:#1f2328">.</span>GpuDeviceId <span style="color:#1f2328">=</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>mlContext<span style="color:#1f2328">.</span>FallbackToCpu <span style="color:#1f2328">=</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Load your data</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> phrases = <span style="color:#000;font-weight:bold">new</span> []
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">new</span> {Source=<span style="color:#d14">&#34;ML.NET 2.0 just released&#34;</span>, Target=<span style="color:#d14">&#34;There&#39;s a new version of ML.NET&#34;</span>, Similarity=<span style="color:#099">5f</span>},
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">new</span> {Source=<span style="color:#d14">&#34;ML.NET 2.0 just released&#34;</span>, Target=<span style="color:#d14">&#34;The rain in Spain stays mainly in the plain&#34;</span>, Similarity=<span style="color:#099">1f</span>}
-</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Load your data</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> phrases <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">new</span> <span style="color:#1f2328">{</span>Source<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;ML.NET 2.0 just released&#34;</span><span style="color:#1f2328">,</span> Target<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;There&#39;s a new version of ML.NET&#34;</span><span style="color:#1f2328">,</span> Similarity<span style="color:#1f2328">=</span><span style="color:#0550ae">5f</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">new</span> <span style="color:#1f2328">{</span>Source<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;ML.NET 2.0 just released&#34;</span><span style="color:#1f2328">,</span> Target<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;The rain in Spain stays mainly in the plain&#34;</span><span style="color:#1f2328">,</span> Similarity<span style="color:#1f2328">=</span><span style="color:#0550ae">1f</span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">};</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> dataView = mlContext.Data.LoadFromEnumerable(phrases);
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> dataView <span style="color:#1f2328">=</span> mlContext<span style="color:#1f2328">.</span>Data<span style="color:#1f2328">.</span>LoadFromEnumerable<span style="color:#1f2328">(</span>phrases<span style="color:#1f2328">);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Define your training pipeline</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> pipeline = 
-</span></span><span style="display:flex;"><span>    mlContext.Regression.Trainers.SentenceSimilarity(
-</span></span><span style="display:flex;"><span>        labelColumnName:<span style="color:#d14">&#34;Similarity&#34;</span>,
-</span></span><span style="display:flex;"><span>        sentence1ColumnName:<span style="color:#d14">&#34;Source&#34;</span>,
-</span></span><span style="display:flex;"><span>        sentence2ColumnName:<span style="color:#d14">&#34;Target&#34;</span>);
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Define your training pipeline</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> pipeline <span style="color:#1f2328">=</span> 
+</span></span><span style="display:flex;"><span>    mlContext<span style="color:#1f2328">.</span>Regression<span style="color:#1f2328">.</span>Trainers<span style="color:#1f2328">.</span>SentenceSimilarity<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        labelColumnName<span style="color:#1f2328">:</span><span style="color:#0a3069">&#34;Similarity&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        sentence1ColumnName<span style="color:#1f2328">:</span><span style="color:#0a3069">&#34;Source&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        sentence2ColumnName<span style="color:#1f2328">:</span><span style="color:#0a3069">&#34;Target&#34;</span><span style="color:#1f2328">);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Train the model</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> model = pipeline.Fit(dataView);
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Train the model</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> model <span style="color:#1f2328">=</span> pipeline<span style="color:#1f2328">.</span>Fit<span style="color:#1f2328">(</span>dataView<span style="color:#1f2328">);</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>在此示例中，使用了三个不同的句子进行训练，目的是预测它们的相似性。相似性由“Similarity”列中的值定义，该值是介于 1-5 之间的等级，其中 1 表示最不相似，5 表示最相似。若要训练句子相似性模型，请将<a href="https://learn.microsoft.com/zh-cn/dotnet/api/microsoft.ml.torchsharp.nasbert.sentencesimilaritytrainer?view=ml-dotnet-preview?WT.mc_id=AI-MVP-5003172">句子相似性训练器</a>添加到管道并调用 Fit。训练模型后，开发者可以提供源句子和目标句子，模型将预测它们之间的相似性。</p>
@@ -211,28 +211,28 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Add using statements</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.ML</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.ML.Tokenizers</span>;
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Add using statements</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.ML</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.ML.Tokenizers</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Initialize MLContext</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> mlContext = <span style="color:#000;font-weight:bold">new</span> MLContext();
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Initialize MLContext</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> mlContext <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> MLContext<span style="color:#1f2328">();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Define vocabulary file paths</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> vocabFilePath = <span style="color:#d14">@&#34;C:\Tokenizers\vocab.json&#34;</span>;
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> mergeFilePath = <span style="color:#d14">@&#34;C:\Tokenizers\merges.txt&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Define vocabulary file paths</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> vocabFilePath <span style="color:#1f2328">=</span> <span style="color:#0a3069">@&#34;C:\Tokenizers\vocab.json&#34;</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> mergeFilePath <span style="color:#1f2328">=</span> <span style="color:#0a3069">@&#34;C:\Tokenizers\merges.txt&#34;</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Initialize Tokenizer</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> tokenizer = <span style="color:#000;font-weight:bold">new</span> Tokenizer(<span style="color:#000;font-weight:bold">new</span> Bpe(vocabFilePath, mergeFilePath),RobertaPreTokenizer.Instance);
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Initialize Tokenizer</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> tokenizer <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> Tokenizer<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> Bpe<span style="color:#1f2328">(</span>vocabFilePath<span style="color:#1f2328">,</span> mergeFilePath<span style="color:#1f2328">),</span>RobertaPreTokenizer<span style="color:#1f2328">.</span>Instance<span style="color:#1f2328">);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Define input for tokenization</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> input = <span style="color:#d14">&#34;the brown fox jumped over the lazy dog!&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Define input for tokenization</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> input <span style="color:#1f2328">=</span> <span style="color:#0a3069">&#34;the brown fox jumped over the lazy dog!&#34;</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Encode input</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> tokenizerEncodedResult = tokenizer.Encode(input);
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Encode input</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> tokenizerEncodedResult <span style="color:#1f2328">=</span> tokenizer<span style="color:#1f2328">.</span>Encode<span style="color:#1f2328">(</span>input<span style="color:#1f2328">);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Decode results</span>
-</span></span><span style="display:flex;"><span>tokenizer.Decode(tokenizerEncodedResult.Ids);
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Decode results</span>
+</span></span><span style="display:flex;"><span>tokenizer<span style="color:#1f2328">.</span>Decode<span style="color:#1f2328">(</span>tokenizerEncodedResult<span style="color:#1f2328">.</span>Ids<span style="color:#1f2328">);</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>编码结果提供的信息包括映射到词汇表中该单词索引的 Id，以及指示每个标记开始和结束位置的偏移量。例如：</p>
@@ -341,10 +341,6 @@
         <li><a href="/post/2021-09-02-mlnet-cheatsheet/">ML.NET 代码速查手册，高清图手慢无！</a></li>
         
         <li><a href="/post/2021-08-07-mlnet-1_6-interesting-content/">ML.NET v1.6 中有趣的内容</a></li>
-        
-        <li><a href="/post/2022-10-18-generate-searchable-pdfs-with-azure-form-recognizer/">使用 Azure 表单识别器生成可搜索的 PDF</a></li>
-        
-        <li><a href="/post/2022-10-14-make-use-of-the-training-code-behind-your-automatedml-model/">利用 AutomatedML 模型背后的训练代码</a></li>
         
     </ul>
 </div>
@@ -510,6 +506,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -545,10 +545,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -558,7 +554,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -575,6 +571,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -585,6 +583,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -594,6 +594,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

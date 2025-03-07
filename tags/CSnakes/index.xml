@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CSnakes on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/tags/CSnakes/</link>
+    <description>Recent content in CSnakes on Innovation with tech</description>
+    <generator>Hugo</generator>
+    <language>zh-Hans</language>
+    <lastBuildDate>Fri, 07 Mar 2025 12:00:00 +0800</lastBuildDate>
+    <atom:link href="https://beanhsiang.github.io/tags/CSnakes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</title>
+      <link>https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/</link>
+      <pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/</guid>
+      <description>&lt;p&gt;最近在开发智能文档搜索的工作中，我需要将各种文件转换为 Markdown 格式，然后通过向量化计算，把它们创建到向量数据库中，以便实现语义搜索文档的功能。并结合 LLMs 和 RAG（Retrieval Augmented Generation）来获取与搜索目标相关的文档内容完成二次创作。由于多模态下需要处理的文档类型太多了，我曾用 python 写了几个工具方法，使用 MarkItDown 来统一处理的。但现实问题是 MarkItDown 目前没有 .NET 版本的实现，而我的应用是 .NET 的程序，如果能有一个办法将 python 脚本无缝嵌入到我的 .NET 应用程序中那就太棒了，这就是我为什么要使用 CSnakes 的原因。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

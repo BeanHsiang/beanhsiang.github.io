@@ -134,7 +134,7 @@
 <pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install azure-ai-formrecognizer pypdf2&gt;<span style="color:#000;font-weight:bold">=</span>3.0 reportlab pillow pdf2image​​
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install azure-ai-formrecognizer pypdf2&gt;<span style="color:#0550ae">=</span>3.0 reportlab pillow pdf2image​​
 </span></span></code></pre></td></tr></table>
 </div>
 </div><ol>
@@ -177,10 +177,10 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">(</span>base<span style="color:#000;font-weight:bold">)</span> C:<span style="color:#d14">\t</span>emp&gt;python fr_generate_searchable_pdf_v1.1_with_key.py input.jpg
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#0550ae">(</span>base<span style="color:#0550ae">)</span> C:<span style="color:#0a3069">\t</span>emp&gt;python fr_generate_searchable_pdf_v1.1_with_key.py input.jpg
 </span></span><span style="display:flex;"><span>Loading input file input.jpg
 </span></span><span style="display:flex;"><span>Starting Azure Form Recognizer OCR process...
-</span></span><span style="display:flex;"><span>Azure Form Recognizer finished OCR text <span style="color:#000;font-weight:bold">for</span> <span style="color:#099">1</span> pages.
+</span></span><span style="display:flex;"><span>Azure Form Recognizer finished OCR text <span style="color:#cf222e">for</span> <span style="color:#0550ae">1</span> pages.
 </span></span><span style="display:flex;"><span>Generating searchable PDF...
 </span></span><span style="display:flex;"><span>Searchable PDF is created: input.jpg.ocr.pdf
 </span></span></code></pre></td></tr></table>
@@ -315,125 +315,125 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Script to create searchable PDF from scan PDF or images using Azure Form Recognizer</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Required packages</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># pip install azure-ai-formrecognizer pypdf2 reportlab pillow pdf2image</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">sys</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">io</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">math</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">argparse</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">pdf2image</span> <span style="color:#000;font-weight:bold">import</span> convert_from_path
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">reportlab.pdfgen</span> <span style="color:#000;font-weight:bold">import</span> canvas
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">reportlab.lib</span> <span style="color:#000;font-weight:bold">import</span> pagesizes
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">reportlab</span> <span style="color:#000;font-weight:bold">import</span> rl_config
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">PIL</span> <span style="color:#000;font-weight:bold">import</span> Image, ImageSequence
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">PyPDF2</span> <span style="color:#000;font-weight:bold">import</span> PdfWriter, PdfReader
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.core.credentials</span> <span style="color:#000;font-weight:bold">import</span> AzureKeyCredential
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.formrecognizer</span> <span style="color:#000;font-weight:bold">import</span> DocumentAnalysisClient
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># Script to create searchable PDF from scan PDF or images using Azure Form Recognizer</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Required packages</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># pip install azure-ai-formrecognizer pypdf2 reportlab pillow pdf2image</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">sys</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">io</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">math</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">argparse</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">pdf2image</span> <span style="color:#cf222e">import</span> convert_from_path
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">reportlab.pdfgen</span> <span style="color:#cf222e">import</span> canvas
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">reportlab.lib</span> <span style="color:#cf222e">import</span> pagesizes
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">reportlab</span> <span style="color:#cf222e">import</span> rl_config
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">PIL</span> <span style="color:#cf222e">import</span> Image<span style="color:#1f2328">,</span> ImageSequence
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">PyPDF2</span> <span style="color:#cf222e">import</span> PdfWriter<span style="color:#1f2328">,</span> PdfReader
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.core.credentials</span> <span style="color:#cf222e">import</span> AzureKeyCredential
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.formrecognizer</span> <span style="color:#cf222e">import</span> DocumentAnalysisClient
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Please provide your Azure Form Recognizer endpoint and key</span>
-</span></span><span style="display:flex;"><span>endpoint <span style="color:#000;font-weight:bold">=</span> YOUR_FORM_RECOGNIZER_ENDPOINT
-</span></span><span style="display:flex;"><span>key <span style="color:#000;font-weight:bold">=</span> YOUR_FORM_RECOGNIZER_KEY
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Please provide your Azure Form Recognizer endpoint and key</span>
+</span></span><span style="display:flex;"><span>endpoint <span style="color:#0550ae">=</span> YOUR_FORM_RECOGNIZER_ENDPOINT
+</span></span><span style="display:flex;"><span>key <span style="color:#0550ae">=</span> YOUR_FORM_RECOGNIZER_KEY
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">dist</span>(p1, p2):
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">return</span> math<span style="color:#000;font-weight:bold">.</span>sqrt((p1<span style="color:#000;font-weight:bold">.</span>x <span style="color:#000;font-weight:bold">-</span> p2<span style="color:#000;font-weight:bold">.</span>x)<span style="color:#000;font-weight:bold">*</span>(p1<span style="color:#000;font-weight:bold">.</span>x <span style="color:#000;font-weight:bold">-</span> p2<span style="color:#000;font-weight:bold">.</span>x) <span style="color:#000;font-weight:bold">+</span> (p1<span style="color:#000;font-weight:bold">.</span>y <span style="color:#000;font-weight:bold">-</span> p2<span style="color:#000;font-weight:bold">.</span>y) <span style="color:#000;font-weight:bold">*</span> (p1<span style="color:#000;font-weight:bold">.</span>y <span style="color:#000;font-weight:bold">-</span> p2<span style="color:#000;font-weight:bold">.</span>y))
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">dist</span><span style="color:#1f2328">(</span>p1<span style="color:#1f2328">,</span> p2<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> math<span style="color:#0550ae">.</span>sqrt<span style="color:#1f2328">((</span>p1<span style="color:#0550ae">.</span>x <span style="color:#0550ae">-</span> p2<span style="color:#0550ae">.</span>x<span style="color:#1f2328">)</span><span style="color:#0550ae">*</span><span style="color:#1f2328">(</span>p1<span style="color:#0550ae">.</span>x <span style="color:#0550ae">-</span> p2<span style="color:#0550ae">.</span>x<span style="color:#1f2328">)</span> <span style="color:#0550ae">+</span> <span style="color:#1f2328">(</span>p1<span style="color:#0550ae">.</span>y <span style="color:#0550ae">-</span> p2<span style="color:#0550ae">.</span>y<span style="color:#1f2328">)</span> <span style="color:#0550ae">*</span> <span style="color:#1f2328">(</span>p1<span style="color:#0550ae">.</span>y <span style="color:#0550ae">-</span> p2<span style="color:#0550ae">.</span>y<span style="color:#1f2328">))</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">if</span> __name__ <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#39;__main__&#39;</span>:
-</span></span><span style="display:flex;"><span>    parser <span style="color:#000;font-weight:bold">=</span> argparse<span style="color:#000;font-weight:bold">.</span>ArgumentParser()
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#39;input_file&#39;</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">str</span>, help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Input PDF or image (jpg, jpeg, tif, tiff, bmp, png) file name&#34;</span>)
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#39;-o&#39;</span>, <span style="color:#d14">&#39;--output&#39;</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">str</span>, required<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">False</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;&#34;</span>, help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Output PDF file name. Default: input_file + .ocr.pdf&#34;</span>)
-</span></span><span style="display:flex;"><span>    args <span style="color:#000;font-weight:bold">=</span> parser<span style="color:#000;font-weight:bold">.</span>parse_args()
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> __name__ <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#39;__main__&#39;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    parser <span style="color:#0550ae">=</span> argparse<span style="color:#0550ae">.</span>ArgumentParser<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    parser<span style="color:#0550ae">.</span>add_argument<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;input_file&#39;</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> help<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Input PDF or image (jpg, jpeg, tif, tiff, bmp, png) file name&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    parser<span style="color:#0550ae">.</span>add_argument<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;-o&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;--output&#39;</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> required<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">,</span> default<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;&#34;</span><span style="color:#1f2328">,</span> help<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Output PDF file name. Default: input_file + .ocr.pdf&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    args <span style="color:#0550ae">=</span> parser<span style="color:#0550ae">.</span>parse_args<span style="color:#1f2328">()</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    input_file <span style="color:#000;font-weight:bold">=</span> args<span style="color:#000;font-weight:bold">.</span>input_file
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">if</span> args<span style="color:#000;font-weight:bold">.</span>output:
-</span></span><span style="display:flex;"><span>        output_file <span style="color:#000;font-weight:bold">=</span> args<span style="color:#000;font-weight:bold">.</span>output
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">else</span>:
-</span></span><span style="display:flex;"><span>        output_file <span style="color:#000;font-weight:bold">=</span> input_file <span style="color:#000;font-weight:bold">+</span> <span style="color:#d14">&#34;.ocr.pdf&#34;</span>
+</span></span><span style="display:flex;"><span>    input_file <span style="color:#0550ae">=</span> args<span style="color:#0550ae">.</span>input_file
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> args<span style="color:#0550ae">.</span>output<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        output_file <span style="color:#0550ae">=</span> args<span style="color:#0550ae">.</span>output
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        output_file <span style="color:#0550ae">=</span> input_file <span style="color:#0550ae">+</span> <span style="color:#0a3069">&#34;.ocr.pdf&#34;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Loading input file</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;Loading input file </span><span style="color:#d14">{</span>input_file<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">if</span> input_file<span style="color:#000;font-weight:bold">.</span>lower()<span style="color:#000;font-weight:bold">.</span>endswith(<span style="color:#d14">&#39;.pdf&#39;</span>):
-</span></span><span style="display:flex;"><span>        <span style="color:#998;font-style:italic"># read existing PDF as images</span>
-</span></span><span style="display:flex;"><span>        image_pages <span style="color:#000;font-weight:bold">=</span> convert_from_path(input_file)
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">elif</span> input_file<span style="color:#000;font-weight:bold">.</span>lower()<span style="color:#000;font-weight:bold">.</span>endswith((<span style="color:#d14">&#39;.tif&#39;</span>, <span style="color:#d14">&#39;.tiff&#39;</span>, <span style="color:#d14">&#39;.jpg&#39;</span>, <span style="color:#d14">&#39;.jpeg&#39;</span>, <span style="color:#d14">&#39;.png&#39;</span>, <span style="color:#d14">&#39;.bmp&#39;</span>)):
-</span></span><span style="display:flex;"><span>        <span style="color:#998;font-style:italic"># read input image (potential multi page Tiff)</span>
-</span></span><span style="display:flex;"><span>        image_pages <span style="color:#000;font-weight:bold">=</span> ImageSequence<span style="color:#000;font-weight:bold">.</span>Iterator(Image<span style="color:#000;font-weight:bold">.</span>open(input_file))
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">else</span>:
-</span></span><span style="display:flex;"><span>        sys<span style="color:#000;font-weight:bold">.</span>exit(<span style="color:#d14">f</span><span style="color:#d14">&#34;Error: Unsupported input file extension </span><span style="color:#d14">{</span>input_file<span style="color:#d14">}</span><span style="color:#d14">. Supported extensions: PDF, TIF, TIFF, JPG, JPEG, PNG, BMP.&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Loading input file</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Loading input file </span><span style="color:#0a3069">{</span>input_file<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> input_file<span style="color:#0550ae">.</span>lower<span style="color:#1f2328">()</span><span style="color:#0550ae">.</span>endswith<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;.pdf&#39;</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># read existing PDF as images</span>
+</span></span><span style="display:flex;"><span>        image_pages <span style="color:#0550ae">=</span> convert_from_path<span style="color:#1f2328">(</span>input_file<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">elif</span> input_file<span style="color:#0550ae">.</span>lower<span style="color:#1f2328">()</span><span style="color:#0550ae">.</span>endswith<span style="color:#1f2328">((</span><span style="color:#0a3069">&#39;.tif&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;.tiff&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;.jpg&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;.jpeg&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;.png&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;.bmp&#39;</span><span style="color:#1f2328">)):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># read input image (potential multi page Tiff)</span>
+</span></span><span style="display:flex;"><span>        image_pages <span style="color:#0550ae">=</span> ImageSequence<span style="color:#0550ae">.</span>Iterator<span style="color:#1f2328">(</span>Image<span style="color:#0550ae">.</span>open<span style="color:#1f2328">(</span>input_file<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        sys<span style="color:#0550ae">.</span>exit<span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Error: Unsupported input file extension </span><span style="color:#0a3069">{</span>input_file<span style="color:#0a3069">}</span><span style="color:#0a3069">. Supported extensions: PDF, TIF, TIFF, JPG, JPEG, PNG, BMP.&#34;</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Running OCR using Azure Form Recognizer Read API </span>
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;Starting Azure Form Recognizer OCR process...&#34;</span>)
-</span></span><span style="display:flex;"><span>    document_analysis_client <span style="color:#000;font-weight:bold">=</span> DocumentAnalysisClient(endpoint<span style="color:#000;font-weight:bold">=</span>endpoint, 
-</span></span><span style="display:flex;"><span>    credential<span style="color:#000;font-weight:bold">=</span>AzureKeyCredential(key), headers<span style="color:#000;font-weight:bold">=</span>{<span style="color:#d14">&#34;x-ms-useragent&#34;</span>: <span style="color:#d14">&#34;searchable-pdf-blog/1.0.0&#34;</span>})
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Running OCR using Azure Form Recognizer Read API </span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Starting Azure Form Recognizer OCR process...&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    document_analysis_client <span style="color:#0550ae">=</span> DocumentAnalysisClient<span style="color:#1f2328">(</span>endpoint<span style="color:#0550ae">=</span>endpoint<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>    credential<span style="color:#0550ae">=</span>AzureKeyCredential<span style="color:#1f2328">(</span>key<span style="color:#1f2328">),</span> headers<span style="color:#0550ae">=</span><span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;x-ms-useragent&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;searchable-pdf-blog/1.0.0&#34;</span><span style="color:#1f2328">})</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">with</span> <span style="color:#0086b3">open</span>(input_file, <span style="color:#d14">&#34;rb&#34;</span>) <span style="color:#000;font-weight:bold">as</span> f:
-</span></span><span style="display:flex;"><span>        poller <span style="color:#000;font-weight:bold">=</span> document_analysis_client<span style="color:#000;font-weight:bold">.</span>begin_analyze_document(<span style="color:#d14">&#34;prebuilt-read&#34;</span>, document <span style="color:#000;font-weight:bold">=</span> f)
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">with</span> <span style="color:#6639ba">open</span><span style="color:#1f2328">(</span>input_file<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;rb&#34;</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">as</span> f<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        poller <span style="color:#0550ae">=</span> document_analysis_client<span style="color:#0550ae">.</span>begin_analyze_document<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;prebuilt-read&#34;</span><span style="color:#1f2328">,</span> document <span style="color:#0550ae">=</span> f<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    ocr_results <span style="color:#000;font-weight:bold">=</span> poller<span style="color:#000;font-weight:bold">.</span>result()
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;Azure Form Recognizer finished OCR text for </span><span style="color:#d14">{</span><span style="color:#0086b3">len</span>(ocr_results<span style="color:#000;font-weight:bold">.</span>pages)<span style="color:#d14">}</span><span style="color:#d14"> pages.&#34;</span>)
+</span></span><span style="display:flex;"><span>    ocr_results <span style="color:#0550ae">=</span> poller<span style="color:#0550ae">.</span>result<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Azure Form Recognizer finished OCR text for </span><span style="color:#0a3069">{</span><span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>ocr_results<span style="color:#0550ae">.</span>pages<span style="color:#1f2328">)</span><span style="color:#0a3069">}</span><span style="color:#0a3069"> pages.&#34;</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Generate OCR overlay layer</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;Generating searchable PDF...&#34;</span>)
-</span></span><span style="display:flex;"><span>    output <span style="color:#000;font-weight:bold">=</span> PdfWriter()
-</span></span><span style="display:flex;"><span>    default_font <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;Times-Roman&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">for</span> page_id, page <span style="color:#000;font-weight:bold">in</span> <span style="color:#0086b3">enumerate</span>(ocr_results<span style="color:#000;font-weight:bold">.</span>pages):
-</span></span><span style="display:flex;"><span>        ocr_overlay <span style="color:#000;font-weight:bold">=</span> io<span style="color:#000;font-weight:bold">.</span>BytesIO()
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Generate OCR overlay layer</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Generating searchable PDF...&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    output <span style="color:#0550ae">=</span> PdfWriter<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    default_font <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;Times-Roman&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> page_id<span style="color:#1f2328">,</span> page <span style="color:#0550ae">in</span> <span style="color:#6639ba">enumerate</span><span style="color:#1f2328">(</span>ocr_results<span style="color:#0550ae">.</span>pages<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        ocr_overlay <span style="color:#0550ae">=</span> io<span style="color:#0550ae">.</span>BytesIO<span style="color:#1f2328">()</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#998;font-style:italic"># Calculate overlay PDF page size</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">if</span> image_pages[page_id]<span style="color:#000;font-weight:bold">.</span>height <span style="color:#000;font-weight:bold">&gt;</span> image_pages[page_id]<span style="color:#000;font-weight:bold">.</span>width:
-</span></span><span style="display:flex;"><span>            page_scale <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">float</span>(image_pages[page_id]<span style="color:#000;font-weight:bold">.</span>height) <span style="color:#000;font-weight:bold">/</span> pagesizes<span style="color:#000;font-weight:bold">.</span>letter[<span style="color:#099">1</span>]
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">else</span>:
-</span></span><span style="display:flex;"><span>            page_scale <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">float</span>(image_pages[page_id]<span style="color:#000;font-weight:bold">.</span>width) <span style="color:#000;font-weight:bold">/</span> pagesizes<span style="color:#000;font-weight:bold">.</span>letter[<span style="color:#099">1</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Calculate overlay PDF page size</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> image_pages<span style="color:#1f2328">[</span>page_id<span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>height <span style="color:#0550ae">&gt;</span> image_pages<span style="color:#1f2328">[</span>page_id<span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>width<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            page_scale <span style="color:#0550ae">=</span> <span style="color:#6639ba">float</span><span style="color:#1f2328">(</span>image_pages<span style="color:#1f2328">[</span>page_id<span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>height<span style="color:#1f2328">)</span> <span style="color:#0550ae">/</span> pagesizes<span style="color:#0550ae">.</span>letter<span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            page_scale <span style="color:#0550ae">=</span> <span style="color:#6639ba">float</span><span style="color:#1f2328">(</span>image_pages<span style="color:#1f2328">[</span>page_id<span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>width<span style="color:#1f2328">)</span> <span style="color:#0550ae">/</span> pagesizes<span style="color:#0550ae">.</span>letter<span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        page_width <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">float</span>(image_pages[page_id]<span style="color:#000;font-weight:bold">.</span>width) <span style="color:#000;font-weight:bold">/</span> page_scale
-</span></span><span style="display:flex;"><span>        page_height <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">float</span>(image_pages[page_id]<span style="color:#000;font-weight:bold">.</span>height) <span style="color:#000;font-weight:bold">/</span> page_scale
+</span></span><span style="display:flex;"><span>        page_width <span style="color:#0550ae">=</span> <span style="color:#6639ba">float</span><span style="color:#1f2328">(</span>image_pages<span style="color:#1f2328">[</span>page_id<span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>width<span style="color:#1f2328">)</span> <span style="color:#0550ae">/</span> page_scale
+</span></span><span style="display:flex;"><span>        page_height <span style="color:#0550ae">=</span> <span style="color:#6639ba">float</span><span style="color:#1f2328">(</span>image_pages<span style="color:#1f2328">[</span>page_id<span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>height<span style="color:#1f2328">)</span> <span style="color:#0550ae">/</span> page_scale
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        scale <span style="color:#000;font-weight:bold">=</span> (page_width <span style="color:#000;font-weight:bold">/</span> page<span style="color:#000;font-weight:bold">.</span>width <span style="color:#000;font-weight:bold">+</span> page_height <span style="color:#000;font-weight:bold">/</span> page<span style="color:#000;font-weight:bold">.</span>height) <span style="color:#000;font-weight:bold">/</span> <span style="color:#099">2.0</span>
-</span></span><span style="display:flex;"><span>        pdf_canvas <span style="color:#000;font-weight:bold">=</span> canvas<span style="color:#000;font-weight:bold">.</span>Canvas(ocr_overlay, pagesize<span style="color:#000;font-weight:bold">=</span>(page_width, page_height))
+</span></span><span style="display:flex;"><span>        scale <span style="color:#0550ae">=</span> <span style="color:#1f2328">(</span>page_width <span style="color:#0550ae">/</span> page<span style="color:#0550ae">.</span>width <span style="color:#0550ae">+</span> page_height <span style="color:#0550ae">/</span> page<span style="color:#0550ae">.</span>height<span style="color:#1f2328">)</span> <span style="color:#0550ae">/</span> <span style="color:#0550ae">2.0</span>
+</span></span><span style="display:flex;"><span>        pdf_canvas <span style="color:#0550ae">=</span> canvas<span style="color:#0550ae">.</span>Canvas<span style="color:#1f2328">(</span>ocr_overlay<span style="color:#1f2328">,</span> pagesize<span style="color:#0550ae">=</span><span style="color:#1f2328">(</span>page_width<span style="color:#1f2328">,</span> page_height<span style="color:#1f2328">))</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#998;font-style:italic"># Add image into PDF page</span>
-</span></span><span style="display:flex;"><span>        pdf_canvas<span style="color:#000;font-weight:bold">.</span>drawInlineImage(image_pages[page_id], <span style="color:#099">0</span>, <span style="color:#099">0</span>, width<span style="color:#000;font-weight:bold">=</span>page_width, 
-</span></span><span style="display:flex;"><span>        height<span style="color:#000;font-weight:bold">=</span>page_height, preserveAspectRatio<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Add image into PDF page</span>
+</span></span><span style="display:flex;"><span>        pdf_canvas<span style="color:#0550ae">.</span>drawInlineImage<span style="color:#1f2328">(</span>image_pages<span style="color:#1f2328">[</span>page_id<span style="color:#1f2328">],</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> width<span style="color:#0550ae">=</span>page_width<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>        height<span style="color:#0550ae">=</span>page_height<span style="color:#1f2328">,</span> preserveAspectRatio<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        text <span style="color:#000;font-weight:bold">=</span> pdf_canvas<span style="color:#000;font-weight:bold">.</span>beginText()
-</span></span><span style="display:flex;"><span>        <span style="color:#998;font-style:italic"># Set text rendering mode to invisible</span>
-</span></span><span style="display:flex;"><span>        text<span style="color:#000;font-weight:bold">.</span>setTextRenderMode(<span style="color:#099">3</span>)
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">for</span> word <span style="color:#000;font-weight:bold">in</span> page<span style="color:#000;font-weight:bold">.</span>words:
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># Calculate optimal font size</span>
-</span></span><span style="display:flex;"><span>            desired_text_width <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">max</span>(dist(word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">0</span>], word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">1</span>]), 
-</span></span><span style="display:flex;"><span>            dist(word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">3</span>], word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">2</span>])) <span style="color:#000;font-weight:bold">*</span> scale
-</span></span><span style="display:flex;"><span>            desired_text_height <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">max</span>(dist(word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">1</span>], word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">2</span>]), 
-</span></span><span style="display:flex;"><span>            dist(word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">0</span>], word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">3</span>])) <span style="color:#000;font-weight:bold">*</span> scale
-</span></span><span style="display:flex;"><span>            font_size <span style="color:#000;font-weight:bold">=</span> desired_text_height
-</span></span><span style="display:flex;"><span>            actual_text_width <span style="color:#000;font-weight:bold">=</span> pdf_canvas<span style="color:#000;font-weight:bold">.</span>stringWidth(word<span style="color:#000;font-weight:bold">.</span>content, default_font, font_size)
+</span></span><span style="display:flex;"><span>        text <span style="color:#0550ae">=</span> pdf_canvas<span style="color:#0550ae">.</span>beginText<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Set text rendering mode to invisible</span>
+</span></span><span style="display:flex;"><span>        text<span style="color:#0550ae">.</span>setTextRenderMode<span style="color:#1f2328">(</span><span style="color:#0550ae">3</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">for</span> word <span style="color:#0550ae">in</span> page<span style="color:#0550ae">.</span>words<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># Calculate optimal font size</span>
+</span></span><span style="display:flex;"><span>            desired_text_width <span style="color:#0550ae">=</span> <span style="color:#6639ba">max</span><span style="color:#1f2328">(</span>dist<span style="color:#1f2328">(</span>word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">],</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]),</span> 
+</span></span><span style="display:flex;"><span>            dist<span style="color:#1f2328">(</span>word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">3</span><span style="color:#1f2328">],</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">2</span><span style="color:#1f2328">]))</span> <span style="color:#0550ae">*</span> scale
+</span></span><span style="display:flex;"><span>            desired_text_height <span style="color:#0550ae">=</span> <span style="color:#6639ba">max</span><span style="color:#1f2328">(</span>dist<span style="color:#1f2328">(</span>word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">],</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">2</span><span style="color:#1f2328">]),</span> 
+</span></span><span style="display:flex;"><span>            dist<span style="color:#1f2328">(</span>word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">],</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">3</span><span style="color:#1f2328">]))</span> <span style="color:#0550ae">*</span> scale
+</span></span><span style="display:flex;"><span>            font_size <span style="color:#0550ae">=</span> desired_text_height
+</span></span><span style="display:flex;"><span>            actual_text_width <span style="color:#0550ae">=</span> pdf_canvas<span style="color:#0550ae">.</span>stringWidth<span style="color:#1f2328">(</span>word<span style="color:#0550ae">.</span>content<span style="color:#1f2328">,</span> default_font<span style="color:#1f2328">,</span> font_size<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>            
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># Calculate text rotation angle</span>
-</span></span><span style="display:flex;"><span>            text_angle <span style="color:#000;font-weight:bold">=</span> math<span style="color:#000;font-weight:bold">.</span>atan2((word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">1</span>]<span style="color:#000;font-weight:bold">.</span>y <span style="color:#000;font-weight:bold">-</span> word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">0</span>]<span style="color:#000;font-weight:bold">.</span>y 
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">+</span> word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">2</span>]<span style="color:#000;font-weight:bold">.</span>y <span style="color:#000;font-weight:bold">-</span> word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">3</span>]<span style="color:#000;font-weight:bold">.</span>y) <span style="color:#000;font-weight:bold">/</span> <span style="color:#099">2.0</span>, 
-</span></span><span style="display:flex;"><span>                                    (word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">1</span>]<span style="color:#000;font-weight:bold">.</span>x <span style="color:#000;font-weight:bold">-</span> word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">0</span>]<span style="color:#000;font-weight:bold">.</span>x 
-</span></span><span style="display:flex;"><span>                                    <span style="color:#000;font-weight:bold">+</span> word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">2</span>]<span style="color:#000;font-weight:bold">.</span>x <span style="color:#000;font-weight:bold">-</span> word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">3</span>]<span style="color:#000;font-weight:bold">.</span>x) <span style="color:#000;font-weight:bold">/</span> <span style="color:#099">2.0</span>)
-</span></span><span style="display:flex;"><span>            text<span style="color:#000;font-weight:bold">.</span>setFont(default_font, font_size)
-</span></span><span style="display:flex;"><span>            text<span style="color:#000;font-weight:bold">.</span>setTextTransform(math<span style="color:#000;font-weight:bold">.</span>cos(text_angle), <span style="color:#000;font-weight:bold">-</span>math<span style="color:#000;font-weight:bold">.</span>sin(text_angle), 
-</span></span><span style="display:flex;"><span>            math<span style="color:#000;font-weight:bold">.</span>sin(text_angle), math<span style="color:#000;font-weight:bold">.</span>cos(text_angle), word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">3</span>]<span style="color:#000;font-weight:bold">.</span>x <span style="color:#000;font-weight:bold">*</span> scale, 
-</span></span><span style="display:flex;"><span>            page_height <span style="color:#000;font-weight:bold">-</span> word<span style="color:#000;font-weight:bold">.</span>polygon[<span style="color:#099">3</span>]<span style="color:#000;font-weight:bold">.</span>y <span style="color:#000;font-weight:bold">*</span> scale)
-</span></span><span style="display:flex;"><span>            text<span style="color:#000;font-weight:bold">.</span>setHorizScale(desired_text_width <span style="color:#000;font-weight:bold">/</span> actual_text_width <span style="color:#000;font-weight:bold">*</span> <span style="color:#099">100</span>)
-</span></span><span style="display:flex;"><span>            text<span style="color:#000;font-weight:bold">.</span>textOut(word<span style="color:#000;font-weight:bold">.</span>content <span style="color:#000;font-weight:bold">+</span> <span style="color:#d14">&#34; &#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># Calculate text rotation angle</span>
+</span></span><span style="display:flex;"><span>            text_angle <span style="color:#0550ae">=</span> math<span style="color:#0550ae">.</span>atan2<span style="color:#1f2328">((</span>word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>y <span style="color:#0550ae">-</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>y 
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">+</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">2</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>y <span style="color:#0550ae">-</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">3</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>y<span style="color:#1f2328">)</span> <span style="color:#0550ae">/</span> <span style="color:#0550ae">2.0</span><span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>                                    <span style="color:#1f2328">(</span>word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>x <span style="color:#0550ae">-</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>x 
+</span></span><span style="display:flex;"><span>                                    <span style="color:#0550ae">+</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">2</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>x <span style="color:#0550ae">-</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">3</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>x<span style="color:#1f2328">)</span> <span style="color:#0550ae">/</span> <span style="color:#0550ae">2.0</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            text<span style="color:#0550ae">.</span>setFont<span style="color:#1f2328">(</span>default_font<span style="color:#1f2328">,</span> font_size<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            text<span style="color:#0550ae">.</span>setTextTransform<span style="color:#1f2328">(</span>math<span style="color:#0550ae">.</span>cos<span style="color:#1f2328">(</span>text_angle<span style="color:#1f2328">),</span> <span style="color:#0550ae">-</span>math<span style="color:#0550ae">.</span>sin<span style="color:#1f2328">(</span>text_angle<span style="color:#1f2328">),</span> 
+</span></span><span style="display:flex;"><span>            math<span style="color:#0550ae">.</span>sin<span style="color:#1f2328">(</span>text_angle<span style="color:#1f2328">),</span> math<span style="color:#0550ae">.</span>cos<span style="color:#1f2328">(</span>text_angle<span style="color:#1f2328">),</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">3</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>x <span style="color:#0550ae">*</span> scale<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>            page_height <span style="color:#0550ae">-</span> word<span style="color:#0550ae">.</span>polygon<span style="color:#1f2328">[</span><span style="color:#0550ae">3</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>y <span style="color:#0550ae">*</span> scale<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            text<span style="color:#0550ae">.</span>setHorizScale<span style="color:#1f2328">(</span>desired_text_width <span style="color:#0550ae">/</span> actual_text_width <span style="color:#0550ae">*</span> <span style="color:#0550ae">100</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            text<span style="color:#0550ae">.</span>textOut<span style="color:#1f2328">(</span>word<span style="color:#0550ae">.</span>content <span style="color:#0550ae">+</span> <span style="color:#0a3069">&#34; &#34;</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        pdf_canvas<span style="color:#000;font-weight:bold">.</span>drawText(text)
-</span></span><span style="display:flex;"><span>        pdf_canvas<span style="color:#000;font-weight:bold">.</span>save()
+</span></span><span style="display:flex;"><span>        pdf_canvas<span style="color:#0550ae">.</span>drawText<span style="color:#1f2328">(</span>text<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        pdf_canvas<span style="color:#0550ae">.</span>save<span style="color:#1f2328">()</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#998;font-style:italic"># Move to the beginning of the buffer</span>
-</span></span><span style="display:flex;"><span>        ocr_overlay<span style="color:#000;font-weight:bold">.</span>seek(<span style="color:#099">0</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Move to the beginning of the buffer</span>
+</span></span><span style="display:flex;"><span>        ocr_overlay<span style="color:#0550ae">.</span>seek<span style="color:#1f2328">(</span><span style="color:#0550ae">0</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#998;font-style:italic"># Create a new PDF page</span>
-</span></span><span style="display:flex;"><span>        new_pdf_page <span style="color:#000;font-weight:bold">=</span> PdfReader(ocr_overlay)
-</span></span><span style="display:flex;"><span>        output<span style="color:#000;font-weight:bold">.</span>add_page(new_pdf_page<span style="color:#000;font-weight:bold">.</span>pages[<span style="color:#099">0</span>])
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># Create a new PDF page</span>
+</span></span><span style="display:flex;"><span>        new_pdf_page <span style="color:#0550ae">=</span> PdfReader<span style="color:#1f2328">(</span>ocr_overlay<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        output<span style="color:#0550ae">.</span>add_page<span style="color:#1f2328">(</span>new_pdf_page<span style="color:#0550ae">.</span>pages<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">])</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Save output searchable PDF file</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">with</span> <span style="color:#0086b3">open</span>(output_file, <span style="color:#d14">&#34;wb&#34;</span>) <span style="color:#000;font-weight:bold">as</span> outputStream:
-</span></span><span style="display:flex;"><span>        output<span style="color:#000;font-weight:bold">.</span>write(outputStream)
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Save output searchable PDF file</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">with</span> <span style="color:#6639ba">open</span><span style="color:#1f2328">(</span>output_file<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;wb&#34;</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">as</span> outputStream<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        output<span style="color:#0550ae">.</span>write<span style="color:#1f2328">(</span>outputStream<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;Searchable PDF is created: </span><span style="color:#d14">{</span>output_file<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Searchable PDF is created: </span><span style="color:#0a3069">{</span>output_file<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -464,8 +464,6 @@
         <li><a href="/post/2022-07-02-azure-cognitive-search-now-supports-swapping-indexes/">Azure Cognitive Search 支持交换索引</a></li>
         
         <li><a href="/post/2022-06-22-azure-machine-learning-s-new-integration-with-h2o-ai/">Azure 机器学习与 H2O.ai 的新集成</a></li>
-        
-        <li><a href="/post/2021-09-21-mlnet-deep-learning-plans/">有关 ML.NET 深度学习的计划</a></li>
         
     </ul>
 </div>
@@ -631,6 +629,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -666,10 +668,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -679,7 +677,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -696,6 +694,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -706,6 +706,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -715,6 +717,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

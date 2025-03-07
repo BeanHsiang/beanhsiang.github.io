@@ -182,31 +182,31 @@ dotnet add package Microsoft.ML.FastTree &ndash;prerelease</p>
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Initialize MLContext</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> ctx = <span style="color:#000;font-weight:bold">new</span> MLContext();
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Initialize MLContext</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> ctx <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> MLContext<span style="color:#1f2328">();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Define data</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> trainingData = <span style="color:#000;font-weight:bold">new</span> [] 
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">new</span> {Arch=<span style="color:#d14">&#34;ARM&#34;</span>, Trainer=<span style="color:#d14">&#34;LightGBM&#34;</span>, oneDALSupport=<span style="color:#000;font-weight:bold">false</span>},
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">new</span> {Arch=<span style="color:#d14">&#34;x86&#34;</span>, Trainer=<span style="color:#d14">&#34;FastTree&#34;</span>, oneDALSupport=<span style="color:#000;font-weight:bold">true</span>},
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">new</span> {Arch=<span style="color:#d14">&#34;x86&#34;</span>, Trainer=<span style="color:#d14">&#34;LbfgsLogisticRegression&#34;</span>, oneDALSupport=<span style="color:#000;font-weight:bold">true</span>},
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">new</span> {Arch=<span style="color:#d14">&#34;ARM&#34;</span>, Trainer=<span style="color:#d14">&#34;FastTree&#34;</span>, oneDALSupport=<span style="color:#000;font-weight:bold">false</span>}
-</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Define data</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> trainingData <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> <span style="color:#1f2328">[]</span> 
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">new</span> <span style="color:#1f2328">{</span>Arch<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;ARM&#34;</span><span style="color:#1f2328">,</span> Trainer<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;LightGBM&#34;</span><span style="color:#1f2328">,</span> oneDALSupport<span style="color:#1f2328">=</span><span style="color:#cf222e">false</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">new</span> <span style="color:#1f2328">{</span>Arch<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;x86&#34;</span><span style="color:#1f2328">,</span> Trainer<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;FastTree&#34;</span><span style="color:#1f2328">,</span> oneDALSupport<span style="color:#1f2328">=</span><span style="color:#cf222e">true</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">new</span> <span style="color:#1f2328">{</span>Arch<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;x86&#34;</span><span style="color:#1f2328">,</span> Trainer<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;LbfgsLogisticRegression&#34;</span><span style="color:#1f2328">,</span> oneDALSupport<span style="color:#1f2328">=</span><span style="color:#cf222e">true</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">new</span> <span style="color:#1f2328">{</span>Arch<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;ARM&#34;</span><span style="color:#1f2328">,</span> Trainer<span style="color:#1f2328">=</span><span style="color:#0a3069">&#34;FastTree&#34;</span><span style="color:#1f2328">,</span> oneDALSupport<span style="color:#1f2328">=</span><span style="color:#cf222e">false</span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">};</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Load data into IDataView</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> trainingDv = ctx.Data.LoadFromEnumerable(trainingData);
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Load data into IDataView</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> trainingDv <span style="color:#1f2328">=</span> ctx<span style="color:#1f2328">.</span>Data<span style="color:#1f2328">.</span>LoadFromEnumerable<span style="color:#1f2328">(</span>trainingData<span style="color:#1f2328">);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Define data processing pipeline &amp; trainer</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> pipeline = 
-</span></span><span style="display:flex;"><span>    ctx.Transforms.Categorical.OneHotEncoding(<span style="color:#000;font-weight:bold">new</span> [] {
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">new</span> InputOutputColumnPair(<span style="color:#d14">&#34;ArchEncoded&#34;</span>, <span style="color:#d14">&#34;Arch&#34;</span>),
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">new</span> InputOutputColumnPair(<span style="color:#d14">&#34;TrainerEncoded&#34;</span>, <span style="color:#d14">&#34;Trainer&#34;</span>)})
-</span></span><span style="display:flex;"><span>        .Append(ctx.Transforms.Concatenate(<span style="color:#d14">&#34;Features&#34;</span>, <span style="color:#d14">&#34;ArchEncoded&#34;</span>, <span style="color:#d14">&#34;TrainerEncoded&#34;</span>))
-</span></span><span style="display:flex;"><span>        .Append(ctx.BinaryClassification.Trainers.LbfgsLogisticRegression(labelColumnName:<span style="color:#d14">&#34;oneDALSupport&#34;</span>));
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Define data processing pipeline &amp; trainer</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> pipeline <span style="color:#1f2328">=</span> 
+</span></span><span style="display:flex;"><span>    ctx<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Categorical<span style="color:#1f2328">.</span>OneHotEncoding<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> <span style="color:#1f2328">[]</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">new</span> InputOutputColumnPair<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;ArchEncoded&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;Arch&#34;</span><span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">new</span> InputOutputColumnPair<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;TrainerEncoded&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;Trainer&#34;</span><span style="color:#1f2328">)})</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>ctx<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Concatenate<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Features&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;ArchEncoded&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;TrainerEncoded&#34;</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>ctx<span style="color:#1f2328">.</span>BinaryClassification<span style="color:#1f2328">.</span>Trainers<span style="color:#1f2328">.</span>LbfgsLogisticRegression<span style="color:#1f2328">(</span>labelColumnName<span style="color:#1f2328">:</span><span style="color:#0a3069">&#34;oneDALSupport&#34;</span><span style="color:#1f2328">));</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Train model</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> model = pipeline.Fit(trainingDv)
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Train model</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> model <span style="color:#1f2328">=</span> pipeline<span style="color:#1f2328">.</span>Fit<span style="color:#1f2328">(</span>trainingDv<span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div></li>
@@ -250,8 +250,6 @@ dotnet add package Microsoft.ML.FastTree &ndash;prerelease</p>
         <li><a href="/post/2021-09-02-mlnet-cheatsheet/">ML.NET 代码速查手册，高清图手慢无！</a></li>
         
         <li><a href="/post/2021-08-07-mlnet-1_6-interesting-content/">ML.NET v1.6 中有趣的内容</a></li>
-        
-        <li><a href="/post/2022-12-10-the-ai-technology-that-predicts-which-clothing-items-appearing/">AI 预测你在视频中可能购买哪些服装</a></li>
         
     </ul>
 </div>
@@ -417,6 +415,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -452,10 +454,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -465,7 +463,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -482,6 +480,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -492,6 +492,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -501,6 +503,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

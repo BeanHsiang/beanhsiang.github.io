@@ -250,146 +250,146 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">140
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;openapi&#34;</span>: <span style="color:#d14">&#34;3.1.0&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;info&#34;</span>: { 
-</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;title&#34;</span>: <span style="color:#d14">&#34;Azure AI Search&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Retrieves knowledges for a question.&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;version&#34;</span>: <span style="color:#d14">&#34;v1.0.0&#34;</span>
-</span></span><span style="display:flex;"><span>  },
-</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;servers&#34;</span>: [
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;url&#34;</span>: <span style="color:#d14">&#34;https://{your-search-name}.search.windows.net&#34;</span>
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  ],
-</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;paths&#34;</span>: {
-</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;/indexes/{your-index-name}/docs/search&#34;</span>: {
-</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;post&#34;</span>: {
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Search knowledges for keywords&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;operationId&#34;</span>: <span style="color:#d14">&#34;Search&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;parameters&#34;</span>: [
-</span></span><span style="display:flex;"><span>          {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;name&#34;</span>: <span style="color:#d14">&#34;api-version&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;in&#34;</span>: <span style="color:#d14">&#34;query&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;the version of api.&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;required&#34;</span>: <span style="color:#000;font-weight:bold">true</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;schema&#34;</span>: {
-</span></span><span style="display:flex;"><span>              <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>              <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;2023-10-01-Preview&#34;</span>
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>        ],
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;requestBody&#34;</span>: {
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;required&#34;</span>: <span style="color:#000;font-weight:bold">true</span>,
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Information about a new query&#34;</span>,
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;content&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;application/json&#34;</span>: {
-</span></span><span style="display:flex;"><span>              <span style="color:#000080">&#34;schema&#34;</span>: {
-</span></span><span style="display:flex;"><span>                <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;object&#34;</span>,
-</span></span><span style="display:flex;"><span>                <span style="color:#000080">&#34;required&#34;</span>: [
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;top&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;select&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;search&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;vectorQueries&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;queryType&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;semanticConfiguration&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;captions&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;answers&#34;</span>,
-</span></span><span style="display:flex;"><span>                  <span style="color:#d14">&#34;queryLanguage&#34;</span>
-</span></span><span style="display:flex;"><span>                ],
-</span></span><span style="display:flex;"><span>                <span style="color:#000080">&#34;properties&#34;</span>: {
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;top&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;integer&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#099">2</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;select&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;chunk,title&#34;</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;search&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;vectorQueries&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;array about query&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;array&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;items&#34;</span>: {
-</span></span><span style="display:flex;"><span>                      <span style="color:#000080">&#34;$ref&#34;</span>: <span style="color:#d14">&#34;#/components/schemas/VectorQuery&#34;</span>
-</span></span><span style="display:flex;"><span>                    }
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;queryType&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;semantic&#34;</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;semanticConfiguration&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: {<span style="color:#a61717;background-color:#e3d2d2">your-semantic-configuration</span>}
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;captions&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;extractive&#34;</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;answers&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;extractive|count-3&#34;</span>
-</span></span><span style="display:flex;"><span>                  },
-</span></span><span style="display:flex;"><span>                  <span style="color:#000080">&#34;queryLanguage&#34;</span>: {
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>                    <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;zh-CN&#34;</span>
-</span></span><span style="display:flex;"><span>                  }
-</span></span><span style="display:flex;"><span>                }
-</span></span><span style="display:flex;"><span>              }
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>        },
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;responses&#34;</span>: {
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;200&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;Get the result&#34;</span>
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>        },
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;deprecated&#34;</span>: <span style="color:#000;font-weight:bold">false</span>
-</span></span><span style="display:flex;"><span>      }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  },
-</span></span><span style="display:flex;"><span>  <span style="color:#000080">&#34;components&#34;</span>: {
-</span></span><span style="display:flex;"><span>    <span style="color:#000080">&#34;schemas&#34;</span>: {
-</span></span><span style="display:flex;"><span>      <span style="color:#000080">&#34;VectorQuery&#34;</span>: {
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;object&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;required&#34;</span>: [
-</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;kind&#34;</span>,
-</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;text&#34;</span>,
-</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;k&#34;</span>,
-</span></span><span style="display:flex;"><span>          <span style="color:#d14">&#34;fields&#34;</span>
-</span></span><span style="display:flex;"><span>        ],
-</span></span><span style="display:flex;"><span>        <span style="color:#000080">&#34;properties&#34;</span>: {
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;kind&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;string type, value is alway default&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;text&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;enum&#34;</span>: [
-</span></span><span style="display:flex;"><span>              <span style="color:#d14">&#34;text&#34;</span>
-</span></span><span style="display:flex;"><span>            ]
-</span></span><span style="display:flex;"><span>          },
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;text&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;string equals to query search&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>
-</span></span><span style="display:flex;"><span>          },
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;k&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;integer&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#099">5</span>
-</span></span><span style="display:flex;"><span>          },
-</span></span><span style="display:flex;"><span>          <span style="color:#000080">&#34;fields&#34;</span>: {
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;description&#34;</span>: <span style="color:#d14">&#34;string type, value is alway default&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;type&#34;</span>: <span style="color:#d14">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;default&#34;</span>: <span style="color:#d14">&#34;vector&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#000080">&#34;enum&#34;</span>: [
-</span></span><span style="display:flex;"><span>              <span style="color:#d14">&#34;vector&#34;</span>
-</span></span><span style="display:flex;"><span>            ]
-</span></span><span style="display:flex;"><span>          }
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>      }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;openapi&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;3.1.0&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;info&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;title&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Azure AI Search&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Retrieves knowledges for a question.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;version&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;v1.0.0&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;servers&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;url&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;https://{your-search-name}.search.windows.net&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;paths&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;/indexes/{your-index-name}/docs/search&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;post&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Search knowledges for keywords&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;operationId&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Search&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;parameters&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;api-version&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;in&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;query&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;the version of api.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;required&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;schema&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;2023-10-01-Preview&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;requestBody&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;required&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Information about a new query&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;application/json&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0550ae">&#34;schema&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;object&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;required&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;top&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;select&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;search&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;vectorQueries&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;queryType&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;semanticConfiguration&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;captions&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;answers&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;queryLanguage&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;properties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;top&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;integer&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">2</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;select&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;chunk,title&#34;</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;search&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;vectorQueries&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;array about query&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;array&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;items&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                      <span style="color:#0550ae">&#34;$ref&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;#/components/schemas/VectorQuery&#34;</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;queryType&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;semantic&#34;</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;semanticConfiguration&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span><span style="color:#f6f8fa;background-color:#82071e">your-semantic-configuration</span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;captions&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;extractive&#34;</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;answers&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;extractive|count-3&#34;</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;queryLanguage&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;zh-CN&#34;</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;responses&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;200&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Get the result&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;deprecated&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;components&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;schemas&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;VectorQuery&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;object&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;required&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;kind&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;text&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;k&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;fields&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;properties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;kind&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string type, value is alway default&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;text&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;enum&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0a3069">&#34;text&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;text&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string equals to query search&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;k&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;integer&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">5</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;fields&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string type, value is alway default&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;vector&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;enum&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0a3069">&#34;vector&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="相关文档">相关文档</h2>
@@ -592,6 +592,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -627,10 +631,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -640,7 +640,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -657,6 +657,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -667,6 +669,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -676,6 +680,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

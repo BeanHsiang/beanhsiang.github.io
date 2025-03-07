@@ -113,11 +113,11 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>client <span style="color:#000;font-weight:bold">=</span> openai<span style="color:#000;font-weight:bold">.</span>AzureOpenAI(
-</span></span><span style="display:flex;"><span>    api_version<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;2024-02-15-preview&#34;</span>,
-</span></span><span style="display:flex;"><span>    azure_endpoint<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>getenv(<span style="color:#d14">&#34;AZURE_OPENAI_ENDPOINT&#34;</span>),
-</span></span><span style="display:flex;"><span>    api_key<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>geten(<span style="color:#d14">&#34;AZURE_OPENAI_KEY&#34;</span>)
-</span></span><span style="display:flex;"><span>)
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>client <span style="color:#0550ae">=</span> openai<span style="color:#0550ae">.</span>AzureOpenAI<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    api_version<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;2024-02-15-preview&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    azure_endpoint<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>getenv<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZURE_OPENAI_ENDPOINT&#34;</span><span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>    api_key<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>geten<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZURE_OPENAI_KEY&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>但是在代码库中使用API密钥可能会导致各种问题。举几个例子:</p>
@@ -143,16 +143,16 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.identity</span> <span style="color:#000;font-weight:bold">import</span> DefaultAzureCredential, get_bearer_token_provider
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.identity</span> <span style="color:#cf222e">import</span> DefaultAzureCredential<span style="color:#1f2328">,</span> get_bearer_token_provider
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>azure_credential <span style="color:#000;font-weight:bold">=</span> DefaultAzureCredential()
-</span></span><span style="display:flex;"><span>token_provider <span style="color:#000;font-weight:bold">=</span> get_bearer_token_provider(azure_credential,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;https://cognitiveservices.azure.com/.default&#34;</span>)
-</span></span><span style="display:flex;"><span>client <span style="color:#000;font-weight:bold">=</span> AzureOpenAI(
-</span></span><span style="display:flex;"><span>    api_version<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;2024-02-15-preview&#34;</span>,
-</span></span><span style="display:flex;"><span>    azure_endpoint<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>getenv(<span style="color:#d14">&#34;AZURE_OPENAI_ENDPOINT&#34;</span>),
-</span></span><span style="display:flex;"><span>    azure_ad_token_provider<span style="color:#000;font-weight:bold">=</span>token_provider
-</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>azure_credential <span style="color:#0550ae">=</span> DefaultAzureCredential<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>token_provider <span style="color:#0550ae">=</span> get_bearer_token_provider<span style="color:#1f2328">(</span>azure_credential<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;https://cognitiveservices.azure.com/.default&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>client <span style="color:#0550ae">=</span> AzureOpenAI<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    api_version<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;2024-02-15-preview&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    azure_endpoint<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>getenv<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZURE_OPENAI_ENDPOINT&#34;</span><span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>    azure_ad_token_provider<span style="color:#0550ae">=</span>token_provider
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>和基于密钥的代码的区别:</p>
@@ -180,11 +180,11 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>az role assignment create <span style="color:#d14">\
-</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>        --role <span style="color:#d14">&#34;5e0bd9bd-7b93-4f28-af87-19fc36ad61bd&#34;</span> <span style="color:#d14">\
-</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>        --assignee-object-id <span style="color:#d14">&#34;</span><span style="color:#008080">$PRINCIPAL_ID</span><span style="color:#d14">&#34;</span> <span style="color:#d14">\
-</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>        --scope /subscriptions/<span style="color:#d14">&#34;</span><span style="color:#008080">$SUBSCRIPTION_ID</span><span style="color:#d14">&#34;</span>/resourceGroups/<span style="color:#d14">&#34;</span><span style="color:#008080">$RESOURCE_GROUP</span><span style="color:#d14">&#34;</span> <span style="color:#d14">\
-</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span>        --assignee-principal-type User
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>az role assignment create <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span>        --role <span style="color:#0a3069">&#34;5e0bd9bd-7b93-4f28-af87-19fc36ad61bd&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span>        --assignee-object-id <span style="color:#0a3069">&#34;</span><span style="color:#953800">$PRINCIPAL_ID</span><span style="color:#0a3069">&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span>        --scope /subscriptions/<span style="color:#0a3069">&#34;</span><span style="color:#953800">$SUBSCRIPTION_ID</span><span style="color:#0a3069">&#34;</span>/resourceGroups/<span style="color:#0a3069">&#34;</span><span style="color:#953800">$RESOURCE_GROUP</span><span style="color:#0a3069">&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span>        --assignee-principal-type User
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="使用-armbicep-分配角色"><em>使用 ARM/Bicep 分配角色</em></h3>
@@ -204,16 +204,16 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>resource role <span style="color:#d14">&#39;Microsoft.Authorization/roleAssignments@2022-04-01&#39;</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>  name: guid<span style="color:#000;font-weight:bold">(</span>subscription<span style="color:#000;font-weight:bold">()</span>.id, resourceGroup<span style="color:#000;font-weight:bold">()</span>.id,
-</span></span><span style="display:flex;"><span>             principalId, roleDefinitionId<span style="color:#000;font-weight:bold">)</span>
-</span></span><span style="display:flex;"><span>  properties: <span style="color:#000;font-weight:bold">{</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>resource role <span style="color:#0a3069">&#39;Microsoft.Authorization/roleAssignments@2022-04-01&#39;</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">{</span>
+</span></span><span style="display:flex;"><span>  name: guid<span style="color:#0550ae">(</span>subscription<span style="color:#0550ae">()</span>.id, resourceGroup<span style="color:#0550ae">()</span>.id,
+</span></span><span style="display:flex;"><span>             principalId, roleDefinitionId<span style="color:#0550ae">)</span>
+</span></span><span style="display:flex;"><span>  properties: <span style="color:#0550ae">{</span>
 </span></span><span style="display:flex;"><span>    principalId: principalId
-</span></span><span style="display:flex;"><span>    principalType: <span style="color:#d14">&#39;User&#39;</span>
-</span></span><span style="display:flex;"><span>    roleDefinitionId: resourceId<span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#39;Microsoft.Authorization/roleDefinitions&#39;</span>,
-</span></span><span style="display:flex;"><span>                                 <span style="color:#d14">&#39;5e0bd9bd-7b93-4f28-af87-19fc36ad61bd&#39;</span><span style="color:#000;font-weight:bold">)</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#000;font-weight:bold">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>    principalType: <span style="color:#0a3069">&#39;User&#39;</span>
+</span></span><span style="display:flex;"><span>    roleDefinitionId: resourceId<span style="color:#0550ae">(</span><span style="color:#0a3069">&#39;Microsoft.Authorization/roleDefinitions&#39;</span>,
+</span></span><span style="display:flex;"><span>                                 <span style="color:#0a3069">&#39;5e0bd9bd-7b93-4f28-af87-19fc36ad61bd&#39;</span><span style="color:#0550ae">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>你也可以看出这个<a href="https://github.com/Azure-Samples/azure-search-openai-demo/blob/main/infra/main.bicep">main.bicep</a>的示例是如何使用模块来设置角色的。</p>
@@ -242,12 +242,12 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>resource appService <span style="color:#d14">&#39;Microsoft.Web/sites@2022-03-01&#39;</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">{</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>resource appService <span style="color:#0a3069">&#39;Microsoft.Web/sites@2022-03-01&#39;</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">{</span>
 </span></span><span style="display:flex;"><span>  name: name
 </span></span><span style="display:flex;"><span>  location: location
-</span></span><span style="display:flex;"><span>  identity: <span style="color:#000;font-weight:bold">{</span> type: <span style="color:#d14">&#39;SystemAssigned&#39;</span><span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>  identity: <span style="color:#0550ae">{</span> type: <span style="color:#0a3069">&#39;SystemAssigned&#39;</span><span style="color:#0550ae">}</span>
 </span></span><span style="display:flex;"><span>  ...
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>有关更多详细信息，请参阅<a href="https://learn.microsoft.com/azure/app-service/overview-managed-identity?tabs=portal%2Chttp&amp;WT.mc_id=AI-MVP-5003172">《Managed Identity for App Service》</a>一文。</p>
@@ -268,16 +268,16 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>resource role <span style="color:#d14">&#39;Microsoft.Authorization/roleAssignments@2022-04-01&#39;</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>  name: guid<span style="color:#000;font-weight:bold">(</span>subscription<span style="color:#000;font-weight:bold">()</span>.id, resourceGroup<span style="color:#000;font-weight:bold">()</span>.id,
-</span></span><span style="display:flex;"><span>             principalId, roleDefinitionId<span style="color:#000;font-weight:bold">)</span>
-</span></span><span style="display:flex;"><span>  properties: <span style="color:#000;font-weight:bold">{</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>resource role <span style="color:#0a3069">&#39;Microsoft.Authorization/roleAssignments@2022-04-01&#39;</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">{</span>
+</span></span><span style="display:flex;"><span>  name: guid<span style="color:#0550ae">(</span>subscription<span style="color:#0550ae">()</span>.id, resourceGroup<span style="color:#0550ae">()</span>.id,
+</span></span><span style="display:flex;"><span>             principalId, roleDefinitionId<span style="color:#0550ae">)</span>
+</span></span><span style="display:flex;"><span>  properties: <span style="color:#0550ae">{</span>
 </span></span><span style="display:flex;"><span>    principalId: appService.identity.principalId
-</span></span><span style="display:flex;"><span>    principalType: <span style="color:#d14">&#39;ServicePrincipal&#39;</span>
-</span></span><span style="display:flex;"><span>    roleDefinitionId: resourceId<span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#39;Microsoft.Authorization/roleDefinitions&#39;</span>,
-</span></span><span style="display:flex;"><span>                                 <span style="color:#d14">&#39;5e0bd9bd-7b93-4f28-af87-19fc36ad61bd&#39;</span><span style="color:#000;font-weight:bold">)</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#000;font-weight:bold">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>    principalType: <span style="color:#0a3069">&#39;ServicePrincipal&#39;</span>
+</span></span><span style="display:flex;"><span>    roleDefinitionId: resourceId<span style="color:#0550ae">(</span><span style="color:#0a3069">&#39;Microsoft.Authorization/roleDefinitions&#39;</span>,
+</span></span><span style="display:flex;"><span>                                 <span style="color:#0a3069">&#39;5e0bd9bd-7b93-4f28-af87-19fc36ad61bd&#39;</span><span style="color:#0550ae">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="azure-容器应用的用户分配身份"><em>Azure 容器应用的用户分配身份</em></h3>
@@ -291,10 +291,10 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>resource userIdentity <span style="color:#d14">&#39;Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31&#39;</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>  name: <span style="color:#d14">&#39;${prefix}-id-aca&#39;</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>resource userIdentity <span style="color:#0a3069">&#39;Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31&#39;</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">{</span>
+</span></span><span style="display:flex;"><span>  name: <span style="color:#0a3069">&#39;${prefix}-id-aca&#39;</span>
 </span></span><span style="display:flex;"><span>  location: location
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>然后我们把这个标识赋给容器应用 Bicep 资源：</p>
@@ -311,15 +311,15 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>resource app <span style="color:#d14">&#39;Microsoft.App/containerApps@2022-03-01&#39;</span> <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">{</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>resource app <span style="color:#0a3069">&#39;Microsoft.App/containerApps@2022-03-01&#39;</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">{</span>
 </span></span><span style="display:flex;"><span>  name: name
 </span></span><span style="display:flex;"><span>  location: location
-</span></span><span style="display:flex;"><span>  identity: <span style="color:#000;font-weight:bold">{</span>
-</span></span><span style="display:flex;"><span>    type: <span style="color:#d14">&#39;UserAssigned&#39;</span>
-</span></span><span style="display:flex;"><span>    userAssignedIdentities: <span style="color:#000;font-weight:bold">{</span> <span style="color:#d14">&#39;${userIdentity.id}&#39;</span>: <span style="color:#000;font-weight:bold">{}</span> <span style="color:#000;font-weight:bold">}</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>  identity: <span style="color:#0550ae">{</span>
+</span></span><span style="display:flex;"><span>    type: <span style="color:#0a3069">&#39;UserAssigned&#39;</span>
+</span></span><span style="display:flex;"><span>    userAssignedIdentities: <span style="color:#0550ae">{</span> <span style="color:#0a3069">&#39;${userIdentity.id}&#39;</span>: <span style="color:#0550ae">{}</span> <span style="color:#0550ae">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">}</span>
 </span></span><span style="display:flex;"><span>  ...
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>当使用用户分配的标识时，我们需要修改对 <code>AzureDefaultCredential</code> 的调用，以告诉它使用哪个标识，因为您可能有多个用户分配的标识(而不仅仅是宿主环境的单个系统分配的标识)。</p>
@@ -330,8 +330,8 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>default_credential <span style="color:#000;font-weight:bold">=</span> azure<span style="color:#000;font-weight:bold">.</span>identity<span style="color:#000;font-weight:bold">.</span>ManagedIdentityCredential(
-</span></span><span style="display:flex;"><span>    client_id<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>getenv(<span style="color:#d14">&#34;AZURE_OPENAI_CLIENT_ID&#34;</span>))
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>default_credential <span style="color:#0550ae">=</span> azure<span style="color:#0550ae">.</span>identity<span style="color:#0550ae">.</span>ManagedIdentityCredential<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    client_id<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>getenv<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZURE_OPENAI_CLIENT_ID&#34;</span><span style="color:#1f2328">))</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="在本地-docker-容器中访问-azure-openai">在本地 Docker 容器中访问 Azure OpenAI</h2>
@@ -371,28 +371,28 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.identity</span> <span style="color:#000;font-weight:bold">import</span> DefaultAzureCredential, ManagedIdentityCredential
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.identity</span> <span style="color:#000;font-weight:bold">import</span> get_bearer_token_provider
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.identity</span> <span style="color:#cf222e">import</span> DefaultAzureCredential<span style="color:#1f2328">,</span> ManagedIdentityCredential
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.identity</span> <span style="color:#cf222e">import</span> get_bearer_token_provider
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>client_args <span style="color:#000;font-weight:bold">=</span> {}
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">if</span> os<span style="color:#000;font-weight:bold">.</span>getenv(<span style="color:#d14">&#34;AZURE_OPENAI_KEY&#34;</span>):
-</span></span><span style="display:flex;"><span>  client_args[<span style="color:#d14">&#34;api_key&#34;</span>] <span style="color:#000;font-weight:bold">=</span> os<span style="color:#000;font-weight:bold">.</span>getenv(<span style="color:#d14">&#34;AZURE_OPENAI_KEY&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">else</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#000;font-weight:bold">if</span> client_id <span style="color:#000;font-weight:bold">:=</span> os<span style="color:#000;font-weight:bold">.</span>getenv(<span style="color:#d14">&#34;AZURE_OPENAI_CLIENT_ID&#34;</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Authenticate using a user-assigned managed identity on Azure</span>
-</span></span><span style="display:flex;"><span>    azure_credential <span style="color:#000;font-weight:bold">=</span> ManagedIdentityCredential(
-</span></span><span style="display:flex;"><span>      client_id<span style="color:#000;font-weight:bold">=</span>client_id)
-</span></span><span style="display:flex;"><span>  <span style="color:#000;font-weight:bold">else</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Authenticate using the default Azure credential chain</span>
-</span></span><span style="display:flex;"><span>    default_credential <span style="color:#000;font-weight:bold">=</span> DefaultAzureCredential()
-</span></span><span style="display:flex;"><span>  client_args[<span style="color:#d14">&#34;azure_ad_token_provider&#34;</span>] <span style="color:#000;font-weight:bold">=</span> get_bearer_token_provider(
-</span></span><span style="display:flex;"><span>    azure_credential, <span style="color:#d14">&#34;https://cognitiveservices.azure.com/.default&#34;</span>)
+</span></span><span style="display:flex;"><span>client_args <span style="color:#0550ae">=</span> <span style="color:#1f2328">{}</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> os<span style="color:#0550ae">.</span>getenv<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZURE_OPENAI_KEY&#34;</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>  client_args<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;api_key&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> os<span style="color:#0550ae">.</span>getenv<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZURE_OPENAI_KEY&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#cf222e">if</span> client_id <span style="color:#0550ae">:=</span> os<span style="color:#0550ae">.</span>getenv<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZURE_OPENAI_CLIENT_ID&#34;</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Authenticate using a user-assigned managed identity on Azure</span>
+</span></span><span style="display:flex;"><span>    azure_credential <span style="color:#0550ae">=</span> ManagedIdentityCredential<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>      client_id<span style="color:#0550ae">=</span>client_id<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Authenticate using the default Azure credential chain</span>
+</span></span><span style="display:flex;"><span>    default_credential <span style="color:#0550ae">=</span> DefaultAzureCredential<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>  client_args<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;azure_ad_token_provider&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> get_bearer_token_provider<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    azure_credential<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;https://cognitiveservices.azure.com/.default&#34;</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>openai_client <span style="color:#000;font-weight:bold">=</span> openai<span style="color:#000;font-weight:bold">.</span>AsyncAzureOpenAI(
-</span></span><span style="display:flex;"><span>  api_version<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>getenv(<span style="color:#d14">&#34;AZURE_OPENAI_API_VERSION&#34;</span>) <span style="color:#000;font-weight:bold">or</span> <span style="color:#d14">&#34;2024-02-15-preview&#34;</span>,
-</span></span><span style="display:flex;"><span>  azure_endpoint<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>getenv(<span style="color:#d14">&#34;AZURE_OPENAI_ENDPOINT&#34;</span>),
-</span></span><span style="display:flex;"><span>  <span style="color:#000;font-weight:bold">**</span>client_args,
-</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>openai_client <span style="color:#0550ae">=</span> openai<span style="color:#0550ae">.</span>AsyncAzureOpenAI<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>  api_version<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>getenv<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZURE_OPENAI_API_VERSION&#34;</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">or</span> <span style="color:#0a3069">&#34;2024-02-15-preview&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  azure_endpoint<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>getenv<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZURE_OPENAI_ENDPOINT&#34;</span><span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">**</span>client_args<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="放心使用无密钥身份验证">放心使用无密钥身份验证</h2>
@@ -418,23 +418,6 @@
 
 
         
-
-<div class="post-archive">
-    <h2>相关文章</h2>
-    <ul class="listing">
-        
-        <li><a href="/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel/">使用 Semantic Kernel 构建自定义 Copilot</a></li>
-        
-        <li><a href="/post/2024-03-07-lets-start-with-the-bootloader/">从引导程序说起</a></li>
-        
-        <li><a href="/post/2024-01-27-fireug-net-conf-china-2023-watch-party/">FireUG x .NET Conf China - Watch Party</a></li>
-        
-        <li><a href="/post/2024-01-22-gpts-action-with-azure-ai-search/">GPTs action 中使用 Azure AI Search</a></li>
-        
-        <li><a href="/post/2024-01-03-azure-machine-learning-and-datarobot-team-up-to-accelerate-value/">Azure 机器学习和 DataRobot 联手加速生成式和预测性 AI 的价值</a></li>
-        
-    </ul>
-</div>
 
 
         <div class="post-meta meta-tags">
@@ -599,6 +582,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -634,10 +621,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -647,7 +630,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -664,6 +647,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -674,6 +659,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -683,6 +670,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

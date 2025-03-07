@@ -6,8 +6,36 @@
     <description>Recent content in Tags on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Mon, 06 Jan 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 07 Mar 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>.NET</title>
+      <link>https://beanhsiang.github.io/tags/.NET/</link>
+      <pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/tags/.NET/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>CSnakes</title>
+      <link>https://beanhsiang.github.io/tags/CSnakes/</link>
+      <pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/tags/CSnakes/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>MarkItDown</title>
+      <link>https://beanhsiang.github.io/tags/MarkItDown/</link>
+      <pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/tags/MarkItDown/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RAG</title>
+      <link>https://beanhsiang.github.io/tags/RAG/</link>
+      <pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/tags/RAG/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Azure AI Search</title>
       <link>https://beanhsiang.github.io/tags/Azure-AI-Search/</link>
@@ -20,13 +48,6 @@
       <link>https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/</link>
       <pubDate>Mon, 06 Jan 2025 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>RAG</title>
-      <link>https://beanhsiang.github.io/tags/RAG/</link>
-      <pubDate>Mon, 06 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/RAG/</guid>
       <description></description>
     </item>
     <item>

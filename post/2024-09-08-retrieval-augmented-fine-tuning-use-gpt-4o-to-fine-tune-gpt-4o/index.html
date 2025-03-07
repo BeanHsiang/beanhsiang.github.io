@@ -120,9 +120,9 @@
 <p>这些文件被分为两类：标准参考文件（Do），其中包含答案；以及干扰文件（Di），其中不包含答案。微调使模型能够区分这两种文件，从而生成一个定制模型，其性能优于仅使用RAG或微调的原始模型。</p>
 <p>我们使用GPT-4o生成训练数据并微调GPT-4o mini版，以创建适合您的具体需求的成本效益更高、速度更快的模型。这种技术称为蒸馏，其中GPT-4o作为教师模型，4o-mini作为学生。</p>
 <p>接下来我们将动手操作。如果您想自行跟随操作或查看参考代码，请访问<a href="https://aka.ms/aoai-raft-workshop.">https://aka.ms/aoai-raft-workshop</a>。我们将为一个银行业务场景创建一个自定义模型，能够回答有关银行在线工具和账户的问题。</p>
-<h3 id="生成-raft-训练数据httpsgithubcomazure-samplesazure-openai-raftblobmain1_raft_datagenipynb"><a href="https://github.com/Azure-Samples/azure-openai-raft/blob/main/1_raft_datagen.ipynb">生成 RAFT 训练数据</a></h3>
+<h3 id="生成-raft-训练数据"><a href="https://github.com/Azure-Samples/azure-openai-raft/blob/main/1_raft_datagen.ipynb">生成 RAFT 训练数据</a></h3>
 <p>首先收集特定领域的文档，例如银行文件的PDF格式。为了生成我们的训练数据，我们将PDF文件转换为Markdown文本格式。该文档为PDF格式，包含许多表格和图表，我们将使用GPT-4o将页面内容转换为Markdown格式。我们使用 Azure OpenAI GPT-4o 将所有这些信息提取到一个Markdown文件中，用于下游处理。然后，我们使用GPT-4o（我们的教师模型）生成合成的“问题-文档-答案”三元组，包括“黄金文档”（高度相关）和“干扰项”（误导性）的例子。这将确保模型能够区分相关和无关信息。RAFT采用“思维链”（CoT）过程，通过整合CoT过程，RAFT过程可以提高模型提取信息和进行逻辑推理的能力。这种方法有助于防止过拟合，提高训练的健壮性，特别适用于需要详细结构化思维的任务。然后我们将这些数据进行格式化，以便进行微调，并将其分为训练、验证和测试集。验证数据在训练过程中使用，而测试集则用于在训练结束后评估性能。</p>
-<h3 id="raft-微调httpsgithubcomazure-samplesazure-openai-raftblobmain2_raft_finetuningipynb"><a href="https://github.com/Azure-Samples/azure-openai-raft/blob/main/2_raft_finetuning.ipynb">RAFT 微调</a></h3>
+<h3 id="raft-微调"><a href="https://github.com/Azure-Samples/azure-openai-raft/blob/main/2_raft_finetuning.ipynb">RAFT 微调</a></h3>
 <p>在准备完训练数据和验证数据后，下一步是将这些数据上传到 Azure OpenAI 并创建微调任务。这非常简单：在 AI Studio 中，选择您的模型，上传您的训练数据和验证数据，并设置您的训练参数只需几步即可。我们将选择 4o-mini 作为我们的训练模型。在实验室里，我们会向您展示如何使用SDK上传和触发微调作业。UI提供了一种易于实验的方法，而SDK的方法则是在生产环境中实现和启用LLMops部署策略的首选方式。</p>
 <p>
         <a data-fancybox="gallery" href="/uploads/azeltov_2-1726660289683.png">
@@ -130,7 +130,7 @@
         </a>
     </p>
 <p>一旦微调工作开始运行，我们可以监控其进度，完成后，可以在 Azure OpenAI Studio 中分析微调后的模型。最后，我们创建一个新的部署，其中包含微调后的模型，可用于我们的专业领域任务。</p>
-<h3 id="评估-raft-模型httpsgithubcomazure-samplesazure-openai-raftblobmain3_raft_evaluationipynb"><a href="https://github.com/Azure-Samples/azure-openai-raft/blob/main/3_raft_evaluation.ipynb">评估 RAFT 模型</a></h3>
+<h3 id="评估-raft-模型"><a href="https://github.com/Azure-Samples/azure-openai-raft/blob/main/3_raft_evaluation.ipynb">评估 RAFT 模型</a></h3>
 <p>你可以从查看AI Studio提供的内置指标开始，查看损失和准确率。我们希望看到准确率不断提高，而损失不断降低：</p>
 <p>
         <a data-fancybox="gallery" href="/uploads/azeltov_1-1726659961512.png">
@@ -162,23 +162,6 @@
 
 
         
-
-<div class="post-archive">
-    <h2>相关文章</h2>
-    <ul class="listing">
-        
-        <li><a href="/post/2024-08-09-reduce-latency-for-azure-speech/">语音识别与合成中的延迟问题及解决策略</a></li>
-        
-        <li><a href="/post/2024-06-21-llm-is-the-brain-and-rpa-are-the-hands/">LLM 是脑，RPA 是手</a></li>
-        
-        <li><a href="/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a></li>
-        
-        <li><a href="/post/2024-05-15-azure-openai-speech/">Azure OpenAI 语音聊天</a></li>
-        
-        <li><a href="/post/2024-04-25-why-is-it-difficult-to-land-large-models/">为什么大模型难落地？</a></li>
-        
-    </ul>
-</div>
 
 
         <div class="post-meta meta-tags">
@@ -343,6 +326,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -378,10 +365,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -391,7 +374,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -408,6 +391,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -418,6 +403,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -427,6 +414,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

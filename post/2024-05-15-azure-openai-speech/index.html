@@ -243,123 +243,123 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">os</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">azure.cognitiveservices.speech</span> <span style="color:#000;font-weight:bold">as</span> <span style="color:#555">speechsdk</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">openai</span> <span style="color:#000;font-weight:bold">import</span> AzureOpenAI
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">os</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">azure.cognitiveservices.speech</span> <span style="color:#cf222e">as</span> <span style="color:#24292e">speechsdk</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">openai</span> <span style="color:#cf222e">import</span> AzureOpenAI
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># This example requires environment variables named </span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># &#34;OPEN_AI_KEY&#34;, &#34;OPEN_AI_ENDPOINT&#34; and &#34;OPEN_AI_DEPLOYMENT_NAME&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># This example requires environment variables named </span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># &#34;OPEN_AI_KEY&#34;, &#34;OPEN_AI_ENDPOINT&#34; and &#34;OPEN_AI_DEPLOYMENT_NAME&#34;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Your endpoint should look like the following:</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># https://YOUR_OPEN_AI_RESOURCE_NAME.openai.azure.com/</span>
-</span></span><span style="display:flex;"><span>client <span style="color:#000;font-weight:bold">=</span> AzureOpenAI(
-</span></span><span style="display:flex;"><span>azure_endpoint<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>environ<span style="color:#000;font-weight:bold">.</span>get(<span style="color:#d14">&#39;OPEN_AI_ENDPOINT&#39;</span>),
-</span></span><span style="display:flex;"><span>api_key<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>environ<span style="color:#000;font-weight:bold">.</span>get(<span style="color:#d14">&#39;OPEN_AI_KEY&#39;</span>),
-</span></span><span style="display:flex;"><span>api_version<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;2024-05-01-preview&#34;</span>
-</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Your endpoint should look like the following:</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># https://YOUR_OPEN_AI_RESOURCE_NAME.openai.azure.com/</span>
+</span></span><span style="display:flex;"><span>client <span style="color:#0550ae">=</span> AzureOpenAI<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>azure_endpoint<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;OPEN_AI_ENDPOINT&#39;</span><span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>api_key<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;OPEN_AI_KEY&#39;</span><span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>api_version<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;2024-05-01-preview&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># This will correspond to the custom name you chose for </span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># your deployment when you deployed a model.</span>
-</span></span><span style="display:flex;"><span>deployment_id<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>environ<span style="color:#000;font-weight:bold">.</span>get(<span style="color:#d14">&#39;OPEN_AI_DEPLOYMENT_NAME&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># This will correspond to the custom name you chose for </span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># your deployment when you deployed a model.</span>
+</span></span><span style="display:flex;"><span>deployment_id<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;OPEN_AI_DEPLOYMENT_NAME&#39;</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># This example requires environment variables </span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># named &#34;SPEECH_KEY&#34; and &#34;SPEECH_REGION&#34;</span>
-</span></span><span style="display:flex;"><span>speech_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechConfig(subscription<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>environ<span style="color:#000;font-weight:bold">.</span>get(<span style="color:#d14">&#39;SPEECH_KEY&#39;</span>), 
-</span></span><span style="display:flex;"><span>                                       region<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>environ<span style="color:#000;font-weight:bold">.</span>get(<span style="color:#d14">&#39;SPEECH_REGION&#39;</span>))
-</span></span><span style="display:flex;"><span>audio_output_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>audio<span style="color:#000;font-weight:bold">.</span>AudioOutputConfig(use_default_speaker<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>)
-</span></span><span style="display:flex;"><span>audio_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>audio<span style="color:#000;font-weight:bold">.</span>AudioConfig(use_default_microphone<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>)
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># This example requires environment variables </span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># named &#34;SPEECH_KEY&#34; and &#34;SPEECH_REGION&#34;</span>
+</span></span><span style="display:flex;"><span>speech_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechConfig<span style="color:#1f2328">(</span>subscription<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;SPEECH_KEY&#39;</span><span style="color:#1f2328">),</span> 
+</span></span><span style="display:flex;"><span>                                       region<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;SPEECH_REGION&#39;</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>audio_output_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>audio<span style="color:#0550ae">.</span>AudioOutputConfig<span style="color:#1f2328">(</span>use_default_speaker<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>audio_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>audio<span style="color:#0550ae">.</span>AudioConfig<span style="color:#1f2328">(</span>use_default_microphone<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Should be the locale for the speaker&#39;s language.</span>
-</span></span><span style="display:flex;"><span>speech_config<span style="color:#000;font-weight:bold">.</span>speech_recognition_language<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;zh-CN&#34;</span>
-</span></span><span style="display:flex;"><span>speech_recognizer <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechRecognizer(speech_config<span style="color:#000;font-weight:bold">=</span>speech_config, 
-</span></span><span style="display:flex;"><span>                                               audio_config<span style="color:#000;font-weight:bold">=</span>audio_config)
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Should be the locale for the speaker&#39;s language.</span>
+</span></span><span style="display:flex;"><span>speech_config<span style="color:#0550ae">.</span>speech_recognition_language<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;zh-CN&#34;</span>
+</span></span><span style="display:flex;"><span>speech_recognizer <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechRecognizer<span style="color:#1f2328">(</span>speech_config<span style="color:#0550ae">=</span>speech_config<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>                                               audio_config<span style="color:#0550ae">=</span>audio_config<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># The language of the voice that responds on behalf of Azure OpenAI.</span>
-</span></span><span style="display:flex;"><span>speech_config<span style="color:#000;font-weight:bold">.</span>speech_synthesis_voice_name<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#39;zh-CN-YunyiMultilingualNeural&#39;</span>
-</span></span><span style="display:flex;"><span>speech_synthesizer <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechSynthesizer(speech_config<span style="color:#000;font-weight:bold">=</span>speech_config, 
-</span></span><span style="display:flex;"><span>                                                 audio_config<span style="color:#000;font-weight:bold">=</span>audio_output_config)
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># tts sentence end mark</span>
-</span></span><span style="display:flex;"><span>tts_sentence_end <span style="color:#000;font-weight:bold">=</span> [ <span style="color:#d14">&#34;.&#34;</span>, <span style="color:#d14">&#34;!&#34;</span>, <span style="color:#d14">&#34;?&#34;</span>, <span style="color:#d14">&#34;;&#34;</span>, <span style="color:#d14">&#34;。&#34;</span>, <span style="color:#d14">&#34;！&#34;</span>, <span style="color:#d14">&#34;？&#34;</span>, <span style="color:#d14">&#34;；&#34;</span>, <span style="color:#d14">&#34;</span><span style="color:#d14">\n</span><span style="color:#d14">&#34;</span> ]
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># The language of the voice that responds on behalf of Azure OpenAI.</span>
+</span></span><span style="display:flex;"><span>speech_config<span style="color:#0550ae">.</span>speech_synthesis_voice_name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#39;zh-CN-YunyiMultilingualNeural&#39;</span>
+</span></span><span style="display:flex;"><span>speech_synthesizer <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechSynthesizer<span style="color:#1f2328">(</span>speech_config<span style="color:#0550ae">=</span>speech_config<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>                                                 audio_config<span style="color:#0550ae">=</span>audio_output_config<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># tts sentence end mark</span>
+</span></span><span style="display:flex;"><span>tts_sentence_end <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span> <span style="color:#0a3069">&#34;.&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;!&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;?&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;;&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;。&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;！&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;？&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;；&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\n</span><span style="color:#0a3069">&#34;</span> <span style="color:#1f2328">]</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Prompts Azure OpenAI with a request and synthesizes the response.</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">ask_openai</span>(prompt):
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Ask Azure OpenAI in streaming way</span>
-</span></span><span style="display:flex;"><span>    response <span style="color:#000;font-weight:bold">=</span> client<span style="color:#000;font-weight:bold">.</span>chat<span style="color:#000;font-weight:bold">.</span>completions<span style="color:#000;font-weight:bold">.</span>create(model<span style="color:#000;font-weight:bold">=</span>deployment_id, 
-</span></span><span style="display:flex;"><span>                                              max_tokens<span style="color:#000;font-weight:bold">=</span><span style="color:#099">200</span>, 
-</span></span><span style="display:flex;"><span>                                              stream<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>, 
-</span></span><span style="display:flex;"><span>                                              messages<span style="color:#000;font-weight:bold">=</span>[
-</span></span><span style="display:flex;"><span>                                                {<span style="color:#d14">&#34;role&#34;</span>: <span style="color:#d14">&#34;user&#34;</span>, <span style="color:#d14">&#34;content&#34;</span>: prompt}
-</span></span><span style="display:flex;"><span>                                              ])
-</span></span><span style="display:flex;"><span>    collected_messages <span style="color:#000;font-weight:bold">=</span> []
-</span></span><span style="display:flex;"><span>    last_tts_request <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">None</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Prompts Azure OpenAI with a request and synthesizes the response.</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">ask_openai</span><span style="color:#1f2328">(</span>prompt<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Ask Azure OpenAI in streaming way</span>
+</span></span><span style="display:flex;"><span>    response <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>chat<span style="color:#0550ae">.</span>completions<span style="color:#0550ae">.</span>create<span style="color:#1f2328">(</span>model<span style="color:#0550ae">=</span>deployment_id<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>                                              max_tokens<span style="color:#0550ae">=</span><span style="color:#0550ae">200</span><span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>                                              stream<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>                                              messages<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>                                                <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;content&#34;</span><span style="color:#1f2328">:</span> prompt<span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>                                              <span style="color:#1f2328">])</span>
+</span></span><span style="display:flex;"><span>    collected_messages <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span>    last_tts_request <span style="color:#0550ae">=</span> <span style="color:#cf222e">None</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># iterate through the stream response stream</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">for</span> chunk <span style="color:#000;font-weight:bold">in</span> response:
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">if</span> <span style="color:#0086b3">len</span>(chunk<span style="color:#000;font-weight:bold">.</span>choices) <span style="color:#000;font-weight:bold">&gt;</span> <span style="color:#099">0</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># extract the message</span>
-</span></span><span style="display:flex;"><span>            chunk_message <span style="color:#000;font-weight:bold">=</span> chunk<span style="color:#000;font-weight:bold">.</span>choices[<span style="color:#099">0</span>]<span style="color:#000;font-weight:bold">.</span>delta<span style="color:#000;font-weight:bold">.</span>content  
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">if</span> chunk_message <span style="color:#000;font-weight:bold">is</span> <span style="color:#000;font-weight:bold">not</span> <span style="color:#000;font-weight:bold">None</span>:
-</span></span><span style="display:flex;"><span>                <span style="color:#998;font-style:italic"># save the message</span>
-</span></span><span style="display:flex;"><span>                collected_messages<span style="color:#000;font-weight:bold">.</span>append(chunk_message)  
-</span></span><span style="display:flex;"><span>                <span style="color:#998;font-style:italic"># sentence end found</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">if</span> chunk_message <span style="color:#000;font-weight:bold">in</span> tts_sentence_end: 
-</span></span><span style="display:flex;"><span>                    <span style="color:#998;font-style:italic"># join the recieved message together to build a sentence</span>
-</span></span><span style="display:flex;"><span>                    text <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;&#39;</span><span style="color:#000;font-weight:bold">.</span>join(collected_messages)<span style="color:#000;font-weight:bold">.</span>strip() 
-</span></span><span style="display:flex;"><span>                    <span style="color:#000;font-weight:bold">if</span> text <span style="color:#000;font-weight:bold">!=</span> <span style="color:#d14">&#39;&#39;</span>: 
-</span></span><span style="display:flex;"><span>                        <span style="color:#998;font-style:italic"># if sentence only have \n or space, we could skip</span>
-</span></span><span style="display:flex;"><span>                        <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;Speech synthesized to speaker for: </span><span style="color:#d14">{</span>text<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
-</span></span><span style="display:flex;"><span>                        last_tts_request <span style="color:#000;font-weight:bold">=</span> speech_synthesizer
-</span></span><span style="display:flex;"><span>                                                    <span style="color:#000;font-weight:bold">.</span>speak_text_async(text)
-</span></span><span style="display:flex;"><span>                        collected_messages<span style="color:#000;font-weight:bold">.</span>clear()
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">if</span> last_tts_request:
-</span></span><span style="display:flex;"><span>        last_tts_request<span style="color:#000;font-weight:bold">.</span>get()
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># iterate through the stream response stream</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> chunk <span style="color:#0550ae">in</span> response<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>chunk<span style="color:#0550ae">.</span>choices<span style="color:#1f2328">)</span> <span style="color:#0550ae">&gt;</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># extract the message</span>
+</span></span><span style="display:flex;"><span>            chunk_message <span style="color:#0550ae">=</span> chunk<span style="color:#0550ae">.</span>choices<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>delta<span style="color:#0550ae">.</span>content  
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> chunk_message <span style="color:#0550ae">is</span> <span style="color:#0550ae">not</span> <span style="color:#cf222e">None</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#57606a"># save the message</span>
+</span></span><span style="display:flex;"><span>                collected_messages<span style="color:#0550ae">.</span>append<span style="color:#1f2328">(</span>chunk_message<span style="color:#1f2328">)</span>  
+</span></span><span style="display:flex;"><span>                <span style="color:#57606a"># sentence end found</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">if</span> chunk_message <span style="color:#0550ae">in</span> tts_sentence_end<span style="color:#1f2328">:</span> 
+</span></span><span style="display:flex;"><span>                    <span style="color:#57606a"># join the recieved message together to build a sentence</span>
+</span></span><span style="display:flex;"><span>                    text <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#0550ae">.</span>join<span style="color:#1f2328">(</span>collected_messages<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>strip<span style="color:#1f2328">()</span> 
+</span></span><span style="display:flex;"><span>                    <span style="color:#cf222e">if</span> text <span style="color:#0550ae">!=</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">:</span> 
+</span></span><span style="display:flex;"><span>                        <span style="color:#57606a"># if sentence only have \n or space, we could skip</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Speech synthesized to speaker for: </span><span style="color:#0a3069">{</span>text<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                        last_tts_request <span style="color:#0550ae">=</span> speech_synthesizer
+</span></span><span style="display:flex;"><span>                                                    <span style="color:#0550ae">.</span>speak_text_async<span style="color:#1f2328">(</span>text<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                        collected_messages<span style="color:#0550ae">.</span>clear<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> last_tts_request<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        last_tts_request<span style="color:#0550ae">.</span>get<span style="color:#1f2328">()</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Continuously listens for speech input to recognize </span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># and send as text to Azure OpenAI</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">chat_with_open_ai</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">while</span> <span style="color:#000;font-weight:bold">True</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;&#34;&#34;Azure OpenAI is listening. 
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">               Say &#39;Stop&#39; or press Ctrl-Z to end the conversation.&#34;&#34;&#34;</span>)
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">try</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># Get audio from the microphone and </span>
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># then send it to the TTS service.</span>
-</span></span><span style="display:flex;"><span>            speech_recognition_result <span style="color:#000;font-weight:bold">=</span> speech_recognizer<span style="color:#000;font-weight:bold">.</span>
-</span></span><span style="display:flex;"><span>                                           recognize_once_async()<span style="color:#000;font-weight:bold">.</span>get()
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Continuously listens for speech input to recognize </span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># and send as text to Azure OpenAI</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">chat_with_open_ai</span><span style="color:#1f2328">():</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">while</span> <span style="color:#cf222e">True</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;&#34;&#34;Azure OpenAI is listening. 
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">               Say &#39;Stop&#39; or press Ctrl-Z to end the conversation.&#34;&#34;&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># Get audio from the microphone and </span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># then send it to the TTS service.</span>
+</span></span><span style="display:flex;"><span>            speech_recognition_result <span style="color:#0550ae">=</span> speech_recognizer<span style="color:#0550ae">.</span>
+</span></span><span style="display:flex;"><span>                                           recognize_once_async<span style="color:#1f2328">()</span><span style="color:#0550ae">.</span>get<span style="color:#1f2328">()</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># If speech is recognized, send it to Azure OpenAI </span>
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># and listen for the response.</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">if</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason
-</span></span><span style="display:flex;"><span>                                                         <span style="color:#000;font-weight:bold">.</span>RecognizedSpeech:
-</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">if</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;Stop.&#34;</span> 
-</span></span><span style="display:flex;"><span>                             <span style="color:#000;font-weight:bold">or</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;Stop。&#34;</span>:
-</span></span><span style="display:flex;"><span>                    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Conversation ended.&#34;</span>)
-</span></span><span style="display:flex;"><span>                    <span style="color:#000;font-weight:bold">break</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Recognized speech: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(
-</span></span><span style="display:flex;"><span>                                            speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text))
-</span></span><span style="display:flex;"><span>                ask_openai(speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text)
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">elif</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason
-</span></span><span style="display:flex;"><span>                                                                  <span style="color:#000;font-weight:bold">.</span>NoMatch:
-</span></span><span style="display:flex;"><span>                <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;No speech could be recognized: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(
-</span></span><span style="display:flex;"><span>                                speech_recognition_result<span style="color:#000;font-weight:bold">.</span>no_match_details))
-</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">break</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">elif</span> speech_recognition_result<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>ResultReason
-</span></span><span style="display:flex;"><span>                                                                  <span style="color:#000;font-weight:bold">.</span>Canceled:
-</span></span><span style="display:flex;"><span>                cancellation_details <span style="color:#000;font-weight:bold">=</span> speech_recognition_result
-</span></span><span style="display:flex;"><span>                                                      <span style="color:#000;font-weight:bold">.</span>cancellation_details
-</span></span><span style="display:flex;"><span>                <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Speech Recognition canceled: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(
-</span></span><span style="display:flex;"><span>                                               cancellation_details<span style="color:#000;font-weight:bold">.</span>reason))
-</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">if</span> cancellation_details<span style="color:#000;font-weight:bold">.</span>reason <span style="color:#000;font-weight:bold">==</span> speechsdk<span style="color:#000;font-weight:bold">.</span>CancellationReason
-</span></span><span style="display:flex;"><span>                                                                    <span style="color:#000;font-weight:bold">.</span>Error:
-</span></span><span style="display:flex;"><span>                    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Error details: </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(
-</span></span><span style="display:flex;"><span>                                        cancellation_details<span style="color:#000;font-weight:bold">.</span>error_details))
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">EOFError</span>:
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">break</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># If speech is recognized, send it to Azure OpenAI </span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># and listen for the response.</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> speech_recognition_result<span style="color:#0550ae">.</span>reason <span style="color:#0550ae">==</span> speechsdk<span style="color:#0550ae">.</span>ResultReason
+</span></span><span style="display:flex;"><span>                                                         <span style="color:#0550ae">.</span>RecognizedSpeech<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">if</span> speech_recognition_result<span style="color:#0550ae">.</span>text <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;Stop.&#34;</span> 
+</span></span><span style="display:flex;"><span>                             <span style="color:#0550ae">or</span> speech_recognition_result<span style="color:#0550ae">.</span>text <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;Stop。&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Conversation ended.&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#cf222e">break</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Recognized speech: </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#34;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>                                            speech_recognition_result<span style="color:#0550ae">.</span>text<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>                ask_openai<span style="color:#1f2328">(</span>speech_recognition_result<span style="color:#0550ae">.</span>text<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">elif</span> speech_recognition_result<span style="color:#0550ae">.</span>reason <span style="color:#0550ae">==</span> speechsdk<span style="color:#0550ae">.</span>ResultReason
+</span></span><span style="display:flex;"><span>                                                                  <span style="color:#0550ae">.</span>NoMatch<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;No speech could be recognized: </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#34;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>                                speech_recognition_result<span style="color:#0550ae">.</span>no_match_details<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">break</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">elif</span> speech_recognition_result<span style="color:#0550ae">.</span>reason <span style="color:#0550ae">==</span> speechsdk<span style="color:#0550ae">.</span>ResultReason
+</span></span><span style="display:flex;"><span>                                                                  <span style="color:#0550ae">.</span>Canceled<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                cancellation_details <span style="color:#0550ae">=</span> speech_recognition_result
+</span></span><span style="display:flex;"><span>                                                      <span style="color:#0550ae">.</span>cancellation_details
+</span></span><span style="display:flex;"><span>                <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Speech Recognition canceled: </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#34;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>                                               cancellation_details<span style="color:#0550ae">.</span>reason<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">if</span> cancellation_details<span style="color:#0550ae">.</span>reason <span style="color:#0550ae">==</span> speechsdk<span style="color:#0550ae">.</span>CancellationReason
+</span></span><span style="display:flex;"><span>                                                                    <span style="color:#0550ae">.</span>Error<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Error details: </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#34;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>                                        cancellation_details<span style="color:#0550ae">.</span>error_details<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">except</span> EOFError<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">break</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Main</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">try</span>:
-</span></span><span style="display:flex;"><span>    chat_with_open_ai()
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">Exception</span> <span style="color:#000;font-weight:bold">as</span> err:
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Encountered exception. </span><span style="color:#d14">{}</span><span style="color:#d14">&#34;</span><span style="color:#000;font-weight:bold">.</span>format(err))
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Main</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    chat_with_open_ai<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> err<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Encountered exception. </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#34;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>err<span style="color:#1f2328">))</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="非阻塞式改进">非阻塞式改进</h3>
@@ -376,13 +376,13 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">threading</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">time</span> <span style="color:#000;font-weight:bold">import</span> sleep
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">threading</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">time</span> <span style="color:#cf222e">import</span> sleep
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>t1 <span style="color:#000;font-weight:bold">=</span> threading<span style="color:#000;font-weight:bold">.</span>Thread(target<span style="color:#000;font-weight:bold">=</span>ask_openai, 
-</span></span><span style="display:flex;"><span>                      args<span style="color:#000;font-weight:bold">=</span>(speech_recognition_result<span style="color:#000;font-weight:bold">.</span>text,))
-</span></span><span style="display:flex;"><span>t1<span style="color:#000;font-weight:bold">.</span>start()
-</span></span><span style="display:flex;"><span>sleep(<span style="color:#099">1</span>)
+</span></span><span style="display:flex;"><span>t1 <span style="color:#0550ae">=</span> threading<span style="color:#0550ae">.</span>Thread<span style="color:#1f2328">(</span>target<span style="color:#0550ae">=</span>ask_openai<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>                      args<span style="color:#0550ae">=</span><span style="color:#1f2328">(</span>speech_recognition_result<span style="color:#0550ae">.</span>text<span style="color:#1f2328">,))</span>
+</span></span><span style="display:flex;"><span>t1<span style="color:#0550ae">.</span>start<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>sleep<span style="color:#1f2328">(</span><span style="color:#0550ae">1</span><span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>需要注意的是，<code>sleep(1)</code> 这里不能省略，否则会导致主线程假死，无法正常监听。</p>
@@ -583,6 +583,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -618,10 +622,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -631,7 +631,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -648,6 +648,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -658,6 +660,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -667,6 +671,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

@@ -118,14 +118,14 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">datasets</span> <span style="color:#000;font-weight:bold">import</span> load_dataset
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">random</span> <span style="color:#000;font-weight:bold">import</span> randrange
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">datasets</span> <span style="color:#cf222e">import</span> load_dataset
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">random</span> <span style="color:#cf222e">import</span> randrange
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Load dataset from the hub</span>
-</span></span><span style="display:flex;"><span>dataset <span style="color:#000;font-weight:bold">=</span> load_dataset(<span style="color:#d14">&#34;HuggingFaceH4/ultrachat_200k&#34;</span>, split<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#39;train_sft[:2%]&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Load dataset from the hub</span>
+</span></span><span style="display:flex;"><span>dataset <span style="color:#0550ae">=</span> load_dataset<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;HuggingFaceH4/ultrachat_200k&#34;</span><span style="color:#1f2328">,</span> split<span style="color:#0550ae">=</span><span style="color:#0a3069">&#39;train_sft[:2%]&#39;</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;dataset size: </span><span style="color:#d14">{</span><span style="color:#0086b3">len</span>(dataset)<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#0086b3">print</span>(dataset[randrange(<span style="color:#0086b3">len</span>(dataset))])
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;dataset size: </span><span style="color:#0a3069">{</span><span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>dataset<span style="color:#1f2328">)</span><span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>dataset<span style="color:#1f2328">[</span>randrange<span style="color:#1f2328">(</span><span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>dataset<span style="color:#1f2328">))])</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>从数据集中选取一个较短的版本来创建训练和测试示例。为了训练我们的模型，我们需要将结构化的示例转换为一系列通过指令描述的任务。我们定义了一个函数，它接受一个样本并返回一个以我们指定格式编写的字符串。</p>
@@ -138,11 +138,11 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>dataset <span style="color:#000;font-weight:bold">=</span> dataset<span style="color:#000;font-weight:bold">.</span>train_test_split(test_size<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0.2</span>)
-</span></span><span style="display:flex;"><span>train_dataset <span style="color:#000;font-weight:bold">=</span> dataset[<span style="color:#d14">&#39;train&#39;</span>]
-</span></span><span style="display:flex;"><span>train_dataset<span style="color:#000;font-weight:bold">.</span>to_json(<span style="color:#d14">f</span><span style="color:#d14">&#34;data/train.jsonl&#34;</span>)
-</span></span><span style="display:flex;"><span>test_dataset <span style="color:#000;font-weight:bold">=</span> dataset[<span style="color:#d14">&#39;test&#39;</span>]
-</span></span><span style="display:flex;"><span>test_dataset<span style="color:#000;font-weight:bold">.</span>to_json(<span style="color:#d14">f</span><span style="color:#d14">&#34;data/eval.jsonl&#34;</span>)
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>dataset <span style="color:#0550ae">=</span> dataset<span style="color:#0550ae">.</span>train_test_split<span style="color:#1f2328">(</span>test_size<span style="color:#0550ae">=</span><span style="color:#0550ae">0.2</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>train_dataset <span style="color:#0550ae">=</span> dataset<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;train&#39;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>train_dataset<span style="color:#0550ae">.</span>to_json<span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;data/train.jsonl&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>test_dataset <span style="color:#0550ae">=</span> dataset<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;test&#39;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>test_dataset<span style="color:#0550ae">.</span>to_json<span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;data/eval.jsonl&#34;</span><span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>将训练数据集和测试数据集保存为JSON格式。现在添加 Azure ML SDK 声明。</p>
@@ -160,16 +160,16 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># import required libraries</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.identity</span> <span style="color:#000;font-weight:bold">import</span> DefaultAzureCredential, InteractiveBrowserCredential
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml</span> <span style="color:#000;font-weight:bold">import</span> MLClient, Input
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.dsl</span> <span style="color:#000;font-weight:bold">import</span> pipeline
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml</span> <span style="color:#000;font-weight:bold">import</span> load_component
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml</span> <span style="color:#000;font-weight:bold">import</span> command
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.entities</span> <span style="color:#000;font-weight:bold">import</span> Data
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml</span> <span style="color:#000;font-weight:bold">import</span> Input
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml</span> <span style="color:#000;font-weight:bold">import</span> Output
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.constants</span> <span style="color:#000;font-weight:bold">import</span> AssetTypes
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># import required libraries</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.identity</span> <span style="color:#cf222e">import</span> DefaultAzureCredential<span style="color:#1f2328">,</span> InteractiveBrowserCredential
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml</span> <span style="color:#cf222e">import</span> MLClient<span style="color:#1f2328">,</span> Input
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml.dsl</span> <span style="color:#cf222e">import</span> pipeline
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml</span> <span style="color:#cf222e">import</span> load_component
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml</span> <span style="color:#cf222e">import</span> command
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml.entities</span> <span style="color:#cf222e">import</span> Data
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml</span> <span style="color:#cf222e">import</span> Input
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml</span> <span style="color:#cf222e">import</span> Output
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml.constants</span> <span style="color:#cf222e">import</span> AssetTypes
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>创建工作空间客户端。</p>
@@ -188,17 +188,17 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>credential <span style="color:#000;font-weight:bold">=</span> DefaultAzureCredential()
-</span></span><span style="display:flex;"><span>workspace_ml_client <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">None</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">try</span>:
-</span></span><span style="display:flex;"><span>    workspace_ml_client <span style="color:#000;font-weight:bold">=</span> MLClient<span style="color:#000;font-weight:bold">.</span>from_config(credential)
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">Exception</span> <span style="color:#000;font-weight:bold">as</span> ex:
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(ex)
-</span></span><span style="display:flex;"><span>    subscription_id<span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;Enter your subscription_id&#34;</span>
-</span></span><span style="display:flex;"><span>    resource_group <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;Enter your resource_group&#34;</span>
-</span></span><span style="display:flex;"><span>    workspace<span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;Enter your workspace name&#34;</span>
-</span></span><span style="display:flex;"><span>    workspace_ml_client <span style="color:#000;font-weight:bold">=</span> MLClient(credential, subscription_id, 
-</span></span><span style="display:flex;"><span>                                     resource_group, workspace)
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>credential <span style="color:#0550ae">=</span> DefaultAzureCredential<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>workspace_ml_client <span style="color:#0550ae">=</span> <span style="color:#cf222e">None</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    workspace_ml_client <span style="color:#0550ae">=</span> MLClient<span style="color:#0550ae">.</span>from_config<span style="color:#1f2328">(</span>credential<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> ex<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>ex<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    subscription_id<span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;Enter your subscription_id&#34;</span>
+</span></span><span style="display:flex;"><span>    resource_group <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;Enter your resource_group&#34;</span>
+</span></span><span style="display:flex;"><span>    workspace<span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;Enter your workspace name&#34;</span>
+</span></span><span style="display:flex;"><span>    workspace_ml_client <span style="color:#0550ae">=</span> MLClient<span style="color:#1f2328">(</span>credential<span style="color:#1f2328">,</span> subscription_id<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>                                     resource_group<span style="color:#1f2328">,</span> workspace<span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>创建一个自定义的训练环境。</p>
@@ -214,14 +214,14 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.entities</span> <span style="color:#000;font-weight:bold">import</span> Environment, BuildContext
-</span></span><span style="display:flex;"><span>env_docker_image <span style="color:#000;font-weight:bold">=</span> Environment(
-</span></span><span style="display:flex;"><span>    image<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;mcr.microsoft.com/azureml/curated/acft-hf-nlp-gpu:latest&#34;</span>,
-</span></span><span style="display:flex;"><span>    conda_file<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;environment/conda.yml&#34;</span>,
-</span></span><span style="display:flex;"><span>    name<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;llm-training&#34;</span>,
-</span></span><span style="display:flex;"><span>    description<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Environment created for llm training.&#34;</span>,
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>workspace_ml_client<span style="color:#000;font-weight:bold">.</span>environments<span style="color:#000;font-weight:bold">.</span>create_or_update(env_docker_image)
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml.entities</span> <span style="color:#cf222e">import</span> Environment<span style="color:#1f2328">,</span> BuildContext
+</span></span><span style="display:flex;"><span>env_docker_image <span style="color:#0550ae">=</span> Environment<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    image<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;mcr.microsoft.com/azureml/curated/acft-hf-nlp-gpu:latest&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    conda_file<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;environment/conda.yml&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;llm-training&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    description<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Environment created for llm training.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>workspace_ml_client<span style="color:#0550ae">.</span>environments<span style="color:#0550ae">.</span>create_or_update<span style="color:#1f2328">(</span>env_docker_image<span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>来检查一下这个 conda.yaml。</p>
@@ -247,24 +247,24 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#000080">name</span>:<span style="color:#bbb"> </span>model-env<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">channels</span>:<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span>- conda-forge<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#000080">dependencies</span>:<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span>- python=3.8<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span>- pip=24.0<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span>- <span style="color:#000080">pip</span>:<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- bitsandbytes==0.43.1<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- transformers~=4.41<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- peft~=0.11<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- accelerate~=0.30<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- trl==0.8.6<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- einops==0.8.0<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- datasets==2.19.1<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- wandb==0.17.0<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- mlflow==2.13.0<span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- azureml-mlflow==1.56.0 <span style="color:#bbb">
-</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- torchvision==0.18.0<span style="color:#bbb">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>model-env<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff"></span><span style="color:#0550ae">channels</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span>- conda-forge<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff"></span><span style="color:#0550ae">dependencies</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span>- python=3.8<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span>- pip=24.0<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span>- <span style="color:#0550ae">pip</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- bitsandbytes==0.43.1<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- transformers~=4.41<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- peft~=0.11<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- accelerate~=0.30<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- trl==0.8.6<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- einops==0.8.0<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- datasets==2.19.1<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- wandb==0.17.0<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- mlflow==2.13.0<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- azureml-mlflow==1.56.0 <span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span>- torchvision==0.18.0<span style="color:#fff">
 </span></span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="训练">训练</h2>
@@ -498,225 +498,225 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">219
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">os</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">#import mlflow</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">argparse</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">sys</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">logging</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">os</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">#import mlflow</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">argparse</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">sys</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">logging</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">datasets</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">datasets</span> <span style="color:#000;font-weight:bold">import</span> load_dataset
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">peft</span> <span style="color:#000;font-weight:bold">import</span> LoraConfig
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">torch</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">transformers</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">trl</span> <span style="color:#000;font-weight:bold">import</span> SFTTrainer
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">transformers</span> <span style="color:#000;font-weight:bold">import</span> AutoModelForCausalLM, AutoTokenizer, 
-</span></span><span style="display:flex;"><span>                         TrainingArguments, BitsAndBytesConfig
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">datasets</span> <span style="color:#000;font-weight:bold">import</span> load_dataset
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">datasets</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">datasets</span> <span style="color:#cf222e">import</span> load_dataset
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">peft</span> <span style="color:#cf222e">import</span> LoraConfig
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">torch</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">transformers</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">trl</span> <span style="color:#cf222e">import</span> SFTTrainer
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">transformers</span> <span style="color:#cf222e">import</span> AutoModelForCausalLM<span style="color:#1f2328">,</span> AutoTokenizer<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>                         TrainingArguments<span style="color:#1f2328">,</span> BitsAndBytesConfig
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">datasets</span> <span style="color:#cf222e">import</span> load_dataset
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>logger <span style="color:#000;font-weight:bold">=</span> logging<span style="color:#000;font-weight:bold">.</span>getLogger(__name__)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">###################</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Hyper-parameters</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">###################</span>
-</span></span><span style="display:flex;"><span>training_config <span style="color:#000;font-weight:bold">=</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;bf16&#34;</span>: <span style="color:#000;font-weight:bold">True</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;do_eval&#34;</span>: <span style="color:#000;font-weight:bold">False</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;learning_rate&#34;</span>: <span style="color:#099">5.0e-06</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;log_level&#34;</span>: <span style="color:#d14">&#34;info&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;logging_steps&#34;</span>: <span style="color:#099">20</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;logging_strategy&#34;</span>: <span style="color:#d14">&#34;steps&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;lr_scheduler_type&#34;</span>: <span style="color:#d14">&#34;cosine&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;num_train_epochs&#34;</span>: <span style="color:#099">1</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;max_steps&#34;</span>: <span style="color:#000;font-weight:bold">-</span><span style="color:#099">1</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;output_dir&#34;</span>: <span style="color:#d14">&#34;./checkpoint_dir&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;overwrite_output_dir&#34;</span>: <span style="color:#000;font-weight:bold">True</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;per_device_eval_batch_size&#34;</span>: <span style="color:#099">4</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;per_device_train_batch_size&#34;</span>: <span style="color:#099">4</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;remove_unused_columns&#34;</span>: <span style="color:#000;font-weight:bold">True</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;save_steps&#34;</span>: <span style="color:#099">100</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;save_total_limit&#34;</span>: <span style="color:#099">1</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;seed&#34;</span>: <span style="color:#099">0</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;gradient_checkpointing&#34;</span>: <span style="color:#000;font-weight:bold">True</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;gradient_checkpointing_kwargs&#34;</span>:{<span style="color:#d14">&#34;use_reentrant&#34;</span>: <span style="color:#000;font-weight:bold">False</span>},
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;gradient_accumulation_steps&#34;</span>: <span style="color:#099">1</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;warmup_ratio&#34;</span>: <span style="color:#099">0.2</span>,
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>peft_config <span style="color:#000;font-weight:bold">=</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;r&#34;</span>: <span style="color:#099">16</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;lora_alpha&#34;</span>: <span style="color:#099">32</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;lora_dropout&#34;</span>: <span style="color:#099">0.05</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;bias&#34;</span>: <span style="color:#d14">&#34;none&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;task_type&#34;</span>: <span style="color:#d14">&#34;CAUSAL_LM&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;target_modules&#34;</span>: <span style="color:#d14">&#34;all-linear&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;modules_to_save&#34;</span>: <span style="color:#000;font-weight:bold">None</span>,
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>train_conf <span style="color:#000;font-weight:bold">=</span> TrainingArguments(<span style="color:#000;font-weight:bold">**</span>training_config)
-</span></span><span style="display:flex;"><span>peft_conf <span style="color:#000;font-weight:bold">=</span> LoraConfig(<span style="color:#000;font-weight:bold">**</span>peft_config)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">###############</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Setup logging</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">###############</span>
-</span></span><span style="display:flex;"><span>logging<span style="color:#000;font-weight:bold">.</span>basicConfig(
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">format</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;</span><span style="color:#d14">%(asctime)s</span><span style="color:#d14"> - </span><span style="color:#d14">%(levelname)s</span><span style="color:#d14"> - </span><span style="color:#d14">%(name)s</span><span style="color:#d14"> - </span><span style="color:#d14">%(message)s</span><span style="color:#d14">&#34;</span>,
-</span></span><span style="display:flex;"><span>    datefmt<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;%Y-%m-</span><span style="color:#d14">%d</span><span style="color:#d14"> %H:%M:%S&#34;</span>,
-</span></span><span style="display:flex;"><span>    handlers<span style="color:#000;font-weight:bold">=</span>[logging<span style="color:#000;font-weight:bold">.</span>StreamHandler(sys<span style="color:#000;font-weight:bold">.</span>stdout)],
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>log_level <span style="color:#000;font-weight:bold">=</span> train_conf<span style="color:#000;font-weight:bold">.</span>get_process_log_level()
-</span></span><span style="display:flex;"><span>logger<span style="color:#000;font-weight:bold">.</span>setLevel(log_level)
-</span></span><span style="display:flex;"><span>datasets<span style="color:#000;font-weight:bold">.</span>utils<span style="color:#000;font-weight:bold">.</span>logging<span style="color:#000;font-weight:bold">.</span>set_verbosity(log_level)
-</span></span><span style="display:flex;"><span>transformers<span style="color:#000;font-weight:bold">.</span>utils<span style="color:#000;font-weight:bold">.</span>logging<span style="color:#000;font-weight:bold">.</span>set_verbosity(log_level)
-</span></span><span style="display:flex;"><span>transformers<span style="color:#000;font-weight:bold">.</span>utils<span style="color:#000;font-weight:bold">.</span>logging<span style="color:#000;font-weight:bold">.</span>enable_default_handler()
-</span></span><span style="display:flex;"><span>transformers<span style="color:#000;font-weight:bold">.</span>utils<span style="color:#000;font-weight:bold">.</span>logging<span style="color:#000;font-weight:bold">.</span>enable_explicit_format()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Log on each process a small summary</span>
-</span></span><span style="display:flex;"><span>logger<span style="color:#000;font-weight:bold">.</span>warning(
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">f</span><span style="color:#d14">&#34;Process rank: </span><span style="color:#d14">{</span>train_conf<span style="color:#000;font-weight:bold">.</span>local_rank<span style="color:#d14">}</span><span style="color:#d14">, </span>
-</span></span><span style="display:flex;"><span>    device: {train_conf<span style="color:#000;font-weight:bold">.</span>device}, n_gpu: {train_conf<span style="color:#000;font-weight:bold">.</span>n_gpu}<span style="color:#d14">&#34;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">+</span> <span style="color:#d14">f</span><span style="color:#d14">&#34; distributed training: </span><span style="color:#d14">{</span><span style="color:#0086b3">bool</span>(train_conf<span style="color:#000;font-weight:bold">.</span>local_rank <span style="color:#000;font-weight:bold">!=</span> <span style="color:#000;font-weight:bold">-</span><span style="color:#099">1</span>)<span style="color:#d14">}</span><span style="color:#d14">, </span>
-</span></span><span style="display:flex;"><span>    <span style="color:#099">16</span><span style="color:#000;font-weight:bold">-</span>bits training: {train_conf<span style="color:#000;font-weight:bold">.</span>fp16}<span style="color:#d14">&#34;</span>
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>logger<span style="color:#000;font-weight:bold">.</span>info(<span style="color:#d14">f</span><span style="color:#d14">&#34;Training/evaluation parameters </span><span style="color:#d14">{</span>train_conf<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
-</span></span><span style="display:flex;"><span>logger<span style="color:#000;font-weight:bold">.</span>info(<span style="color:#d14">f</span><span style="color:#d14">&#34;PEFT parameters </span><span style="color:#d14">{</span>peft_conf<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">################</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Modle Loading</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">################</span>
-</span></span><span style="display:flex;"><span>checkpoint_path <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;microsoft/Phi-3-mini-4k-instruct&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># checkpoint_path = &#34;microsoft/Phi-3-mini-128k-instruct&#34;</span>
-</span></span><span style="display:flex;"><span>model_kwargs <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">dict</span>(
-</span></span><span style="display:flex;"><span>    use_cache<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">False</span>,
-</span></span><span style="display:flex;"><span>    trust_remote_code<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># loading the model with flash-attenstion support</span>
-</span></span><span style="display:flex;"><span>    attn_implementation<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;flash_attention_2&#34;</span>,
-</span></span><span style="display:flex;"><span>    torch_dtype<span style="color:#000;font-weight:bold">=</span>torch<span style="color:#000;font-weight:bold">.</span>bfloat16,
-</span></span><span style="display:flex;"><span>    device_map<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">None</span>
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>model <span style="color:#000;font-weight:bold">=</span> AutoModelForCausalLM<span style="color:#000;font-weight:bold">.</span>from_pretrained(checkpoint_path, <span style="color:#000;font-weight:bold">**</span>model_kwargs)
-</span></span><span style="display:flex;"><span>tokenizer <span style="color:#000;font-weight:bold">=</span> AutoTokenizer<span style="color:#000;font-weight:bold">.</span>from_pretrained(checkpoint_path)
-</span></span><span style="display:flex;"><span>tokenizer<span style="color:#000;font-weight:bold">.</span>model_max_length <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">2048</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># use unk rather than eos token to prevent endless generation</span>
-</span></span><span style="display:flex;"><span>tokenizer<span style="color:#000;font-weight:bold">.</span>pad_token <span style="color:#000;font-weight:bold">=</span> tokenizer<span style="color:#000;font-weight:bold">.</span>unk_token
-</span></span><span style="display:flex;"><span>tokenizer<span style="color:#000;font-weight:bold">.</span>pad_token_id <span style="color:#000;font-weight:bold">=</span> tokenizer<span style="color:#000;font-weight:bold">.</span>convert_tokens_to_ids(tokenizer<span style="color:#000;font-weight:bold">.</span>pad_token)
-</span></span><span style="display:flex;"><span>tokenizer<span style="color:#000;font-weight:bold">.</span>padding_side <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;right&#39;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">##################</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Data Processing</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">##################</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">apply_chat_template</span>(
-</span></span><span style="display:flex;"><span>    example,
-</span></span><span style="display:flex;"><span>    tokenizer,
-</span></span><span style="display:flex;"><span>):
-</span></span><span style="display:flex;"><span>    messages <span style="color:#000;font-weight:bold">=</span> example[<span style="color:#d14">&#34;messages&#34;</span>]
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Add an empty system message if there is none</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">if</span> messages[<span style="color:#099">0</span>][<span style="color:#d14">&#34;role&#34;</span>] <span style="color:#000;font-weight:bold">!=</span> <span style="color:#d14">&#34;system&#34;</span>:
-</span></span><span style="display:flex;"><span>        messages<span style="color:#000;font-weight:bold">.</span>insert(<span style="color:#099">0</span>, {<span style="color:#d14">&#34;role&#34;</span>: <span style="color:#d14">&#34;system&#34;</span>, <span style="color:#d14">&#34;content&#34;</span>: <span style="color:#d14">&#34;&#34;</span>})
-</span></span><span style="display:flex;"><span>    example[<span style="color:#d14">&#34;text&#34;</span>] <span style="color:#000;font-weight:bold">=</span> tokenizer<span style="color:#000;font-weight:bold">.</span>apply_chat_template(
-</span></span><span style="display:flex;"><span>        messages, tokenize<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">False</span>, add_generation_prompt<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">False</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">return</span> example
+</span></span><span style="display:flex;"><span>logger <span style="color:#0550ae">=</span> logging<span style="color:#0550ae">.</span>getLogger<span style="color:#1f2328">(</span>__name__<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">###################</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Hyper-parameters</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">###################</span>
+</span></span><span style="display:flex;"><span>training_config <span style="color:#0550ae">=</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;bf16&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">True</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;do_eval&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">False</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;learning_rate&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">5.0e-06</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;log_level&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;info&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;logging_steps&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">20</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;logging_strategy&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;steps&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;lr_scheduler_type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;cosine&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;num_train_epochs&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;max_steps&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;output_dir&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;./checkpoint_dir&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;overwrite_output_dir&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">True</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;per_device_eval_batch_size&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">4</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;per_device_train_batch_size&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">4</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;remove_unused_columns&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">True</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;save_steps&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">100</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;save_total_limit&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;seed&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;gradient_checkpointing&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">True</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;gradient_checkpointing_kwargs&#34;</span><span style="color:#1f2328">:{</span><span style="color:#0a3069">&#34;use_reentrant&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">False</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;gradient_accumulation_steps&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;warmup_ratio&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0.2</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">main</span>(args):
-</span></span><span style="display:flex;"><span>    train_dataset <span style="color:#000;font-weight:bold">=</span> load_dataset(<span style="color:#d14">&#39;json&#39;</span>, data_files<span style="color:#000;font-weight:bold">=</span>args<span style="color:#000;font-weight:bold">.</span>train_file, split<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#39;train&#39;</span>)
-</span></span><span style="display:flex;"><span>    test_dataset <span style="color:#000;font-weight:bold">=</span> load_dataset(<span style="color:#d14">&#39;json&#39;</span>, data_files<span style="color:#000;font-weight:bold">=</span>args<span style="color:#000;font-weight:bold">.</span>eval_file, split<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#39;train&#39;</span>)
-</span></span><span style="display:flex;"><span>    column_names <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">list</span>(train_dataset<span style="color:#000;font-weight:bold">.</span>features)
+</span></span><span style="display:flex;"><span>peft_config <span style="color:#0550ae">=</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;r&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">16</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;lora_alpha&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">32</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;lora_dropout&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0.05</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;bias&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;none&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;task_type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;CAUSAL_LM&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;target_modules&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;all-linear&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;modules_to_save&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">None</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>train_conf <span style="color:#0550ae">=</span> TrainingArguments<span style="color:#1f2328">(</span><span style="color:#0550ae">**</span>training_config<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>peft_conf <span style="color:#0550ae">=</span> LoraConfig<span style="color:#1f2328">(</span><span style="color:#0550ae">**</span>peft_config<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    processed_train_dataset <span style="color:#000;font-weight:bold">=</span> train_dataset<span style="color:#000;font-weight:bold">.</span>map(
-</span></span><span style="display:flex;"><span>        apply_chat_template,
-</span></span><span style="display:flex;"><span>        fn_kwargs<span style="color:#000;font-weight:bold">=</span>{<span style="color:#d14">&#34;tokenizer&#34;</span>: tokenizer},
-</span></span><span style="display:flex;"><span>        num_proc<span style="color:#000;font-weight:bold">=</span><span style="color:#099">10</span>,
-</span></span><span style="display:flex;"><span>        remove_columns<span style="color:#000;font-weight:bold">=</span>column_names,
-</span></span><span style="display:flex;"><span>        desc<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Applying chat template to train_sft&#34;</span>,
-</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span><span style="color:#57606a">###############</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Setup logging</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">###############</span>
+</span></span><span style="display:flex;"><span>logging<span style="color:#0550ae">.</span>basicConfig<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">format</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;</span><span style="color:#0a3069">%(asctime)s</span><span style="color:#0a3069"> - </span><span style="color:#0a3069">%(levelname)s</span><span style="color:#0a3069"> - </span><span style="color:#0a3069">%(name)s</span><span style="color:#0a3069"> - </span><span style="color:#0a3069">%(message)s</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    datefmt<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;%Y-%m-</span><span style="color:#0a3069">%d</span><span style="color:#0a3069"> %H:%M:%S&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    handlers<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>logging<span style="color:#0550ae">.</span>StreamHandler<span style="color:#1f2328">(</span>sys<span style="color:#0550ae">.</span>stdout<span style="color:#1f2328">)],</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>log_level <span style="color:#0550ae">=</span> train_conf<span style="color:#0550ae">.</span>get_process_log_level<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>logger<span style="color:#0550ae">.</span>setLevel<span style="color:#1f2328">(</span>log_level<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>datasets<span style="color:#0550ae">.</span>utils<span style="color:#0550ae">.</span>logging<span style="color:#0550ae">.</span>set_verbosity<span style="color:#1f2328">(</span>log_level<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>transformers<span style="color:#0550ae">.</span>utils<span style="color:#0550ae">.</span>logging<span style="color:#0550ae">.</span>set_verbosity<span style="color:#1f2328">(</span>log_level<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>transformers<span style="color:#0550ae">.</span>utils<span style="color:#0550ae">.</span>logging<span style="color:#0550ae">.</span>enable_default_handler<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>transformers<span style="color:#0550ae">.</span>utils<span style="color:#0550ae">.</span>logging<span style="color:#0550ae">.</span>enable_explicit_format<span style="color:#1f2328">()</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    processed_test_dataset <span style="color:#000;font-weight:bold">=</span> test_dataset<span style="color:#000;font-weight:bold">.</span>map(
-</span></span><span style="display:flex;"><span>        apply_chat_template,
-</span></span><span style="display:flex;"><span>        fn_kwargs<span style="color:#000;font-weight:bold">=</span>{<span style="color:#d14">&#34;tokenizer&#34;</span>: tokenizer},
-</span></span><span style="display:flex;"><span>        num_proc<span style="color:#000;font-weight:bold">=</span><span style="color:#099">10</span>,
-</span></span><span style="display:flex;"><span>        remove_columns<span style="color:#000;font-weight:bold">=</span>column_names,
-</span></span><span style="display:flex;"><span>        desc<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Applying chat template to test_sft&#34;</span>,
-</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Log on each process a small summary</span>
+</span></span><span style="display:flex;"><span>logger<span style="color:#0550ae">.</span>warning<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Process rank: </span><span style="color:#0a3069">{</span>train_conf<span style="color:#0550ae">.</span>local_rank<span style="color:#0a3069">}</span><span style="color:#0a3069">, </span>
+</span></span><span style="display:flex;"><span>    device<span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>train_conf<span style="color:#0550ae">.</span>device<span style="color:#1f2328">},</span> n_gpu<span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>train_conf<span style="color:#0550ae">.</span>n_gpu<span style="color:#1f2328">}</span><span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">+</span> <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34; distributed training: </span><span style="color:#0a3069">{</span><span style="color:#6639ba">bool</span><span style="color:#1f2328">(</span>train_conf<span style="color:#0550ae">.</span>local_rank <span style="color:#0550ae">!=</span> <span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">)</span><span style="color:#0a3069">}</span><span style="color:#0a3069">, </span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">16</span><span style="color:#0550ae">-</span>bits training<span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>train_conf<span style="color:#0550ae">.</span>fp16<span style="color:#1f2328">}</span><span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>logger<span style="color:#0550ae">.</span>info<span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Training/evaluation parameters </span><span style="color:#0a3069">{</span>train_conf<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>logger<span style="color:#0550ae">.</span>info<span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;PEFT parameters </span><span style="color:#0a3069">{</span>peft_conf<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic">###########</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Training</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic">###########</span>
-</span></span><span style="display:flex;"><span>    trainer <span style="color:#000;font-weight:bold">=</span> SFTTrainer(
-</span></span><span style="display:flex;"><span>        model<span style="color:#000;font-weight:bold">=</span>model,
-</span></span><span style="display:flex;"><span>        args<span style="color:#000;font-weight:bold">=</span>train_conf,
-</span></span><span style="display:flex;"><span>        peft_config<span style="color:#000;font-weight:bold">=</span>peft_conf,
-</span></span><span style="display:flex;"><span>        train_dataset<span style="color:#000;font-weight:bold">=</span>processed_train_dataset,
-</span></span><span style="display:flex;"><span>        eval_dataset<span style="color:#000;font-weight:bold">=</span>processed_test_dataset,
-</span></span><span style="display:flex;"><span>        max_seq_length<span style="color:#000;font-weight:bold">=</span><span style="color:#099">2048</span>,
-</span></span><span style="display:flex;"><span>        dataset_text_field<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;text&#34;</span>,
-</span></span><span style="display:flex;"><span>        tokenizer<span style="color:#000;font-weight:bold">=</span>tokenizer,
-</span></span><span style="display:flex;"><span>        packing<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>
-</span></span><span style="display:flex;"><span>    )
-</span></span><span style="display:flex;"><span>    train_result <span style="color:#000;font-weight:bold">=</span> trainer<span style="color:#000;font-weight:bold">.</span>train()
-</span></span><span style="display:flex;"><span>    metrics <span style="color:#000;font-weight:bold">=</span> train_result<span style="color:#000;font-weight:bold">.</span>metrics
-</span></span><span style="display:flex;"><span>    trainer<span style="color:#000;font-weight:bold">.</span>log_metrics(<span style="color:#d14">&#34;train&#34;</span>, metrics)
-</span></span><span style="display:flex;"><span>    trainer<span style="color:#000;font-weight:bold">.</span>save_metrics(<span style="color:#d14">&#34;train&#34;</span>, metrics)
-</span></span><span style="display:flex;"><span>    trainer<span style="color:#000;font-weight:bold">.</span>save_state()
+</span></span><span style="display:flex;"><span><span style="color:#57606a">################</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Modle Loading</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">################</span>
+</span></span><span style="display:flex;"><span>checkpoint_path <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;microsoft/Phi-3-mini-4k-instruct&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># checkpoint_path = &#34;microsoft/Phi-3-mini-128k-instruct&#34;</span>
+</span></span><span style="display:flex;"><span>model_kwargs <span style="color:#0550ae">=</span> <span style="color:#6639ba">dict</span><span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    use_cache<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    trust_remote_code<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># loading the model with flash-attenstion support</span>
+</span></span><span style="display:flex;"><span>    attn_implementation<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;flash_attention_2&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    torch_dtype<span style="color:#0550ae">=</span>torch<span style="color:#0550ae">.</span>bfloat16<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    device_map<span style="color:#0550ae">=</span><span style="color:#cf222e">None</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>model <span style="color:#0550ae">=</span> AutoModelForCausalLM<span style="color:#0550ae">.</span>from_pretrained<span style="color:#1f2328">(</span>checkpoint_path<span style="color:#1f2328">,</span> <span style="color:#0550ae">**</span>model_kwargs<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>tokenizer <span style="color:#0550ae">=</span> AutoTokenizer<span style="color:#0550ae">.</span>from_pretrained<span style="color:#1f2328">(</span>checkpoint_path<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>tokenizer<span style="color:#0550ae">.</span>model_max_length <span style="color:#0550ae">=</span> <span style="color:#0550ae">2048</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># use unk rather than eos token to prevent endless generation</span>
+</span></span><span style="display:flex;"><span>tokenizer<span style="color:#0550ae">.</span>pad_token <span style="color:#0550ae">=</span> tokenizer<span style="color:#0550ae">.</span>unk_token
+</span></span><span style="display:flex;"><span>tokenizer<span style="color:#0550ae">.</span>pad_token_id <span style="color:#0550ae">=</span> tokenizer<span style="color:#0550ae">.</span>convert_tokens_to_ids<span style="color:#1f2328">(</span>tokenizer<span style="color:#0550ae">.</span>pad_token<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>tokenizer<span style="color:#0550ae">.</span>padding_side <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;right&#39;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic">#############</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Evaluation</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic">#############</span>
-</span></span><span style="display:flex;"><span>    tokenizer<span style="color:#000;font-weight:bold">.</span>padding_side <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;left&#39;</span>
-</span></span><span style="display:flex;"><span>    metrics <span style="color:#000;font-weight:bold">=</span> trainer<span style="color:#000;font-weight:bold">.</span>evaluate()
-</span></span><span style="display:flex;"><span>    metrics[<span style="color:#d14">&#34;eval_samples&#34;</span>] <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">len</span>(processed_test_dataset)
-</span></span><span style="display:flex;"><span>    trainer<span style="color:#000;font-weight:bold">.</span>log_metrics(<span style="color:#d14">&#34;eval&#34;</span>, metrics)
-</span></span><span style="display:flex;"><span>    trainer<span style="color:#000;font-weight:bold">.</span>save_metrics(<span style="color:#d14">&#34;eval&#34;</span>, metrics)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># ############</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># # Save model</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># ############</span>
-</span></span><span style="display:flex;"><span>    os<span style="color:#000;font-weight:bold">.</span>makedirs(args<span style="color:#000;font-weight:bold">.</span>model_dir, exist_ok<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>)
-</span></span><span style="display:flex;"><span>    torch<span style="color:#000;font-weight:bold">.</span>save(model, os<span style="color:#000;font-weight:bold">.</span>path<span style="color:#000;font-weight:bold">.</span>join(args<span style="color:#000;font-weight:bold">.</span>model_dir, <span style="color:#d14">&#34;model.pt&#34;</span>))
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">parse_args</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># setup argparse</span>
-</span></span><span style="display:flex;"><span>    parser <span style="color:#000;font-weight:bold">=</span> argparse<span style="color:#000;font-weight:bold">.</span>ArgumentParser()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># add arguments</span>
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--train-file&#34;</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">str</span>, help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Input data for training&#34;</span>)
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--eval-file&#34;</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">str</span>, help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Input data for eval&#34;</span>)
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--model-dir&#34;</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">str</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;./&#34;</span>, 
-</span></span><span style="display:flex;"><span>    help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;output directory for model&#34;</span>)
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--epochs&#34;</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#099">10</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">int</span>, help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;number of epochs&#34;</span>)
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;--batch-size&#34;</span>,
-</span></span><span style="display:flex;"><span>        default<span style="color:#000;font-weight:bold">=</span><span style="color:#099">16</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">int</span>,
-</span></span><span style="display:flex;"><span>        help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;mini batch size for each gpu/process&#34;</span>,
-</span></span><span style="display:flex;"><span>    )
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--learning-rate&#34;</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0.001</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">float</span>, 
-</span></span><span style="display:flex;"><span>    help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;learning rate&#34;</span>)
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(<span style="color:#d14">&#34;--momentum&#34;</span>, default<span style="color:#000;font-weight:bold">=</span><span style="color:#099">0.9</span>, <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">float</span>, 
-</span></span><span style="display:flex;"><span>    help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;momentum&#34;</span>)
-</span></span><span style="display:flex;"><span>    parser<span style="color:#000;font-weight:bold">.</span>add_argument(
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;--print-freq&#34;</span>,
-</span></span><span style="display:flex;"><span>        default<span style="color:#000;font-weight:bold">=</span><span style="color:#099">200</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">int</span>,
-</span></span><span style="display:flex;"><span>        help<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;frequency of printing training statistics&#34;</span>,
-</span></span><span style="display:flex;"><span>    )
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># parse args</span>
-</span></span><span style="display:flex;"><span>    args <span style="color:#000;font-weight:bold">=</span> parser<span style="color:#000;font-weight:bold">.</span>parse_args()
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># return args</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">return</span> args
+</span></span><span style="display:flex;"><span><span style="color:#57606a">##################</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Data Processing</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">##################</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">apply_chat_template</span><span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    example<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    tokenizer<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    messages <span style="color:#0550ae">=</span> example<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;messages&#34;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Add an empty system message if there is none</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> messages<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">][</span><span style="color:#0a3069">&#34;role&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">!=</span> <span style="color:#0a3069">&#34;system&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        messages<span style="color:#0550ae">.</span>insert<span style="color:#1f2328">(</span><span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;system&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;&#34;</span><span style="color:#1f2328">})</span>
+</span></span><span style="display:flex;"><span>    example<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;text&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> tokenizer<span style="color:#0550ae">.</span>apply_chat_template<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        messages<span style="color:#1f2328">,</span> tokenize<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">,</span> add_generation_prompt<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> example
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># run script</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">if</span> __name__ <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;__main__&#34;</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># parse args</span>
-</span></span><span style="display:flex;"><span>    args <span style="color:#000;font-weight:bold">=</span> parse_args()
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># call main function</span>
-</span></span><span style="display:flex;"><span>    main(args)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">main</span><span style="color:#1f2328">(</span>args<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    train_dataset <span style="color:#0550ae">=</span> load_dataset<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;json&#39;</span><span style="color:#1f2328">,</span> data_files<span style="color:#0550ae">=</span>args<span style="color:#0550ae">.</span>train_file<span style="color:#1f2328">,</span> split<span style="color:#0550ae">=</span><span style="color:#0a3069">&#39;train&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    test_dataset <span style="color:#0550ae">=</span> load_dataset<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;json&#39;</span><span style="color:#1f2328">,</span> data_files<span style="color:#0550ae">=</span>args<span style="color:#0550ae">.</span>eval_file<span style="color:#1f2328">,</span> split<span style="color:#0550ae">=</span><span style="color:#0a3069">&#39;train&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    column_names <span style="color:#0550ae">=</span> <span style="color:#6639ba">list</span><span style="color:#1f2328">(</span>train_dataset<span style="color:#0550ae">.</span>features<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    processed_train_dataset <span style="color:#0550ae">=</span> train_dataset<span style="color:#0550ae">.</span>map<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        apply_chat_template<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        fn_kwargs<span style="color:#0550ae">=</span><span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;tokenizer&#34;</span><span style="color:#1f2328">:</span> tokenizer<span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        num_proc<span style="color:#0550ae">=</span><span style="color:#0550ae">10</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        remove_columns<span style="color:#0550ae">=</span>column_names<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        desc<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Applying chat template to train_sft&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    processed_test_dataset <span style="color:#0550ae">=</span> test_dataset<span style="color:#0550ae">.</span>map<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        apply_chat_template<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        fn_kwargs<span style="color:#0550ae">=</span><span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;tokenizer&#34;</span><span style="color:#1f2328">:</span> tokenizer<span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        num_proc<span style="color:#0550ae">=</span><span style="color:#0550ae">10</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        remove_columns<span style="color:#0550ae">=</span>column_names<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        desc<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Applying chat template to test_sft&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">###########</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Training</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">###########</span>
+</span></span><span style="display:flex;"><span>    trainer <span style="color:#0550ae">=</span> SFTTrainer<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        model<span style="color:#0550ae">=</span>model<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        args<span style="color:#0550ae">=</span>train_conf<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        peft_config<span style="color:#0550ae">=</span>peft_conf<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        train_dataset<span style="color:#0550ae">=</span>processed_train_dataset<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        eval_dataset<span style="color:#0550ae">=</span>processed_test_dataset<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        max_seq_length<span style="color:#0550ae">=</span><span style="color:#0550ae">2048</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        dataset_text_field<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;text&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        tokenizer<span style="color:#0550ae">=</span>tokenizer<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        packing<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    train_result <span style="color:#0550ae">=</span> trainer<span style="color:#0550ae">.</span>train<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    metrics <span style="color:#0550ae">=</span> train_result<span style="color:#0550ae">.</span>metrics
+</span></span><span style="display:flex;"><span>    trainer<span style="color:#0550ae">.</span>log_metrics<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;train&#34;</span><span style="color:#1f2328">,</span> metrics<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    trainer<span style="color:#0550ae">.</span>save_metrics<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;train&#34;</span><span style="color:#1f2328">,</span> metrics<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    trainer<span style="color:#0550ae">.</span>save_state<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">#############</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Evaluation</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">#############</span>
+</span></span><span style="display:flex;"><span>    tokenizer<span style="color:#0550ae">.</span>padding_side <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;left&#39;</span>
+</span></span><span style="display:flex;"><span>    metrics <span style="color:#0550ae">=</span> trainer<span style="color:#0550ae">.</span>evaluate<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    metrics<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;eval_samples&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> <span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>processed_test_dataset<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    trainer<span style="color:#0550ae">.</span>log_metrics<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;eval&#34;</span><span style="color:#1f2328">,</span> metrics<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    trainer<span style="color:#0550ae">.</span>save_metrics<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;eval&#34;</span><span style="color:#1f2328">,</span> metrics<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># ############</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># # Save model</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># ############</span>
+</span></span><span style="display:flex;"><span>    os<span style="color:#0550ae">.</span>makedirs<span style="color:#1f2328">(</span>args<span style="color:#0550ae">.</span>model_dir<span style="color:#1f2328">,</span> exist_ok<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    torch<span style="color:#0550ae">.</span>save<span style="color:#1f2328">(</span>model<span style="color:#1f2328">,</span> os<span style="color:#0550ae">.</span>path<span style="color:#0550ae">.</span>join<span style="color:#1f2328">(</span>args<span style="color:#0550ae">.</span>model_dir<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;model.pt&#34;</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">parse_args</span><span style="color:#1f2328">():</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># setup argparse</span>
+</span></span><span style="display:flex;"><span>    parser <span style="color:#0550ae">=</span> argparse<span style="color:#0550ae">.</span>ArgumentParser<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># add arguments</span>
+</span></span><span style="display:flex;"><span>    parser<span style="color:#0550ae">.</span>add_argument<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;--train-file&#34;</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> help<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Input data for training&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    parser<span style="color:#0550ae">.</span>add_argument<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;--eval-file&#34;</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> help<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Input data for eval&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    parser<span style="color:#0550ae">.</span>add_argument<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;--model-dir&#34;</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> default<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;./&#34;</span><span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>    help<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;output directory for model&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    parser<span style="color:#0550ae">.</span>add_argument<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;--epochs&#34;</span><span style="color:#1f2328">,</span> default<span style="color:#0550ae">=</span><span style="color:#0550ae">10</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> help<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;number of epochs&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    parser<span style="color:#0550ae">.</span>add_argument<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;--batch-size&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        default<span style="color:#0550ae">=</span><span style="color:#0550ae">16</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        help<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;mini batch size for each gpu/process&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    parser<span style="color:#0550ae">.</span>add_argument<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;--learning-rate&#34;</span><span style="color:#1f2328">,</span> default<span style="color:#0550ae">=</span><span style="color:#0550ae">0.001</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#6639ba">float</span><span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>    help<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;learning rate&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    parser<span style="color:#0550ae">.</span>add_argument<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;--momentum&#34;</span><span style="color:#1f2328">,</span> default<span style="color:#0550ae">=</span><span style="color:#0550ae">0.9</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#6639ba">float</span><span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>    help<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;momentum&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    parser<span style="color:#0550ae">.</span>add_argument<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;--print-freq&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        default<span style="color:#0550ae">=</span><span style="color:#0550ae">200</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        help<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;frequency of printing training statistics&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># parse args</span>
+</span></span><span style="display:flex;"><span>    args <span style="color:#0550ae">=</span> parser<span style="color:#0550ae">.</span>parse_args<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># return args</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> args
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># run script</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> __name__ <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;__main__&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># parse args</span>
+</span></span><span style="display:flex;"><span>    args <span style="color:#0550ae">=</span> parse_args<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># call main function</span>
+</span></span><span style="display:flex;"><span>    main<span style="color:#1f2328">(</span>args<span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>创建一个训练计算的实例。</p>
@@ -752,34 +752,34 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.entities</span> <span style="color:#000;font-weight:bold">import</span> AmlCompute
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># If you have a specific compute size to work with change it here. </span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># By default we use the 1 x A100 compute from the above list</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml.entities</span> <span style="color:#cf222e">import</span> AmlCompute
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># If you have a specific compute size to work with change it here. </span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># By default we use the 1 x A100 compute from the above list</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>compute_cluster_size <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;Standard_NC24ads_A100_v4&#34;</span>  <span style="color:#998;font-style:italic"># 1 x A100 (80GB)</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># If you already have a gpu cluster, mention it here. </span>
-</span></span><span style="display:flex;"><span>Else will create a new one <span style="color:#000;font-weight:bold">with</span> the name <span style="color:#d14">&#39;gpu-cluster-big&#39;</span>
-</span></span><span style="display:flex;"><span>compute_cluster <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;gpu-a100&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">try</span>:
-</span></span><span style="display:flex;"><span>    compute <span style="color:#000;font-weight:bold">=</span> ml_client<span style="color:#000;font-weight:bold">.</span>compute<span style="color:#000;font-weight:bold">.</span>get(compute_cluster)
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;The compute cluster already exists! Reusing it for the current run&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">Exception</span> <span style="color:#000;font-weight:bold">as</span> ex:
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">f</span><span style="color:#d14">&#34;Looks like the compute cluster doesn&#39;t exist. Creating a new one </span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">with</span> compute size {compute_cluster_size}<span style="color:#a61717;background-color:#e3d2d2">!</span><span style="color:#d14">&#34;</span>
-</span></span><span style="display:flex;"><span>    )
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">try</span>:
-</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Attempt #1 - Trying to create a dedicated compute&#34;</span>)
-</span></span><span style="display:flex;"><span>        compute <span style="color:#000;font-weight:bold">=</span> AmlCompute(
-</span></span><span style="display:flex;"><span>            name<span style="color:#000;font-weight:bold">=</span>compute_cluster,
-</span></span><span style="display:flex;"><span>            size<span style="color:#000;font-weight:bold">=</span>compute_cluster_size,
-</span></span><span style="display:flex;"><span>            tier<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Dedicated&#34;</span>,
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic"># For multi node training set this to an integer value more than 1</span>
-</span></span><span style="display:flex;"><span>            max_instances<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1</span>,
-</span></span><span style="display:flex;"><span>        )
-</span></span><span style="display:flex;"><span>        ml_client<span style="color:#000;font-weight:bold">.</span>compute<span style="color:#000;font-weight:bold">.</span>begin_create_or_update(compute)<span style="color:#000;font-weight:bold">.</span>wait()
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">Exception</span> <span style="color:#000;font-weight:bold">as</span> e:
-</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;Error&#34;</span>)
+</span></span><span style="display:flex;"><span>compute_cluster_size <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;Standard_NC24ads_A100_v4&#34;</span>  <span style="color:#57606a"># 1 x A100 (80GB)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># If you already have a gpu cluster, mention it here. </span>
+</span></span><span style="display:flex;"><span>Else will create a new one <span style="color:#cf222e">with</span> the name <span style="color:#0a3069">&#39;gpu-cluster-big&#39;</span>
+</span></span><span style="display:flex;"><span>compute_cluster <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;gpu-a100&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    compute <span style="color:#0550ae">=</span> ml_client<span style="color:#0550ae">.</span>compute<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>compute_cluster<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;The compute cluster already exists! Reusing it for the current run&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> ex<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Looks like the compute cluster doesn&#39;t exist. Creating a new one </span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">with</span> compute size <span style="color:#1f2328">{</span>compute_cluster_size<span style="color:#1f2328">}</span><span style="color:#f6f8fa;background-color:#82071e">!</span><span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Attempt #1 - Trying to create a dedicated compute&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        compute <span style="color:#0550ae">=</span> AmlCompute<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>            name<span style="color:#0550ae">=</span>compute_cluster<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            size<span style="color:#0550ae">=</span>compute_cluster_size<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            tier<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Dedicated&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># For multi node training set this to an integer value more than 1</span>
+</span></span><span style="display:flex;"><span>            max_instances<span style="color:#0550ae">=</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        ml_client<span style="color:#0550ae">.</span>compute<span style="color:#0550ae">.</span>begin_create_or_update<span style="color:#1f2328">(</span>compute<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>wait<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> e<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Error&#34;</span><span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>以下是一些有用的建议:</p>
@@ -831,42 +831,42 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml</span> <span style="color:#000;font-weight:bold">import</span> command
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml</span> <span style="color:#000;font-weight:bold">import</span> Input
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.entities</span> <span style="color:#000;font-weight:bold">import</span> ResourceConfiguration
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml</span> <span style="color:#cf222e">import</span> command
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml</span> <span style="color:#cf222e">import</span> Input
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml.entities</span> <span style="color:#cf222e">import</span> ResourceConfiguration
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>job <span style="color:#000;font-weight:bold">=</span> command(
-</span></span><span style="display:flex;"><span>    inputs<span style="color:#000;font-weight:bold">=</span><span style="color:#0086b3">dict</span>(
-</span></span><span style="display:flex;"><span>        train_file<span style="color:#000;font-weight:bold">=</span>Input(
-</span></span><span style="display:flex;"><span>            <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;uri_file&#34;</span>,
-</span></span><span style="display:flex;"><span>            path<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;data/train.jsonl&#34;</span>,
-</span></span><span style="display:flex;"><span>        ),
-</span></span><span style="display:flex;"><span>        eval_file<span style="color:#000;font-weight:bold">=</span>Input(
-</span></span><span style="display:flex;"><span>            <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;uri_file&#34;</span>,
-</span></span><span style="display:flex;"><span>            path<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;data/eval.jsonl&#34;</span>,
-</span></span><span style="display:flex;"><span>        ),        
-</span></span><span style="display:flex;"><span>        epoch<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1</span>,
-</span></span><span style="display:flex;"><span>        batchsize<span style="color:#000;font-weight:bold">=</span><span style="color:#099">64</span>,
-</span></span><span style="display:flex;"><span>        lr <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.01</span>,
-</span></span><span style="display:flex;"><span>        momentum <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0.9</span>,
-</span></span><span style="display:flex;"><span>        prtfreq <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">200</span>,
-</span></span><span style="display:flex;"><span>        output <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;./outputs&#34;</span>
-</span></span><span style="display:flex;"><span>    ),
-</span></span><span style="display:flex;"><span>    code<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;./src&#34;</span>,  <span style="color:#998;font-style:italic"># local path where the code is stored</span>
-</span></span><span style="display:flex;"><span>    compute <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;gpu-a100&#39;</span>,
-</span></span><span style="display:flex;"><span>    command<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;&#34;&#34;accelerate launch train.py --train-file ${{inputs.train_file}} 
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">    --eval-file ${{inputs.eval_file}} --epochs ${{inputs.epoch}} 
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">    --batch-size ${{inputs.batchsize}} --learning-rate ${{inputs.lr}} 
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">    --momentum ${{inputs.momentum}} --print-freq ${{inputs.prtfreq}} 
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">    --model-dir ${{inputs.output}}&#34;&#34;&#34;</span>,
-</span></span><span style="display:flex;"><span>    environment<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;azureml://registries/azureml/environments/acft-hf-nlp-gpu/versions/52&#34;</span>,
-</span></span><span style="display:flex;"><span>    distribution<span style="color:#000;font-weight:bold">=</span>{
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;type&#34;</span>: <span style="color:#d14">&#34;PyTorch&#34;</span>,
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;process_count_per_instance&#34;</span>: <span style="color:#099">1</span>,
-</span></span><span style="display:flex;"><span>    },
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>returned_job  <span style="color:#000;font-weight:bold">=</span> workspace_ml_client<span style="color:#000;font-weight:bold">.</span>jobs<span style="color:#000;font-weight:bold">.</span>create_or_update(job)
-</span></span><span style="display:flex;"><span>workspace_ml_client<span style="color:#000;font-weight:bold">.</span>jobs<span style="color:#000;font-weight:bold">.</span>stream(returned_job<span style="color:#000;font-weight:bold">.</span>name)
+</span></span><span style="display:flex;"><span>job <span style="color:#0550ae">=</span> command<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    inputs<span style="color:#0550ae">=</span><span style="color:#6639ba">dict</span><span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        train_file<span style="color:#0550ae">=</span>Input<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;uri_file&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            path<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;data/train.jsonl&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>        eval_file<span style="color:#0550ae">=</span>Input<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;uri_file&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            path<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;data/eval.jsonl&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">),</span>        
+</span></span><span style="display:flex;"><span>        epoch<span style="color:#0550ae">=</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        batchsize<span style="color:#0550ae">=</span><span style="color:#0550ae">64</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        lr <span style="color:#0550ae">=</span> <span style="color:#0550ae">0.01</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        momentum <span style="color:#0550ae">=</span> <span style="color:#0550ae">0.9</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        prtfreq <span style="color:#0550ae">=</span> <span style="color:#0550ae">200</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        output <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;./outputs&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>    code<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;./src&#34;</span><span style="color:#1f2328">,</span>  <span style="color:#57606a"># local path where the code is stored</span>
+</span></span><span style="display:flex;"><span>    compute <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;gpu-a100&#39;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    command<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;&#34;&#34;accelerate launch train.py --train-file ${{inputs.train_file}} 
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    --eval-file ${{inputs.eval_file}} --epochs ${{inputs.epoch}} 
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    --batch-size ${{inputs.batchsize}} --learning-rate ${{inputs.lr}} 
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    --momentum ${{inputs.momentum}} --print-freq ${{inputs.prtfreq}} 
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    --model-dir ${{inputs.output}}&#34;&#34;&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    environment<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;azureml://registries/azureml/environments/acft-hf-nlp-gpu/versions/52&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    distribution<span style="color:#0550ae">=</span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;PyTorch&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;process_count_per_instance&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>returned_job  <span style="color:#0550ae">=</span> workspace_ml_client<span style="color:#0550ae">.</span>jobs<span style="color:#0550ae">.</span>create_or_update<span style="color:#1f2328">(</span>job<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>workspace_ml_client<span style="color:#0550ae">.</span>jobs<span style="color:#0550ae">.</span>stream<span style="color:#1f2328">(</span>returned_job<span style="color:#0550ae">.</span>name<span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>输出管道的结果。</p>
@@ -877,9 +877,9 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># check if the `trained_model` output is available</span>
-</span></span><span style="display:flex;"><span>job_name <span style="color:#000;font-weight:bold">=</span> returned_job<span style="color:#000;font-weight:bold">.</span>name
-</span></span><span style="display:flex;"><span><span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;pipeline job outputs: &#34;</span>, workspace_ml_client<span style="color:#000;font-weight:bold">.</span>jobs<span style="color:#000;font-weight:bold">.</span>get(job_name)<span style="color:#000;font-weight:bold">.</span>outputs)
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># check if the `trained_model` output is available</span>
+</span></span><span style="display:flex;"><span>job_name <span style="color:#0550ae">=</span> returned_job<span style="color:#0550ae">.</span>name
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;pipeline job outputs: &#34;</span><span style="color:#1f2328">,</span> workspace_ml_client<span style="color:#0550ae">.</span>jobs<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>job_name<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>outputs<span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="收尾">收尾</h2>
@@ -898,16 +898,16 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.entities</span> <span style="color:#000;font-weight:bold">import</span> Model
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.constants</span> <span style="color:#000;font-weight:bold">import</span> AssetTypes
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml.entities</span> <span style="color:#cf222e">import</span> Model
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml.constants</span> <span style="color:#cf222e">import</span> AssetTypes
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>run_model <span style="color:#000;font-weight:bold">=</span> Model(
-</span></span><span style="display:flex;"><span>    path<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">f</span><span style="color:#d14">&#34;azureml://jobs/</span><span style="color:#d14">{</span>job_name<span style="color:#d14">}</span><span style="color:#d14">/outputs/artifacts/paths/outputs/mlflow_model_folder&#34;</span>,
-</span></span><span style="display:flex;"><span>    name<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;phi-3-finetuned&#34;</span>,
-</span></span><span style="display:flex;"><span>    description<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;Model created from run.&#34;</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span>AssetTypes<span style="color:#000;font-weight:bold">.</span>MLFLOW_MODEL,
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>model <span style="color:#000;font-weight:bold">=</span> workspace_ml_client<span style="color:#000;font-weight:bold">.</span>models<span style="color:#000;font-weight:bold">.</span>create_or_update(run_model)
+</span></span><span style="display:flex;"><span>run_model <span style="color:#0550ae">=</span> Model<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    path<span style="color:#0550ae">=</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;azureml://jobs/</span><span style="color:#0a3069">{</span>job_name<span style="color:#0a3069">}</span><span style="color:#0a3069">/outputs/artifacts/paths/outputs/mlflow_model_folder&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;phi-3-finetuned&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    description<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Model created from run.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span>AssetTypes<span style="color:#0550ae">.</span>MLFLOW_MODEL<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>model <span style="color:#0550ae">=</span> workspace_ml_client<span style="color:#0550ae">.</span>models<span style="color:#0550ae">.</span>create_or_update<span style="color:#1f2328">(</span>run_model<span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>此时创建一个端点。</p>
@@ -948,39 +948,39 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.entities</span> <span style="color:#000;font-weight:bold">import</span> (
-</span></span><span style="display:flex;"><span>    ManagedOnlineEndpoint,
-</span></span><span style="display:flex;"><span>    IdentityConfiguration,
-</span></span><span style="display:flex;"><span>    ManagedIdentityConfiguration,
-</span></span><span style="display:flex;"><span>)
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml.entities</span> <span style="color:#cf222e">import</span> <span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    ManagedOnlineEndpoint<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    IdentityConfiguration<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    ManagedIdentityConfiguration<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Check if the endpoint already exists in the workspace</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">try</span>:
-</span></span><span style="display:flex;"><span>    endpoint <span style="color:#000;font-weight:bold">=</span> workspace_ml_client<span style="color:#000;font-weight:bold">.</span>online_endpoints<span style="color:#000;font-weight:bold">.</span>get(endpoint_name)
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;---Endpoint already exists---&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">except</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Create an online endpoint if it doesn&#39;t exist</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Check if the endpoint already exists in the workspace</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    endpoint <span style="color:#0550ae">=</span> workspace_ml_client<span style="color:#0550ae">.</span>online_endpoints<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>endpoint_name<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;---Endpoint already exists---&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">except</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Create an online endpoint if it doesn&#39;t exist</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># Define the endpoint</span>
-</span></span><span style="display:flex;"><span>    endpoint <span style="color:#000;font-weight:bold">=</span> ManagedOnlineEndpoint(
-</span></span><span style="display:flex;"><span>        name<span style="color:#000;font-weight:bold">=</span>endpoint_name,
-</span></span><span style="display:flex;"><span>        description<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">f</span><span style="color:#d14">&#34;Test endpoint for </span><span style="color:#d14">{</span>model<span style="color:#000;font-weight:bold">.</span>name<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>,
-</span></span><span style="display:flex;"><span>        identity<span style="color:#000;font-weight:bold">=</span>IdentityConfiguration(
-</span></span><span style="display:flex;"><span>            <span style="color:#0086b3">type</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;user_assigned&#34;</span>,
-</span></span><span style="display:flex;"><span>            user_assigned_identities<span style="color:#000;font-weight:bold">=</span>[ManagedIdentityConfiguration(resource_id<span style="color:#000;font-weight:bold">=</span>uai_id)],
-</span></span><span style="display:flex;"><span>        )
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">if</span> uai_id <span style="color:#000;font-weight:bold">!=</span> <span style="color:#d14">&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">else</span> <span style="color:#000;font-weight:bold">None</span>,
-</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Define the endpoint</span>
+</span></span><span style="display:flex;"><span>    endpoint <span style="color:#0550ae">=</span> ManagedOnlineEndpoint<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        name<span style="color:#0550ae">=</span>endpoint_name<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        description<span style="color:#0550ae">=</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Test endpoint for </span><span style="color:#0a3069">{</span>model<span style="color:#0550ae">.</span>name<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        identity<span style="color:#0550ae">=</span>IdentityConfiguration<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6639ba">type</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;user_assigned&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            user_assigned_identities<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>ManagedIdentityConfiguration<span style="color:#1f2328">(</span>resource_id<span style="color:#0550ae">=</span>uai_id<span style="color:#1f2328">)],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> uai_id <span style="color:#0550ae">!=</span> <span style="color:#0a3069">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span> <span style="color:#cf222e">None</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Trigger the endpoint creation</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">try</span>:
-</span></span><span style="display:flex;"><span>    workspace_ml_client<span style="color:#000;font-weight:bold">.</span>begin_create_or_update(endpoint)<span style="color:#000;font-weight:bold">.</span>wait()
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;</span><span style="color:#d14">\n</span><span style="color:#d14">---Endpoint created successfully---</span><span style="color:#d14">\n</span><span style="color:#d14">&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">Exception</span> <span style="color:#000;font-weight:bold">as</span> err:
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">raise</span> <span style="color:#900;font-weight:bold">RuntimeError</span>(
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">f</span><span style="color:#d14">&#34;Endpoint creation failed. Detailed Response:</span><span style="color:#d14">\n</span><span style="color:#d14">{</span>err<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>
-</span></span><span style="display:flex;"><span>    ) <span style="color:#000;font-weight:bold">from</span> <span style="color:#555">err</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Trigger the endpoint creation</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    workspace_ml_client<span style="color:#0550ae">.</span>begin_create_or_update<span style="color:#1f2328">(</span>endpoint<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>wait<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\n</span><span style="color:#0a3069">---Endpoint created successfully---</span><span style="color:#0a3069">\n</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> err<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">raise</span> RuntimeError<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Endpoint creation failed. Detailed Response:</span><span style="color:#0a3069">\n</span><span style="color:#0a3069">{</span>err<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span> <span style="color:#cf222e">from</span> <span style="color:#24292e">err</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>一旦创建了端点就可以继续创建部署了。</p>
@@ -1000,18 +1000,18 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Initialize deployment parameters</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># Initialize deployment parameters</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>deployment_name <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;phi3-deploy&#34;</span>
-</span></span><span style="display:flex;"><span>sku_name <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;Standard_NCs_v3&#34;</span>
+</span></span><span style="display:flex;"><span>deployment_name <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;phi3-deploy&#34;</span>
+</span></span><span style="display:flex;"><span>sku_name <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;Standard_NCs_v3&#34;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>REQUEST_TIMEOUT_MS <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">90000</span>
+</span></span><span style="display:flex;"><span>REQUEST_TIMEOUT_MS <span style="color:#0550ae">=</span> <span style="color:#0550ae">90000</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>deployment_env_vars <span style="color:#000;font-weight:bold">=</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;SUBSCRIPTION_ID&#34;</span>: subscription_id,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;RESOURCE_GROUP_NAME&#34;</span>: resource_group,
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;UAI_CLIENT_ID&#34;</span>: uai_client_id,
-</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>deployment_env_vars <span style="color:#0550ae">=</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;SUBSCRIPTION_ID&#34;</span><span style="color:#1f2328">:</span> subscription_id<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;RESOURCE_GROUP_NAME&#34;</span><span style="color:#1f2328">:</span> resource_group<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;UAI_CLIENT_ID&#34;</span><span style="color:#1f2328">:</span> uai_client_id<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>对于推理，要使用不同的基础图像。</p>
@@ -1028,15 +1028,15 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.entities</span> <span style="color:#000;font-weight:bold">import</span> Model, Environment
-</span></span><span style="display:flex;"><span>env <span style="color:#000;font-weight:bold">=</span> Environment(
-</span></span><span style="display:flex;"><span>    image<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#39;mcr.microsoft.com/azureml/curated/foundation-model-inference:latest&#39;</span>,
-</span></span><span style="display:flex;"><span>    inference_config<span style="color:#000;font-weight:bold">=</span>{
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;liveness_route&#34;</span>: {<span style="color:#d14">&#34;port&#34;</span>: <span style="color:#099">5001</span>, <span style="color:#d14">&#34;path&#34;</span>: <span style="color:#d14">&#34;/&#34;</span>},
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;readiness_route&#34;</span>: {<span style="color:#d14">&#34;port&#34;</span>: <span style="color:#099">5001</span>, <span style="color:#d14">&#34;path&#34;</span>: <span style="color:#d14">&#34;/&#34;</span>},
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;scoring_route&#34;</span>: {<span style="color:#d14">&#34;port&#34;</span>: <span style="color:#099">5001</span>, <span style="color:#d14">&#34;path&#34;</span>: <span style="color:#d14">&#34;/score&#34;</span>},
-</span></span><span style="display:flex;"><span>    },
-</span></span><span style="display:flex;"><span>)
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml.entities</span> <span style="color:#cf222e">import</span> Model<span style="color:#1f2328">,</span> Environment
+</span></span><span style="display:flex;"><span>env <span style="color:#0550ae">=</span> Environment<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    image<span style="color:#0550ae">=</span><span style="color:#0a3069">&#39;mcr.microsoft.com/azureml/curated/foundation-model-inference:latest&#39;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    inference_config<span style="color:#0550ae">=</span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;liveness_route&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;port&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">5001</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;path&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;/&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;readiness_route&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;port&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">5001</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;path&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;/&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;scoring_route&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;port&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">5001</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;path&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;/score&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>现在尝试部署这个模型。</p>
@@ -1084,46 +1084,46 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">azure.ai.ml.entities</span> <span style="color:#000;font-weight:bold">import</span> (
-</span></span><span style="display:flex;"><span>    OnlineRequestSettings,
-</span></span><span style="display:flex;"><span>    CodeConfiguration,
-</span></span><span style="display:flex;"><span>    ManagedOnlineDeployment,
-</span></span><span style="display:flex;"><span>    ProbeSettings,
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.ml.entities</span> <span style="color:#cf222e">import</span> <span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    OnlineRequestSettings<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    CodeConfiguration<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    ManagedOnlineDeployment<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    ProbeSettings<span style="color:#1f2328">,</span>
 </span></span><span style="display:flex;"><span>    Environment
-</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>deployment <span style="color:#000;font-weight:bold">=</span> ManagedOnlineDeployment(
-</span></span><span style="display:flex;"><span>    name<span style="color:#000;font-weight:bold">=</span>deployment_name,
-</span></span><span style="display:flex;"><span>    endpoint_name<span style="color:#000;font-weight:bold">=</span>endpoint_name,
-</span></span><span style="display:flex;"><span>    model<span style="color:#000;font-weight:bold">=</span>model<span style="color:#000;font-weight:bold">.</span>id,
-</span></span><span style="display:flex;"><span>    instance_type<span style="color:#000;font-weight:bold">=</span>sku_name,
-</span></span><span style="display:flex;"><span>    instance_count<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1</span>,
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic">#code_configuration=code_configuration,</span>
-</span></span><span style="display:flex;"><span>    environment <span style="color:#000;font-weight:bold">=</span> env,
-</span></span><span style="display:flex;"><span>    environment_variables<span style="color:#000;font-weight:bold">=</span>deployment_env_vars,
-</span></span><span style="display:flex;"><span>    request_settings<span style="color:#000;font-weight:bold">=</span>OnlineRequestSettings(request_timeout_ms<span style="color:#000;font-weight:bold">=</span>REQUEST_TIMEOUT_MS),
-</span></span><span style="display:flex;"><span>    liveness_probe<span style="color:#000;font-weight:bold">=</span>ProbeSettings(
-</span></span><span style="display:flex;"><span>        failure_threshold<span style="color:#000;font-weight:bold">=</span><span style="color:#099">30</span>,
-</span></span><span style="display:flex;"><span>        success_threshold<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1</span>,
-</span></span><span style="display:flex;"><span>        period<span style="color:#000;font-weight:bold">=</span><span style="color:#099">100</span>,
-</span></span><span style="display:flex;"><span>        initial_delay<span style="color:#000;font-weight:bold">=</span><span style="color:#099">500</span>,
-</span></span><span style="display:flex;"><span>    ),
-</span></span><span style="display:flex;"><span>    readiness_probe<span style="color:#000;font-weight:bold">=</span>ProbeSettings(
-</span></span><span style="display:flex;"><span>        failure_threshold<span style="color:#000;font-weight:bold">=</span><span style="color:#099">30</span>,
-</span></span><span style="display:flex;"><span>        success_threshold<span style="color:#000;font-weight:bold">=</span><span style="color:#099">1</span>,
-</span></span><span style="display:flex;"><span>        period<span style="color:#000;font-weight:bold">=</span><span style="color:#099">100</span>,
-</span></span><span style="display:flex;"><span>        initial_delay<span style="color:#000;font-weight:bold">=</span><span style="color:#099">500</span>,
-</span></span><span style="display:flex;"><span>    ),
-</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>deployment <span style="color:#0550ae">=</span> ManagedOnlineDeployment<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    name<span style="color:#0550ae">=</span>deployment_name<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    endpoint_name<span style="color:#0550ae">=</span>endpoint_name<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    model<span style="color:#0550ae">=</span>model<span style="color:#0550ae">.</span>id<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    instance_type<span style="color:#0550ae">=</span>sku_name<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    instance_count<span style="color:#0550ae">=</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a">#code_configuration=code_configuration,</span>
+</span></span><span style="display:flex;"><span>    environment <span style="color:#0550ae">=</span> env<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    environment_variables<span style="color:#0550ae">=</span>deployment_env_vars<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    request_settings<span style="color:#0550ae">=</span>OnlineRequestSettings<span style="color:#1f2328">(</span>request_timeout_ms<span style="color:#0550ae">=</span>REQUEST_TIMEOUT_MS<span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>    liveness_probe<span style="color:#0550ae">=</span>ProbeSettings<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        failure_threshold<span style="color:#0550ae">=</span><span style="color:#0550ae">30</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        success_threshold<span style="color:#0550ae">=</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        period<span style="color:#0550ae">=</span><span style="color:#0550ae">100</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        initial_delay<span style="color:#0550ae">=</span><span style="color:#0550ae">500</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>    readiness_probe<span style="color:#0550ae">=</span>ProbeSettings<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        failure_threshold<span style="color:#0550ae">=</span><span style="color:#0550ae">30</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        success_threshold<span style="color:#0550ae">=</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        period<span style="color:#0550ae">=</span><span style="color:#0550ae">100</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        initial_delay<span style="color:#0550ae">=</span><span style="color:#0550ae">500</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic"># Trigger the deployment creation</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">try</span>:
-</span></span><span style="display:flex;"><span>    workspace_ml_client<span style="color:#000;font-weight:bold">.</span>begin_create_or_update(deployment)<span style="color:#000;font-weight:bold">.</span>wait()
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;</span><span style="color:#d14">\n</span><span style="color:#d14">---Deployment created successfully---</span><span style="color:#d14">\n</span><span style="color:#d14">&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">Exception</span> <span style="color:#000;font-weight:bold">as</span> err:
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">raise</span> <span style="color:#900;font-weight:bold">RuntimeError</span>(
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">f</span><span style="color:#d14">&#34;Deployment creation failed. Detailed Response:</span><span style="color:#d14">\n</span><span style="color:#d14">{</span>err<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>
-</span></span><span style="display:flex;"><span>    ) <span style="color:#000;font-weight:bold">from</span> <span style="color:#555">err</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Trigger the deployment creation</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    workspace_ml_client<span style="color:#0550ae">.</span>begin_create_or_update<span style="color:#1f2328">(</span>deployment<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>wait<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\n</span><span style="color:#0a3069">---Deployment created successfully---</span><span style="color:#0a3069">\n</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> err<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">raise</span> RuntimeError<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Deployment creation failed. Detailed Response:</span><span style="color:#0a3069">\n</span><span style="color:#0a3069">{</span>err<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span> <span style="color:#cf222e">from</span> <span style="color:#24292e">err</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>如果想删除该端点，请查看以下代码。</p>
@@ -1134,9 +1134,9 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>workspace_ml_client<span style="color:#000;font-weight:bold">.</span>online_deployments<span style="color:#000;font-weight:bold">.</span>begin_delete(name <span style="color:#000;font-weight:bold">=</span> deployment_name, 
-</span></span><span style="display:flex;"><span>                                                    endpoint_name <span style="color:#000;font-weight:bold">=</span> endpoint_name)
-</span></span><span style="display:flex;"><span>workspace_ml_client<span style="color:#000;font-weight:bold">.</span>_online_endpoints<span style="color:#000;font-weight:bold">.</span>begin_delete(name <span style="color:#000;font-weight:bold">=</span> endpoint_name)
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>workspace_ml_client<span style="color:#0550ae">.</span>online_deployments<span style="color:#0550ae">.</span>begin_delete<span style="color:#1f2328">(</span>name <span style="color:#0550ae">=</span> deployment_name<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>                                                    endpoint_name <span style="color:#0550ae">=</span> endpoint_name<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>workspace_ml_client<span style="color:#0550ae">.</span>_online_endpoints<span style="color:#0550ae">.</span>begin_delete<span style="color:#1f2328">(</span>name <span style="color:#0550ae">=</span> endpoint_name<span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>您可以对上面的代码片段进行实际操作，但如果您想对更完善的代码进行实际操作，请参阅 <a href="https://github.com/Azure/azure-llm-fine-tuning">GitHub azure-llm-fine-tuning 存储库</a>。</p>
@@ -1163,23 +1163,6 @@
 
 
         
-
-<div class="post-archive">
-    <h2>相关文章</h2>
-    <ul class="listing">
-        
-        <li><a href="/post/2024-05-15-azure-openai-speech/">Azure OpenAI 语音聊天</a></li>
-        
-        <li><a href="/post/2024-04-25-why-is-it-difficult-to-land-large-models/">为什么大模型难落地？</a></li>
-        
-        <li><a href="/post/2024-04-17-keyless-authentication-with-azure-openai/">实现 Azure OpenAI 无密钥身份验证</a></li>
-        
-        <li><a href="/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel/">使用 Semantic Kernel 构建自定义 Copilot</a></li>
-        
-        <li><a href="/post/2024-03-07-lets-start-with-the-bootloader/">从引导程序说起</a></li>
-        
-    </ul>
-</div>
 
 
         <div class="post-meta meta-tags">
@@ -1344,6 +1327,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -1379,10 +1366,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -1392,7 +1375,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -1409,6 +1392,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -1419,6 +1404,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -1428,6 +1415,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

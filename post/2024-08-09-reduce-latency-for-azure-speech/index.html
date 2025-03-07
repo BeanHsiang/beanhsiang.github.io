@@ -159,40 +159,40 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">speech_recognize_continuous_async_from_microphone</span>():
-</span></span><span style="display:flex;"><span>    <span style="color:#d14">&#34;&#34;&#34;异步从麦克风输入进行连续语音识别&#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    speech_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechConfig(subscription<span style="color:#000;font-weight:bold">=</span>os<span style="color:#000;font-weight:bold">.</span>getenv(<span style="color:#d14">&#34;SUBSCRIPTION_KEY&#34;</span>), 
-</span></span><span style="display:flex;"><span>    region<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;centralIndia&#34;</span>)
-</span></span><span style="display:flex;"><span>    speech_recognizer <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechRecognizer(speech_config<span style="color:#000;font-weight:bold">=</span>speech_config)
-</span></span><span style="display:flex;"><span>    done <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">False</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">recognized_cb</span>(evt: speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechRecognitionEventArgs):
-</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#39;RECOGNIZED: </span><span style="color:#d14">{}</span><span style="color:#d14">&#39;</span><span style="color:#000;font-weight:bold">.</span>format(evt<span style="color:#000;font-weight:bold">.</span>result<span style="color:#000;font-weight:bold">.</span>text))
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">speech_recognize_continuous_async_from_microphone</span><span style="color:#1f2328">():</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;&#34;&#34;异步从麦克风输入进行连续语音识别&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    speech_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechConfig<span style="color:#1f2328">(</span>subscription<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>getenv<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;SUBSCRIPTION_KEY&#34;</span><span style="color:#1f2328">),</span> 
+</span></span><span style="display:flex;"><span>    region<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;centralIndia&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    speech_recognizer <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechRecognizer<span style="color:#1f2328">(</span>speech_config<span style="color:#0550ae">=</span>speech_config<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    done <span style="color:#0550ae">=</span> <span style="color:#cf222e">False</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">recognized_cb</span><span style="color:#1f2328">(</span>evt<span style="color:#1f2328">:</span> speechsdk<span style="color:#0550ae">.</span>SpeechRecognitionEventArgs<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;RECOGNIZED: </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#39;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>evt<span style="color:#0550ae">.</span>result<span style="color:#0550ae">.</span>text<span style="color:#1f2328">))</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">stop_cb</span>(evt: speechsdk<span style="color:#000;font-weight:bold">.</span>SessionEventArgs):
-</span></span><span style="display:flex;"><span>        <span style="color:#d14">&#34;&#34;&#34;回调函数，用于停止连续识别&#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#39;CLOSING on </span><span style="color:#d14">{}</span><span style="color:#d14">&#39;</span><span style="color:#000;font-weight:bold">.</span>format(evt))
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">nonlocal</span> done
-</span></span><span style="display:flex;"><span>        done <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">stop_cb</span><span style="color:#1f2328">(</span>evt<span style="color:#1f2328">:</span> speechsdk<span style="color:#0550ae">.</span>SessionEventArgs<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;&#34;&#34;回调函数，用于停止连续识别&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;CLOSING on </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#39;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>evt<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">nonlocal</span> done
+</span></span><span style="display:flex;"><span>        done <span style="color:#0550ae">=</span> <span style="color:#cf222e">True</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 连接语音识别器触发的事件的回调函数</span>
-</span></span><span style="display:flex;"><span>    speech_recognizer<span style="color:#000;font-weight:bold">.</span>recognized<span style="color:#000;font-weight:bold">.</span>connect(recognized_cb)
-</span></span><span style="display:flex;"><span>    speech_recognizer<span style="color:#000;font-weight:bold">.</span>session_stopped<span style="color:#000;font-weight:bold">.</span>connect(stop_cb)
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 连接语音识别器触发的事件的回调函数</span>
+</span></span><span style="display:flex;"><span>    speech_recognizer<span style="color:#0550ae">.</span>recognized<span style="color:#0550ae">.</span>connect<span style="color:#1f2328">(</span>recognized_cb<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    speech_recognizer<span style="color:#0550ae">.</span>session_stopped<span style="color:#0550ae">.</span>connect<span style="color:#1f2328">(</span>stop_cb<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 在识别开始时，可以在此线程上执行其他任务...</span>
-</span></span><span style="display:flex;"><span>    result_future <span style="color:#000;font-weight:bold">=</span> speech_recognizer<span style="color:#000;font-weight:bold">.</span>start_continuous_recognition_async()
-</span></span><span style="display:flex;"><span>    result_future<span style="color:#000;font-weight:bold">.</span>get()  <span style="color:#998;font-style:italic"># 等待 voidfuture，这样我们就知道引擎初始化已完成。</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#39;Continuous Recognition is now running, say something.&#39;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">while</span> <span style="color:#000;font-weight:bold">not</span> done:
-</span></span><span style="display:flex;"><span>        <span style="color:#0086b3">print</span>(<span style="color:#d14">&#39;type &#34;stop&#34; then enter when done&#39;</span>)
-</span></span><span style="display:flex;"><span>        stop <span style="color:#000;font-weight:bold">=</span> <span style="color:#0086b3">input</span>()
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">if</span> (stop<span style="color:#000;font-weight:bold">.</span>lower() <span style="color:#000;font-weight:bold">==</span> <span style="color:#d14">&#34;stop&#34;</span>):
-</span></span><span style="display:flex;"><span>            <span style="color:#0086b3">print</span>(<span style="color:#d14">&#39;Stopping async recognition.&#39;</span>)
-</span></span><span style="display:flex;"><span>            speech_recognizer<span style="color:#000;font-weight:bold">.</span>stop_continuous_recognition_async()
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">break</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">&#34;recognition stopped, main thread can exit now.&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 在识别开始时，可以在此线程上执行其他任务...</span>
+</span></span><span style="display:flex;"><span>    result_future <span style="color:#0550ae">=</span> speech_recognizer<span style="color:#0550ae">.</span>start_continuous_recognition_async<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    result_future<span style="color:#0550ae">.</span>get<span style="color:#1f2328">()</span>  <span style="color:#57606a"># 等待 voidfuture，这样我们就知道引擎初始化已完成。</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;Continuous Recognition is now running, say something.&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">while</span> <span style="color:#0550ae">not</span> done<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;type &#34;stop&#34; then enter when done&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        stop <span style="color:#0550ae">=</span> <span style="color:#6639ba">input</span><span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>stop<span style="color:#0550ae">.</span>lower<span style="color:#1f2328">()</span> <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;stop&#34;</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;Stopping async recognition.&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            speech_recognizer<span style="color:#0550ae">.</span>stop_continuous_recognition_async<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">break</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;recognition stopped, main thread can exit now.&#34;</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>speech_recognize_continuous_async_from_microphone()
+</span></span><span style="display:flex;"><span>speech_recognize_continuous_async_from_microphone<span style="color:#1f2328">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Azure Speech SDK 还提供了将音频流输入识别器的方式，作为对麦克风或文件输入的替代。您可以根据需求选择 PushAudioInputStream 和 PullAudioInputStream。</p>
@@ -214,17 +214,17 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>speech_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechConfig(subscription<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;YourSubscriptionKey&#34;</span>, 
-</span></span><span style="display:flex;"><span>region<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;YourServiceRegion&#34;</span>) 
-</span></span><span style="display:flex;"><span>speech_config<span style="color:#000;font-weight:bold">.</span>speech_recognition_language <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;zh-CN&#34;</span> <span style="color:#998;font-style:italic"># 设置默认语言</span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">## 或者 </span>
-</span></span><span style="display:flex;"><span>speech_config<span style="color:#000;font-weight:bold">.</span>set_property(property_id<span style="color:#000;font-weight:bold">=</span>speechsdk<span style="color:#000;font-weight:bold">.</span>PropertyId
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">.</span>SpeechServiceConnection_LanguageIdMode, value <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;AtStart&#34;</span>)
-</span></span><span style="display:flex;"><span>auto_detect_source_language_config <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>languageconfig
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">.</span>AutoDetectSourceLanguageConfig(languages<span style="color:#000;font-weight:bold">=</span>[<span style="color:#d14">&#34;zh-CN&#34;</span>, <span style="color:#d14">&#34;en-US&#34;</span>])
-</span></span><span style="display:flex;"><span>speech_recognizer <span style="color:#000;font-weight:bold">=</span> speechsdk<span style="color:#000;font-weight:bold">.</span>SpeechRecognizer(speech_config<span style="color:#000;font-weight:bold">=</span>speech_config, 
-</span></span><span style="display:flex;"><span>audio_config<span style="color:#000;font-weight:bold">=</span>audio_config,
-</span></span><span style="display:flex;"><span>auto_detect_source_language_config<span style="color:#000;font-weight:bold">=</span>auto_detect_source_language_config)
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>speech_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechConfig<span style="color:#1f2328">(</span>subscription<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;YourSubscriptionKey&#34;</span><span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>region<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;YourServiceRegion&#34;</span><span style="color:#1f2328">)</span> 
+</span></span><span style="display:flex;"><span>speech_config<span style="color:#0550ae">.</span>speech_recognition_language <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;zh-CN&#34;</span> <span style="color:#57606a"># 设置默认语言</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a">## 或者 </span>
+</span></span><span style="display:flex;"><span>speech_config<span style="color:#0550ae">.</span>set_property<span style="color:#1f2328">(</span>property_id<span style="color:#0550ae">=</span>speechsdk<span style="color:#0550ae">.</span>PropertyId
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">.</span>SpeechServiceConnection_LanguageIdMode<span style="color:#1f2328">,</span> value <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;AtStart&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>auto_detect_source_language_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>languageconfig
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">.</span>AutoDetectSourceLanguageConfig<span style="color:#1f2328">(</span>languages<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;zh-CN&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;en-US&#34;</span><span style="color:#1f2328">])</span>
+</span></span><span style="display:flex;"><span>speech_recognizer <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechRecognizer<span style="color:#1f2328">(</span>speech_config<span style="color:#0550ae">=</span>speech_config<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>audio_config<span style="color:#0550ae">=</span>audio_config<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>auto_detect_source_language_config<span style="color:#0550ae">=</span>auto_detect_source_language_config<span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><strong>2.3 使用异步方法</strong><br>
@@ -236,9 +236,9 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>speech_recognizer<span style="color:#000;font-weight:bold">.</span>start_continuous_recognition_async(); <span style="color:#998;font-style:italic"># 执行其他任务</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>speech_recognizer<span style="color:#0550ae">.</span>start_continuous_recognition_async<span style="color:#1f2328">();</span> <span style="color:#57606a"># 执行其他任务</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>speech_recognizer<span style="color:#000;font-weight:bold">.</span>stop_continuous_recognition_async()
+</span></span><span style="display:flex;"><span>speech_recognizer<span style="color:#0550ae">.</span>stop_continuous_recognition_async<span style="color:#1f2328">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><strong>2.4 使用快速转录</strong><br>
@@ -265,20 +265,20 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">pydub</span> <span style="color:#000;font-weight:bold">import</span> AudioSegment  
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">concurrent.futures</span>  
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">pydub</span> <span style="color:#cf222e">import</span> AudioSegment  
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">concurrent.futures</span>  
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">transcribe_chunk</span>(chunk):  
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 每个片段的转录逻辑  </span>
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">pass</span>  
-</span></span><span style="display:flex;"><span>audio <span style="color:#000;font-weight:bold">=</span> AudioSegment<span style="color:#000;font-weight:bold">.</span>from_file(<span style="color:#d14">&#34;large_audio_file.wav&#34;</span>)  
-</span></span><span style="display:flex;"><span>chunk_length_ms <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">10000</span>  <span style="color:#998;font-style:italic"># 10秒  </span>
-</span></span><span style="display:flex;"><span>chunks <span style="color:#000;font-weight:bold">=</span> [audio[i:i <span style="color:#000;font-weight:bold">+</span> chunk_length_ms] 
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">for</span> i <span style="color:#000;font-weight:bold">in</span> <span style="color:#0086b3">range</span>(<span style="color:#099">0</span>, <span style="color:#0086b3">len</span>(audio), chunk_length_ms)]  
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">transcribe_chunk</span><span style="color:#1f2328">(</span>chunk<span style="color:#1f2328">):</span>  
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 每个片段的转录逻辑  </span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">pass</span>  
+</span></span><span style="display:flex;"><span>audio <span style="color:#0550ae">=</span> AudioSegment<span style="color:#0550ae">.</span>from_file<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;large_audio_file.wav&#34;</span><span style="color:#1f2328">)</span>  
+</span></span><span style="display:flex;"><span>chunk_length_ms <span style="color:#0550ae">=</span> <span style="color:#0550ae">10000</span>  <span style="color:#57606a"># 10秒  </span>
+</span></span><span style="display:flex;"><span>chunks <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span>audio<span style="color:#1f2328">[</span>i<span style="color:#1f2328">:</span>i <span style="color:#0550ae">+</span> chunk_length_ms<span style="color:#1f2328">]</span> 
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">for</span> i <span style="color:#0550ae">in</span> <span style="color:#6639ba">range</span><span style="color:#1f2328">(</span><span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>audio<span style="color:#1f2328">),</span> chunk_length_ms<span style="color:#1f2328">)]</span>  
 </span></span><span style="display:flex;"><span>  
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">with</span> concurrent<span style="color:#000;font-weight:bold">.</span>futures<span style="color:#000;font-weight:bold">.</span>ThreadPoolExecutor() <span style="color:#000;font-weight:bold">as</span> executor:  
-</span></span><span style="display:flex;"><span>    futures <span style="color:#000;font-weight:bold">=</span> [executor<span style="color:#000;font-weight:bold">.</span>submit(transcribe_chunk, chunk) <span style="color:#000;font-weight:bold">for</span> chunk <span style="color:#000;font-weight:bold">in</span> chunks]  
-</span></span><span style="display:flex;"><span>    results <span style="color:#000;font-weight:bold">=</span> [f<span style="color:#000;font-weight:bold">.</span>result() <span style="color:#000;font-weight:bold">for</span> f <span style="color:#000;font-weight:bold">in</span> concurrent<span style="color:#000;font-weight:bold">.</span>futures<span style="color:#000;font-weight:bold">.</span>as_completed(futures)]  
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">with</span> concurrent<span style="color:#0550ae">.</span>futures<span style="color:#0550ae">.</span>ThreadPoolExecutor<span style="color:#1f2328">()</span> <span style="color:#cf222e">as</span> executor<span style="color:#1f2328">:</span>  
+</span></span><span style="display:flex;"><span>    futures <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span>executor<span style="color:#0550ae">.</span>submit<span style="color:#1f2328">(</span>transcribe_chunk<span style="color:#1f2328">,</span> chunk<span style="color:#1f2328">)</span> <span style="color:#cf222e">for</span> chunk <span style="color:#0550ae">in</span> chunks<span style="color:#1f2328">]</span>  
+</span></span><span style="display:flex;"><span>    results <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span>f<span style="color:#0550ae">.</span>result<span style="color:#1f2328">()</span> <span style="color:#cf222e">for</span> f <span style="color:#0550ae">in</span> concurrent<span style="color:#0550ae">.</span>futures<span style="color:#0550ae">.</span>as_completed<span style="color:#1f2328">(</span>futures<span style="color:#1f2328">)]</span>  
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><strong>3.2 提高音频速度</strong><br>
@@ -299,18 +299,18 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">def</span> <span style="color:#900;font-weight:bold">increase_audio_speed</span>(filename, 
-</span></span><span style="display:flex;"><span>output_filename <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;modified_audio_file.wav&#34;</span>, speed_change_factor <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">1.7</span>):  
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 加载音频文件  </span>
-</span></span><span style="display:flex;"><span>    audio <span style="color:#000;font-weight:bold">=</span> AudioSegment<span style="color:#000;font-weight:bold">.</span>from_file(filename)  <span style="color:#998;font-style:italic"># 更改为您的文件格式  </span>
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 改变速度：加速（例如，1.5倍）  </span>
-</span></span><span style="display:flex;"><span>    speed_change_factor <span style="color:#000;font-weight:bold">=</span> speed_change_factor  <span style="color:#998;font-style:italic"># 增加，使其变快，减少以放慢  </span>
-</span></span><span style="display:flex;"><span>    new_audio <span style="color:#000;font-weight:bold">=</span> audio<span style="color:#000;font-weight:bold">.</span>_spawn(audio<span style="color:#000;font-weight:bold">.</span>raw_data, 
-</span></span><span style="display:flex;"><span>    overrides<span style="color:#000;font-weight:bold">=</span>{<span style="color:#d14">&#39;frame_rate&#39;</span>: <span style="color:#0086b3">int</span>(audio<span style="color:#000;font-weight:bold">.</span>frame_rate <span style="color:#000;font-weight:bold">*</span> speed_change_factor)})  
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 设置新音频的帧率  </span>
-</span></span><span style="display:flex;"><span>    new_audio <span style="color:#000;font-weight:bold">=</span> new_audio<span style="color:#000;font-weight:bold">.</span>set_frame_rate(audio<span style="color:#000;font-weight:bold">.</span>frame_rate)  
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 导出修改后的音频  </span>
-</span></span><span style="display:flex;"><span>    new_audio<span style="color:#000;font-weight:bold">.</span>export(output_filename, <span style="color:#0086b3">format</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;wav&#34;</span>)  <span style="color:#998;font-style:italic"># 更改为您所需的格式  </span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">increase_audio_speed</span><span style="color:#1f2328">(</span>filename<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>output_filename <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;modified_audio_file.wav&#34;</span><span style="color:#1f2328">,</span> speed_change_factor <span style="color:#0550ae">=</span> <span style="color:#0550ae">1.7</span><span style="color:#1f2328">):</span>  
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 加载音频文件  </span>
+</span></span><span style="display:flex;"><span>    audio <span style="color:#0550ae">=</span> AudioSegment<span style="color:#0550ae">.</span>from_file<span style="color:#1f2328">(</span>filename<span style="color:#1f2328">)</span>  <span style="color:#57606a"># 更改为您的文件格式  </span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 改变速度：加速（例如，1.5倍）  </span>
+</span></span><span style="display:flex;"><span>    speed_change_factor <span style="color:#0550ae">=</span> speed_change_factor  <span style="color:#57606a"># 增加，使其变快，减少以放慢  </span>
+</span></span><span style="display:flex;"><span>    new_audio <span style="color:#0550ae">=</span> audio<span style="color:#0550ae">.</span>_spawn<span style="color:#1f2328">(</span>audio<span style="color:#0550ae">.</span>raw_data<span style="color:#1f2328">,</span> 
+</span></span><span style="display:flex;"><span>    overrides<span style="color:#0550ae">=</span><span style="color:#1f2328">{</span><span style="color:#0a3069">&#39;frame_rate&#39;</span><span style="color:#1f2328">:</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">(</span>audio<span style="color:#0550ae">.</span>frame_rate <span style="color:#0550ae">*</span> speed_change_factor<span style="color:#1f2328">)})</span>  
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 设置新音频的帧率  </span>
+</span></span><span style="display:flex;"><span>    new_audio <span style="color:#0550ae">=</span> new_audio<span style="color:#0550ae">.</span>set_frame_rate<span style="color:#1f2328">(</span>audio<span style="color:#0550ae">.</span>frame_rate<span style="color:#1f2328">)</span>  
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 导出修改后的音频  </span>
+</span></span><span style="display:flex;"><span>    new_audio<span style="color:#0550ae">.</span>export<span style="color:#1f2328">(</span>output_filename<span style="color:#1f2328">,</span> <span style="color:#6639ba">format</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;wav&#34;</span><span style="color:#1f2328">)</span>  <span style="color:#57606a"># 更改为您所需的格式  </span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><strong>3.3 压缩输入音频</strong><br>
@@ -330,17 +330,17 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">from</span> <span style="color:#555">pydub</span> <span style="color:#000;font-weight:bold">import</span> AudioSegment
-</span></span><span style="display:flex;"><span>input_audio <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;raw_tts.wav&#39;</span>
-</span></span><span style="display:flex;"><span>output_audio <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#39;compressed_audio.mp3&#39;</span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">try</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 加载音频文件</span>
-</span></span><span style="display:flex;"><span>    audio <span style="color:#000;font-weight:bold">=</span> AudioSegment<span style="color:#000;font-weight:bold">.</span>from_file(input_audio)  
-</span></span><span style="display:flex;"><span>    <span style="color:#998;font-style:italic"># 导出音频文件，使用较低的比特率进行压缩</span>
-</span></span><span style="display:flex;"><span>    audio<span style="color:#000;font-weight:bold">.</span>export(output_audio, <span style="color:#0086b3">format</span><span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;mp3&#34;</span>, bitrate<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;64k&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;Compressed audio saved as </span><span style="color:#d14">{</span>output_audio<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">except</span> <span style="color:#900;font-weight:bold">Exception</span> <span style="color:#000;font-weight:bold">as</span> e:
-</span></span><span style="display:flex;"><span>    <span style="color:#0086b3">print</span>(<span style="color:#d14">f</span><span style="color:#d14">&#34;An error occurred: </span><span style="color:#d14">{</span>e<span style="color:#d14">}</span><span style="color:#d14">&#34;</span>)
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">pydub</span> <span style="color:#cf222e">import</span> AudioSegment
+</span></span><span style="display:flex;"><span>input_audio <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;raw_tts.wav&#39;</span>
+</span></span><span style="display:flex;"><span>output_audio <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;compressed_audio.mp3&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 加载音频文件</span>
+</span></span><span style="display:flex;"><span>    audio <span style="color:#0550ae">=</span> AudioSegment<span style="color:#0550ae">.</span>from_file<span style="color:#1f2328">(</span>input_audio<span style="color:#1f2328">)</span>  
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 导出音频文件，使用较低的比特率进行压缩</span>
+</span></span><span style="display:flex;"><span>    audio<span style="color:#0550ae">.</span>export<span style="color:#1f2328">(</span>output_audio<span style="color:#1f2328">,</span> <span style="color:#6639ba">format</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;mp3&#34;</span><span style="color:#1f2328">,</span> bitrate<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;64k&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Compressed audio saved as </span><span style="color:#0a3069">{</span>output_audio<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> e<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;An error occurred: </span><span style="color:#0a3069">{</span>e<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="4-语音合成">4. 语音合成</h2>
@@ -377,30 +377,30 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#998;font-style:italic"># tts 句子结束标记</span>
-</span></span><span style="display:flex;"><span>tts_sentence_end <span style="color:#000;font-weight:bold">=</span> [ <span style="color:#d14">&#34;.&#34;</span>, <span style="color:#d14">&#34;!&#34;</span>, <span style="color:#d14">&#34;?&#34;</span>, <span style="color:#d14">&#34;;&#34;</span>, <span style="color:#d14">&#34;。&#34;</span>, <span style="color:#d14">&#34;！&#34;</span>, <span style="color:#d14">&#34;？&#34;</span>, <span style="color:#d14">&#34;；&#34;</span>, <span style="color:#d14">&#34;</span><span style="color:#d14">\
-</span></span></span><span style="display:flex;"><span><span style="color:#d14"></span><span style="color:#d14">&#34;</span> ]
-</span></span><span style="display:flex;"><span>completion <span style="color:#000;font-weight:bold">=</span> gpt_client<span style="color:#000;font-weight:bold">.</span>chat<span style="color:#000;font-weight:bold">.</span>completions<span style="color:#000;font-weight:bold">.</span>create(
-</span></span><span style="display:flex;"><span>        model<span style="color:#000;font-weight:bold">=</span><span style="color:#d14">&#34;gpt-4o&#34;</span>,
-</span></span><span style="display:flex;"><span>    messages<span style="color:#000;font-weight:bold">=</span>[,
-</span></span><span style="display:flex;"><span>        {<span style="color:#d14">&#34;role&#34;</span>: <span style="color:#d14">&#34;user&#34;</span>, <span style="color:#d14">&#34;content&#34;</span>: <span style="color:#000;font-weight:bold">&lt;</span>prompt<span style="color:#000;font-weight:bold">&gt;</span>}
-</span></span><span style="display:flex;"><span>    ],
-</span></span><span style="display:flex;"><span>    stream<span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">True</span>
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>collected_messages <span style="color:#000;font-weight:bold">=</span> []
-</span></span><span style="display:flex;"><span>last_tts_request <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">None</span>
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># tts 句子结束标记</span>
+</span></span><span style="display:flex;"><span>tts_sentence_end <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span> <span style="color:#0a3069">&#34;.&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;!&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;?&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;;&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;。&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;！&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;？&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;；&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span><span style="color:#0a3069">&#34;</span> <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>completion <span style="color:#0550ae">=</span> gpt_client<span style="color:#0550ae">.</span>chat<span style="color:#0550ae">.</span>completions<span style="color:#0550ae">.</span>create<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        model<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;gpt-4o&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    messages<span style="color:#0550ae">=</span><span style="color:#1f2328">[,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">&lt;</span>prompt<span style="color:#0550ae">&gt;</span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>    stream<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>collected_messages <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span>last_tts_request <span style="color:#0550ae">=</span> <span style="color:#cf222e">None</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">for</span> chunk <span style="color:#000;font-weight:bold">in</span> completion:
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">if</span> <span style="color:#0086b3">len</span>(chunk<span style="color:#000;font-weight:bold">.</span>choices) <span style="color:#000;font-weight:bold">&gt;</span> <span style="color:#099">0</span>:
-</span></span><span style="display:flex;"><span>        chunk_text <span style="color:#000;font-weight:bold">=</span> chunk<span style="color:#000;font-weight:bold">.</span>choices[<span style="color:#099">0</span>]<span style="color:#000;font-weight:bold">.</span>delta<span style="color:#000;font-weight:bold">.</span>content
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">if</span> chunk_text:
-</span></span><span style="display:flex;"><span>            collected_messages<span style="color:#000;font-weight:bold">.</span>append(chunk_text)
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">if</span> chunk_text <span style="color:#000;font-weight:bold">in</span> tts_sentence_end:
-</span></span><span style="display:flex;"><span>                text <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;&#34;</span><span style="color:#000;font-weight:bold">.</span>join(collected_messages)
-</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">.</span>strip() <span style="color:#998;font-style:italic"># 将收到的消息一起连接起来构成一个句子</span>
-</span></span><span style="display:flex;"><span>                last_tts_request <span style="color:#000;font-weight:bold">=</span> speech_synthesizer
-</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">.</span>start_speaking_text_async(text)<span style="color:#000;font-weight:bold">.</span>get()
-</span></span><span style="display:flex;"><span>                collected_messages<span style="color:#000;font-weight:bold">.</span>clear()
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">for</span> chunk <span style="color:#0550ae">in</span> completion<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>chunk<span style="color:#0550ae">.</span>choices<span style="color:#1f2328">)</span> <span style="color:#0550ae">&gt;</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        chunk_text <span style="color:#0550ae">=</span> chunk<span style="color:#0550ae">.</span>choices<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>delta<span style="color:#0550ae">.</span>content
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> chunk_text<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            collected_messages<span style="color:#0550ae">.</span>append<span style="color:#1f2328">(</span>chunk_text<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> chunk_text <span style="color:#0550ae">in</span> tts_sentence_end<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                text <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;&#34;</span><span style="color:#0550ae">.</span>join<span style="color:#1f2328">(</span>collected_messages<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">.</span>strip<span style="color:#1f2328">()</span> <span style="color:#57606a"># 将收到的消息一起连接起来构成一个句子</span>
+</span></span><span style="display:flex;"><span>                last_tts_request <span style="color:#0550ae">=</span> speech_synthesizer
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">.</span>start_speaking_text_async<span style="color:#1f2328">(</span>text<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>get<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>                collected_messages<span style="color:#0550ae">.</span>clear<span style="color:#1f2328">()</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><strong>4.3 优化音频输出格式</strong><br>
@@ -603,6 +603,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -638,10 +642,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -651,7 +651,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -668,6 +668,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -678,6 +680,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -687,6 +691,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

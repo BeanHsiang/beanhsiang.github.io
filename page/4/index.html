@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-Hans">
 <head>
-	<meta name="generator" content="Hugo 0.140.2">
+	<meta name="generator" content="Hugo 0.145.0">
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -70,6 +70,37 @@
                 <div class="col-8" id="main">
                     
 <div class="res-cons">
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/" title="使用 Intel oneDAL 加速 ML.NET 训练" target="_blank">使用 Intel oneDAL 加速 ML.NET 训练</a>
+            </h1>
+        </header>
+        
+  <time datetime="2022-12-23T04:24:00Z" class="post-meta meta-date dt-published">
+    2022年12月23日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/ML.NET' target="_blank">ML.NET</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p><a href="https://dot.net/ml?WT.mc_id=AI-MVP-5003172">ML.NET</a> 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。</p>
+<p>ML.NET 3.0 的第一个预览版带来了多项硬件加速改进，使你可以在训练期间充分利用计算资源。安装最新的 <a href="https://aka.ms/mlnet-3-preview1">ML.NET 3.0</a> 和<a href="https://aka.ms/mlnet-onedal-nuget">Intel oneDAL</a> 预览包，试用由 Intel oneDAL 提供支持的最新改进。</p>
+<h2 id="什么是-oneapi-data-analytics-libraryonedal">什么是 oneAPI Data Analytics Library（oneDAL）</h2>
+<p>Intel oneAPI Data Analytics Library 是一个通过为数据分析和机器学习过程的所有阶段提供高度优化的算法构建模块，帮助加快数据分析速度的库。oneDAL 利用 64 位架构中的 SIMD 扩展，这些扩展在 Intel 和 AMD CPU 中都有。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2022-12-23-accelerate-ml-net-training-with-intel-onedal/" target="_blank">阅读全文</a></p>
+    </article>
+    
     
     
     <article class="post">
@@ -255,10 +286,10 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>   <span style="color:#000080">&#34;name&#34;</span>: <span style="color:#d14">&#34;my-alias&#34;</span>,
-</span></span><span style="display:flex;"><span>   <span style="color:#000080">&#34;indexes&#34;</span>: [<span style="color:#d14">&#34;hotel-samples-index&#34;</span>]
-</span></span><span style="display:flex;"><span>}
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#0550ae">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;my-alias&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#0550ae">&#34;indexes&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;hotel-samples-index&#34;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>如果您发现自己相当频繁地更新搜索索引，则可能会从使用别名中受益。下图显示了在应用程序中使用索引别名的典型工作流。
@@ -366,39 +397,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2021-08-07-mlnet-1_6-interesting-content/" title="ML.NET v1.6 中有趣的内容" target="_blank">ML.NET v1.6 中有趣的内容</a>
-            </h1>
-        </header>
-        
-  <time datetime="2021-08-07T11:53:00Z" class="post-meta meta-date dt-published">
-    2021年8月7日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/ML.NET' target="_blank">ML.NET</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p><a href="https://dot.net/ml?WT.mc_id=AI-MVP-5003172">ML.NET</a> v1.6 发布有一段时间了，所有<a href="https://github.com/dotnet/machinelearning/blob/main/docs/release-notes/1.6.0/release-1.6.0.md">详细信息</a>在此，可以了解到更多细节或实现，本文把比较新鲜有趣的内容摘要出来。</p>
-<p>此版本中增加了很多东西，但它们确实注意到，添加的所有内容都没有中断更改。</p>
-<h3 id="支持-arm">支持 ARM</h3>
-<p>这次更新最令人兴奋的部分是<a href="https://github.com/dotnet/machinelearning/pull/5789">对ARM架构的新支持</a>。这将允许在 <a href="https://dot.net/ml?WT.mc_id=AI-MVP-5003172">ML.NET</a> 进行大多数场景的训练和推论项目。ARM架构几乎无处不在。如<a href="https://devblogs.microsoft.com/dotnet/ml-net-june-updates-model-builder/?WT.mc_id=AI-MVP-5003172#ml-net-on-arm">六月更新博客</a>文章中所述，此 ARM 架构包含在移动和嵌入式设备上。这可以为手机和 IoT 设备的 <a href="https://dot.net/ml?WT.mc_id=AI-MVP-5003172">ML.NET</a> 开辟全新的世界。</p>
-<h3 id="dataframe-更新">DataFrame 更新</h3>
-<p><a href="https://www.nuget.org/packages/Microsoft.Data.Analysis/">DataFrame API</a> 可能是目前处于早期阶段的特性之一。主要还是由于 .NET 与 Python 中常见库 pandas 在数据分析上面不存在竞争，在将数据发送到 <a href="https://dot.net/ml?WT.mc_id=AI-MVP-5003172">ML.NET</a> 进行建模之前，你可能需要处理一些预处理。现在 DataFrame API 已经进入 <a href="https://github.com/dotnet/machinelearning/pull/5641">ML.NET 主库</a> ，该代码以前作为实验包在 <a href="https://github.com/dotnet/corefxlab">CoreFx Lab</a>存储库中，但现在它不再是实验性的，现在已是 <a href="https://dot.net/ml?WT.mc_id=AI-MVP-5003172">ML.NET</a> 的一部分意味着项目计划持续更新。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2021-08-07-mlnet-1_6-interesting-content/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -426,7 +424,15 @@
         <a href="https://beanhsiang.github.io/page/4/">4</a>
     </li>
     
+    <li >
+        <a href="https://beanhsiang.github.io/page/5/">5</a>
+    </li>
+    
 
+    
+    <li class="next">
+        <a href="https://beanhsiang.github.io/page/5/">下一页</a>
+    </li>
     
 </ol>
 
@@ -479,6 +485,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -514,10 +524,6 @@
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -527,7 +533,7 @@
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -544,6 +550,8 @@
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -554,6 +562,8 @@
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -563,6 +573,8 @@
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

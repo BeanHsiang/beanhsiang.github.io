@@ -179,78 +179,78 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.SemanticKernel</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.SemanticKernel.ChatCompletion</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.SemanticKernel.Connectors.OpenAI</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">static</span> System.Environment;
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel.ChatCompletion</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel.Connectors.OpenAI</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">static</span> System<span style="color:#1f2328">.</span>Environment<span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">namespace</span> <span style="color:#555">CustomCopilot</span>
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">internal</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">Program</span>
-</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">namespace</span> <span style="color:#24292e">CustomCopilot</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">internal</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">Program</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">static</span> <span style="color:#000;font-weight:bold">async</span> Task Main(<span style="color:#458;font-weight:bold">string</span>[] args)
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">static</span> <span style="color:#cf222e">async</span> Task Main<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span><span style="color:#1f2328">[]</span> args<span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic">// Create a kernel with the Azure OpenAI chat completion service</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">var</span> builder = Kernel.CreateBuilder();
-</span></span><span style="display:flex;"><span>            builder.AddAzureOpenAIChatCompletion(<span style="color:#d14">&#34;gpt-35-turbo-16k&#34;</span>,
-</span></span><span style="display:flex;"><span>                GetEnvironmentVariable(<span style="color:#d14">&#34;AOI_ENDPOINT_SWDN&#34;</span>)!,
-</span></span><span style="display:flex;"><span>                GetEnvironmentVariable(<span style="color:#d14">&#34;AOI_KEY_SWDN&#34;</span>)!);
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a">// Create a kernel with the Azure OpenAI chat completion service</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">var</span> builder <span style="color:#1f2328">=</span> Kernel<span style="color:#1f2328">.</span>CreateBuilder<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>            builder<span style="color:#1f2328">.</span>AddAzureOpenAIChatCompletion<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;gpt-35-turbo-16k&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                GetEnvironmentVariable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AOI_ENDPOINT_SWDN&#34;</span><span style="color:#1f2328">)!,</span>
+</span></span><span style="display:flex;"><span>                GetEnvironmentVariable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AOI_KEY_SWDN&#34;</span><span style="color:#1f2328">)!);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic">// Build the kernel</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">var</span> kernel = builder.Build();
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a">// Build the kernel</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">var</span> kernel <span style="color:#1f2328">=</span> builder<span style="color:#1f2328">.</span>Build<span style="color:#1f2328">();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic">// Create chat history</span>
-</span></span><span style="display:flex;"><span>            ChatHistory history = [];
-</span></span><span style="display:flex;"><span>            history.AddSystemMessage(
-</span></span><span style="display:flex;"><span>              <span style="color:#d14">@&#34;You&#39;re a virtual assistant that helps people find information.&#34;</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a">// Create chat history</span>
+</span></span><span style="display:flex;"><span>            ChatHistory history <span style="color:#1f2328">=</span> <span style="color:#1f2328">[];</span>
+</span></span><span style="display:flex;"><span>            history<span style="color:#1f2328">.</span>AddSystemMessage<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0a3069">@&#34;You&#39;re a virtual assistant that helps people find information.&#34;</span><span style="color:#1f2328">);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic">// Get chat completion service</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">var</span> chatCompletionService = 
-</span></span><span style="display:flex;"><span>            kernel.GetRequiredService&lt;IChatCompletionService&gt;();
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a">// Get chat completion service</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">var</span> chatCompletionService <span style="color:#1f2328">=</span> 
+</span></span><span style="display:flex;"><span>            kernel<span style="color:#1f2328">.</span>GetRequiredService<span style="color:#1f2328">&lt;</span>IChatCompletionService<span style="color:#1f2328">&gt;();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#998;font-style:italic">// Start the conversation</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">while</span> (<span style="color:#000;font-weight:bold">true</span>)
-</span></span><span style="display:flex;"><span>            {
-</span></span><span style="display:flex;"><span>                <span style="color:#998;font-style:italic">// Get user input</span>
-</span></span><span style="display:flex;"><span>                Console.ForegroundColor = ConsoleColor.White;
-</span></span><span style="display:flex;"><span>                Console.Write(<span style="color:#d14">&#34;User &gt; &#34;</span>);
-</span></span><span style="display:flex;"><span>                history.AddUserMessage(Console.ReadLine()!);
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a">// Start the conversation</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">while</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">true</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#57606a">// Get user input</span>
+</span></span><span style="display:flex;"><span>                Console<span style="color:#1f2328">.</span>ForegroundColor <span style="color:#1f2328">=</span> ConsoleColor<span style="color:#1f2328">.</span>White<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>                Console<span style="color:#1f2328">.</span>Write<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;User &gt; &#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>                history<span style="color:#1f2328">.</span>AddUserMessage<span style="color:#1f2328">(</span>Console<span style="color:#1f2328">.</span>ReadLine<span style="color:#1f2328">()!);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>                <span style="color:#998;font-style:italic">// Enable auto function calling</span>
-</span></span><span style="display:flex;"><span>                OpenAIPromptExecutionSettings openAIPromptExecutionSettings = <span style="color:#000;font-weight:bold">new</span>()
-</span></span><span style="display:flex;"><span>                {
-</span></span><span style="display:flex;"><span>                    MaxTokens = <span style="color:#099">200</span>
-</span></span><span style="display:flex;"><span>                };
+</span></span><span style="display:flex;"><span>                <span style="color:#57606a">// Enable auto function calling</span>
+</span></span><span style="display:flex;"><span>                OpenAIPromptExecutionSettings openAIPromptExecutionSettings <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span><span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    MaxTokens <span style="color:#1f2328">=</span> <span style="color:#0550ae">200</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#1f2328">};</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>                <span style="color:#998;font-style:italic">// Get the response from the AI</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#458;font-weight:bold">var</span> response = 
-</span></span><span style="display:flex;"><span>                chatCompletionService.GetStreamingChatMessageContentsAsync(
-</span></span><span style="display:flex;"><span>                               history,
-</span></span><span style="display:flex;"><span>                               executionSettings: openAIPromptExecutionSettings,
-</span></span><span style="display:flex;"><span>                               kernel: kernel);
+</span></span><span style="display:flex;"><span>                <span style="color:#57606a">// Get the response from the AI</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">var</span> response <span style="color:#1f2328">=</span> 
+</span></span><span style="display:flex;"><span>                chatCompletionService<span style="color:#1f2328">.</span>GetStreamingChatMessageContentsAsync<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>                               history<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                               executionSettings<span style="color:#1f2328">:</span> openAIPromptExecutionSettings<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                               kernel<span style="color:#1f2328">:</span> kernel<span style="color:#1f2328">);</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>                Console.ForegroundColor = ConsoleColor.Green;
-</span></span><span style="display:flex;"><span>                Console.Write(<span style="color:#d14">&#34;\nAssistant &gt; &#34;</span>);
+</span></span><span style="display:flex;"><span>                Console<span style="color:#1f2328">.</span>ForegroundColor <span style="color:#1f2328">=</span> ConsoleColor<span style="color:#1f2328">.</span>Green<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>                Console<span style="color:#1f2328">.</span>Write<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;\nAssistant &gt; &#34;</span><span style="color:#1f2328">);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>                <span style="color:#458;font-weight:bold">string</span> combinedResponse = <span style="color:#458;font-weight:bold">string</span>.Empty;
-</span></span><span style="display:flex;"><span>                <span style="color:#000;font-weight:bold">await</span> <span style="color:#000;font-weight:bold">foreach</span> (<span style="color:#458;font-weight:bold">var</span> message <span style="color:#000;font-weight:bold">in</span> response)
-</span></span><span style="display:flex;"><span>                {
-</span></span><span style="display:flex;"><span>                    <span style="color:#998;font-style:italic">//Write the response to the console</span>
-</span></span><span style="display:flex;"><span>                    Console.Write(message);
-</span></span><span style="display:flex;"><span>                    combinedResponse += message;
-</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">string</span> combinedResponse <span style="color:#1f2328">=</span> <span style="color:#cf222e">string</span><span style="color:#1f2328">.</span>Empty<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">await</span> <span style="color:#cf222e">foreach</span> <span style="color:#1f2328">(</span><span style="color:#cf222e">var</span> message <span style="color:#cf222e">in</span> response<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#57606a">//Write the response to the console</span>
+</span></span><span style="display:flex;"><span>                    Console<span style="color:#1f2328">.</span>Write<span style="color:#1f2328">(</span>message<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>                    combinedResponse <span style="color:#1f2328">+=</span> message<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#1f2328">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>                Console.WriteLine();
+</span></span><span style="display:flex;"><span>                Console<span style="color:#1f2328">.</span>WriteLine<span style="color:#1f2328">();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>                <span style="color:#998;font-style:italic">// Add the message from the agent to the chat history</span>
-</span></span><span style="display:flex;"><span>                history.AddAssistantMessage(combinedResponse);
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>                <span style="color:#57606a">// Add the message from the agent to the chat history</span>
+</span></span><span style="display:flex;"><span>                history<span style="color:#1f2328">.</span>AddAssistantMessage<span style="color:#1f2328">(</span>combinedResponse<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>现在如果你只是在控制台应用程序中用 Program.cs 运行代码并提供必要的配置，它应该像 ChatGPT 一样工作。到目前为止，你可能看到在互联网上相同的演示，向你展示如何使用 Azure OpenAI API 并增强业务能力。让我们为它添加一些变化，继续问它现在几点了。</p>
@@ -279,19 +279,19 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Create a kernel with the Azure OpenAI chat completion service</span>
-</span></span><span style="display:flex;"><span> <span style="color:#458;font-weight:bold">var</span> builder = Kernel.CreateBuilder();
-</span></span><span style="display:flex;"><span> builder.AddAzureOpenAIChatCompletion(<span style="color:#d14">&#34;gpt-35-turbo-16k&#34;</span>,
-</span></span><span style="display:flex;"><span>     GetEnvironmentVariable(<span style="color:#d14">&#34;AOI_ENDPOINT_SWDN&#34;</span>)!,
-</span></span><span style="display:flex;"><span>     GetEnvironmentVariable(<span style="color:#d14">&#34;AOI_KEY_SWDN&#34;</span>)!);
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Create a kernel with the Azure OpenAI chat completion service</span>
+</span></span><span style="display:flex;"><span> <span style="color:#cf222e">var</span> builder <span style="color:#1f2328">=</span> Kernel<span style="color:#1f2328">.</span>CreateBuilder<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span> builder<span style="color:#1f2328">.</span>AddAzureOpenAIChatCompletion<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;gpt-35-turbo-16k&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>     GetEnvironmentVariable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AOI_ENDPOINT_SWDN&#34;</span><span style="color:#1f2328">)!,</span>
+</span></span><span style="display:flex;"><span>     GetEnvironmentVariable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AOI_KEY_SWDN&#34;</span><span style="color:#1f2328">)!);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span> <span style="color:#998;font-style:italic">// Load the plugins</span>
-</span></span><span style="display:flex;"><span> <span style="color:#998;font-style:italic">// add this namespace Microsoft.SemanticKernel.Plugins.Core;</span>
-</span></span><span style="display:flex;"><span> <span style="color:#999;font-weight:bold;font-style:italic">#pragma</span> warning disable SKEXP0050
-</span></span><span style="display:flex;"><span> builder.Plugins.AddFromType&lt;TimePlugin&gt;();
+</span></span><span style="display:flex;"><span> <span style="color:#57606a">// Load the plugins</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57606a">// add this namespace Microsoft.SemanticKernel.Plugins.Core;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#57606a">#pragma</span> warning disable SKEXP0050
+</span></span><span style="display:flex;"><span> builder<span style="color:#1f2328">.</span>Plugins<span style="color:#1f2328">.</span>AddFromType<span style="color:#1f2328">&lt;</span>TimePlugin<span style="color:#1f2328">&gt;();</span>
 </span></span><span style="display:flex;"><span> 
-</span></span><span style="display:flex;"><span> <span style="color:#998;font-style:italic">// Build the kernel</span>
-</span></span><span style="display:flex;"><span> <span style="color:#458;font-weight:bold">var</span> kernel = builder.Build();
+</span></span><span style="display:flex;"><span> <span style="color:#57606a">// Build the kernel</span>
+</span></span><span style="display:flex;"><span> <span style="color:#cf222e">var</span> kernel <span style="color:#1f2328">=</span> builder<span style="color:#1f2328">.</span>Build<span style="color:#1f2328">();</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>添加完上面的代码后，kernel 需要解决当用户询问时间与通常的 ChatGPT 响应时，它如何知道我需要运行 TimePlugin？从广义上讲，有两种方法可以应对这一问题。</p>
@@ -315,17 +315,17 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Get user input</span>
-</span></span><span style="display:flex;"><span>Console.ForegroundColor = ConsoleColor.White;
-</span></span><span style="display:flex;"><span>Console.Write(<span style="color:#d14">&#34;User &gt; &#34;</span>);
-</span></span><span style="display:flex;"><span>history.AddUserMessage(Console.ReadLine()!);
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Get user input</span>
+</span></span><span style="display:flex;"><span>Console<span style="color:#1f2328">.</span>ForegroundColor <span style="color:#1f2328">=</span> ConsoleColor<span style="color:#1f2328">.</span>White<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>Console<span style="color:#1f2328">.</span>Write<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;User &gt; &#34;</span><span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>history<span style="color:#1f2328">.</span>AddUserMessage<span style="color:#1f2328">(</span>Console<span style="color:#1f2328">.</span>ReadLine<span style="color:#1f2328">()!);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// Enable auto function calling</span>
-</span></span><span style="display:flex;"><span>OpenAIPromptExecutionSettings openAIPromptExecutionSettings = <span style="color:#000;font-weight:bold">new</span>()
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    MaxTokens = <span style="color:#099">200</span>,
-</span></span><span style="display:flex;"><span>    ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
-</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// Enable auto function calling</span>
+</span></span><span style="display:flex;"><span>OpenAIPromptExecutionSettings openAIPromptExecutionSettings <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span><span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    MaxTokens <span style="color:#1f2328">=</span> <span style="color:#0550ae">200</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    ToolCallBehavior <span style="color:#1f2328">=</span> ToolCallBehavior<span style="color:#1f2328">.</span>AutoInvokeKernelFunctions
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">};</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>添加 ToolCallBehavior 并添加 TimePlugin 后，可以运行应用，并应看到如下所示的输出。</p>
@@ -393,41 +393,41 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.SemanticKernel</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Collections.Generic</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.ComponentModel</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Linq</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Text</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Threading.Tasks</span>;
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Collections.Generic</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.ComponentModel</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Linq</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Text</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Threading.Tasks</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">namespace</span> <span style="color:#555">CustomCopilot.Plugins.FlightTrackerPlugin</span>
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">FlightTrackerPlugin</span>(<span style="color:#458;font-weight:bold">string</span> apiKey)
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">readonly</span> HttpClient client = <span style="color:#000;font-weight:bold">new</span> HttpClient();
-</span></span><span style="display:flex;"><span><span style="color:#008080">
-</span></span></span><span style="display:flex;"><span><span style="color:#008080">        [KernelFunction, Description(&#34;Tracks the flight status of a provided source and destination&#34;)]</span>
-</span></span><span style="display:flex;"><span><span style="color:#008080">        [return: Description(&#34;Flight details and status&#34;)]</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">async</span> Task&lt;<span style="color:#458;font-weight:bold">string</span>&gt; TrackFlightAsync(
-</span></span><span style="display:flex;"><span><span style="color:#008080">        [Description(&#34;IATA code for the source location&#34;)]</span> <span style="color:#458;font-weight:bold">string</span> source,
-</span></span><span style="display:flex;"><span><span style="color:#008080">        [Description(&#34;IATA code for the designation location&#34;)]</span> <span style="color:#458;font-weight:bold">string</span> destination,
-</span></span><span style="display:flex;"><span><span style="color:#008080">        [Description(&#34;IATA code for the flight&#34;)]</span> <span style="color:#458;font-weight:bold">string</span> flightNumber,
-</span></span><span style="display:flex;"><span><span style="color:#008080">        [Description(&#34;Count of flights&#34;)]</span> <span style="color:#458;font-weight:bold">int</span> limit)
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">string</span> url = <span style="color:#d14">$&#34;&#34;&#34;http://api.aviationstack.com/v1/flights
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">            ?access_key={apiKey}&amp;dep_iata={source}&amp;arr_iata={destination}
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">            &amp;limit={limit}&amp;flight_iata={flightNumber}&#34;&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">namespace</span> <span style="color:#24292e">CustomCopilot.Plugins.FlightTrackerPlugin</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">FlightTrackerPlugin</span><span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> apiKey<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">readonly</span> HttpClient client <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> HttpClient<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">
+</span></span></span><span style="display:flex;"><span><span style="color:#1f2328">        [KernelFunction, Description(&#34;Tracks the flight status of a provided source and destination&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">        [return: Description(&#34;Flight details and status&#34;)]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">public</span> <span style="color:#cf222e">async</span> Task<span style="color:#1f2328">&lt;</span><span style="color:#cf222e">string</span><span style="color:#1f2328">&gt;</span> TrackFlightAsync<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">        [Description(&#34;IATA code for the source location&#34;)]</span> <span style="color:#cf222e">string</span> source<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">        [Description(&#34;IATA code for the designation location&#34;)]</span> <span style="color:#cf222e">string</span> destination<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">        [Description(&#34;IATA code for the flight&#34;)]</span> <span style="color:#cf222e">string</span> flightNumber<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">        [Description(&#34;Count of flights&#34;)]</span> <span style="color:#cf222e">int</span> limit<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">string</span> url <span style="color:#1f2328">=</span> <span style="color:#0a3069">$&#34;&#34;&#34;http://api.aviationstack.com/v1/flights
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">            ?access_key={apiKey}&amp;dep_iata={source}&amp;arr_iata={destination}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">            &amp;limit={limit}&amp;flight_iata={flightNumber}&#34;&#34;&#34;</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            HttpResponseMessage response = <span style="color:#000;font-weight:bold">await</span> client.GetAsync(url);
-</span></span><span style="display:flex;"><span>            response.EnsureSuccessStatusCode();
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">string</span> responseBody = <span style="color:#000;font-weight:bold">await</span> response.Content.ReadAsStringAsync();
+</span></span><span style="display:flex;"><span>            HttpResponseMessage response <span style="color:#1f2328">=</span> <span style="color:#cf222e">await</span> client<span style="color:#1f2328">.</span>GetAsync<span style="color:#1f2328">(</span>url<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            response<span style="color:#1f2328">.</span>EnsureSuccessStatusCode<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">string</span> responseBody <span style="color:#1f2328">=</span> <span style="color:#cf222e">await</span> response<span style="color:#1f2328">.</span>Content<span style="color:#1f2328">.</span>ReadAsStringAsync<span style="color:#1f2328">();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">return</span> responseBody;
-</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> responseBody<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>这只是一个类的一个函数。这意味着，一个插件只有一个本机功能。如果你注意到，从定义到它的参数再到它的返回值，我已经为这个函数中的几乎所有内容提供了描述 。这些语义描述的原因是 Semantic Kernel 将有效地使用 AI 来处理请求。这就是为什么，如果您注意到源和目的地，我会分别为源/目的地位置编写 IATA 代码。通过提供此描述，无需调用单独的服务来解析城市名称，在我们的示例悉尼中，它可以自动将其转换为 SYD。</p>
@@ -439,9 +439,9 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder.Plugins.AddFromObject(<span style="color:#000;font-weight:bold">new</span> FlightTrackerPlugin(
-</span></span><span style="display:flex;"><span>  GetEnvironmentVariable(<span style="color:#d14">&#34;AVIATIONSTACK_KEY&#34;</span>)!), 
-</span></span><span style="display:flex;"><span>  nameof(FlightTrackerPlugin));
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder<span style="color:#1f2328">.</span>Plugins<span style="color:#1f2328">.</span>AddFromObject<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> FlightTrackerPlugin<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>  GetEnvironmentVariable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AVIATIONSTACK_KEY&#34;</span><span style="color:#1f2328">)!),</span> 
+</span></span><span style="display:flex;"><span>  nameof<span style="color:#1f2328">(</span>FlightTrackerPlugin<span style="color:#1f2328">));</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>添加此行代码后。我的建议是将系统提示更改为 “You&rsquo;re a virtual assistant that helps people track flight and find information. ”。 执行并查看是否得到类似的响应：</p>
@@ -492,36 +492,36 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.SemanticKernel</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Collections.Generic</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.ComponentModel</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Linq</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Text</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Threading.Tasks</span>;
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Collections.Generic</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.ComponentModel</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Linq</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Text</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Threading.Tasks</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">namespace</span> <span style="color:#555">CustomCopilot.Plugins.WeatherPlugin</span>
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">WeatherPlugin</span>(<span style="color:#458;font-weight:bold">string</span> apiKey)
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>        HttpClient client = <span style="color:#000;font-weight:bold">new</span> HttpClient();
-</span></span><span style="display:flex;"><span><span style="color:#008080">
-</span></span></span><span style="display:flex;"><span><span style="color:#008080">        [KernelFunction, Description(&#34;Gets the weather details of a given location&#34;)]</span>
-</span></span><span style="display:flex;"><span><span style="color:#008080">        [return: Description(&#34;Weather details&#34;)]</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">async</span> Task&lt;<span style="color:#458;font-weight:bold">string</span>&gt; GetWeatherAsync(
-</span></span><span style="display:flex;"><span><span style="color:#008080">        [Description(&#34;name of the location&#34;)]</span> <span style="color:#458;font-weight:bold">string</span> locationName)
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">string</span> url = <span style="color:#d14">$&#34;&#34;&#34;http://api.weatherapi.com/v1/current.json
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">            ?key={apiKey}&amp;q={locationName}&amp;aqi=no&#34;&#34;&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">namespace</span> <span style="color:#24292e">CustomCopilot.Plugins.WeatherPlugin</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">WeatherPlugin</span><span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> apiKey<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        HttpClient client <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> HttpClient<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">
+</span></span></span><span style="display:flex;"><span><span style="color:#1f2328">        [KernelFunction, Description(&#34;Gets the weather details of a given location&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">        [return: Description(&#34;Weather details&#34;)]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">public</span> <span style="color:#cf222e">async</span> Task<span style="color:#1f2328">&lt;</span><span style="color:#cf222e">string</span><span style="color:#1f2328">&gt;</span> GetWeatherAsync<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">        [Description(&#34;name of the location&#34;)]</span> <span style="color:#cf222e">string</span> locationName<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">string</span> url <span style="color:#1f2328">=</span> <span style="color:#0a3069">$&#34;&#34;&#34;http://api.weatherapi.com/v1/current.json
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">            ?key={apiKey}&amp;q={locationName}&amp;aqi=no&#34;&#34;&#34;</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            HttpResponseMessage response = <span style="color:#000;font-weight:bold">await</span> client.GetAsync(url);
-</span></span><span style="display:flex;"><span>            response.EnsureSuccessStatusCode();
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">string</span> responseBody = <span style="color:#000;font-weight:bold">await</span> response.Content.ReadAsStringAsync();
+</span></span><span style="display:flex;"><span>            HttpResponseMessage response <span style="color:#1f2328">=</span> <span style="color:#cf222e">await</span> client<span style="color:#1f2328">.</span>GetAsync<span style="color:#1f2328">(</span>url<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            response<span style="color:#1f2328">.</span>EnsureSuccessStatusCode<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">string</span> responseBody <span style="color:#1f2328">=</span> <span style="color:#cf222e">await</span> response<span style="color:#1f2328">.</span>Content<span style="color:#1f2328">.</span>ReadAsStringAsync<span style="color:#1f2328">();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">return</span> responseBody;
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> responseBody<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>按照前面的示例，您只需编写以下代码行即可注入它：</p>
@@ -532,9 +532,9 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder.Plugins.AddFromObject(<span style="color:#000;font-weight:bold">new</span> WeatherPlugin(
-</span></span><span style="display:flex;"><span>  GetEnvironmentVariable(<span style="color:#d14">&#34;WEATHERAPI_KEY&#34;</span>)!), 
-</span></span><span style="display:flex;"><span>  nameof(WeatherPlugin));
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder<span style="color:#1f2328">.</span>Plugins<span style="color:#1f2328">.</span>AddFromObject<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> WeatherPlugin<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>  GetEnvironmentVariable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;WEATHERAPI_KEY&#34;</span><span style="color:#1f2328">)!),</span> 
+</span></span><span style="display:flex;"><span>  nameof<span style="color:#1f2328">(</span>WeatherPlugin<span style="color:#1f2328">));</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>现在如果您再次运行它，您将能够看到即将到来的天气。这是因为您的 Copilot 现在正在与外部服务交互。</p>
@@ -627,60 +627,60 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Azure.Maps.Search.Models</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Azure.Maps.Search</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Azure</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">Microsoft.SemanticKernel</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Collections.Generic</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Linq</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Text</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.Threading.Tasks</span>;
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">using</span> <span style="color:#555">System.ComponentModel</span>;
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Azure.Maps.Search.Models</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Azure.Maps.Search</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Azure</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Collections.Generic</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Linq</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Text</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Threading.Tasks</span><span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.ComponentModel</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#000;font-weight:bold">namespace</span> <span style="color:#555">CustomCopilot.Plugins.PlaceSuggestionsPlugin</span>
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    <span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">PlaceSuggestionsPlugin</span>
-</span></span><span style="display:flex;"><span>    {
-</span></span><span style="display:flex;"><span>        MapsSearchClient client;
-</span></span><span style="display:flex;"><span>        HttpClient httpClient = <span style="color:#000;font-weight:bold">new</span> HttpClient();
-</span></span><span style="display:flex;"><span>        <span style="color:#458;font-weight:bold">string</span> APIKey;
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">namespace</span> <span style="color:#24292e">CustomCopilot.Plugins.PlaceSuggestionsPlugin</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">public</span> <span style="color:#cf222e">class</span> <span style="color:#1f2328">PlaceSuggestionsPlugin</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        MapsSearchClient client<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        HttpClient httpClient <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> HttpClient<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">string</span> APIKey<span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">public</span> PlaceSuggestionsPlugin(<span style="color:#458;font-weight:bold">string</span> apiKey)
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>            APIKey = apiKey;
-</span></span><span style="display:flex;"><span>            AzureKeyCredential credential = <span style="color:#000;font-weight:bold">new</span>(apiKey);
-</span></span><span style="display:flex;"><span>            client = <span style="color:#000;font-weight:bold">new</span> MapsSearchClient(credential);
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span><span style="color:#008080">
-</span></span></span><span style="display:flex;"><span><span style="color:#008080">        [KernelFunction, Description(&#34;Gets the place suggestions for a given location&#34;)]</span>
-</span></span><span style="display:flex;"><span><span style="color:#008080">        [return: Description(&#34;Place suggestions&#34;)]</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">async</span> Task&lt;<span style="color:#458;font-weight:bold">string</span>&gt; GetPlaceSuggestionsAsync(
-</span></span><span style="display:flex;"><span><span style="color:#008080">        [Description(&#34;type of the place&#34;)]</span> <span style="color:#458;font-weight:bold">string</span> placeType,
-</span></span><span style="display:flex;"><span><span style="color:#008080">        [Description(&#34;name of the location&#34;)]</span> <span style="color:#458;font-weight:bold">string</span> locationName)
-</span></span><span style="display:flex;"><span>        {
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">var</span> searchResult = <span style="color:#000;font-weight:bold">await</span> client.SearchAddressAsync(locationName);
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">public</span> PlaceSuggestionsPlugin<span style="color:#1f2328">(</span><span style="color:#cf222e">string</span> apiKey<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            APIKey <span style="color:#1f2328">=</span> apiKey<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>            AzureKeyCredential credential <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span><span style="color:#1f2328">(</span>apiKey<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            client <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> MapsSearchClient<span style="color:#1f2328">(</span>credential<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">
+</span></span></span><span style="display:flex;"><span><span style="color:#1f2328">        [KernelFunction, Description(&#34;Gets the place suggestions for a given location&#34;)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">        [return: Description(&#34;Place suggestions&#34;)]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">public</span> <span style="color:#cf222e">async</span> Task<span style="color:#1f2328">&lt;</span><span style="color:#cf222e">string</span><span style="color:#1f2328">&gt;</span> GetPlaceSuggestionsAsync<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">        [Description(&#34;type of the place&#34;)]</span> <span style="color:#cf222e">string</span> placeType<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">        [Description(&#34;name of the location&#34;)]</span> <span style="color:#cf222e">string</span> locationName<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">var</span> searchResult <span style="color:#1f2328">=</span> <span style="color:#cf222e">await</span> client<span style="color:#1f2328">.</span>SearchAddressAsync<span style="color:#1f2328">(</span>locationName<span style="color:#1f2328">);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">if</span> (searchResult?.Value?.Results.Count() == <span style="color:#099">0</span>) { <span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">null</span>; }
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>searchResult<span style="color:#1f2328">?.</span>Value<span style="color:#1f2328">?.</span>Results<span style="color:#1f2328">.</span>Count<span style="color:#1f2328">()</span> <span style="color:#1f2328">==</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">)</span> <span style="color:#1f2328">{</span> <span style="color:#cf222e">return</span> <span style="color:#cf222e">null</span><span style="color:#1f2328">;</span> <span style="color:#1f2328">}</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            SearchAddressResultItem locationDetails = searchResult!.Value.Results[<span style="color:#099">0</span>];
+</span></span><span style="display:flex;"><span>            SearchAddressResultItem locationDetails <span style="color:#1f2328">=</span> searchResult<span style="color:#1f2328">!.</span>Value<span style="color:#1f2328">.</span>Results<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">];</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">string</span> url = <span style="color:#a61717;background-color:#e3d2d2">@</span><span style="color:#d14">$&#34;https://atlas.microsoft.com/search/fuzzy/json
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">            ?api-version=1.0&amp;query={placeType}
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">                    &amp;subscription-key={APIKey}
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">                    &amp;lat={locationDetails.Position.Latitude}
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">                    &amp;lon={locationDetails.Position.Longitude}
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">                    &amp;countrySet=AU
-</span></span></span><span style="display:flex;"><span><span style="color:#d14">                    &amp;language=en-AU&#34;</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">string</span> url <span style="color:#1f2328">=</span> <span style="color:#f6f8fa;background-color:#82071e">@</span><span style="color:#0a3069">$&#34;https://atlas.microsoft.com/search/fuzzy/json
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">            ?api-version=1.0&amp;query={placeType}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">                    &amp;subscription-key={APIKey}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">                    &amp;lat={locationDetails.Position.Latitude}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">                    &amp;lon={locationDetails.Position.Longitude}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">                    &amp;countrySet=AU
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">                    &amp;language=en-AU&#34;</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            HttpResponseMessage response = <span style="color:#000;font-weight:bold">await</span> httpClient.GetAsync(url);
-</span></span><span style="display:flex;"><span>            response.EnsureSuccessStatusCode();
-</span></span><span style="display:flex;"><span>            <span style="color:#458;font-weight:bold">string</span> responseBody = <span style="color:#000;font-weight:bold">await</span> response.Content.ReadAsStringAsync();
+</span></span><span style="display:flex;"><span>            HttpResponseMessage response <span style="color:#1f2328">=</span> <span style="color:#cf222e">await</span> httpClient<span style="color:#1f2328">.</span>GetAsync<span style="color:#1f2328">(</span>url<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span>            response<span style="color:#1f2328">.</span>EnsureSuccessStatusCode<span style="color:#1f2328">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">string</span> responseBody <span style="color:#1f2328">=</span> <span style="color:#cf222e">await</span> response<span style="color:#1f2328">.</span>Content<span style="color:#1f2328">.</span>ReadAsStringAsync<span style="color:#1f2328">();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#000;font-weight:bold">return</span> responseBody;
-</span></span><span style="display:flex;"><span>        }
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> responseBody<span style="color:#1f2328">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>现在，您只需将这行代码添加到现有的 Copilot 代码中，它应该就可以正常工作了。</p>
@@ -691,9 +691,9 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder.Plugins.AddFromObject(<span style="color:#000;font-weight:bold">new</span> PlaceSuggestionsPlugin(
-</span></span><span style="display:flex;"><span>  GetEnvironmentVariable(<span style="color:#d14">&#34;AZUREMAPS_SUBSCRIPTION_KEY&#34;</span>)!), 
-</span></span><span style="display:flex;"><span>  nameof(PlaceSuggestionsPlugin));
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder<span style="color:#1f2328">.</span>Plugins<span style="color:#1f2328">.</span>AddFromObject<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> PlaceSuggestionsPlugin<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>  GetEnvironmentVariable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZUREMAPS_SUBSCRIPTION_KEY&#34;</span><span style="color:#1f2328">)!),</span> 
+</span></span><span style="display:flex;"><span>  nameof<span style="color:#1f2328">(</span>PlaceSuggestionsPlugin<span style="color:#1f2328">));</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>再次启动控制台应用，现在应看到类似于以下内容的内容：</p>
@@ -911,6 +911,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -946,10 +950,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -959,7 +959,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -976,6 +976,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -986,6 +988,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -995,6 +999,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

@@ -168,65 +168,65 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> chain = <span style="color:#000;font-weight:bold">new</span> EstimatorChain&lt;ITransformer&gt;();
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">var</span> chain <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> EstimatorChain<span style="color:#1f2328">&lt;</span>ITransformer<span style="color:#1f2328">&gt;();</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> filteredPipeline = chain. Append(
-</span></span><span style="display:flex;"><span>        mlContext.Transforms.Text.TokenizeIntoWords(
-</span></span><span style="display:flex;"><span>            labelColumnName, separators: [<span style="color:#d14">&#39;,&#39;</span>]),
-</span></span><span style="display:flex;"><span>        TransformerScope.Training
-</span></span><span style="display:flex;"><span>    )
-</span></span><span style="display:flex;"><span>    .Append(
-</span></span><span style="display:flex;"><span>        mlContext.Transforms.Conversion.MapValueToKey(labelColumnName),
-</span></span><span style="display:flex;"><span>        TransformerScope.Training
-</span></span><span style="display:flex;"><span>    )
-</span></span><span style="display:flex;"><span>    .Append(
-</span></span><span style="display:flex;"><span>        mlContext.Transforms.Text.TokenizeIntoWords(
-</span></span><span style="display:flex;"><span>            boundingBoxColumnName, separators: [<span style="color:#d14">&#39;,&#39;</span>]),
-</span></span><span style="display:flex;"><span>        TransformerScope.Training
-</span></span><span style="display:flex;"><span>    )
-</span></span><span style="display:flex;"><span>    .Append(
-</span></span><span style="display:flex;"><span>        mlContext.Transforms.Conversion.ConvertType(boundingBoxColumnName),
-</span></span><span style="display:flex;"><span>        TransformerScope.Training
-</span></span><span style="display:flex;"><span>    )
-</span></span><span style="display:flex;"><span>    .Append(mlContext.Transforms.LoadImages(<span style="color:#d14">&#34;Image&#34;</span>, imageFolder, <span style="color:#d14">&#34;ImagePath&#34;</span>))
-</span></span><span style="display:flex;"><span>    .Append(
-</span></span><span style="display:flex;"><span>        mlContext.MulticlassClassification.Trainers.ObjectDetection(
-</span></span><span style="display:flex;"><span>            labelColumnName, predictedLabelColumnName, scoreColumnName,
-</span></span><span style="display:flex;"><span>            boundingBoxColumnName, predictedBoundingBoxColumnName,
-</span></span><span style="display:flex;"><span>            imageColumnName, maxEpoch
-</span></span><span style="display:flex;"><span>        )
-</span></span><span style="display:flex;"><span>    )
-</span></span><span style="display:flex;"><span>    .Append(mlContext.Transforms.Conversion.MapKeyToValue(
-</span></span><span style="display:flex;"><span>        predictedLabelColumnName));
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> filteredPipeline <span style="color:#1f2328">=</span> chain<span style="color:#1f2328">.</span> Append<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Text<span style="color:#1f2328">.</span>TokenizeIntoWords<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>            labelColumnName<span style="color:#1f2328">,</span> separators<span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;,&#39;</span><span style="color:#1f2328">]),</span>
+</span></span><span style="display:flex;"><span>        TransformerScope<span style="color:#1f2328">.</span>Training
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Conversion<span style="color:#1f2328">.</span>MapValueToKey<span style="color:#1f2328">(</span>labelColumnName<span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>        TransformerScope<span style="color:#1f2328">.</span>Training
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Text<span style="color:#1f2328">.</span>TokenizeIntoWords<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>            boundingBoxColumnName<span style="color:#1f2328">,</span> separators<span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;,&#39;</span><span style="color:#1f2328">]),</span>
+</span></span><span style="display:flex;"><span>        TransformerScope<span style="color:#1f2328">.</span>Training
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Conversion<span style="color:#1f2328">.</span>ConvertType<span style="color:#1f2328">(</span>boundingBoxColumnName<span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>        TransformerScope<span style="color:#1f2328">.</span>Training
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>LoadImages<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Image&#34;</span><span style="color:#1f2328">,</span> imageFolder<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;ImagePath&#34;</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        mlContext<span style="color:#1f2328">.</span>MulticlassClassification<span style="color:#1f2328">.</span>Trainers<span style="color:#1f2328">.</span>ObjectDetection<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>            labelColumnName<span style="color:#1f2328">,</span> predictedLabelColumnName<span style="color:#1f2328">,</span> scoreColumnName<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            boundingBoxColumnName<span style="color:#1f2328">,</span> predictedBoundingBoxColumnName<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            imageColumnName<span style="color:#1f2328">,</span> maxEpoch
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Conversion<span style="color:#1f2328">.</span>MapKeyToValue<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        predictedLabelColumnName<span style="color:#1f2328">));</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> options = <span style="color:#000;font-weight:bold">new</span> ObjectDetectionTrainer.Options()
-</span></span><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>    LabelColumnName = labelColumnName,
-</span></span><span style="display:flex;"><span>    BoundingBoxColumnName = boundingBoxColumnName,
-</span></span><span style="display:flex;"><span>    ScoreThreshold = .<span style="color:#099">5</span>,
-</span></span><span style="display:flex;"><span>    MaxEpoch = maxEpoch,
-</span></span><span style="display:flex;"><span>    LogEveryNStep = <span style="color:#099">1</span>,
-</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> options <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> ObjectDetectionTrainer<span style="color:#1f2328">.</span>Options<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    LabelColumnName <span style="color:#1f2328">=</span> labelColumnName<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    BoundingBoxColumnName <span style="color:#1f2328">=</span> boundingBoxColumnName<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    ScoreThreshold <span style="color:#1f2328">=</span> <span style="color:#1f2328">.</span><span style="color:#0550ae">5</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    MaxEpoch <span style="color:#1f2328">=</span> maxEpoch<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    LogEveryNStep <span style="color:#1f2328">=</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">};</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// 另一种 pipeline 的写法</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> pipeline = mlContext.Transforms.Text.TokenizeIntoWords(
-</span></span><span style="display:flex;"><span>    labelColumnName, separators: [<span style="color:#d14">&#39;,&#39;</span>])
-</span></span><span style="display:flex;"><span>    .Append(mlContext.Transforms.Conversion.MapValueToKey(labelColumnName))
-</span></span><span style="display:flex;"><span>    .Append(mlContext.Transforms.Text.TokenizeIntoWords(
-</span></span><span style="display:flex;"><span>        boundingBoxColumnName, separators: [<span style="color:#d14">&#39;,&#39;</span>]))
-</span></span><span style="display:flex;"><span>    .Append(mlContext.Transforms.Conversion.ConvertType(boundingBoxColumnName))
-</span></span><span style="display:flex;"><span>    .Append(mlContext.Transforms.LoadImages(<span style="color:#d14">&#34;Image&#34;</span>, imageFolder, <span style="color:#d14">&#34;ImagePath&#34;</span>))
-</span></span><span style="display:flex;"><span>    .Append(mlContext.MulticlassClassification.Trainers.ObjectDetection(options))
-</span></span><span style="display:flex;"><span>    .Append(mlContext.Transforms.Conversion.MapKeyToValue(predictedLabelColumnName));
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// 另一种 pipeline 的写法</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> pipeline <span style="color:#1f2328">=</span> mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Text<span style="color:#1f2328">.</span>TokenizeIntoWords<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    labelColumnName<span style="color:#1f2328">,</span> separators<span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;,&#39;</span><span style="color:#1f2328">])</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Conversion<span style="color:#1f2328">.</span>MapValueToKey<span style="color:#1f2328">(</span>labelColumnName<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Text<span style="color:#1f2328">.</span>TokenizeIntoWords<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        boundingBoxColumnName<span style="color:#1f2328">,</span> separators<span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;,&#39;</span><span style="color:#1f2328">]))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Conversion<span style="color:#1f2328">.</span>ConvertType<span style="color:#1f2328">(</span>boundingBoxColumnName<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>LoadImages<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Image&#34;</span><span style="color:#1f2328">,</span> imageFolder<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;ImagePath&#34;</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>mlContext<span style="color:#1f2328">.</span>MulticlassClassification<span style="color:#1f2328">.</span>Trainers<span style="color:#1f2328">.</span>ObjectDetection<span style="color:#1f2328">(</span>options<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Conversion<span style="color:#1f2328">.</span>MapKeyToValue<span style="color:#1f2328">(</span>predictedLabelColumnName<span style="color:#1f2328">));</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> model = pipeline.Fit(data);
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> idv = model.Transform(data);
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> model <span style="color:#1f2328">=</span> pipeline<span style="color:#1f2328">.</span>Fit<span style="color:#1f2328">(</span>data<span style="color:#1f2328">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> idv <span style="color:#1f2328">=</span> model<span style="color:#1f2328">.</span>Transform<span style="color:#1f2328">(</span>data<span style="color:#1f2328">);</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> metrics = ML.MulticlassClassification.EvaluateObjectDetection(
-</span></span><span style="display:flex;"><span>    idv, idv.Schema[<span style="color:#099">2</span>], idv.Schema[boundingBoxColumnName], 
-</span></span><span style="display:flex;"><span>    idv.Schema[predictedLabelColumnName],
-</span></span><span style="display:flex;"><span>    idv.Schema[predictedBoundingBoxColumnName], idv.Schema[scoreColumnName]
-</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> metrics <span style="color:#1f2328">=</span> ML<span style="color:#1f2328">.</span>MulticlassClassification<span style="color:#1f2328">.</span>EvaluateObjectDetection<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    idv<span style="color:#1f2328">,</span> idv<span style="color:#1f2328">.</span>Schema<span style="color:#1f2328">[</span><span style="color:#0550ae">2</span><span style="color:#1f2328">],</span> idv<span style="color:#1f2328">.</span>Schema<span style="color:#1f2328">[</span>boundingBoxColumnName<span style="color:#1f2328">],</span> 
+</span></span><span style="display:flex;"><span>    idv<span style="color:#1f2328">.</span>Schema<span style="color:#1f2328">[</span>predictedLabelColumnName<span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>    idv<span style="color:#1f2328">.</span>Schema<span style="color:#1f2328">[</span>predictedBoundingBoxColumnName<span style="color:#1f2328">],</span> idv<span style="color:#1f2328">.</span>Schema<span style="color:#1f2328">[</span>scoreColumnName<span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">);</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>命名实体识别和问答需要引用 Microsoft.ML.TorchSharp 3.0.0 包的 Microsoft.ML.TorchSharp 命名空间。</p>
@@ -251,23 +251,23 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#998;font-style:italic">// 问答训练器定义</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> chain = <span style="color:#000;font-weight:bold">new</span> EstimatorChain&lt;ITransformer&gt;();
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> estimatorQA = chain.Append(
-</span></span><span style="display:flex;"><span>    mlContext.MulticlassClassification.Trainers.QuestionAnswer(
-</span></span><span style="display:flex;"><span>    contextColumnName, questionColumnName, trainingAnswerColumnName,
-</span></span><span style="display:flex;"><span>    answerIndexColumnName, predictedAnswerColumnName, scoreColumnName,
-</span></span><span style="display:flex;"><span>    topK, batchSize, maxEpochs, architecture, validationSet
-</span></span><span style="display:flex;"><span>));
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// 问答训练器定义</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> chain <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> EstimatorChain<span style="color:#1f2328">&lt;</span>ITransformer<span style="color:#1f2328">&gt;();</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> estimatorQA <span style="color:#1f2328">=</span> chain<span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    mlContext<span style="color:#1f2328">.</span>MulticlassClassification<span style="color:#1f2328">.</span>Trainers<span style="color:#1f2328">.</span>QuestionAnswer<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    contextColumnName<span style="color:#1f2328">,</span> questionColumnName<span style="color:#1f2328">,</span> trainingAnswerColumnName<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    answerIndexColumnName<span style="color:#1f2328">,</span> predictedAnswerColumnName<span style="color:#1f2328">,</span> scoreColumnName<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    topK<span style="color:#1f2328">,</span> batchSize<span style="color:#1f2328">,</span> maxEpochs<span style="color:#1f2328">,</span> architecture<span style="color:#1f2328">,</span> validationSet
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">));</span>
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#998;font-style:italic">// 命名实体识别训练器定义</span>
-</span></span><span style="display:flex;"><span><span style="color:#458;font-weight:bold">var</span> estimatorNER = chain.Append(
-</span></span><span style="display:flex;"><span>    mlContext.Transforms.Conversion.MapValueToKey(<span style="color:#d14">&#34;Label&#34;</span>, keyData))
-</span></span><span style="display:flex;"><span>    .Append(mlContext.MulticlassClassification.Trainers.NameEntityRecognition(
-</span></span><span style="display:flex;"><span>        labelColumnName, outputColumnName, sentence1ColumnName,
-</span></span><span style="display:flex;"><span>        batchSize, maxEpochs, architecture, validationSet
-</span></span><span style="display:flex;"><span>    ))
-</span></span><span style="display:flex;"><span>    .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumn));
+</span></span><span style="display:flex;"><span><span style="color:#57606a">// 命名实体识别训练器定义</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> estimatorNER <span style="color:#1f2328">=</span> chain<span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Conversion<span style="color:#1f2328">.</span>MapValueToKey<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Label&#34;</span><span style="color:#1f2328">,</span> keyData<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>mlContext<span style="color:#1f2328">.</span>MulticlassClassification<span style="color:#1f2328">.</span>Trainers<span style="color:#1f2328">.</span>NameEntityRecognition<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        labelColumnName<span style="color:#1f2328">,</span> outputColumnName<span style="color:#1f2328">,</span> sentence1ColumnName<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        batchSize<span style="color:#1f2328">,</span> maxEpochs<span style="color:#1f2328">,</span> architecture<span style="color:#1f2328">,</span> validationSet
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Conversion<span style="color:#1f2328">.</span>MapKeyToValue<span style="color:#1f2328">(</span>outputColumn<span style="color:#1f2328">));</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h3 id="数据处理场景的改善">数据处理场景的改善</h3>
@@ -474,6 +474,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
     </li>
     
@@ -509,10 +513,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2024-06-07-finetune-small-language-model-phi-3-using-azure-machine/" title="使用 Azure 机器学习对小型语言模型 Phi-3 进行微调" target="_blank">使用 Azure 机器学习对小型语言模型 Phi-3 进行微调</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -522,7 +522,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (2)</a></li>
     
@@ -539,6 +539,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
 <div class="tagcloud">
     
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
@@ -549,6 +551,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
     
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
     <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
@@ -558,6 +562,8 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
     
     <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     

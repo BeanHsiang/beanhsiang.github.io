@@ -30,6 +30,13 @@
       <description>&lt;p&gt;在2025年，我们可能会习惯于与一个个人AI代理聊天，这个代理了解我们的日程、朋友圈和我们去过的地方。它们被设计得如此贴心，以至于我们愿意让它们深入我们生活的方方面面。通过语音交流，这种亲密感变得更加强烈。&lt;/p&gt;&#xA;&lt;p&gt;但这种亲密感其实是一种错觉，我们以为自己在和一个真正像人的代理互动，但实际上背后是一个服务于工业利益的系统，这些利益并不总是和我们的利益一致。这些AI代理拥有强大的能力，它们能微妙地影响我们的消费选择、去向和阅读内容。它们以一种几乎不易察觉的方式，让我们忘记它们真正的忠诚所在。&lt;/p&gt;</description>
     </item>
     <item>
+      <title>FireUG x .NET Conf China 2024</title>
+      <link>https://beanhsiang.github.io/post/2024-12-14-fireug-net-conf-china-2024/</link>
+      <pubDate>Sat, 14 Dec 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2024-12-14-fireug-net-conf-china-2024/</guid>
+      <description>&lt;h1 id=&#34;net-conf-china-2024-赋能开发者&#34;&gt;.NET Conf China 2024 赋能开发者！&lt;/h1&gt;&#xA;&lt;h2 id=&#34;--fireug-特别呈现&#34;&gt;——  FireUG 特别呈现&lt;/h2&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/logo.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;LOGO&#34; src=&#34;https://beanhsiang.github.io/uploads/logo.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;以“智能、创新、开放”为核心主题，.NET Conf China 2024 于12月14日在上海成功举办。&lt;/p&gt;&#xA;&lt;p&gt;本次大会，微软（中国）公司首席技术官韦青老师在主会场演讲中分享了对 AI 技术时代的前瞻思考，并在圆桌论坛深度探讨了.NET+AI 的现状与未来。各分会场中，来自微软的工程师、产品组专家及微软最有价值专家（MVP）老师们，围绕 .NET Aspire、用 .NET 打造企业级智能聊天助手与 API 网关、.NET 在国产化系统下的实践等话题带来了精彩分享。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>使用MLX调用Phi-4模型</title>
       <link>https://beanhsiang.github.io/post/2024-12-10-phi-4-with-mlx/</link>
       <pubDate>Tue, 10 Dec 2024 12:00:00 +0800</pubDate>

@@ -6,8 +6,15 @@
     <description>Recent content in Tags on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Fri, 07 Mar 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 15 Mar 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FireUG</title>
+      <link>https://beanhsiang.github.io/tags/FireUG/</link>
+      <pubDate>Sat, 15 Mar 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/tags/FireUG/</guid>
+      <description></description>
+    </item>
     <item>
       <title>.NET</title>
       <link>https://beanhsiang.github.io/tags/.NET/</link>
@@ -55,13 +62,6 @@
       <link>https://beanhsiang.github.io/tags/VoiceRAG/</link>
       <pubDate>Mon, 06 Jan 2025 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/tags/VoiceRAG/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>FireUG</title>
-      <link>https://beanhsiang.github.io/tags/FireUG/</link>
-      <pubDate>Mon, 30 Dec 2024 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/FireUG/</guid>
       <description></description>
     </item>
     <item>

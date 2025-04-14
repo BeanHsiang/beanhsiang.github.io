@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-Hans">
 <head>
-	<meta name="generator" content="Hugo 0.145.0">
+	<meta name="generator" content="Hugo 0.146.3">
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -70,6 +70,41 @@
                 <div class="col-8" id="main">
                     
 <div class="res-cons">
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" title="ML.NET Model Builder 中的句子相似性" target="_blank">ML.NET Model Builder 中的句子相似性</a>
+            </h1>
+        </header>
+        
+  <time datetime="2023-03-02T05:23:00Z" class="post-meta meta-date dt-published">
+    2023年3月2日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/ML.NET' target="_blank">ML.NET</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p><a href="https://dot.net/ml?WT.mc_id=AI-MVP-5003172">ML.NET</a> 是一个面向 .NET 开发人员的开源跨平台机器学习框架，可将自定义机器学习模型集成到 .NET 应用中。</p>
+<p>新版本的 <a href="https://marketplace.visualstudio.com/items?itemName=MLNET.ModelBuilder2022">Model Builder</a> 现已发布！</p>
+<h2 id="有什么新变化">有什么新变化？</h2>
+<p>以下是此版本的亮点。您可以在 <a href="https://github.com/dotnet/machinelearning-modelbuilder/blob/main/docs/release-notes/16.14.4.md">Model Builder 发行说明</a>中找到所有更改的列表。</p>
+<p>要开始使用这些新功能，请<a href="https://learn.microsoft.com/dotnet/machine-learning/how-to-guides/install-model-builder?tabs=visual-studio-2022&amp;WT.mc_id=AI-MVP-5003172">安装或升级到</a>最新版本的 Model Builder 16.14.4 或更高版本。</p>
+<h3 id="model-builder中的句子相似性">Model Builder中的句子相似性</h3>
+<p>句子相似性是一项比较两个文本彼此相似程度的任务。</p>
+<p>句子相似性的常见用例是信息检索。例如，给出一个搜索查询，返回最相似（相关）的文档。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2023-03-02-sentence-similarity-mlnet-model-builder/" target="_blank">阅读全文</a></p>
+    </article>
+    
     
     
     <article class="post">
@@ -348,56 +383,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2022-07-02-azure-cognitive-search-now-supports-swapping-indexes/" title="Azure Cognitive Search 支持交换索引" target="_blank">Azure Cognitive Search 支持交换索引</a>
-            </h1>
-        </header>
-        
-  <time datetime="2022-07-02T02:00:00Z" class="post-meta meta-date dt-published">
-    2022年7月2日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>搜索索引是不可变的，这意味着如果需要更新索引，通常需要<a href="https://docs.microsoft.com/azure/search/search-howto-reindex?WT.mc_id=AI-MVP-5003172">删除并重新生成</a>索引或创建新索引，然后迁移应用程序。像这样交换搜索索引会增加管理搜索索引的复杂性，如果最终需要在多个位置更新应用程序设置或需要重新部署代码，则可能会很困难。</p>
-<p>为了帮助更轻松地交换索引，Azure 认知搜索现在支持预览版提供的<a href="https://docs.microsoft.com/azure/search/search-how-to-alias?tabs=rest&amp;WT.mc_id=AI-MVP-5003172">索引别名</a>。别名是辅助名称，可用于引用索引以进行查询、索引和其他文档操作。您可以通过 <a href="https://docs.microsoft.com/rest/api/searchservice/preview-api/create-or-update-alias?WT.mc_id=AI-MVP-5003172">REST API</a>、<a href="https://docs.microsoft.com/azure/search/search-how-to-alias?tabs=vscode&amp;WT.mc_id=AI-MVP-5003172#create-an-index-alias">Visual Studio Code 扩展</a>或 <a href="https://docs.microsoft.com/dotnet/api/azure.search.documents.indexes.searchindexclient.createorupdatealias?WT.mc_id=AI-MVP-5003172&amp;view=azure-dotnet-preview#azure-search-documents-indexes-searchindexclient-createorupdatealias(system-string-azure-search-documents-indexes-models-searchalias-system-boolean-system-threading-cancellationtoken)">SDK</a> 创建别名。</p>
-<p><strong>POST https://[service name].search.windows.net/aliases?api-version=2021-04-30-Preview</strong></p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
-</span></span><span style="display:flex;"><span>   <span style="color:#0550ae">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;my-alias&#34;</span><span style="color:#1f2328">,</span>
-</span></span><span style="display:flex;"><span>   <span style="color:#0550ae">&#34;indexes&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;hotel-samples-index&#34;</span><span style="color:#1f2328">]</span>
-</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>如果您发现自己相当频繁地更新搜索索引，则可能会从使用别名中受益。下图显示了在应用程序中使用索引别名的典型工作流。
-
-        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224216713-4a1e6d70-0277-46cd-832a-1194d5decd2d.png">
-            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/224216713-4a1e6d70-0277-46cd-832a-1194d5decd2d.png" />
-        </a>
-    </p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2022-07-02-azure-cognitive-search-now-supports-swapping-indexes/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -486,6 +471,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-14-use-typescript-to-build-an-mcp-server-for-azure-ai-agent/" title="使用 TypeScript 构建 Azure AI Agent 的 MCP 服务器" target="_blank">使用 TypeScript 构建 Azure AI Agent 的 MCP 服务器</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-03-22-fireug-global-ai-bootcamp-2025/" title="FireUG x Global AI Bootcamp 2025" target="_blank">FireUG x Global AI Bootcamp 2025</a>
     </li>
     
@@ -521,10 +510,6 @@
         <a href="https://beanhsiang.github.io/post/2024-10-15-building-your-first-voice-bot-with-gpt-4o-real-time-api/" title="使用 GPT-4o 实时 API 构建一个语音机器人" target="_blank">使用 GPT-4o 实时 API 构建一个语音机器人</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/" title="检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用" target="_blank">检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -534,7 +519,7 @@
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (26)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
     
@@ -554,6 +539,8 @@
     <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
     
@@ -577,11 +564,15 @@
     
     <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     
     <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
     
     <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
     
     <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
     

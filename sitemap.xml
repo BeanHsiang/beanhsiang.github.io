@@ -2,8 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
+    <lastmod>2025-04-14T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Azure-AI-Agent/</loc>
+    <lastmod>2025-04-14T12:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2025-03-15T12:00:00+08:00</lastmod>
+    <lastmod>2025-04-14T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/</loc>
+    <lastmod>2025-04-14T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/MCP/</loc>
+    <lastmod>2025-04-14T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Model-Context-Protocol/</loc>
+    <lastmod>2025-04-14T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2025-04-14T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2025-04-14T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2025-04-14-use-typescript-to-build-an-mcp-server-for-azure-ai-agent/</loc>
+    <lastmod>2025-04-14T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/FireUG/</loc>
     <lastmod>2025-03-15T12:00:00+08:00</lastmod>
@@ -14,19 +38,7 @@
     <loc>https://beanhsiang.github.io/post/2025-03-22-fireug-global-ai-bootcamp-2025/</loc>
     <lastmod>2025-03-15T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2025-03-15T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2025-03-15T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
-    <lastmod>2025-03-15T12:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://beanhsiang.github.io/tags/.NET/</loc>
-    <lastmod>2025-03-07T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
     <lastmod>2025-03-07T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/CSnakes/</loc>

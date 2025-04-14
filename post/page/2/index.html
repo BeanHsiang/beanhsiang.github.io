@@ -75,6 +75,40 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/" title="检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用" target="_blank">检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用</a>
+            </h1>
+        </header>
+        
+  <time datetime="2024-09-08T04:00:00Z" class="post-meta meta-date dt-published">
+    2024年9月8日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>对企业来说，生成式AI最具影响力的应用之一是创建自然语言界面，这些界面已根据特定领域和使用场景的数据进行了定制，以提供更准确、更准确的响应。这意味着回答与银行、法律和医疗等特定领域相关的问题。</p>
+<p>我们经常谈到实现这一目标的两种方法：</p>
+<ol>
+<li>检索增强生成（RAG）：将这些文档存储在向量数据库中，在查询时根据它们与问题的语义相似度来检索文档，然后将它们作为LLM的上下文。</li>
+<li>监督微调（SFT）：在一组代表特定领域知识的提示和响应上对现有的基线模型进行训练。</li>
+</ol>
+<p>虽然大多数尝试使用RAG的组织都试图通过其内部知识库来扩展LLM的知识，但许多组织在没有进行显著优化的情况下未能达到预期效果。同样，精心挑选一个足够大且高质量的数据集用于微调也是一项具有挑战性的任务。这两种方法都有局限性：微调将模型限制在其已训练的数据上，使其容易受到近似和幻觉的影响，而RAG虽然可以使模型落地，但它仅根据查询与文档的语义接近程度来检索文档——这可能与查询无关，并导致给出的解释不充分。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/" title="语音识别与合成中的延迟问题及解决策略" target="_blank">语音识别与合成中的延迟问题及解决策略</a>
             </h1>
         </header>
@@ -611,35 +645,6 @@ Yang SSW 资深专家
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" title="GPTs action 中使用 Azure AI Search" target="_blank">GPTs action 中使用 Azure AI Search</a>
-            </h1>
-        </header>
-        
-  <time datetime="2024-01-22T04:00:00Z" class="post-meta meta-date dt-published">
-    2024年1月22日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>OpenAI 的 GPTs 上线有一段时间了，在实际应用中发现 GPTs 内置对知识库的检索能力很一般，对话过程中经常拿不到期望的反馈内容。如果利用 GPTs 的 action 能很好地弥补这个缺陷。</p>
-<p>总所周知加强检索知识库离不开 RAG，如果自建 RAG 将会是一个很大的工作量，而且还要考虑到知识库的更新问题。于是想到 Azure AI Search 提供了一个很好的解决方案，可以很方便地将知识库导入到 Azure AI Search 中，然后通过 API 调用来检索知识库。整个过程都不需要编码，所以将 Azure AI Search 与 GPTs action 结合起来是个不错的主意。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2024-01-22-gpts-action-with-azure-ai-search/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -728,6 +733,10 @@ Yang SSW 资深专家
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-14-use-typescript-to-build-an-mcp-server-for-azure-ai-agent/" title="使用 TypeScript 构建 Azure AI Agent 的 MCP 服务器" target="_blank">使用 TypeScript 构建 Azure AI Agent 的 MCP 服务器</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-03-22-fireug-global-ai-bootcamp-2025/" title="FireUG x Global AI Bootcamp 2025" target="_blank">FireUG x Global AI Bootcamp 2025</a>
     </li>
     
@@ -763,10 +772,6 @@ Yang SSW 资深专家
         <a href="https://beanhsiang.github.io/post/2024-10-15-building-your-first-voice-bot-with-gpt-4o-real-time-api/" title="使用 GPT-4o 实时 API 构建一个语音机器人" target="_blank">使用 GPT-4o 实时 API 构建一个语音机器人</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/" title="检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用" target="_blank">检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -776,7 +781,7 @@ Yang SSW 资深专家
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (25)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (26)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
     
@@ -796,6 +801,8 @@ Yang SSW 资深专家
     <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
     
     <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
     
@@ -819,11 +826,15 @@ Yang SSW 资深专家
     
     <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
     
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
     
     <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
     
     <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
     
     <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
     

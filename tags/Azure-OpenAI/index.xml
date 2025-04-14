@@ -6,8 +6,15 @@
     <description>Recent content in Azure OpenAI on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Wed, 15 May 2024 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 14 Apr 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/Azure-OpenAI/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>通用模型与推理模型：Azure OpenAI 的选择指南</title>
+      <link>https://beanhsiang.github.io/post/2025-04-14-general-models-vs-inference-models-a-selection-guide-for-azure-openai/</link>
+      <pubDate>Mon, 14 Apr 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-04-14-general-models-vs-inference-models-a-selection-guide-for-azure-openai/</guid>
+      <description>&lt;p&gt;随着大型语言模型（LLM）的普及，市场上涌现了许多不同类型的模型，满足从日常聊天到高级科学推理的各种任务需求。如果你熟悉 GPT-3.5 和 GPT-4，你会知道它们在通用 AI 领域设立了高标准。然而，随着技术的发展，模型之间的差异也变得更加显著。&lt;/p&gt;&#xA;&lt;p&gt;本文将从以下几个方面探讨通用模型与推理模型的区别，并结合 Azure OpenAI 提供的具体模型进行说明：&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Azure OpenAI 语音聊天</title>
       <link>https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/</link>

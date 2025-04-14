@@ -16,6 +16,13 @@
       <description>&lt;h2 id=&#34;简介&#34;&gt;简介&lt;/h2&gt;&#xA;&lt;p&gt;这篇文章将带你了解如何使用 TypeScript 构建一个 &lt;strong&gt;Model Context Protocol (MCP)&lt;/strong&gt; 服务器，以连接 Azure AI Agent 和 Claude Desktop 或其他支持 MCP 的客户端。通过本文，你将学习搭建服务器、配置连接以及以编程方式处理 AI Agent 的交互。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;为什么需要-mcp-服务器&#34;&gt;为什么需要 MCP 服务器？&lt;/h2&gt;&#xA;&lt;p&gt;Azure AI Agent 是 &lt;strong&gt;Azure AI Foundry&lt;/strong&gt; 生态系统的一部分，提供强大的对话式 AI 功能。然而，要将这些 Agent 集成到桌面应用程序中，往往需要定制化的解决方案。MCP 提供了一个标准化协议，可以无缝连接 &lt;strong&gt;Azure AI Agent&lt;/strong&gt; 和支持 MCP 的客户端（如 Claude Desktop）。&lt;/p&gt;</description>
     </item>
     <item>
+      <title>通用模型与推理模型：Azure OpenAI 的选择指南</title>
+      <link>https://beanhsiang.github.io/post/2025-04-14-general-models-vs-inference-models-a-selection-guide-for-azure-openai/</link>
+      <pubDate>Mon, 14 Apr 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-04-14-general-models-vs-inference-models-a-selection-guide-for-azure-openai/</guid>
+      <description>&lt;p&gt;随着大型语言模型（LLM）的普及，市场上涌现了许多不同类型的模型，满足从日常聊天到高级科学推理的各种任务需求。如果你熟悉 GPT-3.5 和 GPT-4，你会知道它们在通用 AI 领域设立了高标准。然而，随着技术的发展，模型之间的差异也变得更加显著。&lt;/p&gt;&#xA;&lt;p&gt;本文将从以下几个方面探讨通用模型与推理模型的区别，并结合 Azure OpenAI 提供的具体模型进行说明：&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>FireUG x Global AI Bootcamp 2025</title>
       <link>https://beanhsiang.github.io/post/2025-03-22-fireug-global-ai-bootcamp-2025/</link>
       <pubDate>Sat, 15 Mar 2025 12:00:00 +0800</pubDate>

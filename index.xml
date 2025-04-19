@@ -100,6 +100,13 @@
       <description>&lt;p&gt;语音识别和合成的延迟可能是创建无缝和高效应用程序的一个重大障碍。减少延迟不仅可以改善用户体验，还可以提升实时应用程序的整体性能。本文将探讨在一般转录、实时转录、文件转录和语音合成中减少延迟的策略。&lt;/p&gt;&#xA;&lt;h2 id=&#34;1-网络延迟将语音资源移近应用程序&#34;&gt;1. 网络延迟：将语音资源移近应用程序&lt;/h2&gt;&#xA;&lt;p&gt;导致语音识别延迟的主要因素之一是网络延迟。为了减轻这一延迟，关键是减少应用程序与语音识别资源之间的距离。以下是一些建议：&lt;/p&gt;</description>
     </item>
     <item>
+      <title>努力保留更多的原创知识</title>
+      <link>https://beanhsiang.github.io/post/2024-07-15-keep-more-original-knowledge/</link>
+      <pubDate>Mon, 15 Jul 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2024-07-15-keep-more-original-knowledge/</guid>
+      <description>&lt;p&gt;不久前我的一位好友向我诉说他的遭遇，他原创的一套在线课程被一家知识付费平台用爬虫剽窃并公开收费，他感到非常愤怒，但是又无可奈何。当下我们常说互联网信息爆炸的同时也应该看到，大量垃圾信息充斥着网络，普通人难以辨别真伪。久而久之，原创内容越来越少，导致网络上的信息质量越来越低，形成恶性循环。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>LLM 是脑，RPA 是手</title>
       <link>https://beanhsiang.github.io/post/2024-06-21-llm-is-the-brain-and-rpa-are-the-hands/</link>
       <pubDate>Fri, 21 Jun 2024 12:00:00 +0800</pubDate>

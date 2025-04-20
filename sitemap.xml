@@ -2,6 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://beanhsiang.github.io/</loc>
+    <lastmod>2025-04-20T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2025-04-20T12:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
     <lastmod>2025-04-14T12:00:00+08:00</lastmod>
   </url><url>
@@ -14,16 +20,10 @@
     <loc>https://beanhsiang.github.io/categories/</loc>
     <lastmod>2025-04-14T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2025-04-14T12:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://beanhsiang.github.io/tags/MCP/</loc>
     <lastmod>2025-04-14T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Model-Context-Protocol/</loc>
-    <lastmod>2025-04-14T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
     <lastmod>2025-04-14T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/</loc>

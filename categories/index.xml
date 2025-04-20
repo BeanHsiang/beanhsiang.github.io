@@ -6,8 +6,15 @@
     <description>Recent content in Categories on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Fri, 18 Apr 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 20 Apr 2025 11:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Model-Based Machine Learning</title>
+      <link>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</link>
+      <pubDate>Sun, 20 Apr 2025 11:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Azure AI</title>
       <link>https://beanhsiang.github.io/categories/Azure-AI/</link>

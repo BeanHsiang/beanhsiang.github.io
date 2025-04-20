@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Semantic Kernel on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/tags/Semantic-Kernel/</link>
+    <description>Recent content in Semantic Kernel on Innovation with tech</description>
+    <generator>Hugo</generator>
+    <language>zh-Hans</language>
+    <lastBuildDate>Fri, 18 Apr 2025 12:00:00 +0800</lastBuildDate>
+    <atom:link href="https://beanhsiang.github.io/tags/Semantic-Kernel/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 Semantic Kernel Python 集成 Google A2A协议</title>
+      <link>https://beanhsiang.github.io/post/2025-04-18-google-a2a-protocol-integrated-using-semantic-kernel-python/</link>
+      <pubDate>Fri, 18 Apr 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-04-18-google-a2a-protocol-integrated-using-semantic-kernel-python/</guid>
+      <description>&lt;p&gt;Google的Agent-to-Agent（A2A）协议旨在实现不同AI代理之间的无缝互操作性。而微软的**Semantic Kernel（SK）**是一个开源平台，用于协调智能代理的交互。本文将介绍如何将Semantic Kernel代理集成到A2A生态系统中，并作为A2A服务器高效地路由代理调用到专业服务。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

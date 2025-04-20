@@ -6,13 +6,34 @@
     <description>Recent content in Tags on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Fri, 18 Apr 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 20 Apr 2025 11:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Azure AI</title>
-      <link>https://beanhsiang.github.io/tags/Azure-AI/</link>
+      <title>Machine Learning</title>
+      <link>https://beanhsiang.github.io/tags/Machine-Learning/</link>
+      <pubDate>Sun, 20 Apr 2025 11:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/tags/Machine-Learning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Model-Based</title>
+      <link>https://beanhsiang.github.io/tags/Model-Based/</link>
+      <pubDate>Sun, 20 Apr 2025 11:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/tags/Model-Based/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>A2A</title>
+      <link>https://beanhsiang.github.io/tags/A2A/</link>
       <pubDate>Fri, 18 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Azure-AI/</guid>
+      <guid>https://beanhsiang.github.io/tags/A2A/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Semantic Kernel</title>
+      <link>https://beanhsiang.github.io/tags/Semantic-Kernel/</link>
+      <pubDate>Fri, 18 Apr 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/tags/Semantic-Kernel/</guid>
       <description></description>
     </item>
     <item>
@@ -153,6 +174,13 @@
       <link>https://beanhsiang.github.io/tags/RAFT/</link>
       <pubDate>Sun, 08 Sep 2024 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/tags/RAFT/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Azure AI</title>
+      <link>https://beanhsiang.github.io/tags/Azure-AI/</link>
+      <pubDate>Fri, 09 Aug 2024 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/tags/Azure-AI/</guid>
       <description></description>
     </item>
     <item>

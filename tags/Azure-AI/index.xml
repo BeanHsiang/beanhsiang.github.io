@@ -6,15 +6,8 @@
     <description>Recent content in Azure AI on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Fri, 18 Apr 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 09 Aug 2024 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/Azure-AI/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>使用Semantic Kernel Python集成Google A2A协议</title>
-      <link>https://beanhsiang.github.io/post/2025-04-20-google-a2a-protocol-integrated-using-semantic-kernel-python/</link>
-      <pubDate>Fri, 18 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-04-20-google-a2a-protocol-integrated-using-semantic-kernel-python/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://devblogs.microsoft.com/semantic-kernel/wp-content/uploads/sites/78/2025/04/mermaid_a2a.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;标题图片&#34; src=&#34;https://devblogs.microsoft.com/semantic-kernel/wp-content/uploads/sites/78/2025/04/mermaid_a2a.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;Google的Agent-to-Agent（A2A）协议旨在实现不同AI代理之间的无缝互操作性。而微软的**Semantic Kernel（SK）**是一个开源平台，用于协调智能代理的交互。本文将介绍如何将Semantic Kernel代理集成到A2A生态系统中，并作为A2A服务器高效地路由代理调用到专业服务。&lt;/p&gt;</description>
-    </item>
     <item>
       <title>语音识别与合成中的延迟问题及解决策略</title>
       <link>https://beanhsiang.github.io/post/2024-08-09-reduce-latency-for-azure-speech/</link>

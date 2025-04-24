@@ -13,7 +13,7 @@
       <link>https://beanhsiang.github.io/post/2025-04-24-using-pydanticai-for-agentic-development/</link>
       <pubDate>Thu, 24 Apr 2025 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2025-04-24-using-pydanticai-for-agentic-development/</guid>
-      <description>&lt;p&gt;在人工智能快速发展的今天，智能代理(Agentic AI)成为了一个热门话题。本文将介绍如何使用 PydanticAI 构建智能代理系统，包括与 MCP(Model Context Protocol)的集成以及一个实际的智能工单助手应用案例。&lt;/p&gt;&#xA;&lt;h2 id=&#34;pydanticai-与-mcp-简介&#34;&gt;PydanticAI 与 MCP 简介&lt;/h2&gt;&#xA;&lt;p&gt;PydanticAI 是一个强大的 Python 库，它允许开发者以类型安全的方式定义和使用AI代理。它与 Pydantic v2 完美集成，提供了清晰的数据验证和模式定义能力。而 MCP(Model Context Protocol)则是一个标准化协议，用于定义LLM如何与工具交互。&lt;/p&gt;</description>
+      <description>&lt;p&gt;在人工智能快速发展的今天，智能代理(Agentic AI) 成为了一个热门话题。本文将介绍如何使用 PydanticAI 构建智能代理系统，包括与 MCP(Model Context Protocol) 的集成以及一个实际的智能工单助手应用案例。&lt;/p&gt;&#xA;&lt;h2 id=&#34;pydanticai-与-mcp-简介&#34;&gt;PydanticAI 与 MCP 简介&lt;/h2&gt;&#xA;&lt;p&gt;PydanticAI 是一个强大的 Python 库，它允许开发者以类型安全的方式定义和使用 AI 代理。它与 Pydantic v2 完美集成，提供了清晰的数据验证和模式定义能力。而 MCP(Model Context Protocol) 则是一个标准化协议，用于定义 LLM 如何与工具交互。&lt;/p&gt;</description>
     </item>
     <item>
       <title>[译]基于模型的机器学习 - 第一章 谋杀之谜</title>

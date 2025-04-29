@@ -13,7 +13,7 @@
       <link>https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/</link>
       <pubDate>Mon, 28 Apr 2025 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/</guid>
-      <description>&lt;h2 id=&#34;11-整合证据&#34;&gt;1.1 整合证据&lt;/h2&gt;&#xA;&lt;p&gt;贝叶斯博士彻底搜查了整个豪宅。她发现可用的武器只有一把装饰性匕首和一把旧军用左轮手枪。&amp;ldquo;凶器一定是其中之一&amp;rdquo;，她得出结论。&lt;/p&gt;&#xA;&lt;p&gt;到目前为止，我们只考虑了一个&lt;strong&gt;随机变量&lt;/strong&gt;：&lt;code&gt;murderer&lt;/code&gt;（凶手）。但现在我们有了关于可能凶器的新信息，我们可以引入一个新的&lt;strong&gt;随机变量&lt;/strong&gt; &lt;code&gt;weapon&lt;/code&gt;（武器）来表示凶器的选择。这个新变量可以取两个值：&lt;code&gt;revolver&lt;/code&gt;（左轮手枪）或 &lt;code&gt;dagger&lt;/code&gt;（匕首）。有了这个新变量，下一步就是使用&lt;strong&gt;概率&lt;/strong&gt;来表达它与我们现有的 &lt;code&gt;murderer&lt;/code&gt; 变量之间的关系。这将让我们能够推理这些变量如何相互影响，并在破案中取得进展。&lt;/p&gt;</description>
+      <description>&lt;p&gt;贝叶斯博士彻底搜查了整个豪宅。她发现可用的武器只有一把装饰性匕首和一把旧军用左轮手枪。&amp;ldquo;凶器一定是其中之一&amp;rdquo;，她得出结论。&lt;/p&gt;&#xA;&lt;p&gt;到目前为止，我们只考虑了一个&lt;strong&gt;随机变量&lt;/strong&gt;：&lt;code&gt;murderer&lt;/code&gt;（凶手）。但现在我们有了关于可能凶器的新信息，我们可以引入一个新的&lt;strong&gt;随机变量&lt;/strong&gt; &lt;code&gt;weapon&lt;/code&gt;（武器）来表示凶器的选择。这个新变量可以取两个值：&lt;code&gt;revolver&lt;/code&gt;（左轮手枪）或 &lt;code&gt;dagger&lt;/code&gt;（匕首）。有了这个新变量，下一步就是使用&lt;strong&gt;概率&lt;/strong&gt;来表达它与我们现有的 &lt;code&gt;murderer&lt;/code&gt; 变量之间的关系。这将让我们能够推理这些变量如何相互影响，并在破案中取得进展。&lt;/p&gt;</description>
     </item>
     <item>
       <title>[译]基于模型的机器学习 - 第一章 谋杀之谜</title>

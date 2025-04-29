@@ -101,8 +101,7 @@
         
         
         <div class="post-content">
-            <h2 id="11-整合证据">1.1 整合证据</h2>
-<p>贝叶斯博士彻底搜查了整个豪宅。她发现可用的武器只有一把装饰性匕首和一把旧军用左轮手枪。&ldquo;凶器一定是其中之一&rdquo;，她得出结论。</p>
+            <p>贝叶斯博士彻底搜查了整个豪宅。她发现可用的武器只有一把装饰性匕首和一把旧军用左轮手枪。&ldquo;凶器一定是其中之一&rdquo;，她得出结论。</p>
 <p>到目前为止，我们只考虑了一个<strong>随机变量</strong>：<code>murderer</code>（凶手）。但现在我们有了关于可能凶器的新信息，我们可以引入一个新的<strong>随机变量</strong> <code>weapon</code>（武器）来表示凶器的选择。这个新变量可以取两个值：<code>revolver</code>（左轮手枪）或 <code>dagger</code>（匕首）。有了这个新变量，下一步就是使用<strong>概率</strong>来表达它与我们现有的 <code>murderer</code> 变量之间的关系。这将让我们能够推理这些变量如何相互影响，并在破案中取得进展。</p>
 <p>假设格雷少校是凶手。我们可能认为，他选择左轮手枪而不是匕首作为凶器的<strong>概率</strong>是 90%，因为他在军队服役期间熟悉这种枪的使用。但如果凶手是奥本小姐，我们可能认为她使用左轮手枪的<strong>概率</strong>会小得多，比如说 20%，因为她可能不熟悉这种在她出生前就已经停止使用的武器。这意味着<strong>随机变量</strong> <code>weapon</code> 的<strong>概率分布</strong>取决于凶手是格雷少校还是奥本小姐。这被称为<strong>条件概率分布</strong>，因为其<strong>概率</strong>值会随另一个<strong>随机变量</strong>（在本例中是 <code>murderer</code>）而变化。</p>
 <p>如果格雷少校是凶手，<strong>条件概率</strong>选择左轮手枪可以表示为：</p>
@@ -135,8 +134,7 @@
 <p>这可以用更紧凑的形式表示为：</p>
 <p>P(weapon | murderer)</p>
 <p>和以前一样，我们有一个<strong>归一化约束</strong>，这是由于对每个嫌疑人来说，使用的武器必须是左轮手枪或匕首。这个约束可以写作：</p>
-<p>∑[weapon] P(weapon | murderer) = 1</p>
-<p>其中求和是在<strong>随机变量</strong> <code>weapon</code> 的两个状态上进行，即 <code>weapon=revolver</code> 和 <code>weapon=dagger</code>，而 <code>murderer</code> 保持在任何固定值（<code>Grey</code> 或 <code>Auburn</code>）。请注意，我们不期望针对 <code>weapon</code> 的列中的<strong>概率</strong>相加等于 1。这就是为什么紧凑的形式中两个数字加起来不等于 1 的原因。这些概率加起来不需要等于 1，因为它们指的是在两种不同情况下左轮手枪是凶器的概率：如果格雷是凶手，如果奥本是凶手。例如，在两种情况下选择旋转器的概率可能很高，在两种情况下都可能很低，因此归一化约束不适用。</p>
+$$\sum_{weapon} P(weapon | murderer) = 1$$<p>其中求和是在<strong>随机变量</strong> <code>weapon</code> 的两个状态上进行，即 <code>weapon=revolver</code> 和 <code>weapon=dagger</code>，而 <code>murderer</code> 保持在任何固定值（<code>Grey</code> 或 <code>Auburn</code>）。请注意，我们不期望针对 <code>weapon</code> 的列中的<strong>概率</strong>相加等于 1。这就是为什么紧凑的形式中两个数字加起来不等于 1 的原因。这些概率加起来不需要等于 1，因为它们指的是在两种不同情况下左轮手枪是凶器的概率：如果格雷是凶手，如果奥本是凶手。例如，在两种情况下选择旋转器的概率可能很高，在两种情况下都可能很低，因此归一化约束不适用。</p>
 <p>条件概率可以写成条件概率表 （CPT） 的形式——这是我们在本书中经常使用的形式。表 1.1 显示了 P(weapon | murderer) 的<strong>条件概率表</strong>：</p>
 <p>
         <a data-fancybox="gallery" href="/uploads/Table1.1.png">

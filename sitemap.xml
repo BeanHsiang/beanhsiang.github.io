@@ -2,13 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/</loc>
-    <lastmod>2025-04-28T12:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
+    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Azure-AI/</loc>
+    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2025-04-28T12:00:00+08:00</lastmod>
+    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
+    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Semantic-Kernel/</loc>
+    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/</loc>
+    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/</loc>
     <lastmod>2025-04-28T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
@@ -20,16 +38,7 @@
     <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
     <lastmod>2025-04-28T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2025-04-28T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
-    <lastmod>2025-04-28T12:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://beanhsiang.github.io/tags/Agentic-AI/</loc>
-    <lastmod>2025-04-24T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
     <lastmod>2025-04-24T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/MCP/</loc>
@@ -54,9 +63,6 @@
     <lastmod>2025-04-20T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/A2A/</loc>
-    <lastmod>2025-04-18T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Semantic-Kernel/</loc>
     <lastmod>2025-04-18T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2025-04-18-google-a2a-protocol-integrated-using-semantic-kernel-python/</loc>
@@ -160,9 +166,6 @@
   </url><url>
     <loc>https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/</loc>
     <lastmod>2024-09-08T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Azure-AI/</loc>
-    <lastmod>2024-08-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Azure-Speech/</loc>
     <lastmod>2024-08-09T12:00:00+08:00</lastmod>

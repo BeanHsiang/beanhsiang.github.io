@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>使用 Semantic Kernel 插件编排 AI 代理的技术深度解析 | Innovation with tech</title>
+    <meta property="og:title" content="使用 Semantic Kernel 插件编排 AI 代理的技术深度解析 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2025-05-08T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2025-05-08T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="使用 Semantic Kernel 插件编排 AI 代理的技术深度解析">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">使用 Semantic Kernel 插件编排 AI 代理的技术深度解析</h1>
+        </header>
+        
+  <time datetime="2025-05-08T04:00:00Z" class="post-meta meta-date dt-published">
+    2025年5月8日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>在如今快速发展的 <strong>大型语言模型（LLM）</strong> 领域，编排专门的 AI 代理已成为构建复杂认知系统的关键，这些系统能够进行复杂推理和任务执行。虽然功能强大，但协调多个具有独特能力和数据访问权限的代理会带来显著的工程挑战。微软的 Semantic Kernel（SK）通过其直观的插件系统为管理这种复杂性提供了强大的框架。本文将深入探讨如何利用 SK 插件实现高效的代理编排，并结合实际实现模式进行说明。</p>
+<hr>
+<h2 id="代理编排的挑战">代理编排的挑战</h2>
+<p>现代 AI 应用通常超越单一 LLM 的能力，越来越依赖专业代理团队的协作。例如，一个查询可能需要获取以下信息：</p>
+<ul>
+<li>一个代理访问内部政策文档</li>
+<li>另一个代理搜索公共网络</li>
+<li>第三个代理查询私有数据库</li>
+</ul>
+<p>编排这些代理的核心挑战如下：</p>
+<ol>
+<li><strong>动态选择</strong>：适合特定任务的代理。</li>
+<li><strong>管理上下文和数据流</strong>：在各代理之间。</li>
+<li><strong>综合潜在冲突的输出</strong>：形成连贯的最终响应。</li>
+<li><strong>保持模块化和可观察性</strong>：随着系统规模扩大。</li>
+</ol>
+<hr>
+<h2 id="semantic-kernel-插件">Semantic Kernel 插件</h2>
+<p>Semantic Kernel 的插件架构提供了一个结构化解决方案。插件作为代理功能的标准化封装，允许 <strong>Kernel（中央编排器）</strong> 有效地发现、调用和管理这些功能。其主要优势包括：</p>
+<ol>
+<li><strong>模块化代理集成</strong>：每个代理的逻辑封装在专属的插件中。</li>
+<li><strong>声明式调用</strong>：通过对插件功能的清晰描述实现动态选择和调用。</li>
+<li><strong>统一接口</strong>：标准化代理间的交互方式。</li>
+<li><strong>集中监控</strong>：跟踪资源使用（如 token 消耗）和执行流程。</li>
+<li><strong>简化结果整合</strong>：提供钩子以合并多个代理的输出为一致的响应。</li>
+</ol>
+<hr>
+<h2 id="架构概览">架构概览</h2>
+<p>使用 Semantic Kernel 插件构建的编排系统架构如下：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/sk-multi-architect.jpg">
+            <img class="mx-auto" alt="sk multi architect image" src="/uploads/sk-multi-architect.jpg" />
+        </a>
+    </p>
+<p>这一架构包括：</p>
+<ul>
+<li><strong>中央编排代理</strong>：由 SK 驱动，通过接收用户查询管理代理调用。</li>
+<li><strong>专门代理插件</strong>：每个插件暴露特定代理功能（如 Web 搜索、内部文件访问等）。</li>
+<li><strong>插件注册机制</strong>：支持动态发现和调用所需的代理功能。</li>
+<li><strong>结果整合逻辑</strong>：将多代理输出转化为用户可读的统一响应。Kernel使用每个插件中提供的描述（通过<code>@kernel_function</code>等装饰器）来确定哪些插件与用户查询相关，实现动态、上下文感知的代理调用。</li>
+</ul>
+<hr>
+<h2 id="编排代理的-python-示例">编排代理的 Python 示例</h2>
+<p>以下代码展示了如何利用 Semantic Kernel SDK 实现一个简单的编排代理：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">OrchestratorAgent</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">invoke</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> message<span style="color:#1f2328">:</span> ChatMessage<span style="color:#1f2328">,</span> context<span style="color:#1f2328">:</span> Context<span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> ChatResponseMessage<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 设置系统提示，引导 LLM 进行编排</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_history<span style="color:#0550ae">.</span>add_system_message<span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>system_prompt<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_history<span style="color:#0550ae">.</span>add_user_message<span style="color:#1f2328">(</span>message<span style="color:#0550ae">.</span>user_query<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 初始化代理插件</span>
+</span></span><span style="display:flex;"><span>        org_policy_plugin <span style="color:#0550ae">=</span> OrgPolicyAgentInvokingPlugin<span style="color:#1f2328">(</span>kernel<span style="color:#0550ae">=</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_kernel<span style="color:#1f2328">,</span> message<span style="color:#0550ae">=</span>message<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        web_search_plugin <span style="color:#0550ae">=</span> WebSearchAgentInvokingPlugin<span style="color:#1f2328">(</span>kernel<span style="color:#0550ae">=</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_kernel<span style="color:#1f2328">,</span> message<span style="color:#0550ae">=</span>message<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        private_data_plugin <span style="color:#0550ae">=</span> PrivateDataAgentInvokingPlugin<span style="color:#1f2328">(</span>kernel<span style="color:#0550ae">=</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_kernel<span style="color:#1f2328">,</span> message<span style="color:#0550ae">=</span>message<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        generic_plugin <span style="color:#0550ae">=</span> GenericAgentInvokingPlugin<span style="color:#1f2328">(</span>kernel<span style="color:#0550ae">=</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_kernel<span style="color:#1f2328">,</span> message<span style="color:#0550ae">=</span>message<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 注册插件到 Kernel</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_kernel<span style="color:#0550ae">.</span>add_plugin<span style="color:#1f2328">(</span>org_policy_plugin<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;ORG_POLICY_AGENT&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_kernel<span style="color:#0550ae">.</span>add_plugin<span style="color:#1f2328">(</span>web_search_plugin<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;WEB_SEARCH_AGENT&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_kernel<span style="color:#0550ae">.</span>add_plugin<span style="color:#1f2328">(</span>private_data_plugin<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;PRIVATE_DATA_AGENT&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_kernel<span style="color:#0550ae">.</span>add_plugin<span style="color:#1f2328">(</span>generic_plugin<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;GENERIC_LLM_AGENT&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 调用 Kernel 对问题进行编排</span>
+</span></span><span style="display:flex;"><span>        results <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">async</span> <span style="color:#cf222e">for</span> content <span style="color:#0550ae">in</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_sk_agent<span style="color:#0550ae">.</span>invoke<span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>_history<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>            results<span style="color:#0550ae">.</span>append<span style="color:#1f2328">(</span>content<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 整合结果并返回响应</span>
+</span></span><span style="display:flex;"><span>        final_content <span style="color:#0550ae">=</span> results<span style="color:#1f2328">[</span><span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>content <span style="color:#cf222e">if</span> results <span style="color:#cf222e">else</span> <span style="color:#0a3069">&#34;无法生成响应。&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> ChatResponseMessage<span style="color:#1f2328">(</span>content<span style="color:#0550ae">=</span>final_content<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="插件实现细节web-search-plugin">插件实现细节：Web Search Plugin</h2>
+<p>以下代码展示了 Web 搜索插件的具体实现：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">WebSearchAgentInvokingPlugin</span><span style="color:#1f2328">(</span>AgentInvokingPlugin<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">@kernel_function</span><span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;invoke_web_search_agent&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        description<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;&#34;&#34;WebSearch插件。用此插件回答需要当前公共信息的问题，例如：
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">        - 一般知识问题或事实（如&#34;法国的首都是什么？&#34;）
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">        - 时事、市场数据或行业趋势（如&#34;MSFT最新股价？&#34;）
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">        - 可能在网上找到的技术信息（如&#34;如何配置Flask服务器？&#34;）
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">        - 发表在学术论文或公共行业报告中的信息。&#34;&#34;&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">invoke_web_search_agent</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> query<span style="color:#1f2328">:</span> Annotated<span style="color:#1f2328">[</span><span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;要在网上搜索的特定问题或主题。应该是自包含的。&#34;</span><span style="color:#1f2328">]):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;&#34;&#34;调用外部Web搜索代理。&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># self.was_invoked = True # 标记为已调用</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 创建搜索请求</span>
+</span></span><span style="display:flex;"><span>        message_body <span style="color:#0550ae">=</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>create_message_body<span style="color:#1f2328">(</span>query<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        recipient <span style="color:#0550ae">=</span> AgentId<span style="color:#1f2328">(</span>WEBSEARCH_AGENT<span style="color:#1f2328">,</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>message<span style="color:#0550ae">.</span>metadata<span style="color:#0550ae">.</span>session_id<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 目标代理</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 通过运行时发送消息并等待响应</span>
+</span></span><span style="display:flex;"><span>        result <span style="color:#0550ae">=</span> <span style="color:#cf222e">await</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>runtime<span style="color:#0550ae">.</span>send_message<span style="color:#1f2328">(</span>message_body<span style="color:#1f2328">,</span> recipient<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 处理结果，更新内部状态（token使用情况、搜索结果），并返回</span>
+</span></span><span style="display:flex;"><span>        processed_response <span style="color:#0550ae">=</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>proccess_and_create_response<span style="color:#1f2328">(</span>result<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># self.token_usage = ... # 根据结果更新token使用情况</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># self.search_result = ... # 根据结果更新搜索结果</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> processed_response
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 返回处理后的数据，通常只是一个摘要字符串给编排器LLM</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="插件的设计原则">插件的设计原则</h3>
+<ol>
+<li><strong>清晰的功能定义</strong>：通过 <code>@kernel_function</code> 装饰器协助 LLM 确定插件的使用场景。</li>
+<li><strong>标准化接口</strong>：抽象具体实现细节，提高系统的模块化。</li>
+<li><strong>结果处理逻辑</strong>：将外部搜索结果转化为编排器期望的格式。</li>
+</ol>
+<hr>
+<h2 id="插件编排的优势">插件编排的优势</h2>
+<p>利用 Semantic Kernel 插件进行代理编排，能够显著提升系统能力：</p>
+<ul>
+<li><strong>动态和上下文感知</strong>：根据用户查询和上下文动态选择最相关的代理。</li>
+<li><strong>灵活执行模式</strong>：支持并行和顺序调用，可适应复杂任务。</li>
+<li><strong>资源监控</strong>：集中管理所有代理的 token 使用情况，优化整体性能。</li>
+</ul>
+<hr>
+<h2 id="层级插件结构">层级插件结构</h2>
+<p>Semantic Kernel 支持以层级方式组织插件，这可以反映复杂的代理交互：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/sk-multi-architect-hierarchy.jpg">
+            <img class="mx-auto" alt="sk multi architect hierarchy image" src="/uploads/sk-multi-architect-hierarchy.jpg" />
+        </a>
+    </p>
+<p>一个 <code>AgentInvokingPlugin</code> 可能在内部使用其他更细粒度的插件（例如 <code>BingSearchPlugin</code> 或 <code>HttpRequestPlugin</code>）。这允许在代理抽象中组合和重用低级功能。</p>
+<hr>
+<h2 id="插件式编排的强大优势">插件式编排的强大优势</h2>
+<h3 id="1-动态和上下文感知的代理选择">1. 动态和上下文感知的代理选择</h3>
+<p>Kernel 的 LLM 充当智能路由器，使用函数描述和对话历史为每个回合或子任务选择最相关的代理。<code>system_prompt</code> 指导这一选择过程：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># 编排器 LLM 的系统提示示例</span>
+</span></span><span style="display:flex;"><span>system_prompt <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;&#34;&#34;您是一个编排专门代理的 AI 助手。分析用户查询。
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">基于查询和可用工具（插件）的描述，选择最合适的工具。
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">可用工具：
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">- ORG_POLICY_AGENT：用于关于内部公司政策和流程的问题。
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">- WEB_SEARCH_AGENT：用于当前事件、公共事实和一般网络知识。
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">- PRIVATE_DATA_AGENT：用于需要访问内部数据库的查询（例如销售数据、用户数据）。
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">- GENERIC_LLM_AGENT：作为一般对话或没有其他合适工具时的备选方案。
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">调用所选工具。如果需要多个工具，规划其执行。
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">将它们的输出合成为最终的综合响应。
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">&#34;&#34;&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-灵活的执行流程并行顺序">2. 灵活的执行流程（并行/顺序）</h3>
+<p>SK 支持不同的函数调用模式。您可以配置 Kernel 以：</p>
+<ul>
+<li>如果任务彼此独立，可以并行调用多个插件</li>
+<li>如果一个代理的输出需要作为另一个代理的输入，则可以顺序链接插件调用</li>
+<li>允许 LLM 自动决定最佳执行策略</li>
+</ul>
+<h3 id="3-统一资源监控">3. 统一资源监控</h3>
+<p>通过让插件向编排器报告其令牌使用情况和执行时间，您可以获得对整个多代理系统中的成本和性能瓶颈的集中可见性。</p>
+<hr>
+<h2 id="实现模式">实现模式</h2>
+<h3 id="1-代理调用插件的基类">1. 代理调用插件的基类</h3>
+<p>创建一个基类来处理通用逻辑，如 kernel/message 存储、运行时访问、状态跟踪（调用状态、token 使用情况、结果）和结果处理。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">semantic_kernel.kernel_pugin</span> <span style="color:#cf222e">import</span> KernelPlugin
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># ... 其他导入 ...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">AgentInvokingPlugin</span><span style="color:#1f2328">(</span>KernelPlugin<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">__init__</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> kernel<span style="color:#1f2328">,</span> message<span style="color:#1f2328">,</span> runtime<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>kernel <span style="color:#0550ae">=</span> kernel
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>message <span style="color:#0550ae">=</span> message
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>runtime <span style="color:#0550ae">=</span> runtime  <span style="color:#57606a"># 代理通信运行时</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>token_usage <span style="color:#0550ae">=</span> TokenUsage<span style="color:#1f2328">(</span>prompt_token<span style="color:#0550ae">=</span><span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> completion_token<span style="color:#0550ae">=</span><span style="color:#0550ae">0</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>search_result <span style="color:#0550ae">=</span> SearchResult<span style="color:#1f2328">(</span>docs<span style="color:#0550ae">=</span><span style="color:#1f2328">[],</span> citations<span style="color:#0550ae">=</span><span style="color:#1f2328">[])</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>was_invoked <span style="color:#0550ae">=</span> <span style="color:#cf222e">False</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 可能添加用于处理结果等的抽象方法</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">create_message_body</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> query<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">dict</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 标准化消息创建</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">pass</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">proccess_and_create_response</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> agent_result<span style="color:#1f2328">:</span> <span style="color:#6639ba">dict</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 标准化响应处理，更新状态（令牌、结果）</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 返回适合编排器 LLM 的字符串摘要</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">pass</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">get_summary</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 如果已调用，返回结果摘要</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">pass</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># ... 其他公共方法 ...</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-描述性插件和函数命名">2. 描述性插件和函数命名</h3>
+<p>为插件注册（<code>plugin_name=&quot;WEB_SEARCH_AGENT&quot;</code>）和 Kernel 函数（<code>@kernel_function(name=&quot;invoke_web_search_agent&quot;, ...)</code>）使用清晰、描述性的名称。这有助于 LLM 理解和人工调试。</p>
+<h3 id="3-显式函数选择配置">3. 显式函数选择配置</h3>
+<p>利用 <code>FunctionChoiceBehavior</code>（或特定 SK SDK 版本中的类似机制）来控制 LLM 如何选择和执行函数（例如，<code>Auto</code> 用于动态选择，<code>Required</code> 用于强制特定函数调用）。</p>
+<hr>
+<h2 id="使用-sk-插件进行代理编排的最佳实践">使用 SK 插件进行代理编排的最佳实践</h2>
+<ul>
+<li><strong>丰富的函数描述</strong>：为 <code>@kernel_function</code> 编写详细、明确的描述。这对于准确的动态路由至关重要。</li>
+<li><strong>清晰的系统提示</strong>：指导编排器 LLM 了解总体目标、可用工具以及如何在它们之间进行选择。</li>
+<li><strong>标准化输入/输出</strong>：设计插件函数接受简单输入（如字符串）并返回标准化、可预测的输出（或可预测地更新状态）。</li>
+<li><strong>强大的错误处理</strong>：在插件函数中实现 try/except 块，并向编排器清晰报告错误。</li>
+<li><strong>全面的遥测</strong>：记录关键事件（插件调用、代理请求/响应、错误、计时）以进行监控和调试。使用关联 ID。</li>
+<li><strong>状态管理</strong>：仔细管理传递给插件的共享状态（如对话历史）以及插件如何更新聚合结果（令牌、引用）。</li>
+<li><strong>可观察性优先</strong>：从一开始就考虑日志和指标设计插件。跟踪每个插件/代理的令牌使用情况。</li>
+<li><strong>代理契约测试</strong>：为每个插件实现测试，模拟底层代理，确保其符合预期接口和行为。</li>
+<li><strong>幂等性考虑</strong>：如果代理可能被重试，考虑设计其操作尽可能具有幂等性。</li>
+<li><strong>断路器</strong>：为可能不可靠或缓慢的外部代理调用实现弹性模式，如断路器。</li>
+</ul>
+<hr>
+<h2 id="结论">结论</h2>
+<p>Semantic Kernel 插件为 AI 代理编排的复杂挑战提供了强大且结构化的方法。通过在标准化插件框架内封装代理功能，开发人员可以构建复杂的多代理系统，受益于：</p>
+<ul>
+<li><strong>模块化</strong>：更容易的开发、测试和维护。</li>
+<li><strong>动态路由</strong>：智能、上下文感知的专门代理选择。</li>
+<li><strong>可扩展性</strong>：添加新代理功能的清晰模式。</li>
+<li><strong>可观察性</strong>：性能和资源消耗的集中监控。</li>
+</ul>
+<p>随着 AI 应用越来越依赖专门代理的协作，掌握像 Semantic Kernel 这样的插件式编排框架将对构建下一代智能、强大且可维护的系统至关重要。</p>
+<h3 id="参考链接">参考链接</h3>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/concepts/kernel?WT.mc_id=AI-MVP-5003172">Semantic Kernel 概念</a></li>
+<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins?WT.mc_id=AI-MVP-5003172">Semantic Kernel 插件</a></li>
+<li><a href="https://learn.microsoft.com/en-us/semantic-kernel/concepts/ai-services/chat-completion/function-calling?WT.mc_id=AI-MVP-5003172">功能调用支持</a></li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/">https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2025-04-18-google-a2a-protocol-integrated-using-semantic-kernel-python/">使用 Semantic Kernel Python 集成 Google A2A协议</a></li>
+        
+        <li><a href="/post/2024-08-09-reduce-latency-for-azure-speech/">语音识别与合成中的延迟问题及解决策略</a></li>
+        
+        <li><a href="/post/2024-05-15-azure-openai-speech/">Azure OpenAI 语音聊天</a></li>
+        
+        <li><a href="/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel/">使用 Semantic Kernel 构建自定义 Copilot</a></li>
+        
+        <li><a href="/post/2024-01-22-gpts-action-with-azure-ai-search/">GPTs action 中使用 Azure AI Search</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Azure-AI' target="_blank">Azure AI</a></li>
+                
+                <li><a href='/tags/Semantic-Kernel' target="_blank">Semantic Kernel</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/" title="使用 Semantic Kernel 插件编排 AI 代理的技术深度解析" target="_blank">使用 Semantic Kernel 插件编排 AI 代理的技术深度解析</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/" title="[译]基于模型的机器学习 - 1.1 整合证据" target="_blank">[译]基于模型的机器学习 - 1.1 整合证据</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-24-using-pydanticai-for-agentic-development/" title="使用 PydanticAI 构建智能代理系统：从 MCP 到智能工单助手" target="_blank">使用 PydanticAI 构建智能代理系统：从 MCP 到智能工单助手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery/" title="[译]基于模型的机器学习 - 第一章 谋杀之谜" target="_blank">[译]基于模型的机器学习 - 第一章 谋杀之谜</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-21-mbml-introduction/" title="[译]基于模型的机器学习 - 如何用机器学习解决我的问题？" target="_blank">[译]基于模型的机器学习 - 如何用机器学习解决我的问题？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-20-mbml-preface/" title="[译]基于模型的机器学习 - 前言" target="_blank">[译]基于模型的机器学习 - 前言</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-20-mbml-table-of-contents/" title="[译]基于模型的机器学习 - 目录" target="_blank">[译]基于模型的机器学习 - 目录</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-18-google-a2a-protocol-integrated-using-semantic-kernel-python/" title="使用 Semantic Kernel Python 集成 Google A2A协议" target="_blank">使用 Semantic Kernel Python 集成 Google A2A协议</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-14-use-typescript-to-build-an-mcp-server-for-azure-ai-agent/" title="使用 TypeScript 构建 Azure AI Agent 的 MCP 服务器" target="_blank">使用 TypeScript 构建 Azure AI Agent 的 MCP 服务器</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-14-general-models-vs-inference-models-a-selection-guide-for-azure-openai/" title="通用模型与推理模型：Azure OpenAI 的选择指南" target="_blank">通用模型与推理模型：Azure OpenAI 的选择指南</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (30)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (5)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (5)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

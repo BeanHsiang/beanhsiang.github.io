@@ -6,8 +6,15 @@
     <description>Recent content in Semantic Kernel on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Fri, 18 Apr 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 08 May 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/Semantic-Kernel/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 Semantic Kernel 插件编排 AI 代理的技术深度解析</title>
+      <link>https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/</link>
+      <pubDate>Thu, 08 May 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/</guid>
+      <description>&lt;p&gt;在如今快速发展的 &lt;strong&gt;大型语言模型（LLM）&lt;/strong&gt; 领域，编排专门的 AI 代理已成为构建复杂认知系统的关键，这些系统能够进行复杂推理和任务执行。虽然功能强大，但协调多个具有独特能力和数据访问权限的代理会带来显著的工程挑战。微软的 Semantic Kernel（SK）通过其直观的插件系统为管理这种复杂性提供了强大的框架。本文将深入探讨如何利用 SK 插件实现高效的代理编排，并结合实际实现模式进行说明。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>使用 Semantic Kernel Python 集成 Google A2A协议</title>
       <link>https://beanhsiang.github.io/post/2025-04-18-google-a2a-protocol-integrated-using-semantic-kernel-python/</link>

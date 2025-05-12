@@ -115,15 +115,15 @@
         </a>
     </p>
 <p>图 1.5：凶手和武器这两个随机变量的联合概率表示。</p>
-<p>下面的图 1.6 显示了这个联合分布是如何从我们先前定义的分布构建而来的。我们取了正方形中对应于格雷少校的左侧切片，并按照格雷的<a href="https://www.mbmlbook.com/MurderMystery_Incorporating_evidence.html#conditional_probability_distribution">条件概率</a>方块的两个区域的比例垂直划分了它。同样，我们取了正方形中对应于奥本小姐的右侧切片，并按照奥本的<a href="https://www.mbmlbook.com/MurderMystery_Incorporating_evidence.html#conditional_probability_distribution">条件概率</a>方块的两个区域的比例垂直划分了它。</p>
-<div style="display: flex; justify-content: center; gap: 20px;">
-  <img src="/uploads/MurderMystery_2AModelOfAMurderAllProbabilityPlots__2_Joint.png" style="max-height: 300px;">=
-  <img src="/uploads/MurderMystery_2AModelOfAMurderAllProbabilityPlots__3_Priors.png" style="max-height: 300px;">
-  <img src="/uploads/MurderMystery_2AModelOfAMurderAllProbabilityPlots__4_Conditionals.png" style="max-height: 300px;">
+<p>下面的图 1.6 显示了这个联合分布是如何从我们先前定义的分布构建而来的。我们取了正方形中对应于格雷少校的左侧切片，并按照格雷的条件概率方块的两个区域的比例垂直划分了它。同样，我们取了正方形中对应于奥本小姐的右侧切片，并按照奥本的条件概率方块的两个区域的比例垂直划分了它。</p>
+<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+  <img src="/uploads/MurderMystery_2AModelOfAMurderAllProbabilityPlots__2_Joint.png" style="max-height: 150px;">=
+  <img src="/uploads/MurderMystery_2AModelOfAMurderAllProbabilityPlots__3_Priors.png" style="max-height: 150px;">×
+  <img src="/uploads/MurderMystery_2AModelOfAMurderAllProbabilityPlots__4_Conditionals.png" style="max-height: 150px;">
 </div>
 <p>图 1.6：我们的双变量模型的联合分布，表示为两个因子的乘积。</p>
 <p>我们将此联合概率分布表示为 P(weapon, murderer)，应读作“武器和凶手的概率”。通常，两个随机变量 A 和 B 的联合分布可以写作 P(A,B)，并指定 A 和 B 每种可能设置组合的概率。因为概率之和必须为1，所以我们有：</p>
-$$ \sum_A \sum_B P(A,B) = 1 $$<p>这里的符号 \( \sum_A \) 表示对随机变量 A 的所有可能状态求和，B 同理。这对应于图 1.5 中正方形的总面积为1，这是因为我们假设世界由一种且仅由一种凶手和武器的组合构成。在这个新正方形中随机选择一个点对应于从联合概率分布中<a href="#sampling">采样</a>。</p>
+$$ \sum_A \sum_B P(A,B) = 1 $$<p>这里的符号 \( \sum_A \) 表示对随机变量 A 的所有可能状态求和，B 同理。这对应于图 1.5 中正方形的总面积为1，这是因为我们假设世界由一种且仅由一种凶手和武器的组合构成。在这个新正方形中随机选择一个点对应于从联合概率分布中采样。</p>
 <h3 id="处理联合概率的两个规则">处理联合概率的两个规则</h3>
 <p>我们希望利用我们的联合概率分布，根据这条有力的新证据来更新我们对谁是凶手的信念。为此，我们需要引入处理联合分布的两个重要规则。</p>
 <p>从上面的讨论中，我们看到我们的联合概率分布是通过取凶手的概率分布乘以武器的条件分布得到的。这可以写成如下形式：</p>
@@ -137,7 +137,7 @@ $$ P(A_1, A_2, B) = P(A_1, A_2) P(B | A_1, A_2) \quad (1.20) $$<p>类似地，�
 $$ P(A_1) = \sum_{A_2} \sum_B P(A_1, A_2, B) \quad (1.21) $$<p>最后一个结果特别有用，因为它表明我们可以通过对联合分布中的所有其他随机变量求和来找到特定随机变量的边缘分布，无论有多少其他变量。</p>
 <p>乘法法则和加法法则共同提供了我们在整本书中为了操作和计算概率所需的两个关键结果。令人瞩目的是，概率推理丰富而强大的复杂性完全建立在这两条简单的规则之上。</p>
 <h3 id="使用联合分布进行推断">使用联合分布进行推断</h3>
-<p>我们现在拥有了所需的工具，可以将武器是左轮手枪这一事实纳入考虑。直观上，我们期望这应该会增加格雷是凶手的概率，但要证实这一点，我们需要计算更新后的概率。在我们观察到某些随机变量的值之后，计算修正的概率分布的过程称为概率推断。推断是<a href="https://www.mbmlbook.com/Introduction.html#model-based_machine_learning">基于模型的机器学习</a>的基石——它可以用于对情况进行推理、从数据中学习、进行预测——事实上，任何机器学习任务都可以通过推断来实现。</p>
+<p>我们现在拥有了所需的工具，可以将武器是左轮手枪这一事实纳入考虑。直观上，我们期望这应该会增加格雷是凶手的概率，但要证实这一点，我们需要计算更新后的概率。在我们观察到某些随机变量的值之后，计算修正的概率分布的过程称为概率推断。推断是基于模型的机器学习的基石——它可以用于对情况进行推理、从数据中学习、进行预测——事实上，任何机器学习任务都可以通过推断来实现。</p>
 <p>我们可以使用图 1.5 所示的联合概率分布进行推断。在我们观察到用于犯罪的武器之前，这个正方形内的所有点都是等可能的。既然我们知道武器是左轮手枪，我们就可以排除掉对应于武器是匕首的下面两个区域，如图 1.7 所示。</p>
 <p>
         <a data-fancybox="gallery" href="/uploads/MurderMystery_2AModelOfAMurderAllProbabilityPlots_JointWeaponObserved.png">

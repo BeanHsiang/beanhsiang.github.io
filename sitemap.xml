@@ -2,40 +2,43 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://beanhsiang.github.io/post/2025-05-12-updating-our-beliefs/</loc>
+    <lastmod>2025-05-12T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/</loc>
+    <lastmod>2025-05-12T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/</loc>
+    <lastmod>2025-05-12T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
+    <lastmod>2025-05-12T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Model-Based/</loc>
+    <lastmod>2025-05-12T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
+    <lastmod>2025-05-12T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2025-05-12T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2025-05-12T10:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
     <lastmod>2025-05-08T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Azure-AI/</loc>
     <lastmod>2025-05-08T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://beanhsiang.github.io/tags/Semantic-Kernel/</loc>
-    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
     <lastmod>2025-05-08T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/</loc>
     <lastmod>2025-05-08T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/</loc>
-    <lastmod>2025-04-28T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
-    <lastmod>2025-04-28T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Model-Based/</loc>
-    <lastmod>2025-04-28T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
     <lastmod>2025-04-28T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Agentic-AI/</loc>

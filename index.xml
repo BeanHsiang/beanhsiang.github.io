@@ -23,6 +23,13 @@
       <description>&lt;p&gt;在如今快速发展的 &lt;strong&gt;大型语言模型（LLM）&lt;/strong&gt; 领域，编排专门的 AI 代理已成为构建复杂认知系统的关键，这些系统能够进行复杂推理和任务执行。虽然功能强大，但协调多个具有独特能力和数据访问权限的代理会带来显著的工程挑战。微软的 Semantic Kernel（SK）通过其直观的插件系统为管理这种复杂性提供了强大的框架。本文将深入探讨如何利用 SK 插件实现高效的代理编排，并结合实际实现模式进行说明。&lt;/p&gt;</description>
     </item>
     <item>
+      <title>利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录</title>
+      <link>https://beanhsiang.github.io/post/2025-05-03-real-time-speech-transcription-gpt4o-websocket/</link>
+      <pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-05-03-real-time-speech-transcription-gpt4o-websocket/</guid>
+      <description>&lt;p&gt;Azure OpenAI 最近增强了其语音识别产品，推出了两款令人印象深刻的模型：GPT-4o-transcribe 和 GPT-4o-mini-transcribe。它们的一个关键特性是利用 WebSocket 连接进行实时音频流转录。这为开发者们提供了构建语音转文本应用的先进工具。本文将深入探讨这些模型的工作原理，并提供一个用 Python 实现的实用示例。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>[译]基于模型的机器学习 - 1.1 整合证据</title>
       <link>https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/</link>
       <pubDate>Mon, 28 Apr 2025 12:00:00 +0800</pubDate>

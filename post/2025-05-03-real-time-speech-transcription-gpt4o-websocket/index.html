@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录 | Innovation with tech</title>
+    <meta property="og:title" content="利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2025-05-03T09:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2025-05-03T09:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2025-05-03-real-time-speech-transcription-gpt4o-websocket/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    <style type="text/css">
+    .post-toc {
+        position: fixed;
+        width: 200px;
+        margin-left: -210px;
+        padding: 5px 10px;
+        font-family: Athelas, STHeiti, Microsoft Yahei, serif;
+        font-size: 12px;
+        border: 1px solid rgba(0, 0, 0, .07);
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.98);
+        background-clip: padding-box;
+        -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, .125);
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, .125);
+        word-wrap: break-word;
+        white-space: nowrap;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        z-index: 999;
+        cursor: pointer;
+        max-height: 70%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .post-toc .post-toc-title {
+        width: 100%;
+        margin: 0 auto;
+        font-size: 20px;
+        font-weight: 400;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .post-toc .post-toc-content {
+        font-size: 15px;
+    }
+
+    .post-toc .post-toc-content>nav>ul {
+        margin: 10px 0;
+    }
+
+    .post-toc .post-toc-content ul {
+        padding-left: 20px;
+        list-style: square;
+        margin: 0.5em;
+        line-height: 1.8em;
+    }
+
+    .post-toc .post-toc-content ul ul {
+        padding-left: 15px;
+        display: none;
+    }
+
+    @media print,
+    screen and (max-width:1057px) {
+        .post-toc {
+            display: none;
+        }
+    }
+</style>
+<div class="post-toc" style="position: absolute; top: 188px;">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+        <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var postToc = $(".post-toc");
+        if (postToc.length) {
+            var leftPos = $("#main").offset().left;
+            if (leftPos < 220) {
+                postToc.css({ "width": leftPos - 10, "margin-left": (0 - leftPos) })
+            }
+
+            var t = postToc.offset().top - 20,
+                a = {
+                    start: {
+                        position: "absolute",
+                        top: t
+                    },
+                    process: {
+                        position: "fixed",
+                        top: 20
+                    },
+                };
+            $(window).scroll(function () {
+                var e = $(window).scrollTop();
+                e < t ? postToc.css(a.start) : postToc.css(a.process)
+            })
+        }
+
+        if ($("#TableOfContents").children().length < 1) {
+            $(".post-toc").remove();
+        }
+    })
+</script>
+    <article class="post">
+        <header>
+            <h1 class="post-title">利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录</h1>
+        </header>
+        
+  <time datetime="2025-05-03T01:00:00Z" class="post-meta meta-date dt-published">
+    2025年5月3日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="clear" style="display: none">
+            <div class="toc-article">
+                <div class="toc-title">文章目录</div>
+            </div>
+        </div>
+        
+        <div class="post-content">
+            <p>Azure OpenAI 最近增强了其语音识别产品，推出了两款令人印象深刻的模型：GPT-4o-transcribe 和 GPT-4o-mini-transcribe。它们的一个关键特性是利用 WebSocket 连接进行实时音频流转录。这为开发者们提供了构建语音转文本应用的先进工具。本文将深入探讨这些模型的工作原理，并提供一个用 Python 实现的实用示例。</p>
+<h4 id="理解-openai-的实时转录-api">理解 OpenAI 的实时转录 API</h4>
+<p>与常规的用于音频转录的 REST API 不同，Azure OpenAI 的实时 API 支持通过 WebSocket 或 WebRTC 连接持续流式传输音频数据。这种方法对于需要即时转录反馈的应用特别有价值，例如实时字幕、会议转录或语音助手。</p>
+<p>标准转录 API 和实时 API 之间的关键区别在于，实时转录会话通常不包含来自模型的响应，而是专注于实时地将语音转换为文本。</p>
+<h4 id="gpt-4o-transcribe-和-gpt-4o-mini-transcribe功能概览">GPT-4o-transcribe 和 GPT-4o-mini-transcribe：功能概览</h4>
+<p>Azure OpenAI 推出了两款专门的转录模型：</p>
+<ul>
+<li><strong>GPT-4o-transcribe</strong>：功能齐全的转录模型，具有高准确性。</li>
+<li><strong>GPT-4o-mini-transcribe</strong>：一个更轻量、更快速的模型，准确性略有降低，但延迟更低。</li>
+</ul>
+<p>两种模型都通过 WebSocket 连接，使开发人员能够直接从麦克风或其他来源流式传输音频以进行即时转录。这些模型专为实时 API 基础架构设计。</p>
+<h4 id="设置环境">设置环境</h4>
+<p>首先，需要使用必要的库来设置 Python 环境：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">os</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">json</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">base64</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">threading</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">pyaudio</span> <span style="color:#57606a"># 用于处理音频</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">websocket</span> <span style="color:#57606a"># 用于 WebSocket 通信</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">dotenv</span> <span style="color:#cf222e">import</span> load_dotenv <span style="color:#57606a"># 用于加载环境变量</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 从 .env 文件加载环境变量 (例如 azure.env)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 确保你的 .env 文件中有 AZURE_OPENAI_STT_TTS_KEY 和 AZURE_OPENAI_STT_TTS_ENDPOINT</span>
+</span></span><span style="display:flex;"><span>load_dotenv<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;azure.env&#39;</span><span style="color:#1f2328">)</span> 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>OPENAI_API_KEY <span style="color:#0550ae">=</span> os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZURE_OPENAI_STT_TTS_KEY&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> <span style="color:#0550ae">not</span> OPENAI_API_KEY<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">raise</span> RuntimeError<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;❌ 环境变量 AZURE_OPENAI_STT_TTS_KEY 未设置！&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>AZURE_OPENAI_ENDPOINT <span style="color:#0550ae">=</span> os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;AZURE_OPENAI_STT_TTS_ENDPOINT&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> <span style="color:#0550ae">not</span> AZURE_OPENAI_ENDPOINT<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">raise</span> RuntimeError<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;❌ 环境变量 AZURE_OPENAI_STT_TTS_ENDPOINT 未设置！&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># OpenAI 实时 API (转录模型) 的 WebSocket 端点</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 将 https 替换为 wss 用于 WebSocket 连接</span>
+</span></span><span style="display:flex;"><span>url <span style="color:#0550ae">=</span> <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;</span><span style="color:#0a3069">{</span>AZURE_OPENAI_ENDPOINT<span style="color:#0550ae">.</span>replace<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;https&#39;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;wss&#39;</span><span style="color:#1f2328">)</span><span style="color:#0a3069">}</span><span style="color:#0a3069">/openai/realtime?api-version=2025-04-01-preview&amp;intent=transcription&#34;</span>
+</span></span><span style="display:flex;"><span>headers <span style="color:#0550ae">=</span> <span style="color:#1f2328">{</span> <span style="color:#0a3069">&#34;api-key&#34;</span><span style="color:#1f2328">:</span> OPENAI_API_KEY <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 音频流参数 (16位 PCM, 24kHz 单声道)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 注意: 原文提及16kHz, 但示例代码中使用24000Hz。此处保留代码中的24000Hz。</span>
+</span></span><span style="display:flex;"><span>RATE <span style="color:#0550ae">=</span> <span style="color:#0550ae">24000</span>  <span style="color:#57606a"># 采样率</span>
+</span></span><span style="display:flex;"><span>CHANNELS <span style="color:#0550ae">=</span> <span style="color:#0550ae">1</span>  <span style="color:#57606a">#声道数</span>
+</span></span><span style="display:flex;"><span>FORMAT <span style="color:#0550ae">=</span> pyaudio<span style="color:#0550ae">.</span>paInt16  <span style="color:#57606a"># 音频格式 (16位)</span>
+</span></span><span style="display:flex;"><span>CHUNK <span style="color:#0550ae">=</span> <span style="color:#0550ae">1024</span>  <span style="color:#57606a"># 每次读取的音频块大小</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 初始化 PyAudio</span>
+</span></span><span style="display:flex;"><span>audio_interface <span style="color:#0550ae">=</span> pyaudio<span style="color:#0550ae">.</span>PyAudio<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 打开音频流</span>
+</span></span><span style="display:flex;"><span>stream <span style="color:#0550ae">=</span> audio_interface<span style="color:#0550ae">.</span>open<span style="color:#1f2328">(</span><span style="color:#6639ba">format</span><span style="color:#0550ae">=</span>FORMAT<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                              channels<span style="color:#0550ae">=</span>CHANNELS<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                              rate<span style="color:#0550ae">=</span>RATE<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                              <span style="color:#6639ba">input</span><span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">,</span>  <span style="color:#57606a"># 设置为输入流</span>
+</span></span><span style="display:flex;"><span>                              frames_per_buffer<span style="color:#0550ae">=</span>CHUNK<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="建立-websocket-连接">建立 WebSocket 连接</h5>
+<p>以下代码建立到 OpenAI 实时 API 的连接并配置转录会话：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">on_open</span><span style="color:#1f2328">(</span>ws<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;WebSocket 连接成功！请开始说话...&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    session_config <span style="color:#0550ae">=</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;transcription_session.update&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;session&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;input_audio_format&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;pcm16&#34;</span><span style="color:#1f2328">,</span> <span style="color:#57606a"># 输入音频格式</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;input_audio_transcription&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">&#34;model&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;gpt-4o-mini-transcribe&#34;</span><span style="color:#1f2328">,</span> <span style="color:#57606a"># 可选 &#34;gpt-4o-transcribe&#34; 以获得更高精度</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">&#34;prompt&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Respond in English.&#34;</span> <span style="color:#57606a"># 提示模型输出英文，可根据需求调整</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;input_audio_noise_reduction&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span> <span style="color:#57606a"># 输入音频降噪配置</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;near_field&#34;</span> <span style="color:#57606a"># 近场降噪，适用于耳机等近距离麦克风</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;turn_detection&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span> <span style="color:#57606a"># 轮次检测配置 (判断用户是否说完一句话)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;server_vad&#34;</span><span style="color:#1f2328">,</span> <span style="color:#57606a"># 服务器端语音活动检测 (VAD)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">&#34;threshold&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0.5</span><span style="color:#1f2328">,</span> <span style="color:#57606a"># VAD 阈值</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">&#34;prefix_padding_ms&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">300</span><span style="color:#1f2328">,</span> <span style="color:#57606a"># 前缀填充毫秒数</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">&#34;silence_duration_ms&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">200</span> <span style="color:#57606a"># 静默持续毫秒数</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 发送会话配置信息</span>
+</span></span><span style="display:flex;"><span>    ws<span style="color:#0550ae">.</span>send<span style="color:#1f2328">(</span>json<span style="color:#0550ae">.</span>dumps<span style="color:#1f2328">(</span>session_config<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 定义一个函数来处理麦克风音频流</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">stream_microphone</span><span style="color:#1f2328">():</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># WebSocketApp 会在 run_forever 循环中管理 keep_running</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># 此处检查 ws.keep_running 属性 (由 websocket-client 库设置)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">while</span> <span style="color:#6639ba">getattr</span><span style="color:#1f2328">(</span>ws<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;keep_running&#39;</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">True</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>                audio_data <span style="color:#0550ae">=</span> stream<span style="color:#0550ae">.</span>read<span style="color:#1f2328">(</span>CHUNK<span style="color:#1f2328">,</span> exception_on_overflow<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                audio_base64 <span style="color:#0550ae">=</span> base64<span style="color:#0550ae">.</span>b64encode<span style="color:#1f2328">(</span>audio_data<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>decode<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;utf-8&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="color:#57606a"># 仅当 WebSocket 仍处于连接状态时发送数据</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">if</span> ws<span style="color:#0550ae">.</span>sock <span style="color:#0550ae">and</span> ws<span style="color:#0550ae">.</span>sock<span style="color:#0550ae">.</span>connected<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    ws<span style="color:#0550ae">.</span>send<span style="color:#1f2328">(</span>json<span style="color:#0550ae">.</span>dumps<span style="color:#1f2328">({</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;input_audio_buffer.append&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#0a3069">&#34;audio&#34;</span><span style="color:#1f2328">:</span> audio_base64
+</span></span><span style="display:flex;"><span>                    <span style="color:#1f2328">}))</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;WebSocket 已关闭，停止发送音频数据。&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#cf222e">break</span> <span style="color:#57606a"># 如果连接关闭则退出循环</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> e<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;音频流错误: </span><span style="color:#0a3069">{</span>e<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># finally:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># WebSocket 的关闭通常由 on_close 回调或 run_forever 结束时处理</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># 在此显式调用 ws.close() 可能导致竞争条件或重复关闭</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 启动一个守护线程 (daemon thread) 来发送麦克风音频流</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 守护线程会随主线程退出而退出</span>
+</span></span><span style="display:flex;"><span>    threading<span style="color:#0550ae">.</span>Thread<span style="color:#1f2328">(</span>target<span style="color:#0550ae">=</span>stream_microphone<span style="color:#1f2328">,</span> daemon<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>start<span style="color:#1f2328">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="处理转录结果">处理转录结果</h5>
+<p>此部分处理包含转录结果的传入 WebSocket 消息：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">on_message</span><span style="color:#1f2328">(</span>ws<span style="color:#1f2328">,</span> message<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#0550ae">=</span> json<span style="color:#0550ae">.</span>loads<span style="color:#1f2328">(</span>message<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        event_type <span style="color:#0550ae">=</span> data<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># print(f&#34;接收到事件类型: {event_type}&#34;) # 取消注释以进行调试</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># print(data) # 取消注释以查看完整数据</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 处理实时的增量转录文本 (delta)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> event_type <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;conversation.item.input_audio_transcription.delta&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            transcript_piece <span style="color:#0550ae">=</span> data<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;delta&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> transcript_piece<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>transcript_piece<span style="color:#1f2328">,</span> end<span style="color:#0550ae">=</span><span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">,</span> flush<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span> <span style="color:#57606a"># 连续打印，不换行</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 处理一段完整的语音转录完成事件</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> event_type <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;conversation.item.input_audio_transcription.completed&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># 确保在打印前换行，如果之前有 delta 输出</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">[</span>分段完成<span style="color:#1f2328">]:</span> <span style="color:#1f2328">{</span>data<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;transcript&#39;</span><span style="color:#1f2328">]}</span><span style="color:#0a3069">&#34;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 根据原文，&#34;item&#34; 类型也可能表示最终的转录结果</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> event_type <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;item&#34;</span><span style="color:#1f2328">:</span> 
+</span></span><span style="display:flex;"><span>            transcript <span style="color:#0550ae">=</span> data<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;item&#34;</span><span style="color:#1f2328">,</span> <span style="color:#1f2328">{})</span><span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;transcript&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;&#34;</span><span style="color:#1f2328">)</span> <span style="color:#57606a"># 更安全地获取 transcript</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> transcript<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                 <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">[</span>最终转录条目<span style="color:#1f2328">]:</span> <span style="color:#1f2328">{</span>transcript<span style="color:#1f2328">}</span><span style="color:#0a3069">&#34;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">except</span> json<span style="color:#0550ae">.</span>JSONDecodeError<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;无法解析消息为 JSON: </span><span style="color:#0a3069">{</span>message<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> e<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;处理消息时发生错误: </span><span style="color:#0a3069">{</span>e<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># pass # 可以选择忽略不相关的事件或特定错误</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="错误处理和清理">错误处理和清理</h5>
+<p>为确保正确的资源管理，实现了错误和连接关闭的处理程序：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">on_error</span><span style="color:#1f2328">(</span>ws<span style="color:#1f2328">,</span> error<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;WebSocket 错误: </span><span style="color:#0a3069">{</span>error<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 可以在此处添加更复杂的错误处理逻辑，例如记录错误或尝试重新连接</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">on_close</span><span style="color:#1f2328">(</span>ws<span style="color:#1f2328">,</span> close_status_code<span style="color:#1f2328">,</span> close_msg<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;已从服务器断开连接。状态码: </span><span style="color:#0a3069">{</span>close_status_code<span style="color:#0a3069">}</span><span style="color:#0a3069">, 消息: </span><span style="color:#0a3069">{</span>close_msg<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 确保音频流和 PyAudio 实例被正确关闭和终止</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> stream<span style="color:#0550ae">.</span>is_active<span style="color:#1f2328">():</span>
+</span></span><span style="display:flex;"><span>        stream<span style="color:#0550ae">.</span>stop_stream<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 双重检查以确保流已停止</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#0550ae">not</span> stream<span style="color:#0550ae">.</span>is_stopped<span style="color:#1f2328">():</span> 
+</span></span><span style="display:flex;"><span>        stream<span style="color:#0550ae">.</span>stop_stream<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    stream<span style="color:#0550ae">.</span>close<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    audio_interface<span style="color:#0550ae">.</span>terminate<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;音频资源已释放。&#34;</span><span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h5 id="运行-websocket-客户端">运行 WebSocket 客户端</h5>
+<p>最后，此代码初始化 WebSocket 连接并开始转录过程：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">if</span> <span style="color:#953800">__name__</span> <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;__main__&#34;</span><span style="color:#1f2328">:</span> <span style="color:#57606a"># 确保作为脚本运行时执行</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;正在连接到 Azure OpenAI 实时语音转录 API...&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    ws_app <span style="color:#0550ae">=</span> websocket<span style="color:#0550ae">.</span>WebSocketApp<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        url<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        header<span style="color:#0550ae">=</span>headers<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        on_open<span style="color:#0550ae">=</span>on_open<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        on_message<span style="color:#0550ae">=</span>on_message<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        on_error<span style="color:#0550ae">=</span>on_error<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        on_close<span style="color:#0550ae">=</span>on_close
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># run_forever() 会阻塞直到连接关闭或发生错误</span>
+</span></span><span style="display:flex;"><span>        ws_app<span style="color:#0550ae">.</span>run_forever<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">except</span> KeyboardInterrupt<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span>用户请求中断程序<span style="color:#0550ae">...</span><span style="color:#0a3069">&#34;)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">finally</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 确保在退出时 WebSocket 连接已关闭</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> ws_app <span style="color:#0550ae">and</span> <span style="color:#6639ba">getattr</span><span style="color:#1f2328">(</span>ws_app<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;sock&#39;</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">None</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">and</span> <span style="color:#6639ba">getattr</span><span style="color:#1f2328">(</span>ws_app<span style="color:#0550ae">.</span>sock<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;connected&#39;</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">False</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;正在关闭 WebSocket 连接...&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            ws_app<span style="color:#0550ae">.</span>close<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;程序已退出。&#34;</span><span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="分析实现细节">分析实现细节</h4>
+<h5 id="会话配置">会话配置</h5>
+<p>让我们分解一下会话配置的关键组件：</p>
+<ul>
+<li><strong><code>input_audio_format</code></strong>：指定为 <code>&quot;pcm16&quot;</code>，表示16位 PCM 音频。</li>
+<li><strong><code>input_audio_transcription</code></strong>：
+<ul>
+<li><strong><code>model</code></strong>：指定为 <code>&quot;gpt-4o-mini-transcribe&quot;</code>（可以替换为 <code>&quot;gpt-4o-transcribe&quot;</code> 以获得更高准确性）。</li>
+<li><strong><code>prompt</code></strong>：向模型提供指令（例如：<code>&quot;Respond in English.&quot;</code>，意为“用英语回答”）。这有助于引导模型的输出语言和风格。</li>
+<li><strong><code>language</code></strong>：指定音频的语言，如 <code>&quot;zh-CN&quot;</code> (简体中文) 或 <code>&quot;hi&quot;</code> (印地语)。如果设为 <code>null</code> 或不提供，模型会尝试自动检测语言。</li>
+</ul>
+</li>
+<li><strong><code>input_audio_noise_reduction</code></strong>：降噪类型。<code>near_field</code> 适用于近距离麦克风（如耳机），<code>far_field</code> 适用于远场麦克风（如笔记本电脑或会议室麦克风）。</li>
+<li><strong><code>turn_detection</code></strong>：配置 <code>&quot;server_vad&quot;</code>（语音活动检测）以自动检测语音轮次（即用户何时说完一句话）。可以设为 <code>null</code> 来关闭此功能，这种情况下客户端需要通过其他方式（如特定事件）手动触发模型响应。
+<ul>
+<li><code>Server VAD</code>：模型根据音量检测语音的开始和结束，并在用户语音结束时响应。</li>
+<li><code>Semantic VAD</code>：这是一种更高级的轮次检测机制，它使用一个专门的轮次检测模型（结合传统的VAD）来从语义上估计用户是否已经讲完话。然后，它会根据这个概率动态地设置一个超时时间。例如，如果用户的音频以“嗯&hellip;”这样的拖尾音结束，模型会判断为轮次结束的概率较低，并等待更长时间让用户继续讲话。这种方式对于实现更自然的对话交互非常有用，但可能会带来稍高的延迟。</li>
+</ul>
+</li>
+</ul>
+<h5 id="音频流式传输">音频流式传输</h5>
+<p>该实现使用线程化方法将音频数据从麦克风连续流式传输到 WebSocket 连接。每个音频块都会：</p>
+<ol>
+<li>从麦克风读取。</li>
+<li>编码为 base64 字符串。</li>
+<li>作为带有 <code>&quot;input_audio_buffer.append&quot;</code> 事件类型的 JSON 消息发送给服务器。</li>
+</ol>
+<h5 id="转录事件">转录事件</h5>
+<p>系统处理来自 WebSocket 连接的几种类型的事件：</p>
+<ul>
+<li><strong><code>conversation.item.input_audio_transcription.delta</code></strong>：转录的增量更新。这使得可以实时显示正在识别的文本。</li>
+<li><strong><code>conversation.item.input_audio_transcription.completed</code></strong>：一个语音片段（turn）的完整转录稿。</li>
+<li><strong><code>item</code></strong>：根据原始文章的代码结构，此类型也可能用于传递最终的转录结果。</li>
+</ul>
+<h5 id="自定义选项">自定义选项</h5>
+<p>可以通过多种方式自定义示例代码：</p>
+<ul>
+<li>在 <code>gpt-4o-transcribe</code>（高精度）和 <code>gpt-4o-mini-transcribe</code>（低延迟）模型之间切换。</li>
+<li>调整音频参数，如采样率（<code>RATE</code>）、通道数（<code>CHANNELS</code>）、块大小（<code>CHUNK</code>），以匹配音频源或优化性能。</li>
+<li>修改 <code>prompt</code> 来为模型提供更多上下文信息或指定特定的语言偏好。</li>
+<li>根据实际的麦克风和环境配置 <code>input_audio_noise_reduction</code>（例如，从 <code>near_field</code> 改为 <code>far_field</code>）。</li>
+<li>针对不同的说话模式或应用场景调整 <code>turn_detection</code> 参数，或完全禁用它。</li>
+</ul>
+<h5 id="部署注意事项">部署注意事项</h5>
+<p>在生产环境中部署此解决方案时，请考虑以下几点：</p>
+<ul>
+<li><strong>身份验证</strong>：安全地存储和管理 API 密钥。避免将密钥硬编码到代码中，应使用环境变量或 Azure Key Vault 等服务。</li>
+<li><strong>错误处理与重连</strong>：实现更健壮的错误处理逻辑，包括网络中断时的自动重新连接机制。</li>
+<li><strong>性能优化</strong>：根据具体的用例优化音频参数和处理流程，以平衡延迟和准确性。</li>
+<li><strong>速率限制</strong>：了解并遵守 Azure OpenAI 实时 API 的速率限制，以避免服务中断。</li>
+<li><strong>回退策略</strong>：为连接中断或 API 故障等情况实施回退策略，例如切换到备用服务或通知用户。</li>
+<li><strong>日志记录与监控</strong>：集成日志记录和监控系统，以便跟踪应用性能、诊断问题和审计用量。</li>
+</ul>
+<h4 id="总结">总结</h4>
+<p>GPT-4o-transcribe 和 GPT-4o-mini-transcribe 代表了实时语音识别技术的重大进步。通过利用 WebSocket 进行连续音频流传输，这些模型使开发人员能够以最小的延迟构建响应迅速的语音转文本应用程序。</p>
+<p>本文中展示的 Python 实现演示了如何快速搭建一个实时转录系统。这个基础可以扩展到各种应用，从实时字幕和会议转录到语音控制界面和无障碍工具。</p>
+<p>随着这些模型的不断发展和完善，我们可以期待它们在准确性和性能上带来更多惊喜，为各行各业的语音识别应用开辟新的可能性。</p>
+<p>请记住，在生产环境中实施这些 API 时，务必遵循 Azure OpenAI 关于 API 安全的最佳实践，包括采用安全的身份验证方法并妥善保管您的 API 密钥。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2025-05-03-real-time-speech-transcription-gpt4o-websocket/">https://beanhsiang.github.io/post/2025-05-03-real-time-speech-transcription-gpt4o-websocket/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2024-05-15-azure-openai-speech/">Azure OpenAI 语音聊天</a></li>
+        
+        <li><a href="/post/2025-04-14-general-models-vs-inference-models-a-selection-guide-for-azure-openai/">通用模型与推理模型：Azure OpenAI 的选择指南</a></li>
+        
+        <li><a href="/post/2024-10-15-building-your-first-voice-bot-with-gpt-4o-real-time-api/">使用 GPT-4o 实时 API 构建一个语音机器人</a></li>
+        
+        <li><a href="/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/">检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用</a></li>
+        
+        <li><a href="/post/2024-08-09-reduce-latency-for-azure-speech/">语音识别与合成中的延迟问题及解决策略</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Azure-AI' target="_blank">Azure AI</a></li>
+                
+                <li><a href='/tags/GPT-4o' target="_blank">GPT-4o</a></li>
+                
+                <li><a href='/tags/Transcribe' target="_blank">Transcribe</a></li>
+                
+                <li><a href='/tags/Websocket' target="_blank">Websocket</a></li>
+                
+                <li><a href='/tags/Speech-Recognition' target="_blank">Speech Recognition</a></li>
+                
+                <li><a href='/tags/Azure-OpenAI' target="_blank">Azure OpenAI</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs/" title="[译]基于模型的机器学习 - 1.2 更新我们的可信部分" target="_blank">[译]基于模型的机器学习 - 1.2 更新我们的可信部分</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/" title="使用 Semantic Kernel 插件编排 AI 代理的技术深度解析" target="_blank">使用 Semantic Kernel 插件编排 AI 代理的技术深度解析</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-03-real-time-speech-transcription-gpt4o-websocket/" title="利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录" target="_blank">利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/" title="[译]基于模型的机器学习 - 1.1 整合证据" target="_blank">[译]基于模型的机器学习 - 1.1 整合证据</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-24-using-pydanticai-for-agentic-development/" title="使用 PydanticAI 构建智能代理系统：从 MCP 到智能工单助手" target="_blank">使用 PydanticAI 构建智能代理系统：从 MCP 到智能工单助手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery/" title="[译]基于模型的机器学习 - 第一章 谋杀之谜" target="_blank">[译]基于模型的机器学习 - 第一章 谋杀之谜</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-21-mbml-introduction/" title="[译]基于模型的机器学习 - 如何用机器学习解决我的问题？" target="_blank">[译]基于模型的机器学习 - 如何用机器学习解决我的问题？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-20-mbml-preface/" title="[译]基于模型的机器学习 - 前言" target="_blank">[译]基于模型的机器学习 - 前言</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-20-mbml-table-of-contents/" title="[译]基于模型的机器学习 - 目录" target="_blank">[译]基于模型的机器学习 - 目录</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-18-google-a2a-protocol-integrated-using-semantic-kernel-python/" title="使用 Semantic Kernel Python 集成 Google A2A协议" target="_blank">使用 Semantic Kernel Python 集成 Google A2A协议</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (31)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (6)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (5)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Speech Recognition on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/tags/Speech-Recognition/</link>
+    <description>Recent content in Speech Recognition on Innovation with tech</description>
+    <generator>Hugo</generator>
+    <language>zh-Hans</language>
+    <lastBuildDate>Sat, 03 May 2025 09:00:00 +0800</lastBuildDate>
+    <atom:link href="https://beanhsiang.github.io/tags/Speech-Recognition/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录</title>
+      <link>https://beanhsiang.github.io/post/2025-05-03-real-time-speech-transcription-gpt4o-websocket/</link>
+      <pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-05-03-real-time-speech-transcription-gpt4o-websocket/</guid>
+      <description>&lt;p&gt;Azure OpenAI 最近增强了其语音识别产品，推出了两款令人印象深刻的模型：GPT-4o-transcribe 和 GPT-4o-mini-transcribe。它们的一个关键特性是利用 WebSocket 连接进行实时音频流转录。这为开发者们提供了构建语音转文本应用的先进工具。本文将深入探讨这些模型的工作原理，并提供一个用 Python 实现的实用示例。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -158,7 +158,7 @@ $$ P(murderer,weapon)=P(murderer|weapon)P(weapon) (1.23) $$<p>将这两个方程
 $$ P(murderer|weapon)=\frac{P(murderer)P(weapon|murderer)}{P(weapon)} (1.24) $$<p>这是贝叶斯定理或贝叶斯规则 Bayes, 1763] 的一个例子，它在许多[推断计算中起着基础性的作用（参见专栏 1.1）。这里的 P(murderer)P(murderer) 是随机变量 <code>murderer</code> 上的先验概率分布，也是我们在定义谋杀之谜模型时指定的内容之一。类似地，P(weapon|murderer)P(weapon|murderer) 也是我们指定的，称为似然函数，应被视为随机变量 <code>murderer</code> 的函数。左边的量是后验概率分布 P(murderer|weapon)P(murderer|weapon)，它告诉我们，在观察到 <code>weapon</code> 的值之后，我们对 <code>murderer</code> 的了解。</p>
 <p>方程 (1.24) 中的分母起着归一化常数的作用，并确保贝叶斯定理的左边正确归一化（即，当对随机变量 <code>murderer</code> 的所有可能状态求和时，总和为 1）。它可以根据先验和似然性使用</p>
 $$ P(weapon)=\sum_{murderer} P(weapon|murderer)P(murderer) (1.25) $$<p>来计算，这源于乘积和求和规则。在使用贝叶斯规则时，有时省略此分母而改写为</p>
-$$ P(murderer|weapon)∝P(weapon|murderer)P(murderer) (1.26) $$<p>其中 ∝ 表示左边与右边成正比（即，它们在不依赖于 <code>murderer</code> 值的常数范围内相等）。我们不需要计算分母，因为归一化约束告诉我们条件概率分布在 <code>murderer</code> 的所有值上加起来必须为 1。一旦我们评估了 (1.26) 的右边，为 <code>murderer</code> 的两个值分别给出一个数字，我们就可以缩放这两个数字，使它们加起来为 1，从而得到最终的后验分布。</p>
+$$ P(murderer|weapon) \propto P(weapon|murderer)P(murderer) (1.26) $$<p>其中 ∝ 表示左边与右边成正比（即，它们在不依赖于 <code>murderer</code> 值的常数范围内相等）。我们不需要计算分母，因为归一化约束告诉我们条件概率分布在 <code>murderer</code> 的所有值上加起来必须为 1。一旦我们评估了 (1.26) 的右边，为 <code>murderer</code> 的两个值分别给出一个数字，我们就可以缩放这两个数字，使它们加起来为 1，从而得到最终的后验分布。</p>
 <p><strong>专栏 1.1：贝叶斯定理</strong></p>
 <p>贝叶斯定理允许我们用“反向”条件分布来表示诸如 P(A|B)P(A|B) 之类的条件概率分布：</p>
 $$ P(A|B)=\frac{P(A)P(B|A)}{P(B)} (1.27) $$<p>当我们得到由随机变量 B 表示的一些新信息时，贝叶斯定理在我们要更新某个不确定数量 A 的分布时特别有用。例如，在谋杀之谜中，我们想知道凶手 A 的身份，而我们刚刚发现了凶器 B。如果我们不知道 B，那么我们对 A 的了解将由 P(A)P(A) 描述，我们称之为先验。一旦我们知道了 B 的值，我们就可以计算修正后的分布 P(A|B)P(A|B)，称为后验。它们通过反向条件分布 P(B|A)P(B|A) 相关联，后者称为似然。请注意，似然不应被视为 B 上的概率分布，因为假定 B 的值是已知的，而应被视为随机变量 A 的函数，因此也称为似然函数。另请注意，它在 A 上的总和不一定等于 1。</p>
@@ -166,8 +166,8 @@ $$ P(A|B)=\frac{P(A)P(B|A)}{P(B)} (1.27) $$<p>当我们得到由随机变量 B �
 $$ posterior=\frac{prior \times likelihood}{normalizer} (1.28) $$<p>这里的“normalizer”就是 P(B) 的值，是确保后验分布归一化的量。根据求和规则 (1.19)，它由</p>
 $$ P(B)=\sum_{A} P(A)P(B|A) (1.29) $$<p>给出，因此可以从先验和似然函数计算出来。</p>
 <p>现在让我们将贝叶斯规则应用于谋杀之谜问题。我们知道 <code>weapon=revolver</code>，所以我们可以为 <code>murderer=Grey</code> 和 <code>murderer=Auburn</code> 计算方程 (1.26) 的右边，得到：</p>
-$$ P(murderer=Grey|weapon=revolver)∝0.3 \times 0.9 = 0.27 $$$$ P(murderer=Auburn|weapon=revolver)∝0.7 \times 0.2 = 0.14 $$<p>这些数字加起来是 0.41。为了得到概率，我们需要将这两个数字缩放以使它们的总和为 1（通过除以 0.41），得到：</p>
-$$ P(murderer=Grey|weapon=revolver)=\frac{0.27}{0.41} ≃ 0.66 $$$$ P(murderer=Auburn|weapon=revolver)=\frac{0.14}{0.41}≃0.34 $$<p>这和之前的结果一样。虽然我们通过不同的途径得到了相同的结果，但后一种使用贝叶斯定理的方法更可取，因为我们不需要计算联合分布。到目前为止，在我们的谋杀之谜中只有两个随机变量，这看起来可能不是一个显著的改进，但是当我们处理更复杂的问题时，我们会看到概率规则的连续应用使我们能够处理随机变量的小子集——即使在具有数百万变量的模型中也是如此！</p>
+$$ P(murderer=Grey|weapon=revolver) \propto 0.3 \times 0.9 = 0.27 $$$$ P(murderer=Auburn|weapon=revolver) \propto 0.7 \times 0.2 = 0.14 $$<p>这些数字加起来是 0.41。为了得到概率，我们需要将这两个数字缩放以使它们的总和为 1（通过除以 0.41），得到：</p>
+$$ P(murderer=Grey|weapon=revolver)=\frac{0.27}{0.41} \approx 0.66 $$$$ P(murderer=Auburn|weapon=revolver)=\frac{0.14}{0.41} \approx 0.34 $$<p>这和之前的结果一样。虽然我们通过不同的途径得到了相同的结果，但后一种使用贝叶斯定理的方法更可取，因为我们不需要计算联合分布。到目前为止，在我们的谋杀之谜中只有两个随机变量，这看起来可能不是一个显著的改进，但是当我们处理更复杂的问题时，我们会看到概率规则的连续应用使我们能够处理随机变量的小子集——即使在具有数百万变量的模型中也是如此！</p>
 <p><strong>本页介绍的概念回顾</strong></p>
 <ul>
 <li><strong>概率模型</strong>：一组随机变量与一个联合分布相结合，该联合分布为这些变量的每种配置分配一个概率。</li>

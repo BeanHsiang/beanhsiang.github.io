@@ -6,8 +6,15 @@
     <description>Recent content on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Mon, 12 May 2025 10:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 19 May 2025 10:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>[译]基于模型的机器学习 - 1.3 谋杀模型</title>
+      <link>https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder/</link>
+      <pubDate>Mon, 19 May 2025 10:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder/</guid>
+      <description>&lt;h2 id=&#34;13-谋杀模型&#34;&gt;1.3 谋杀模型&lt;/h2&gt;&#xA;&lt;p&gt;为了侦破谋杀案，我们需要整合更多来自犯罪现场的证据。每一条新证据都将为我们的联合分布添加一个新的随机变量。为了管理这个不断增长的变量数量，我们现在将引入本书的核心概念：概率模型。概率模型包括：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;一组随机变量，&lt;/li&gt;&#xA;&lt;li&gt;这些变量上的一个联合概率分布（即一个为这些变量的每种配置分配一个概率的分布，使得所有可能配置的概率总和为1）。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;一旦我们有了概率模型，我们就可以对它包含的变量进行推理，进行预测，了解一些随机变量在给定其他变量值的情况下的值，并且通常可以回答任何可以用模型中包含的随机变量来陈述的可能问题。这使得概率模型成为进行机器学习的极其强大的工具。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>[译]基于模型的机器学习 - 1.2 更新我们的可信部分</title>
       <link>https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs/</link>
@@ -69,7 +76,7 @@
       <link>https://beanhsiang.github.io/post/2025-04-20-mbml-table-of-contents/</link>
       <pubDate>Sun, 20 Apr 2025 10:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2025-04-20-mbml-table-of-contents/</guid>
-      <description>&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-20-mbml-preface&#34;&gt;前言&lt;/a&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;本书简介、适用读者及阅读方法&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;如何用机器学习解决我的问题？&lt;/a&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;什么是基于模型的机器学习及其如何帮助解决问题&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery&#34;&gt;谋杀之谜&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;通过解决一起谋杀案介绍基于模型的机器学习的核心概念&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;关键词：概率、随机变量、概率推断、概率模型、因子图、贝叶斯定理&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;1.1 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence&#34;&gt;整合证据&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;1.2 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs&#34;&gt;更新我们的可信部分&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;ol start=&#34;2&#34;&gt;&#xA;&lt;li&gt;评估人的技能&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;基于模型的机器学习的第一个应用：根据测试答案评估一个人具备哪些技能&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;关键词：消息传递算法、循环置信传播、可视化、评估指标、ROC曲线&lt;/p&gt;</description>
+      <description>&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-20-mbml-preface&#34;&gt;前言&lt;/a&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;本书简介、适用读者及阅读方法&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;如何用机器学习解决我的问题？&lt;/a&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;什么是基于模型的机器学习及其如何帮助解决问题&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery&#34;&gt;谋杀之谜&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;通过解决一起谋杀案介绍基于模型的机器学习的核心概念&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;关键词：概率、随机变量、概率推断、概率模型、因子图、贝叶斯定理&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;1.1 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence&#34;&gt;整合证据&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;1.2 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs&#34;&gt;更新我们的可信部分&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;1.3 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder&#34;&gt;谋杀模型&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;ol start=&#34;2&#34;&gt;&#xA;&lt;li&gt;评估人的技能&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;基于模型的机器学习的第一个应用：根据测试答案评估一个人具备哪些技能&lt;/p&gt;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;关键词：消息传递算法、循环置信传播、可视化、评估指标、ROC曲线&lt;/p&gt;</description>
     </item>
     <item>
       <title>使用 Semantic Kernel Python 集成 Google A2A协议</title>

@@ -1,0 +1,945 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]Q-learning强化学习实践：用Python构建井字棋智能代理 | Innovation with tech</title>
+    <meta property="og:title" content="[译]Q-learning强化学习实践：用Python构建井字棋智能代理 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2025-05-29T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2025-05-29T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]Q-learning强化学习实践：用Python构建井字棋智能代理">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2025-05-29-q-learning-python-tic-tac-toe/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]Q-learning强化学习实践：用Python构建井字棋智能代理</h1>
+        </header>
+        
+  <time datetime="2025-05-29T02:00:00Z" class="post-meta meta-date dt-published">
+    2025年5月29日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Machine-Learning' target="_blank">Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>还记得2016年3月AlphaGo与李世石的那场世纪对决吗？当时的第37手让全世界为之震惊——这一步看似错误的棋，后来却被誉为天才之举。这就是强化学习的魅力所在。</p>
+<p>最近重看了《AlphaGo》纪录片，再次被这种学习方式深深打动。可怕的是，AlphaGo并没有从数据库、规则或策略书中学习棋艺，而是通过数百万次自我对弈，在实践中学会了如何获胜。</p>
+<h2 id="什么是强化学习">什么是强化学习？</h2>
+<p>观察婴儿学走路的过程：站起来，摔倒，再次尝试——最终迈出了第一步。</p>
+<p>没有老师教他们如何做，婴儿完全是通过试错来学习走路的。当他们能够站立或走几步时，这对他们来说就是奖励。毕竟，他们的目标是能够走路。如果摔倒了，就没有奖励。</p>
+<p>这种试错和奖励的学习过程，正是强化学习(RL)的基本思想。</p>
+<p>强化学习是一种学习方法，智能体通过与环境交互来学习哪些行动能够带来奖励。</p>
+<p>其目标是：长期获得尽可能多的奖励。</p>
+<ul>
+<li>与监督学习不同，这里没有&quot;正确答案&quot;或标签。智能体必须自己找出哪些决策是好的。</li>
+<li>与无监督学习不同，目标不是发现数据中的隐藏模式，而是执行那些能最大化奖励的行动。</li>
+</ul>
+<h2 id="强化学习智能体如何思考决策和学习">强化学习智能体如何思考、决策和学习</h2>
+<p>要让强化学习智能体学习，需要四个要素：对当前位置的认知（状态）、可以执行的操作（动作）、想要达成的目标（奖励）以及过去策略的表现如何（价值）。</p>
+<p>智能体行动，获得反馈，然后改进。</p>
+<p>为了实现这一点，需要四个核心组件：</p>
+<h3 id="1-策略战略">1. 策略/战略</h3>
+<p>这是智能体在特定状态下决定执行哪个动作的规则或策略。在简单情况下，这是一个查找表。在更复杂的应用中（例如使用神经网络），它是一个函数。</p>
+<h3 id="2-奖励信号">2. 奖励信号</h3>
+<p>奖励是来自环境的反馈。例如，胜利可以是+1，平局是0，失败是-1。智能体的目标是在尽可能多的步骤中收集尽可能多的奖励。</p>
+<h3 id="3-价值函数">3. 价值函数</h3>
+<p>这个函数估计一个状态的预期未来奖励。奖励显示智能体该动作是&quot;好&quot;还是&quot;坏&quot;。价值函数估计一个状态有多好——不仅仅是当前，而是考虑智能体从该状态开始可以期待的未来奖励。因此，价值函数估计的是一个状态的长期利益。</p>
+<h3 id="4-环境模型">4. 环境模型</h3>
+<p>模型告诉智能体：&ldquo;如果我在状态S中执行动作A，我可能会到达状态S&rsquo;并获得奖励R。&rdquo;</p>
+<p>不过，在Q-learning等无模型方法中，这并不是必需的。</p>
+<h2 id="利用与探索第37手的启示">利用与探索：第37手的启示</h2>
+<p>你可能还记得AlphaGo与李世石第二局中的第37手：</p>
+<p>这是一个看起来像错误的不寻常走法——但后来被誉为天才之举。</p>
+<p>算法为什么要这样做？</p>
+<p>计算机程序在尝试新的东西。这叫做探索。</p>
+<p>强化学习需要两者兼顾：智能体必须在利用和探索之间找到平衡。</p>
+<ul>
+<li>利用意味着智能体使用它已经知道的动作。</li>
+<li>探索则是智能体第一次尝试的动作。它尝试这些动作是因为它们可能比已知的动作更好。</li>
+</ul>
+<p>智能体通过试错来寻找最优策略。</p>
+<h2 id="用强化学习玩井字棋">用强化学习玩井字棋</h2>
+<p>让我们通过一个大家都很熟悉的游戏来看看强化学习的实际应用。</p>
+<p>你可能小时候也玩过：井字棋。</p>
+<p>这个游戏非常适合作为入门例子，因为它不需要神经网络，规则清晰，我们只需要一点Python代码就能实现：</p>
+<ul>
+<li>我们的智能体从对游戏的零知识开始。它就像第一次看到这个游戏的人类一样。</li>
+<li>智能体逐渐评估每个游戏情况：0.5分意味着&quot;我还不知道在这里是否会获胜&quot;，1.0意味着&quot;这种情况几乎肯定会胜利&quot;。</li>
+<li>通过玩很多局游戏，智能体观察什么有效——并调整其策略。</li>
+</ul>
+<p>目标是：在每一轮中，智能体应该选择能带来最高长期奖励的行动。</p>
+<p>在这一部分，我们将逐步构建这样一个强化学习系统，创建<code>TicTacToeRL.py</code>文件。</p>
+<p>→ 你可以在这个<a href="https://github.com/Data-Science-Espresso/Reinforcement-Learning-TicTacToe">GitHub仓库</a>中找到所有代码。</p>
+<h3 id="1-构建游戏环境">1. 构建游戏环境</h3>
+<p>在强化学习中，智能体通过与环境的交互来学习。环境决定什么是状态（例如当前棋盘）、允许哪些动作（例如你可以在哪里下棋）以及对动作有什么反馈（例如获胜奖励+1）。</p>
+<p>理论上，我们称这种设置为马尔可夫决策过程：模型由状态、动作和奖励组成。</p>
+<p>首先，我们创建一个<code>TicTacToe</code>类。这管理游戏棋盘（我们创建为3×3的NumPy数组）并管理游戏逻辑：</p>
+<ul>
+<li><code>reset(self)</code>函数开始新游戏。</li>
+<li><code>available_actions()</code>函数返回所有空位。</li>
+<li><code>step(self, action, player)</code>函数执行游戏移动。这里我们返回新状态、奖励（1=获胜，0.5=平局，-10=无效移动）和游戏状态。在这个例子中，我们对无效移动给予-10的重罚，以便智能体快速学会避免它们——这是小型强化学习环境中的常见技巧。</li>
+<li><code>check_winner()</code>函数检查玩家是否连成三个X或O并因此获胜。</li>
+<li>用<code>render_gui()</code>我们用matplotlib将当前棋盘显示为X和O图形。</li>
+</ul>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">numpy</span> <span style="color:#cf222e">as</span> <span style="color:#24292e">np</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">matplotlib</span>
+</span></span><span style="display:flex;"><span>matplotlib<span style="color:#0550ae">.</span>use<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;TkAgg&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">matplotlib.pyplot</span> <span style="color:#cf222e">as</span> <span style="color:#24292e">plt</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">random</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">collections</span> <span style="color:#cf222e">import</span> defaultdict
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 井字棋游戏环境</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">TicTacToe</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">__init__</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>board <span style="color:#0550ae">=</span> np<span style="color:#0550ae">.</span>zeros<span style="color:#1f2328">((</span><span style="color:#0550ae">3</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">3</span><span style="color:#1f2328">),</span> dtype<span style="color:#0550ae">=</span><span style="color:#6639ba">int</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>done <span style="color:#0550ae">=</span> <span style="color:#cf222e">False</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>winner <span style="color:#0550ae">=</span> <span style="color:#cf222e">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">reset</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>board<span style="color:#1f2328">[:]</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>done <span style="color:#0550ae">=</span> <span style="color:#cf222e">False</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>winner <span style="color:#0550ae">=</span> <span style="color:#cf222e">None</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>get_state<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">get_state</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#6639ba">tuple</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>board<span style="color:#0550ae">.</span>flatten<span style="color:#1f2328">())</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">available_actions</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#1f2328">[(</span>i<span style="color:#1f2328">,</span> j<span style="color:#1f2328">)</span> <span style="color:#cf222e">for</span> i <span style="color:#0550ae">in</span> <span style="color:#6639ba">range</span><span style="color:#1f2328">(</span><span style="color:#0550ae">3</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">for</span> j <span style="color:#0550ae">in</span> <span style="color:#6639ba">range</span><span style="color:#1f2328">(</span><span style="color:#0550ae">3</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">if</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>board<span style="color:#1f2328">[</span>i<span style="color:#1f2328">,</span> j<span style="color:#1f2328">]</span> <span style="color:#0550ae">==</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">step</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> action<span style="color:#1f2328">,</span> player<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>done<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">raise</span> ValueError<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;游戏已结束&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        i<span style="color:#1f2328">,</span> j <span style="color:#0550ae">=</span> action
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>board<span style="color:#1f2328">[</span>i<span style="color:#1f2328">,</span> j<span style="color:#1f2328">]</span> <span style="color:#0550ae">!=</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>get_state<span style="color:#1f2328">(),</span> <span style="color:#0550ae">-</span><span style="color:#0550ae">10</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>board<span style="color:#1f2328">[</span>i<span style="color:#1f2328">,</span> j<span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> player
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>check_winner<span style="color:#1f2328">(</span>player<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>done <span style="color:#0550ae">=</span> <span style="color:#cf222e">True</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>winner <span style="color:#0550ae">=</span> player
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>get_state<span style="color:#1f2328">(),</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">elif</span> <span style="color:#0550ae">not</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>available_actions<span style="color:#1f2328">():</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>done <span style="color:#0550ae">=</span> <span style="color:#cf222e">True</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>get_state<span style="color:#1f2328">(),</span> <span style="color:#0550ae">0.5</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>get_state<span style="color:#1f2328">(),</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#cf222e">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">check_winner</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> player<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">for</span> i <span style="color:#0550ae">in</span> <span style="color:#6639ba">range</span><span style="color:#1f2328">(</span><span style="color:#0550ae">3</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> <span style="color:#6639ba">all</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>board<span style="color:#1f2328">[</span>i<span style="color:#1f2328">,</span> <span style="color:#1f2328">:]</span> <span style="color:#0550ae">==</span> player<span style="color:#1f2328">)</span> <span style="color:#0550ae">or</span> <span style="color:#6639ba">all</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>board<span style="color:#1f2328">[:,</span> i<span style="color:#1f2328">]</span> <span style="color:#0550ae">==</span> player<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">return</span> <span style="color:#cf222e">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#6639ba">all</span><span style="color:#1f2328">(</span>np<span style="color:#0550ae">.</span>diag<span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>board<span style="color:#1f2328">)</span> <span style="color:#0550ae">==</span> player<span style="color:#1f2328">)</span> <span style="color:#0550ae">or</span> <span style="color:#6639ba">all</span><span style="color:#1f2328">(</span>np<span style="color:#0550ae">.</span>diag<span style="color:#1f2328">(</span>np<span style="color:#0550ae">.</span>fliplr<span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>board<span style="color:#1f2328">))</span> <span style="color:#0550ae">==</span> player<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> <span style="color:#cf222e">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#cf222e">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">render_gui</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        fig<span style="color:#1f2328">,</span> ax <span style="color:#0550ae">=</span> plt<span style="color:#0550ae">.</span>subplots<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        ax<span style="color:#0550ae">.</span>set_xticks<span style="color:#1f2328">([</span><span style="color:#0550ae">0.5</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">1.5</span><span style="color:#1f2328">],</span> minor<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        ax<span style="color:#0550ae">.</span>set_yticks<span style="color:#1f2328">([</span><span style="color:#0550ae">0.5</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">1.5</span><span style="color:#1f2328">],</span> minor<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        ax<span style="color:#0550ae">.</span>set_xticks<span style="color:#1f2328">([],</span> minor<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        ax<span style="color:#0550ae">.</span>set_yticks<span style="color:#1f2328">([],</span> minor<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        ax<span style="color:#0550ae">.</span>set_xlim<span style="color:#1f2328">(</span><span style="color:#0550ae">-</span><span style="color:#0550ae">0.5</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">2.5</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        ax<span style="color:#0550ae">.</span>set_ylim<span style="color:#1f2328">(</span><span style="color:#0550ae">-</span><span style="color:#0550ae">0.5</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">2.5</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        ax<span style="color:#0550ae">.</span>grid<span style="color:#1f2328">(</span><span style="color:#cf222e">True</span><span style="color:#1f2328">,</span> which<span style="color:#0550ae">=</span><span style="color:#0a3069">&#39;major&#39;</span><span style="color:#1f2328">,</span> color<span style="color:#0550ae">=</span><span style="color:#0a3069">&#39;black&#39;</span><span style="color:#1f2328">,</span> linewidth<span style="color:#0550ae">=</span><span style="color:#0550ae">2</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">for</span> i <span style="color:#0550ae">in</span> <span style="color:#6639ba">range</span><span style="color:#1f2328">(</span><span style="color:#0550ae">3</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">for</span> j <span style="color:#0550ae">in</span> <span style="color:#6639ba">range</span><span style="color:#1f2328">(</span><span style="color:#0550ae">3</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>                value <span style="color:#0550ae">=</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>board<span style="color:#1f2328">[</span>i<span style="color:#1f2328">,</span> j<span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">if</span> value <span style="color:#0550ae">==</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    ax<span style="color:#0550ae">.</span>plot<span style="color:#1f2328">(</span>j<span style="color:#1f2328">,</span> <span style="color:#0550ae">2</span> <span style="color:#0550ae">-</span> i<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#39;x&#39;</span><span style="color:#1f2328">,</span> markersize<span style="color:#0550ae">=</span><span style="color:#0550ae">20</span><span style="color:#1f2328">,</span> markeredgewidth<span style="color:#0550ae">=</span><span style="color:#0550ae">2</span><span style="color:#1f2328">,</span> color<span style="color:#0550ae">=</span><span style="color:#0a3069">&#39;blue&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">elif</span> value <span style="color:#0550ae">==</span> <span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    circle <span style="color:#0550ae">=</span> plt<span style="color:#0550ae">.</span>Circle<span style="color:#1f2328">((</span>j<span style="color:#1f2328">,</span> <span style="color:#0550ae">2</span> <span style="color:#0550ae">-</span> i<span style="color:#1f2328">),</span> <span style="color:#0550ae">0.3</span><span style="color:#1f2328">,</span> fill<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">,</span> color<span style="color:#0550ae">=</span><span style="color:#0a3069">&#39;red&#39;</span><span style="color:#1f2328">,</span> linewidth<span style="color:#0550ae">=</span><span style="color:#0550ae">2</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                    ax<span style="color:#0550ae">.</span>add_patch<span style="color:#1f2328">(</span>circle<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        ax<span style="color:#0550ae">.</span>set_aspect<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;equal&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        plt<span style="color:#0550ae">.</span>axis<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;off&#39;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        plt<span style="color:#0550ae">.</span>show<span style="color:#1f2328">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="2-编程q-learning智能体">2. 编程Q-learning智能体</h3>
+<p>接下来，我们定义学习部分：我们的智能体。</p>
+<p>它决定在特定状态下执行哪个动作以获得尽可能多的奖励。</p>
+<p>智能体使用经典的强化学习方法Q-learning。为每个状态和动作的组合存储一个Q值——该动作的估计长期收益。</p>
+<p>最重要的方法是：</p>
+<ul>
+<li>使用<code>choose_action(self, state, actions)</code>函数，智能体在每个游戏情况下决定是选择它已经熟知的动作（利用）还是尝试尚未充分测试的新动作（探索）。</li>
+</ul>
+<p>这个决策基于所谓的ε-贪婪方法：
+以ε = 0.1的概率，智能体选择随机动作（探索），
+以90%的概率（1 – ε），它基于Q表选择当前已知的最佳动作（利用）。</p>
+<ul>
+<li>通过<code>update(state, action, reward, next_state, next_actions)</code>函数，我们根据动作的好坏和后续发生的情况调整Q值。这是智能体的核心学习步骤。</li>
+</ul>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># Q-learning智能体</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">QLearningAgent</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">__init__</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> alpha<span style="color:#0550ae">=</span><span style="color:#0550ae">0.1</span><span style="color:#1f2328">,</span> gamma<span style="color:#0550ae">=</span><span style="color:#0550ae">0.9</span><span style="color:#1f2328">,</span> epsilon<span style="color:#0550ae">=</span><span style="color:#0550ae">0.1</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>q_table <span style="color:#0550ae">=</span> defaultdict<span style="color:#1f2328">(</span><span style="color:#6639ba">float</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>alpha <span style="color:#0550ae">=</span> alpha  <span style="color:#57606a"># 学习率</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>gamma <span style="color:#0550ae">=</span> gamma  <span style="color:#57606a"># 折扣因子</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>epsilon <span style="color:#0550ae">=</span> epsilon  <span style="color:#57606a"># 探索率</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">get_q</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> state<span style="color:#1f2328">,</span> action<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>q_table<span style="color:#1f2328">[(</span>state<span style="color:#1f2328">,</span> action<span style="color:#1f2328">)]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">choose_action</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> state<span style="color:#1f2328">,</span> actions<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> random<span style="color:#0550ae">.</span>random<span style="color:#1f2328">()</span> <span style="color:#0550ae">&lt;</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>epsilon<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> random<span style="color:#0550ae">.</span>choice<span style="color:#1f2328">(</span>actions<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            q_values <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>get_q<span style="color:#1f2328">(</span>state<span style="color:#1f2328">,</span> a<span style="color:#1f2328">)</span> <span style="color:#cf222e">for</span> a <span style="color:#0550ae">in</span> actions<span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>            max_q <span style="color:#0550ae">=</span> <span style="color:#6639ba">max</span><span style="color:#1f2328">(</span>q_values<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            best_actions <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span>a <span style="color:#cf222e">for</span> a<span style="color:#1f2328">,</span> q <span style="color:#0550ae">in</span> <span style="color:#6639ba">zip</span><span style="color:#1f2328">(</span>actions<span style="color:#1f2328">,</span> q_values<span style="color:#1f2328">)</span> <span style="color:#cf222e">if</span> q <span style="color:#0550ae">==</span> max_q<span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">return</span> random<span style="color:#0550ae">.</span>choice<span style="color:#1f2328">(</span>best_actions<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">update</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> state<span style="color:#1f2328">,</span> action<span style="color:#1f2328">,</span> reward<span style="color:#1f2328">,</span> next_state<span style="color:#1f2328">,</span> next_actions<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        max_q_next <span style="color:#0550ae">=</span> <span style="color:#6639ba">max</span><span style="color:#1f2328">([</span><span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>get_q<span style="color:#1f2328">(</span>next_state<span style="color:#1f2328">,</span> a<span style="color:#1f2328">)</span> <span style="color:#cf222e">for</span> a <span style="color:#0550ae">in</span> next_actions<span style="color:#1f2328">],</span> default<span style="color:#0550ae">=</span><span style="color:#0550ae">0</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        old_value <span style="color:#0550ae">=</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>q_table<span style="color:#1f2328">[(</span>state<span style="color:#1f2328">,</span> action<span style="color:#1f2328">)]</span>
+</span></span><span style="display:flex;"><span>        new_value <span style="color:#0550ae">=</span> old_value <span style="color:#0550ae">+</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>alpha <span style="color:#0550ae">*</span> <span style="color:#1f2328">(</span>reward <span style="color:#0550ae">+</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>gamma <span style="color:#0550ae">*</span> max_q_next <span style="color:#0550ae">-</span> old_value<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>q_table<span style="color:#1f2328">[(</span>state<span style="color:#1f2328">,</span> action<span style="color:#1f2328">)]</span> <span style="color:#0550ae">=</span> new_value
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="3-训练智能体">3. 训练智能体</h3>
+<p>实际的学习过程从这一步开始。在训练期间，智能体通过试错学习。智能体玩许多游戏，记住哪些动作效果好——并调整其策略。</p>
+<p>在训练过程中，智能体学习其动作如何获得奖励，其行为如何影响后续状态以及长期更好的策略如何发展。</p>
+<ul>
+<li>通过<code>train(agent, episodes=10000)</code>函数，我们定义智能体对抗简单的随机对手玩10,000局游戏。
+在每一局中，智能体（玩家1）先移动，然后是对手（玩家2）。每次移动后，智能体通过<code>update()</code>学习。</li>
+<li>每1000局游戏我们保存有多少胜利、平局和失败。</li>
+<li>最后，我们用matplotlib绘制学习曲线。它显示智能体如何随时间改进。</li>
+</ul>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># 训练与学习曲线</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">train</span><span style="color:#1f2328">(</span>agent<span style="color:#1f2328">,</span> episodes<span style="color:#0550ae">=</span><span style="color:#0550ae">10000</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    env <span style="color:#0550ae">=</span> TicTacToe<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    results <span style="color:#0550ae">=</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;win&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;draw&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;loss&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    win_rates <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span>    draw_rates <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span>    loss_rates <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> episode <span style="color:#0550ae">in</span> <span style="color:#6639ba">range</span><span style="color:#1f2328">(</span>episodes<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        state <span style="color:#0550ae">=</span> env<span style="color:#0550ae">.</span>reset<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        done <span style="color:#0550ae">=</span> <span style="color:#cf222e">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">while</span> <span style="color:#0550ae">not</span> done<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            actions <span style="color:#0550ae">=</span> env<span style="color:#0550ae">.</span>available_actions<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>            action <span style="color:#0550ae">=</span> agent<span style="color:#0550ae">.</span>choose_action<span style="color:#1f2328">(</span>state<span style="color:#1f2328">,</span> actions<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            next_state<span style="color:#1f2328">,</span> reward<span style="color:#1f2328">,</span> done <span style="color:#0550ae">=</span> env<span style="color:#0550ae">.</span>step<span style="color:#1f2328">(</span>action<span style="color:#1f2328">,</span> player<span style="color:#0550ae">=</span><span style="color:#0550ae">1</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> done<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                agent<span style="color:#0550ae">.</span>update<span style="color:#1f2328">(</span>state<span style="color:#1f2328">,</span> action<span style="color:#1f2328">,</span> reward<span style="color:#1f2328">,</span> next_state<span style="color:#1f2328">,</span> <span style="color:#1f2328">[])</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">if</span> reward <span style="color:#0550ae">==</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;win&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">+=</span> <span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">elif</span> reward <span style="color:#0550ae">==</span> <span style="color:#0550ae">0.5</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;draw&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">+=</span> <span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;loss&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">+=</span> <span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            opp_actions <span style="color:#0550ae">=</span> env<span style="color:#0550ae">.</span>available_actions<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>            opp_action <span style="color:#0550ae">=</span> random<span style="color:#0550ae">.</span>choice<span style="color:#1f2328">(</span>opp_actions<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            next_state2<span style="color:#1f2328">,</span> reward2<span style="color:#1f2328">,</span> done <span style="color:#0550ae">=</span> env<span style="color:#0550ae">.</span>step<span style="color:#1f2328">(</span>opp_action<span style="color:#1f2328">,</span> player<span style="color:#0550ae">=-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> done<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                agent<span style="color:#0550ae">.</span>update<span style="color:#1f2328">(</span>state<span style="color:#1f2328">,</span> action<span style="color:#1f2328">,</span> <span style="color:#0550ae">-</span><span style="color:#0550ae">1</span> <span style="color:#0550ae">*</span> reward2<span style="color:#1f2328">,</span> next_state2<span style="color:#1f2328">,</span> <span style="color:#1f2328">[])</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">if</span> reward2 <span style="color:#0550ae">==</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;loss&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">+=</span> <span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">elif</span> reward2 <span style="color:#0550ae">==</span> <span style="color:#0550ae">0.5</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;draw&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">+=</span> <span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;win&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">+=</span> <span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">break</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            next_actions <span style="color:#0550ae">=</span> env<span style="color:#0550ae">.</span>available_actions<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>            agent<span style="color:#0550ae">.</span>update<span style="color:#1f2328">(</span>state<span style="color:#1f2328">,</span> action<span style="color:#1f2328">,</span> reward<span style="color:#1f2328">,</span> next_state2<span style="color:#1f2328">,</span> next_actions<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            state <span style="color:#0550ae">=</span> next_state2
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#1f2328">(</span>episode <span style="color:#0550ae">+</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">%</span> <span style="color:#0550ae">1000</span> <span style="color:#0550ae">==</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            total <span style="color:#0550ae">=</span> <span style="color:#6639ba">sum</span><span style="color:#1f2328">(</span>results<span style="color:#0550ae">.</span>values<span style="color:#1f2328">())</span>
+</span></span><span style="display:flex;"><span>            win_rates<span style="color:#0550ae">.</span>append<span style="color:#1f2328">(</span>results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;win&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">/</span> total<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            draw_rates<span style="color:#0550ae">.</span>append<span style="color:#1f2328">(</span>results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;draw&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">/</span> total<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            loss_rates<span style="color:#0550ae">.</span>append<span style="color:#1f2328">(</span>results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;loss&#34;</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">/</span> total<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;第</span><span style="color:#0a3069">{</span>episode<span style="color:#0550ae">+</span><span style="color:#0550ae">1</span><span style="color:#0a3069">}</span><span style="color:#0a3069">局: 胜利 </span><span style="color:#0a3069">{</span>results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;win&#39;</span><span style="color:#1f2328">]</span><span style="color:#0a3069">}</span><span style="color:#0a3069">, 平局 </span><span style="color:#0a3069">{</span>results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;draw&#39;</span><span style="color:#1f2328">]</span><span style="color:#0a3069">}</span><span style="color:#0a3069">, 失败 </span><span style="color:#0a3069">{</span>results<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;loss&#39;</span><span style="color:#1f2328">]</span><span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            results <span style="color:#0550ae">=</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;win&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;draw&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;loss&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    x <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span>i <span style="color:#0550ae">*</span> <span style="color:#0550ae">1000</span> <span style="color:#cf222e">for</span> i <span style="color:#0550ae">in</span> <span style="color:#6639ba">range</span><span style="color:#1f2328">(</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>win_rates<span style="color:#1f2328">)</span> <span style="color:#0550ae">+</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">)]</span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#0550ae">.</span>plot<span style="color:#1f2328">(</span>x<span style="color:#1f2328">,</span> win_rates<span style="color:#1f2328">,</span> label<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;胜率&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#0550ae">.</span>plot<span style="color:#1f2328">(</span>x<span style="color:#1f2328">,</span> draw_rates<span style="color:#1f2328">,</span> label<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;平局率&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#0550ae">.</span>plot<span style="color:#1f2328">(</span>x<span style="color:#1f2328">,</span> loss_rates<span style="color:#1f2328">,</span> label<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;败率&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#0550ae">.</span>xlabel<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;训练局数&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#0550ae">.</span>ylabel<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;比率&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#0550ae">.</span>title<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Q-learning智能体学习曲线&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#0550ae">.</span>legend<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#0550ae">.</span>grid<span style="color:#1f2328">(</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#0550ae">.</span>tight_layout<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#0550ae">.</span>show<span style="color:#1f2328">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="4-棋盘可视化">4. 棋盘可视化</h3>
+<p>通过主程序<code>if __name__ == &quot;__main__&quot;:</code>我们定义程序的起点。它确保当我们执行脚本时智能体的训练自动运行。我们使用<code>render_gui()</code>方法将井字棋棋盘显示为图形。</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># 主程序</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> <span style="color:#953800">__name__</span> <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;__main__&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    agent <span style="color:#0550ae">=</span> QLearningAgent<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    train<span style="color:#1f2328">(</span>agent<span style="color:#1f2328">,</span> episodes<span style="color:#0550ae">=</span><span style="color:#0550ae">10000</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 示例棋盘可视化</span>
+</span></span><span style="display:flex;"><span>    env <span style="color:#0550ae">=</span> TicTacToe<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    env<span style="color:#0550ae">.</span>board<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>    env<span style="color:#0550ae">.</span>board<span style="color:#1f2328">[</span><span style="color:#0550ae">1</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">1</span><span style="color:#1f2328">]</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">-</span><span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>    env<span style="color:#0550ae">.</span>render_gui<span style="color:#1f2328">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="终端执行">终端执行</h3>
+<p>我们将代码保存为<code>TicTacToeRL.py</code>文件。</p>
+<p>在终端中，我们导航到存储<code>TicTacToeRL.py</code>的相应目录，并使用命令<code>python TicTacToeRL.py</code>执行文件。</p>
+<p>在终端中，我们可以看到每1000局后我们的智能体赢了多少局游戏，在可视化中我们看到学习曲线显示智能体的改进过程。</p>
+<h2 id="总结思考">总结思考</h2>
+<p>通过井字棋，我们使用一个简单的游戏和一些Python代码——但我们可以清楚地看到强化学习是如何工作的：</p>
+<ul>
+<li>智能体从没有任何先验知识开始。</li>
+<li>它通过反馈和经验制定策略。</li>
+<li>因此，它的决策逐渐改善——不是因为它知道规则，而是因为它学习了。</li>
+</ul>
+<p>在我们的例子中，对手是一个随机智能体。接下来，我们可以看看我们的Q-learning智能体如何对抗另一个学习智能体或对抗我们自己的表现。</p>
+<p>强化学习向我们展示，机器智能不仅通过知识或信息创造——而是通过经验、反馈和适应。</p>
+<h2 id="进一步学习资源">进一步学习资源</h2>
+<ul>
+<li><a href="http://incompleteideas.net/book/the-book.html">书籍 – 强化学习：导论</a> by Richard S. Sutton &amp; Andre G. Barto</li>
+<li><a href="https://www.datacamp.com/tutorial/reinforcement-learning-with-gymnasium">DataCamp博客 – 使用Gymnasium进行强化学习实践指南</a></li>
+<li><a href="https://dokumen.pub/reinforcement-learning-industrial-applications-of-intelligent-agents-1098114833-9781098114831.html">书籍 – 强化学习：智能代理的工业应用</a></li>
+</ul>
+<p>强化学习的魅力在于，它让我们看到了机器如何像人类一样从错误中学习，并最终超越人类的表现。正如AlphaGo的第37手所证明的那样，有时候最好的策略就是勇于探索未知。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2025-05-29-q-learning-python-tic-tac-toe/">https://beanhsiang.github.io/post/2025-05-29-q-learning-python-tic-tac-toe/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/reinforcement-learning' target="_blank">reinforcement learning</a></li>
+                
+                <li><a href='/tags/q-learning' target="_blank">q-learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-29-q-learning-python-tic-tac-toe/" title="[译]Q-learning强化学习实践：用Python构建井字棋智能代理" target="_blank">[译]Q-learning强化学习实践：用Python构建井字棋智能代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder/" title="[译]基于模型的机器学习 - 1.3 谋杀模型" target="_blank">[译]基于模型的机器学习 - 1.3 谋杀模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs/" title="[译]基于模型的机器学习 - 1.2 更新我们的可信部分" target="_blank">[译]基于模型的机器学习 - 1.2 更新我们的可信部分</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/" title="使用 Semantic Kernel 插件编排 AI 代理的技术深度解析" target="_blank">使用 Semantic Kernel 插件编排 AI 代理的技术深度解析</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-03-real-time-speech-transcription-gpt4o-websocket/" title="利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录" target="_blank">利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/" title="[译]基于模型的机器学习 - 1.1 整合证据" target="_blank">[译]基于模型的机器学习 - 1.1 整合证据</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-24-using-pydanticai-for-agentic-development/" title="使用 PydanticAI 构建智能代理系统：从 MCP 到智能工单助手" target="_blank">使用 PydanticAI 构建智能代理系统：从 MCP 到智能工单助手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery/" title="[译]基于模型的机器学习 - 第一章 谋杀之谜" target="_blank">[译]基于模型的机器学习 - 第一章 谋杀之谜</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-21-mbml-introduction/" title="[译]基于模型的机器学习 - 如何用机器学习解决我的问题？" target="_blank">[译]基于模型的机器学习 - 如何用机器学习解决我的问题？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-20-mbml-preface/" title="[译]基于模型的机器学习 - 前言" target="_blank">[译]基于模型的机器学习 - 前言</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (31)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (5)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

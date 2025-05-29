@@ -6,8 +6,22 @@
     <description>Recent content in Tags on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Mon, 19 May 2025 10:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 29 May 2025 10:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Q-Learning</title>
+      <link>https://beanhsiang.github.io/tags/q-learning/</link>
+      <pubDate>Thu, 29 May 2025 10:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/tags/q-learning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Reinforcement Learning</title>
+      <link>https://beanhsiang.github.io/tags/reinforcement-learning/</link>
+      <pubDate>Thu, 29 May 2025 10:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/tags/reinforcement-learning/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Machine Learning</title>
       <link>https://beanhsiang.github.io/tags/Machine-Learning/</link>

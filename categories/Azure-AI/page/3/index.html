@@ -82,6 +82,32 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/" target="_blank">多种环境部署 Azure 机器学习 Prompt Flow</a>
+            </h1>
+        </header>
+        
+  <time datetime="2023-12-09T04:00:00Z" class="post-meta meta-date dt-published">
+    2023年12月9日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>Prompt Flow 在 Azure 机器学习工作室、Azure AI Studio 和本地开发笔记本电脑上提供，是一种开发工具，旨在简化由 LLM（大型语言模型）提供支持的 AI 应用程序的整个开发周期。Prompt Flow 使提示处于前端和中心，而不是像其他工具那样混淆它们或将它们深埋在抽象层中。这种方法不仅允许开发人员构建编排，还可以像在传统软件开发周期中评估和迭代代码一样评估和迭代他们的提示。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2023-12-09-deploy-your-azure-machine-learning-prompt-flow/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2023-11-16-more-to-azure-ai-model-catalog/" target="_blank">新加入 Azure AI Model Catalog 的模型</a>
             </h1>
         </header>
@@ -332,54 +358,6 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2022-07-02-azure-cognitive-search-now-supports-swapping-indexes/" target="_blank">Azure Cognitive Search 支持交换索引</a>
-            </h1>
-        </header>
-        
-  <time datetime="2022-07-02T02:00:00Z" class="post-meta meta-date dt-published">
-    2022年7月2日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>搜索索引是不可变的，这意味着如果需要更新索引，通常需要<a href="https://docs.microsoft.com/azure/search/search-howto-reindex?WT.mc_id=AI-MVP-5003172">删除并重新生成</a>索引或创建新索引，然后迁移应用程序。像这样交换搜索索引会增加管理搜索索引的复杂性，如果最终需要在多个位置更新应用程序设置或需要重新部署代码，则可能会很困难。</p>
-<p>为了帮助更轻松地交换索引，Azure 认知搜索现在支持预览版提供的<a href="https://docs.microsoft.com/azure/search/search-how-to-alias?tabs=rest&amp;WT.mc_id=AI-MVP-5003172">索引别名</a>。别名是辅助名称，可用于引用索引以进行查询、索引和其他文档操作。您可以通过 <a href="https://docs.microsoft.com/rest/api/searchservice/preview-api/create-or-update-alias?WT.mc_id=AI-MVP-5003172">REST API</a>、<a href="https://docs.microsoft.com/azure/search/search-how-to-alias?tabs=vscode&amp;WT.mc_id=AI-MVP-5003172#create-an-index-alias">Visual Studio Code 扩展</a>或 <a href="https://docs.microsoft.com/dotnet/api/azure.search.documents.indexes.searchindexclient.createorupdatealias?WT.mc_id=AI-MVP-5003172&amp;view=azure-dotnet-preview#azure-search-documents-indexes-searchindexclient-createorupdatealias(system-string-azure-search-documents-indexes-models-searchalias-system-boolean-system-threading-cancellationtoken)">SDK</a> 创建别名。</p>
-<p><strong>POST https://[service name].search.windows.net/aliases?api-version=2021-04-30-Preview</strong></p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
-</span></span><span style="display:flex;"><span>   <span style="color:#0550ae">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;my-alias&#34;</span><span style="color:#1f2328">,</span>
-</span></span><span style="display:flex;"><span>   <span style="color:#0550ae">&#34;indexes&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;hotel-samples-index&#34;</span><span style="color:#1f2328">]</span>
-</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>如果您发现自己相当频繁地更新搜索索引，则可能会从使用别名中受益。下图显示了在应用程序中使用索引别名的典型工作流。
-
-        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224216713-4a1e6d70-0277-46cd-832a-1194d5decd2d.png">
-            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/224216713-4a1e6d70-0277-46cd-832a-1194d5decd2d.png" />
-        </a>
-    </p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2022-07-02-azure-cognitive-search-now-supports-swapping-indexes/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
@@ -466,6 +444,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-29-azure-ai-search-multi-vector-semantic-ranking-enhancements/" title="Azure AI Search 推出多向量字段支持和语义排序增强功能" target="_blank">Azure AI Search 推出多向量字段支持和语义排序增强功能</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-05-29-q-learning-python-tic-tac-toe/" title="[译]Q-learning强化学习实践：用Python构建井字棋智能代理" target="_blank">[译]Q-learning强化学习实践：用Python构建井字棋智能代理</a>
     </li>
     
@@ -501,10 +483,6 @@
         <a href="https://beanhsiang.github.io/post/2025-04-21-mbml-introduction/" title="[译]基于模型的机器学习 - 如何用机器学习解决我的问题？" target="_blank">[译]基于模型的机器学习 - 如何用机器学习解决我的问题？</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2025-04-20-mbml-preface/" title="[译]基于模型的机器学习 - 前言" target="_blank">[译]基于模型的机器学习 - 前言</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -514,7 +492,7 @@
         <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
 <ul class="widget-list">
     
-    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (31)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (32)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
     
@@ -601,9 +579,13 @@
     
     <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
     
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
     <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
     
     <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
     
     <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
     

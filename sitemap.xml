@@ -2,28 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
+    <lastmod>2025-05-29T14:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Azure-AI/</loc>
+    <lastmod>2025-05-29T14:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Azure-AI-Search/</loc>
+    <lastmod>2025-05-29T14:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2025-05-29-azure-ai-search-multi-vector-semantic-ranking-enhancements/</loc>
+    <lastmod>2025-05-29T14:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/</loc>
+    <lastmod>2025-05-29T14:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/</loc>
+    <lastmod>2025-05-29T14:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2025-05-29T14:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Semantic-Ranking/</loc>
+    <lastmod>2025-05-29T14:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2025-05-29T14:30:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Vector-Search/</loc>
+    <lastmod>2025-05-29T14:30:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/post/2025-05-29-q-learning-python-tic-tac-toe/</loc>
     <lastmod>2025-05-29T10:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2025-05-29T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2025-05-29T10:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://beanhsiang.github.io/categories/Machine-Learning/</loc>
-    <lastmod>2025-05-29T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
     <lastmod>2025-05-29T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/q-learning/</loc>
     <lastmod>2025-05-29T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/reinforcement-learning/</loc>
-    <lastmod>2025-05-29T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
     <lastmod>2025-05-29T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder/</loc>
@@ -40,12 +58,6 @@
   </url><url>
     <loc>https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs/</loc>
     <lastmod>2025-05-12T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
-    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Azure-AI/</loc>
-    <lastmod>2025-05-08T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Semantic-Kernel/</loc>
     <lastmod>2025-05-08T12:00:00+08:00</lastmod>
@@ -139,9 +151,6 @@
   </url><url>
     <loc>https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/</loc>
     <lastmod>2025-03-07T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Azure-AI-Search/</loc>
-    <lastmod>2025-01-06T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/</loc>
     <lastmod>2025-01-06T12:00:00+08:00</lastmod>

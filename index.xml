@@ -6,8 +6,15 @@
     <description>Recent content on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Thu, 29 May 2025 10:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 29 May 2025 14:30:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Azure AI Search 推出多向量字段支持和语义排序增强功能</title>
+      <link>https://beanhsiang.github.io/post/2025-05-29-azure-ai-search-multi-vector-semantic-ranking-enhancements/</link>
+      <pubDate>Thu, 29 May 2025 14:30:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-05-29-azure-ai-search-multi-vector-semantic-ranking-enhancements/</guid>
+      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/azure-ai-search-multi-vector-semantic-ranking.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Azure AI Search 多向量和语义排序增强功能&#34; src=&#34;https://beanhsiang.github.io/uploads/azure-ai-search-multi-vector-semantic-ranking.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;Azure AI Search 最近发布了两个强大的新功能：多向量字段支持和语义排序的评分配置文件集成。这些功能是基于用户反馈开发的，为搜索体验提供了更多控制和更多应用场景。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么这些增强功能很重要&#34;&gt;为什么这些增强功能很重要&lt;/h2&gt;&#xA;&lt;p&gt;随着搜索体验变得越来越复杂，处理复杂的多模态数据并保持精确的相关性变得至关重要。这些新功能直接解决了常见的痛点：&lt;/p&gt;</description>
+    </item>
     <item>
       <title>[译]Q-learning强化学习实践：用Python构建井字棋智能代理</title>
       <link>https://beanhsiang.github.io/post/2025-05-29-q-learning-python-tic-tac-toe/</link>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>AI Agent on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/categories/AI-Agent/</link>
+    <description>Recent content in AI Agent on Innovation with tech</description>
+    <generator>Hugo</generator>
+    <language>zh-Hans</language>
+    <lastBuildDate>Tue, 03 Jun 2025 12:00:00 +0800</lastBuildDate>
+    <atom:link href="https://beanhsiang.github.io/categories/AI-Agent/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>将 VSCode 打造为全能型内容创作工具</title>
+      <link>https://beanhsiang.github.io/post/2025-06-03-make-vscode-a-versatile-content-creation-tool/</link>
+      <pubDate>Tue, 03 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-06-03-make-vscode-a-versatile-content-creation-tool/</guid>
+      <description>&lt;p&gt;Visual Studio Code (VSCode) 通常被誉为程序员的瑞士军刀，但它的强大功能远不止于代码编写。凭借其轻量级的设计、丰富的扩展生态系统以及与日俱增的 AI 能力，VSCode 完全可以转变为一个高效、多功能的内容创作平台，尤其适合技术博主、文档撰写者和任何需要处理大量文本内容的创作者。&lt;/p&gt;&#xA;&lt;p&gt;本文将探讨如何配置和使用 VSCode 来优化你的内容创作流程，特别是结合 AI 工具，如 GitHub Copilot，让写作体验更上一层楼。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

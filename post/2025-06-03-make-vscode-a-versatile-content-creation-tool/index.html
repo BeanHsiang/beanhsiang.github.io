@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>将 VSCode 打造为全能型内容创作工具 | Innovation with tech</title>
+    <meta property="og:title" content="将 VSCode 打造为全能型内容创作工具 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2025-06-03T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2025-06-03T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="将 VSCode 打造为全能型内容创作工具">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2025-06-03-make-vscode-a-versatile-content-creation-tool/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">将 VSCode 打造为全能型内容创作工具</h1>
+        </header>
+        
+  <time datetime="2025-06-03T04:00:00Z" class="post-meta meta-date dt-published">
+    2025年6月3日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/AI-Agent' target="_blank">AI Agent</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>Visual Studio Code (VSCode) 通常被誉为程序员的瑞士军刀，但它的强大功能远不止于代码编写。凭借其轻量级的设计、丰富的扩展生态系统以及与日俱增的 AI 能力，VSCode 完全可以转变为一个高效、多功能的内容创作平台，尤其适合技术博主、文档撰写者和任何需要处理大量文本内容的创作者。</p>
+<p>本文将探讨如何配置和使用 VSCode 来优化你的内容创作流程，特别是结合 AI 工具，如 GitHub Copilot，让写作体验更上一层楼。</p>
+<h2 id="为什么选择-vscode-进行内容创作">为什么选择 VSCode 进行内容创作？</h2>
+<p>你可能会问，市面上有那么多专业的写作工具，为什么还要选择一个代码编辑器呢？</p>
+<ul>
+<li><strong>轻量级与高性能</strong>：VSCode 启动迅速，运行流畅，即使处理大型项目或多个文件也不会感到卡顿。</li>
+<li><strong>卓越的 Markdown 支持</strong>：VSCode 原生支持 Markdown，并且有大量优秀的扩展进一步增强 Markdown 的编辑和预览体验。对于技术博客作者来说，Markdown 是首选格式。</li>
+<li><strong>强大的扩展生态</strong>：无论是语法高亮、拼写检查、版本控制还是 AI 辅助，VSCode 社区都提供了海量高质量扩展来满足你的需求。</li>
+<li><strong>集成终端</strong>：可以直接在 VSCode 内部运行命令行工具，例如 Git 命令、Hugo/Jekyll 等静态网站生成器的命令，无需切换窗口。</li>
+<li><strong>Git 集成</strong>：内置的 Git 支持使得版本控制和协作变得异常简单。</li>
+<li><strong>跨平台</strong>：无论你使用 Windows, macOS 还是 Linux，VSCode 都能提供一致的体验。</li>
+<li><strong>高度可定制</strong>：从主题到快捷键，再到特定语言的设置，VSCode 允许你根据自己的偏好进行深度定制。</li>
+</ul>
+<h2 id="必备的-vscode-扩展提升创作体验">必备的 VSCode 扩展，提升创作体验</h2>
+<p>要将 VSCode 打造成内容创作利器，安装合适的扩展是关键。以下是一些强烈推荐的扩展：</p>
+<ul>
+<li>
+<p><strong>Markdown All in One</strong>:</p>
+<ul>
+<li>功能：提供 Markdown 写作所需的一切核心功能，包括快捷键（粗体、斜体、链接等）、自动生成目录 (TOC)、实时预览同步、数学公式支持等。</li>
+<li>为什么需要：极大提升 Markdown 写作效率和便捷性。</li>
+</ul>
+</li>
+<li>
+<p><strong>Markdown Preview Enhanced</strong>:</p>
+<ul>
+<li>功能：提供比 VSCode 内置预览更强大的 Markdown 预览功能。支持导出为 HTML/PDF，自定义 CSS，以及流程图、序列图、幻灯片等高级功能。</li>
+<li>为什么需要：对于需要复杂预览和导出选项的用户来说非常有用。</li>
+</ul>
+</li>
+<li>
+<p><strong>Code Spell Checker</strong>:</p>
+<ul>
+<li>功能：一个强大的拼写检查器，支持多种语言（包括中文和英文混合内容中的英文单词检查）。它可以帮助你捕捉文章中的拼写错误和笔误。</li>
+<li>为什么需要：确保内容专业无误，提升文章质量。</li>
+</ul>
+</li>
+<li>
+<p><strong>GitHub Copilot</strong>:</p>
+<ul>
+<li>功能：你的 AI 编程伙伴，但在内容创作方面同样出色。它可以根据上下文提供写作建议、补全句子、生成段落、甚至帮助你构思内容大纲和撰写代码示例。</li>
+<li>为什么需要：显著提升写作效率，克服写作障碍，并为技术内容提供准确的代码支持。我们将在下一节详细讨论。</li>
+</ul>
+</li>
+<li>
+<p><strong>GitLens — Git supercharged</strong>:</p>
+<ul>
+<li>功能：极大地增强了 VSCode 内置的 Git 功能。你可以轻松查看代码/文本的每一行历史记录 (blame)、文件历史、提交信息等。</li>
+<li>为什么需要：对于需要频繁进行版本控制和回顾修改历史的创作者来说，这是一个神器。</li>
+</ul>
+</li>
+<li>
+<p><strong>(可选) Prettier - Code formatter</strong>:</p>
+<ul>
+<li>功能：虽然主要用于代码格式化，但 Prettier 也支持 Markdown 文件的格式化，确保你的 Markdown 源码风格一致，易于阅读和维护。</li>
+<li>为什么需要：保持文档源码的整洁和一致性。</li>
+</ul>
+</li>
+</ul>
+<h2 id="利用-ai-github-copilot-赋能内容创作">利用 AI (GitHub Copilot) 赋能内容创作</h2>
+<p>GitHub Copilot 不仅仅是写代码的工具，它在内容创作，尤其是技术写作方面，展现出了惊人的潜力。</p>
+<h3 id="1-内容构思与大纲生成">1. 内容构思与大纲生成</h3>
+<p>当你对某个主题只有初步想法时，可以让 Copilot 帮你生成一个初步的大纲。例如，在空白的 Markdown 文件中输入：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#57606a">&lt;!-- 为一篇关于“使用 VSCode 和 GitHub Copilot 进行高效技术写作”的文章生成大纲 --&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Copilot 可能会为你提供一个包含引言、主要章节和小节的结构化大纲。</p>
+<h3 id="2-辅助写作与润色">2. 辅助写作与润色</h3>
+<p>在写作过程中，Copilot 可以：</p>
+<ul>
+<li><strong>补全句子和段落</strong>：根据你已经写的内容，智能地补全接下来的文本。</li>
+<li><strong>提供多种表达方式</strong>：如果你对某个句子的表达不满意，可以尝试让 Copilot 提供不同的版本。</li>
+<li><strong>解释概念</strong>：快速查找和解释技术术语，帮助你更准确地表达。</li>
+</ul>
+<h3 id="3-生成代码示例">3. 生成代码示例</h3>
+<p>对于技术博客而言，清晰、准确的代码示例至关重要。Copilot 可以根据你的描述快速生成多种编程语言的代码片段。例如，你可以这样请求：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#57606a">&lt;!-- 生成一个 Python 函数，用于计算斐波那契数列 --&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>或者更复杂一些，如本博客中关于 Semantic Kernel 的文章 (<code>content/post/2024-03-17-building-your-custom-copilot-with-semantic-kernel.md</code>) 所示，你可以让它生成特定框架或库的示例代码。</p>
+<h3 id="4-github-copilot-chat你的互动式-ai-助手">4. GitHub Copilot Chat：你的互动式 AI 助手</h3>
+<p>VSCode 中的 GitHub Copilot Chat 提供了更具互动性的体验。你可以像与人对话一样向它提问：</p>
+<ul>
+<li><strong>直接提问</strong>：“如何在 Markdown 中插入图片并设置其宽度？”</li>
+<li><strong>请求代码解释</strong>：粘贴一段代码，然后问 “解释这段代码的作用。”</li>
+<li><strong>利用 <code>@workspace</code> 获取项目上下文感知能力</strong>：正如在 <code>content/post/2023-11-27-coding-with-github-copilot-in-vs-code.md</code> 中提到的，<code>@workspace</code> 使得 Copilot Chat 能够理解你当前工作区的内容，提供更相关的建议。例如，你可以问：“@workspace 我的 Hugo 博客中通常如何组织图片？”</li>
+</ul>
+<h2 id="高效内容创作工作流建议">高效内容创作工作流建议</h2>
+<ol>
+<li><strong>善用模板 (Archetypes)</strong>：如果你的博客使用 Hugo 等静态网站生成器，可以创建内容原型 (archetypes)，例如 <code>/archetypes/default.md</code>，预设好新文章的 Front Matter 结构，通过 <code>hugo new post/your-post-title.md</code> 命令快速创建符合规范的新文章。</li>
+<li><strong>版本控制是标配</strong>：利用 VSCode 强大的 Git 集成，频繁提交你的修改。这不仅能保证内容安全，也方便追踪历史和与他人协作。</li>
+<li><strong>统一管理静态资源</strong>：对于图片等静态资源，建议在 <code>static/</code> 目录下创建一个统一的文件夹（例如本博客使用的 <code>static/uploads/</code>），并在文章中通过 <code>/uploads/image.png</code> 这样的绝对路径引用，方便管理和迁移。</li>
+<li><strong>实时预览，所见即所得</strong>：充分利用 Markdown 预览功能，一边写作一边查看最终效果，及时调整格式和排版。</li>
+<li><strong>集成终端执行构建和预览命令</strong>：直接在 VSCode 的集成终端中运行 <code>hugo server -D</code> (或其他静态网站生成器的预览命令)，实时查看网站的最终呈现效果。</li>
+</ol>
+<h2 id="结论">结论</h2>
+<p>VSCode 凭借其轻量级特性、强大的 Markdown 支持、丰富的扩展生态以及革命性的 AI 辅助功能 (如 GitHub Copilot)，已经从一个单纯的代码编辑器进化为一个全能的内容创作中心。无论是撰写技术博客、编写项目文档，还是进行其他形式的文本创作，VSCode 都能提供流畅、高效且智能的体验。</p>
+<p>如果你还没有尝试过将 VSCode 作为你的主力内容创作工具，现在是时候了。发掘适合你的扩展组合，定制你的工作流程，让 AI 助你一臂之力，你会发现内容创作可以如此轻松和愉快。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2025-06-03-make-vscode-a-versatile-content-creation-tool/">https://beanhsiang.github.io/post/2025-06-03-make-vscode-a-versatile-content-creation-tool/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/VSCode' target="_blank">VSCode</a></li>
+                
+                <li><a href='/tags/AI-Agent' target="_blank">AI Agent</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-03-make-vscode-a-versatile-content-creation-tool/" title="将 VSCode 打造为全能型内容创作工具" target="_blank">将 VSCode 打造为全能型内容创作工具</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-29-azure-ai-search-multi-vector-semantic-ranking-enhancements/" title="Azure AI Search 推出多向量字段支持和语义排序增强功能" target="_blank">Azure AI Search 推出多向量字段支持和语义排序增强功能</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-29-q-learning-python-tic-tac-toe/" title="[译]Q-learning强化学习实践：用Python构建井字棋智能代理" target="_blank">[译]Q-learning强化学习实践：用Python构建井字棋智能代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder/" title="[译]基于模型的机器学习 - 1.3 谋杀模型" target="_blank">[译]基于模型的机器学习 - 1.3 谋杀模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs/" title="[译]基于模型的机器学习 - 1.2 更新我们的可信部分" target="_blank">[译]基于模型的机器学习 - 1.2 更新我们的可信部分</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/" title="使用 Semantic Kernel 插件编排 AI 代理的技术深度解析" target="_blank">使用 Semantic Kernel 插件编排 AI 代理的技术深度解析</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-05-03-real-time-speech-transcription-gpt4o-websocket/" title="利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录" target="_blank">利用 WebSocket 实现 GPT-4o-transcribe 和 GPT-4o-mini-transcribe 的实时语音转录</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/" title="[译]基于模型的机器学习 - 1.1 整合证据" target="_blank">[译]基于模型的机器学习 - 1.1 整合证据</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-24-using-pydanticai-for-agentic-development/" title="使用 PydanticAI 构建智能代理系统：从 MCP 到智能工单助手" target="_blank">使用 PydanticAI 构建智能代理系统：从 MCP 到智能工单助手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery/" title="[译]基于模型的机器学习 - 第一章 谋杀之谜" target="_blank">[译]基于模型的机器学习 - 第一章 谋杀之谜</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (32)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (5)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

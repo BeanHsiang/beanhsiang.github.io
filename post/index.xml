@@ -16,6 +16,13 @@
       <description>&lt;p&gt;近年来，生成式AI的应用越来越广泛，但随之而来的安全问题也愈发突出。其中，提示注入攻击（Prompt Injection）已成为对AI系统的主要威胁之一。为了应对这一挑战，Azure推出了Prompt Shields和Azure AI Content Safety，帮助开发者保护AI系统免受直接和间接威胁。&lt;/p&gt;</description>
     </item>
     <item>
+      <title>设计 Agent 先找出确定性的部分</title>
+      <link>https://beanhsiang.github.io/post/2025-06-10-the-design-agent-first-identifies-the-deterministic-parts/</link>
+      <pubDate>Tue, 10 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-06-10-the-design-agent-first-identifies-the-deterministic-parts/</guid>
+      <description>&lt;p&gt;这几年，AI Agent、Agentic AI 这些词简直火得不行，朋友圈、技术大会、公众号到处都在聊。自动化办公、智能客服、流程优化，听起来好像什么都能搞定。但真要把这些技术搬进企业，落地到实际业务里，很多团队才发现，理想很丰满，现实却有点骨感。&lt;/p&gt;&#xA;&lt;p&gt;企业的核心业务流程，都是经过多年摸爬滚打、不断打磨出来的，标准化、确定性极高。这些流程就像企业的“定海神针”，保证了业务的稳定和可预期。可 AI 大模型虽然很强大，推理、生成样样行，但那种“黑盒”特性和不确定性，真让人又爱又怕。很多企业试着把 Agent 融进现有系统，结果发现根本不是想象中那样无缝衔接，甚至还可能把流程搞乱，效率反而下降，真是让人头大。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>编程大模型正在软件开发领域“清理门户”</title>
       <link>https://beanhsiang.github.io/post/2025-06-06-the-programming-models-are-clearing-the-way-in-the-field-of-software-development/</link>
       <pubDate>Fri, 06 Jun 2025 12:00:00 +0800</pubDate>
@@ -28,13 +35,6 @@
       <pubDate>Tue, 03 Jun 2025 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2025-06-03-make-vscode-a-versatile-content-creation-tool/</guid>
       <description>&lt;p&gt;Visual Studio Code (VSCode) 通常被誉为程序员的瑞士军刀，但它的强大功能远不止于代码编写。凭借其轻量级的设计、丰富的扩展生态系统以及与日俱增的 AI 能力，VSCode 完全可以转变为一个高效、多功能的内容创作平台，尤其适合技术博主、文档撰写者和任何需要处理大量文本内容的创作者。&lt;/p&gt;&#xA;&lt;p&gt;本文将探讨如何配置和使用 VSCode 来优化你的内容创作流程，特别是结合 AI 工具，如 GitHub Copilot，让写作体验更上一层楼。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>设计 Agent 先找出确定性的部分</title>
-      <link>https://beanhsiang.github.io/post/2025-06-10-the-design-agent-first-identifies-the-deterministic-parts/</link>
-      <pubDate>Tue, 03 Jun 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-06-10-the-design-agent-first-identifies-the-deterministic-parts/</guid>
-      <description>&lt;p&gt;这几年，AI Agent、Agentic AI 这些词简直火得不行，朋友圈、技术大会、公众号到处都在聊。自动化办公、智能客服、流程优化，听起来好像什么都能搞定。但真要把这些技术搬进企业，落地到实际业务里，很多团队才发现，理想很丰满，现实却有点骨感。&lt;/p&gt;&#xA;&lt;p&gt;企业的核心业务流程，都是经过多年摸爬滚打、不断打磨出来的，标准化、确定性极高。这些流程就像企业的“定海神针”，保证了业务的稳定和可预期。可 AI 大模型虽然很强大，推理、生成样样行，但那种“黑盒”特性和不确定性，真让人又爱又怕。很多企业试着把 Agent 融进现有系统，结果发现根本不是想象中那样无缝衔接，甚至还可能把流程搞乱，效率反而下降，真是让人头大。&lt;/p&gt;</description>
     </item>
     <item>
       <title>Azure AI Search 推出多向量字段支持和语义排序增强功能</title>

@@ -6,8 +6,15 @@
     <description>Recent content in Categories on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Fri, 06 Jun 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 11 Jun 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Azure AI</title>
+      <link>https://beanhsiang.github.io/categories/Azure-AI/</link>
+      <pubDate>Wed, 11 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/categories/Azure-AI/</guid>
+      <description></description>
+    </item>
     <item>
       <title>穿越人机融合之际</title>
       <link>https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/</link>
@@ -20,13 +27,6 @@
       <link>https://beanhsiang.github.io/categories/AI-Agent/</link>
       <pubDate>Tue, 03 Jun 2025 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/categories/AI-Agent/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Azure AI</title>
-      <link>https://beanhsiang.github.io/categories/Azure-AI/</link>
-      <pubDate>Thu, 29 May 2025 14:30:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/categories/Azure-AI/</guid>
       <description></description>
     </item>
     <item>

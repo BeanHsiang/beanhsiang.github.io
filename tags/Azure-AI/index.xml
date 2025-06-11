@@ -6,8 +6,15 @@
     <description>Recent content in Azure AI on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Thu, 29 May 2025 14:30:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 11 Jun 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/Azure-AI/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>增强AI安全性：Azure Prompt Shields 与 Azure AI Content Safety</title>
+      <link>https://beanhsiang.github.io/post/2025-06-11-enhancing-ai-security-azure-prompt-shields-and-azure-ai-content-safety/</link>
+      <pubDate>Wed, 11 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-06-11-enhancing-ai-security-azure-prompt-shields-and-azure-ai-content-safety/</guid>
+      <description>&lt;p&gt;近年来，生成式AI的应用越来越广泛，但随之而来的安全问题也愈发突出。其中，提示注入攻击（Prompt Injection）已成为对AI系统的主要威胁之一。为了应对这一挑战，Azure推出了Prompt Shields和Azure AI Content Safety，帮助开发者保护AI系统免受直接和间接威胁。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Azure AI Search 推出多向量字段支持和语义排序增强功能</title>
       <link>https://beanhsiang.github.io/post/2025-05-29-azure-ai-search-multi-vector-semantic-ranking-enhancements/</link>

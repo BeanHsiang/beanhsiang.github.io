@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Wed, 11 Jun 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 17 Jun 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>微软 Azure OpenAI API 版本生命周期解读</title>
+      <link>https://beanhsiang.github.io/post/2025-06-17-interpretation-of-the-microsoft-azure-openai-api-version-lifecycle/</link>
+      <pubDate>Tue, 17 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-06-17-interpretation-of-the-microsoft-azure-openai-api-version-lifecycle/</guid>
+      <description>&lt;p&gt;在当前人工智能技术飞速发展的浪潮中，微软的 Azure OpenAI 服务成为众多企业与开发者构建智能应用的首选平台。要高效、可持续地利用这些服务，理解 API 版本的生命周期（API Version Lifecycle）至关重要。本文将深入解读 Azure OpenAI API 的版本生命周期策略，帮助您更好地应对服务更新和迭代带来的挑战。&lt;/p&gt;&#xA;&lt;p&gt;一、什么是 API 版本生命周期？&lt;/p&gt;</description>
+    </item>
     <item>
       <title>增强AI安全性：Azure Prompt Shields 与 Azure AI Content Safety</title>
       <link>https://beanhsiang.github.io/post/2025-06-11-enhancing-ai-security-azure-prompt-shields-and-azure-ai-content-safety/</link>

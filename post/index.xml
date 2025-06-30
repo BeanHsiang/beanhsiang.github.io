@@ -37,6 +37,13 @@
       <description>&lt;p&gt;这几年，AI Agent、Agentic AI 这些词简直火得不行，朋友圈、技术大会、公众号到处都在聊。自动化办公、智能客服、流程优化，听起来好像什么都能搞定。但真要把这些技术搬进企业，落地到实际业务里，很多团队才发现，理想很丰满，现实却有点骨感。&lt;/p&gt;&#xA;&lt;p&gt;企业的核心业务流程，都是经过多年摸爬滚打、不断打磨出来的，标准化、确定性极高。这些流程就像企业的“定海神针”，保证了业务的稳定和可预期。可 AI 大模型虽然很强大，推理、生成样样行，但那种“黑盒”特性和不确定性，真让人又爱又怕。很多企业试着把 Agent 融进现有系统，结果发现根本不是想象中那样无缝衔接，甚至还可能把流程搞乱，效率反而下降，真是让人头大。&lt;/p&gt;</description>
     </item>
     <item>
+      <title>精通模型上下文协议（MCP）：基于 Azure OpenAI 构建多服务器 MCP 实践</title>
+      <link>https://beanhsiang.github.io/post/2025-06-07-mastering-model-context-protocol-mcp-building-multi-server/</link>
+      <pubDate>Sat, 07 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-06-07-mastering-model-context-protocol-mcp-building-multi-server/</guid>
+      <description>&lt;h2 id=&#34;引言&#34;&gt;引言&lt;/h2&gt;&#xA;&lt;p&gt;模型上下文协议（Model Context Protocol，简称 MCP）正在迅速成为打造高度智能和可互操作 AI 应用的重要标准框架。大多数有关 MCP 的资料聚焦于单服务器部署，而在本文中，我们将介绍如何结合 Azure OpenAI，基于多服务器 MCP 架构实现一个可扩展、可定制的智能体平台，让你能够在一个前端界面下，便捷地连接和编排多个工具服务器，实现跨领域智能体工具协作。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>编程大模型正在软件开发领域“清理门户”</title>
       <link>https://beanhsiang.github.io/post/2025-06-06-the-programming-models-are-clearing-the-way-in-the-field-of-software-development/</link>
       <pubDate>Fri, 06 Jun 2025 12:00:00 +0800</pubDate>

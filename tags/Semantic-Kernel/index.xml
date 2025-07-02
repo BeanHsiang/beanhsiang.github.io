@@ -6,8 +6,15 @@
     <description>Recent content in Semantic Kernel on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Thu, 08 May 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 02 Jul 2025 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/Semantic-Kernel/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>构建高级多智能体 AI 工作流：利用 AutoGen 和 Semantic Kernel</title>
+      <link>https://beanhsiang.github.io/post/2025-07-02-building-advanced-multi-agent-ai-workflows-by-leveraging-autogen-and-semantic-kernel/</link>
+      <pubDate>Wed, 02 Jul 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-07-02-building-advanced-multi-agent-ai-workflows-by-leveraging-autogen-and-semantic-kernel/</guid>
+      <description>&lt;p&gt;在这篇教程中，我将带你了解如何无缝集成 AutoGen 和 Semantic Kernel 与 Google 的 Gemini Flash 模型。我们首先设置 GeminiWrapper 和 SemanticKernelGeminiPlugin 类，将 Gemini 的生成能力与 AutoGen 的多智能体编排功能连接起来。接下来，我们配置专业智能体，包括代码审查员和创意分析师，展示如何利用 AutoGen 的 ConversableAgent API 结合 Semantic Kernel 的装饰器函数来进行文本分析、摘要生成、代码审查和创意问题解决。&lt;/p&gt;&#xA;&lt;p&gt;通过结合 AutoGen 强大的智能体框架和 Semantic Kernel 基于函数的方法，我们创建了一个高级 AI 助手，能够适应各种任务并提供结构化、可操作的见解。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>使用 Semantic Kernel 插件编排 AI 代理的技术深度解析</title>
       <link>https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/</link>

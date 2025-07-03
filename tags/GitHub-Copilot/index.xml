@@ -6,8 +6,15 @@
     <description>Recent content in GitHub Copilot on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Mon, 27 Nov 2023 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 03 Jul 2025 10:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/GitHub-Copilot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队</title>
+      <link>https://beanhsiang.github.io/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/</link>
+      <pubDate>Thu, 03 Jul 2025 10:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/</guid>
+      <description>&lt;p&gt;GitHub 官方近日宣布推出了一个令人兴奋的社区资源 —— &lt;a href=&#34;https://github.com/github/awesome-copilot?WT.mc_id=AI-MVP-5003172&#34;&gt;Awesome GitHub Copilot Customizations&lt;/a&gt; 仓库！这个社区驱动的资源库包含了大量的自定义指令、可重用提示和自定义聊天模式，帮助开发者获得更一致、更个性化的 AI 编程辅助体验。&lt;/p&gt;&#xA;&lt;h2 id=&#34;什么是-awesome-copilot-仓库&#34;&gt;什么是 Awesome Copilot 仓库？&lt;/h2&gt;&#xA;&lt;p&gt;Awesome Copilot 仓库是一个旨在帮助开发者充分利用 GitHub Copilot 的资源集合。通过将 Copilot 定制为符合特定需求的工具，开发者可以获得更加精准和有用的代码建议。随着越来越多的开发者贡献自己的指令、提示和聊天模式，这个仓库的内容将不断丰富和完善。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>在 VS Code 里用 GitHub Copilot 编写代码</title>
       <link>https://beanhsiang.github.io/post/2023-11-27-coding-with-github-copilot-in-vs-code/</link>

@@ -37,6 +37,13 @@
       <description>&lt;p&gt;在当前人工智能技术飞速发展的浪潮中，微软的 Azure OpenAI 服务成为众多企业与开发者构建智能应用的首选平台。要高效、可持续地利用这些服务，理解 API 版本的生命周期（API Version Lifecycle）至关重要。本文将深入解读 Azure OpenAI API 的版本生命周期策略，帮助您更好地应对服务更新和迭代带来的挑战。&lt;/p&gt;&#xA;&lt;p&gt;一、什么是 API 版本生命周期？&lt;/p&gt;</description>
     </item>
     <item>
+      <title>Agent 终将是个性化的</title>
+      <link>https://beanhsiang.github.io/post/2025-06-12-agents-will-ultimately-be-personalized/</link>
+      <pubDate>Thu, 12 Jun 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-06-12-agents-will-ultimately-be-personalized/</guid>
+      <description>&lt;p&gt;还记得第一次和Siri对话时的兴奋感吗？那时的我们就像发现了新大陆一样，对着手机说&amp;quot;嗨，Siri&amp;quot;，然后看着它机械地回答我们的问题。虽然偶尔会闹出一些啼笑皆非的误解，但那种科幻感十足的体验让我们觉得未来已经到来。&lt;/p&gt;&#xA;&lt;p&gt;快进到2025年，AI Agent已经不再是那个只会按部就班回答问题的&amp;quot;机器人&amp;quot;了。它们开始有了自己的&amp;quot;脾气&amp;quot;，有了自己的&amp;quot;喜好&amp;quot;，甚至还会和我们开玩笑。没错，&lt;strong&gt;Agent终将是个性化的&lt;/strong&gt;，这不仅仅是技术发展的必然趋势，更是人类内心深处对于陪伴的渴望。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>增强AI安全性：Azure Prompt Shields 与 Azure AI Content Safety</title>
       <link>https://beanhsiang.github.io/post/2025-06-11-enhancing-ai-security-azure-prompt-shields-and-azure-ai-content-safety/</link>
       <pubDate>Wed, 11 Jun 2025 12:00:00 +0800</pubDate>

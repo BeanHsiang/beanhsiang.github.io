@@ -6,8 +6,15 @@
     <description>Recent content in Categories on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Sun, 04 Jan 2026 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 05 Jan 2026 10:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Model-Based Machine Learning</title>
+      <link>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</link>
+      <pubDate>Mon, 05 Jan 2026 10:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Microsoft Foundry</title>
       <link>https://beanhsiang.github.io/categories/Microsoft-Foundry/</link>
@@ -41,13 +48,6 @@
       <link>https://beanhsiang.github.io/categories/Machine-Learning/</link>
       <pubDate>Thu, 29 May 2025 10:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/categories/Machine-Learning/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Model-Based Machine Learning</title>
-      <link>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</link>
-      <pubDate>Mon, 19 May 2025 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</guid>
       <description></description>
     </item>
     <item>

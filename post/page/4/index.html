@@ -75,6 +75,38 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2025-04-14-use-typescript-to-build-an-mcp-server-for-azure-ai-agent/" title="使用 TypeScript 构建 Azure AI Agent 的 MCP 服务器" target="_blank">使用 TypeScript 构建 Azure AI Agent 的 MCP 服务器</a>
+            </h1>
+        </header>
+        
+  <time datetime="2025-04-14T04:00:00Z" class="post-meta meta-date dt-published">
+    2025年4月14日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <h2 id="简介">简介</h2>
+<p>这篇文章将带你了解如何使用 TypeScript 构建一个 <strong>Model Context Protocol (MCP)</strong> 服务器，以连接 Azure AI Agent 和 Claude Desktop 或其他支持 MCP 的客户端。通过本文，你将学习搭建服务器、配置连接以及以编程方式处理 AI Agent 的交互。</p>
+<hr>
+<h2 id="为什么需要-mcp-服务器">为什么需要 MCP 服务器？</h2>
+<p>Azure AI Agent 是 <strong>Azure AI Foundry</strong> 生态系统的一部分，提供强大的对话式 AI 功能。然而，要将这些 Agent 集成到桌面应用程序中，往往需要定制化的解决方案。MCP 提供了一个标准化协议，可以无缝连接 <strong>Azure AI Agent</strong> 和支持 MCP 的客户端（如 Claude Desktop）。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-04-14-use-typescript-to-build-an-mcp-server-for-azure-ai-agent/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2025-03-22-fireug-global-ai-bootcamp-2025/" title="FireUG x Global AI Bootcamp 2025" target="_blank">FireUG x Global AI Bootcamp 2025</a>
             </h1>
         </header>
@@ -417,40 +449,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/" title="检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用" target="_blank">检索增强微调：使用 GPT-4o 微调 GPT-4o mini 模型以适用于特定领域应用</a>
-            </h1>
-        </header>
-        
-  <time datetime="2024-09-08T04:00:00Z" class="post-meta meta-date dt-published">
-    2024年9月8日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>对企业来说，生成式AI最具影响力的应用之一是创建自然语言界面，这些界面已根据特定领域和使用场景的数据进行了定制，以提供更准确、更准确的响应。这意味着回答与银行、法律和医疗等特定领域相关的问题。</p>
-<p>我们经常谈到实现这一目标的两种方法：</p>
-<ol>
-<li>检索增强生成（RAG）：将这些文档存储在向量数据库中，在查询时根据它们与问题的语义相似度来检索文档，然后将它们作为LLM的上下文。</li>
-<li>监督微调（SFT）：在一组代表特定领域知识的提示和响应上对现有的基线模型进行训练。</li>
-</ol>
-<p>虽然大多数尝试使用RAG的组织都试图通过其内部知识库来扩展LLM的知识，但许多组织在没有进行显著优化的情况下未能达到预期效果。同样，精心挑选一个足够大且高质量的数据集用于微调也是一项具有挑战性的任务。这两种方法都有局限性：微调将模型限制在其已训练的数据上，使其容易受到近似和幻觉的影响，而RAG虽然可以使模型落地，但它仅根据查询与文档的语义接近程度来检索文档——这可能与查询无关，并导致给出的解释不充分。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2024-09-08-retrieval-augmented-fine-tuning-use-gpt-4o-to-fine-tune-gpt-4o/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -571,6 +569,10 @@
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2025-11-08-monitoring-generative-ai-applications-with-azure-ai-foundry/" title="使用 Azure AI Foundry 监控生成式 AI 应用" target="_blank">使用 Azure AI Foundry 监控生成式 AI 应用</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/" title="介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队" target="_blank">介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队</a>
     </li>
     
@@ -584,10 +586,6 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2025-06-17-interpretation-of-the-microsoft-azure-openai-api-version-lifecycle/" title="微软 Azure OpenAI API 版本生命周期解读" target="_blank">微软 Azure OpenAI API 版本生命周期解读</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2025-06-12-agents-will-ultimately-be-personalized/" title="Agent 终将是个性化的" target="_blank">Agent 终将是个性化的</a>
     </li>
     
 </ul>
@@ -609,7 +607,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (5)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (6)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

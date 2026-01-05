@@ -75,6 +75,34 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" title="用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
+            </h1>
+        </header>
+        
+  <time datetime="2025-03-07T04:00:00Z" class="post-meta meta-date dt-published">
+    2025年3月7日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>最近在开发智能文档搜索的工作中，我需要将各种文件转换为 Markdown 格式，然后通过向量化计算，把它们创建到向量数据库中，以便实现语义搜索文档的功能。并结合 LLMs 和 RAG（Retrieval Augmented Generation）来获取与搜索目标相关的文档内容完成二次创作。由于多模态下需要处理的文档类型太多了，我曾用 python 写了几个工具方法，使用 MarkItDown 来统一处理的。但现实问题是 MarkItDown 目前没有 .NET 版本的实现，而我的应用是 .NET 的程序，如果能有一个办法将 python 脚本无缝嵌入到我的 .NET 应用程序中那就太棒了，这就是我为什么要使用 CSnakes 的原因。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2025-01-06-voicerag-for-rag/" title="基于Azure AI搜索和GPT-4o实时音频的语音化RAG" target="_blank">基于Azure AI搜索和GPT-4o实时音频的语音化RAG</a>
             </h1>
         </header>
@@ -408,34 +436,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2024-07-15-keep-more-original-knowledge/" title="努力保留更多的原创知识" target="_blank">努力保留更多的原创知识</a>
-            </h1>
-        </header>
-        
-  <time datetime="2024-07-15T04:00:00Z" class="post-meta meta-date dt-published">
-    2024年7月15日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85' target="_blank">穿越人机融合之际</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>不久前我的一位好友向我诉说他的遭遇，他原创的一套在线课程被一家知识付费平台用爬虫剽窃并公开收费，他感到非常愤怒，但是又无可奈何。当下我们常说互联网信息爆炸的同时也应该看到，大量垃圾信息充斥着网络，普通人难以辨别真伪。久而久之，原创内容越来越少，导致网络上的信息质量越来越低，形成恶性循环。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2024-07-15-keep-more-original-knowledge/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -540,6 +540,10 @@
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-01-why-web-ai-agents-are-more-vulnerable-than-standalone-llms-and-how-we-should-actually-fix-it/" title="为什么 Web AI Agent 比独立 LLM 更脆弱——以及我们应该如何真正修复它" target="_blank">为什么 Web AI Agent 比独立 LLM 更脆弱——以及我们应该如何真正修复它</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/" title="使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文" target="_blank">使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文</a>
     </li>
     
@@ -571,10 +575,6 @@
         <a href="https://beanhsiang.github.io/post/2025-06-11-enhancing-ai-security-azure-prompt-shields-and-azure-ai-content-safety/" title="增强AI安全性：Azure Prompt Shields 与 Azure AI Content Safety" target="_blank">增强AI安全性：Azure Prompt Shields 与 Azure AI Content Safety</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2025-06-10-the-design-agent-first-identifies-the-deterministic-parts/" title="设计 Agent 先找出确定性的部分" target="_blank">设计 Agent 先找出确定性的部分</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -594,7 +594,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (3)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (4)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

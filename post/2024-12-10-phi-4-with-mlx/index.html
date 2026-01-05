@@ -109,12 +109,12 @@
 <h3 id="三使用mlx调用phi-4模型的步骤">三、使用MLX调用Phi-4模型的步骤</h3>
 <h4 id="1-安装mlx">1. 安装MLX</h4>
 <p>首先，需要在本地环境中安装MLX框架。可以通过以下命令完成安装：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install mlx-lm
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install mlx-lm
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h4 id="2-下载phi-4模型">2. 下载Phi-4模型</h4>
@@ -123,20 +123,20 @@
 <p>为了训练或微调Phi-4模型，需要准备相应的数据集。MLX支持多种数据格式，包括JSONL格式。可以从GitHub或其他资源库下载数据集。</p>
 <h4 id="4-使用mlx进行推理">4. 使用MLX进行推理</h4>
 <p>一旦数据准备就绪，可以使用MLX进行推理。以下是一个简单的推理示例：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python -m mlx_lm.generate --model lokinfey/Phi-4-mlx-int4  <span style="color:#0a3069">\
-</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span>--max-token <span style="color:#0550ae">2048</span> --prompt <span style="color:#0a3069">&#34;&lt;|user|&gt;\nCan you introduce yourself&lt;|end|&gt;\n&lt;|assistant|&gt;&#34;</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python -m mlx_lm.generate --model lokinfey/Phi-4-mlx-int4  <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>--max-token <span style="color:#0550ae">2048</span> --prompt <span style="color:#0a3069">&#34;&lt;|user|&gt;\nCan you introduce yourself&lt;|end|&gt;\n&lt;|assistant|&gt;&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>或者使用Python代码：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -155,17 +155,17 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">mlx_lm</span> <span style="color:#cf222e">import</span> load<span style="color:#1f2328">,</span> generate
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>model<span style="color:#1f2328">,</span> tokenizer <span style="color:#0550ae">=</span> load<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;lokinfey/Phi-4-mlx-int4&#34;</span><span style="color:#1f2328">)</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>prompt <span style="color:#0550ae">=</span> tokenizer<span style="color:#0550ae">.</span>apply_chat_template<span style="color:#1f2328">(</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#1f2328">[{</span><span style="color:#0a3069">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;I have $20,000 in my savings account, </span><span style="color:#0a3069">\
-</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span><span style="color:#0a3069">    where I receive a 4% profit per year and payments twice a year. </span><span style="color:#0a3069">\
-</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span><span style="color:#0a3069">    Can you please tell me how long it will take for me to become </span><span style="color:#0a3069">\
-</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span><span style="color:#0a3069">    a millionaire? Also, can you please explain the math step by </span><span style="color:#0a3069">\
-</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span><span style="color:#0a3069">    step as if you were explaining it to an uneducated person?&#34;</span><span style="color:#1f2328">}],</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    where I receive a 4% profit per year and payments twice a year. </span><span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    Can you please tell me how long it will take for me to become </span><span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    a millionaire? Also, can you please explain the math step by </span><span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">    step as if you were explaining it to an uneducated person?&#34;</span><span style="color:#1f2328">}],</span>
 </span></span><span style="display:flex;"><span>    tokenize<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">,</span>
 </span></span><span style="display:flex;"><span>    add_generation_prompt<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">,</span>
 </span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
@@ -187,14 +187,14 @@
     </p>
 <h4 id="5-微调phi-4模型">5. 微调Phi-4模型</h4>
 <p>如果需要对Phi-4进行微调以适应特定任务，可以使用MLX提供的LoRA（Low-Rank Adaptation）技术。以下是微调的基本步骤：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python -m mlx_lm.lora --model lokinfey/Phi-4-mlx-int4 <span style="color:#0a3069">\
-</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span>--train --data ./data --iters <span style="color:#0550ae">1000</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python -m mlx_lm.lora --model lokinfey/Phi-4-mlx-int4 <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>--train --data ./data --iters <span style="color:#0550ae">1000</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>通过上述命令，可以在本地环境中对Phi-4模型进行微调，以提升其在特定任务上的表现。</p>
@@ -277,7 +277,7 @@
 
                     <footer id="footer">
     <div>
-        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
         
     </div>
     <br />

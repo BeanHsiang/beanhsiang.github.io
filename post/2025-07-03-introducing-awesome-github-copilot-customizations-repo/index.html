@@ -133,14 +133,15 @@
   </tbody>
 </table>
 <blockquote>
-<p>💡 <strong>专业提示：</strong> 自定义指令只影响 Copilot Chat（不影响内联代码补全）。你可以组合使用所有三种自定义类型 - 使用自定义指令作为通用指南，使用提示文件处理特定任务，使用聊天模式控制交互上下文。</p></blockquote>
+<p>💡 <strong>专业提示：</strong> 自定义指令只影响 Copilot Chat（不影响内联代码补全）。你可以组合使用所有三种自定义类型 - 使用自定义指令作为通用指南，使用提示文件处理特定任务，使用聊天模式控制交互上下文。</p>
+</blockquote>
 <h3 id="1-自定义指令-custom-instructions">1. 自定义指令 (Custom Instructions)</h3>
 <p>自定义指令允许你为 Copilot 提供关于团队工作流程、编码风格偏好、代码标准等具体上下文。这些指令包含在 Markdown 文件中，可以帮助 Copilot 更好地理解你的项目需求。</p>
 <p><strong>使用方法：</strong> 在项目中创建一个名为 <code>copilot-instructions.md</code> 的文件，或将指令放在 <code>.github/instructions</code> 文件夹中。当你使用 Copilot 代理模式时，它会自动引用这些指令作为提示的一部分。</p>
 <p>以下是一个 Next.js + Tailwind 开发的自定义指令示例：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -155,7 +156,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span># Next.js + Tailwind 开发指令
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span># Next.js + Tailwind 开发指令
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>用于构建高质量 Next.js 应用程序的指令，包含 Tailwind CSS 样式和 TypeScript。
 </span></span><span style="display:flex;"><span>
@@ -174,9 +175,9 @@
 <p>可重用提示是针对特定任务的独立提示，用于创建一致且可在团队间共享的工作流程。它们描述应该做什么以及可选的任务特定指南，还可以指定可用的工具集。</p>
 <p><strong>使用方法：</strong> 将提示保存为 <code>.github/prompts/prompt-name.prompt.md</code>，然后在聊天中使用 <code>/prompt-name</code> 命令运行。</p>
 <p>以下是一个处理拉取请求的提示示例：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -192,7 +193,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>---
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>---
 </span></span><span style="display:flex;"><span>mode: agent
 </span></span><span style="display:flex;"><span>tools: [&#39;githubRepo&#39;, &#39;github&#39;, &#39;get_me&#39;, &#39;get_pull_request&#39;, 
 </span></span><span style="display:flex;"><span>        &#39;get_pull_request_comments&#39;, &#39;get_pull_request_diff&#39;]
@@ -212,9 +213,9 @@
 <p>自定义聊天模式是预定义的配置，让你能够为特定任务定制 AI 聊天行为。它们包含一组指令和工具，当你切换到该模式时会应用这些配置，相当于为 AI 提供一个专门的角色。</p>
 <p><strong>使用方法：</strong> 将聊天模式文件保存在 <code>.github/chatmodes/</code> 文件夹中，然后在聊天中切换到相应的模式。</p>
 <p>以下是一个数据库管理员聊天模式的示例：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -233,7 +234,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>---
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>---
 </span></span><span style="display:flex;"><span>description: &#39;使用 PostgreSQL 扩展处理 PostgreSQL 数据库。&#39;
 </span></span><span style="display:flex;"><span>tools: [&#39;codebase&#39;, &#39;editFiles&#39;, &#39;githubRepo&#39;, &#39;runCommands&#39;, &#39;database&#39;, 
 </span></span><span style="display:flex;"><span>        &#39;pgsql_connect&#39;, &#39;pgsql_query&#39;, &#39;pgsql_listDatabases&#39;]
@@ -263,7 +264,8 @@
 </ul>
 <p>自定义指令、提示和聊天模式可以帮助你定制 Copilot 在代理或聊天模式下的响应和行为方式。Awesome Copilot 仓库包含了大量可以直接使用或作为起点的示例配置。</p>
 <blockquote>
-<p>📌 <strong>多平台支持：</strong> Copilot 和代理模式在多个不同的编辑器和 IDE 中都可用，从 VS Code 到 Visual Studio，从 XCode 到 JetBrains IDE 等等。无论 Copilot 在哪里工作，Awesome Copilot 仓库中的指令和提示都同样适用！</p></blockquote>
+<p>📌 <strong>多平台支持：</strong> Copilot 和代理模式在多个不同的编辑器和 IDE 中都可用，从 VS Code 到 Visual Studio，从 XCode 到 JetBrains IDE 等等。无论 Copilot 在哪里工作，Awesome Copilot 仓库中的指令和提示都同样适用！</p>
+</blockquote>
 <h2 id="丰富的资源库内容">丰富的资源库内容</h2>
 <h3 id="自定义指令大全">自定义指令大全</h3>
 <p>Awesome Copilot 仓库包含针对各种技术栈和开发场景的自定义指令：</p>
@@ -295,7 +297,8 @@
 <li><strong><a href="https://github.com/github/awesome-copilot/blob/main/instructions/markdown.instructions.md?WT.mc_id=AI-MVP-5003172">Markdown</a></strong> - 文档和内容创建标准</li>
 </ul>
 <blockquote>
-<p>💡 <strong>使用方法：</strong> 将这些指令复制到你的 <code>.github/copilot-instructions.md</code> 文件中，或在工作区的 <code>.github/instructions</code> 文件夹中创建特定任务的指令文件。</p></blockquote>
+<p>💡 <strong>使用方法：</strong> 将这些指令复制到你的 <code>.github/copilot-instructions.md</code> 文件中，或在工作区的 <code>.github/instructions</code> 文件夹中创建特定任务的指令文件。</p>
+</blockquote>
 <h3 id="可重用提示精选">可重用提示精选</h3>
 <p>现成可用的提示模板，适用于特定的开发场景和任务：</p>
 <h4 id="开发最佳实践">开发最佳实践</h4>
@@ -331,7 +334,8 @@
 <li><strong><a href="https://github.com/github/awesome-copilot/blob/main/prompts/my-pull-requests.prompt.md?WT.mc_id=AI-MVP-5003172">我的拉取请求</a></strong> - 列出当前仓库中我的拉取请求</li>
 </ul>
 <blockquote>
-<p>💡 <strong>使用方法：</strong> 在 VS Code 聊天中使用 <code>/prompt-name</code>，运行 <code>Chat: Run Prompt</code> 命令，或在打开提示时点击运行按钮。</p></blockquote>
+<p>💡 <strong>使用方法：</strong> 在 VS Code 聊天中使用 <code>/prompt-name</code>，运行 <code>Chat: Run Prompt</code> 命令，或在打开提示时点击运行按钮。</p>
+</blockquote>
 <h3 id="自定义聊天模式精选">自定义聊天模式精选</h3>
 <p>专门的聊天模式为特定任务或工作流程提供增强的上下文感知辅助：</p>
 <h4 id="性能优化模式">性能优化模式</h4>
@@ -352,7 +356,8 @@
 <li><strong><a href="https://github.com/github/awesome-copilot/blob/main/chatmodes/refine-issue.chatmode.md?WT.mc_id=AI-MVP-5003172">需求或问题细化聊天模式</a></strong> - 通过验收标准、技术考虑、边界情况和非功能性需求来细化需求或问题</li>
 </ul>
 <blockquote>
-<p>💡 <strong>使用方法：</strong> 使用命令 <code>Chat: Configure Chat Modes...</code> 创建新的聊天模式，然后在聊天输入中将聊天模式从 Agent 或 Ask 切换到你自己的模式。</p></blockquote>
+<p>💡 <strong>使用方法：</strong> 使用命令 <code>Chat: Configure Chat Modes...</code> 创建新的聊天模式，然后在聊天输入中将聊天模式从 Agent 或 Ask 切换到你自己的模式。</p>
+</blockquote>
 <h2 id="快速开始指南">快速开始指南</h2>
 <p>要开始使用这些自定义配置，只需：</p>
 <ol>
@@ -443,7 +448,7 @@
 
                     <footer id="footer">
     <div>
-        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
         
     </div>
     <br />

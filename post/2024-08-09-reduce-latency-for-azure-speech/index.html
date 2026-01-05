@@ -121,9 +121,9 @@
 <p>实时转录需要立即处理音频输入以提供即时反馈。以下是一些建议，以实现低延迟的实时转录：</p>
 <p><strong>2.1 使用实时流</strong><br>
 不要录制整个音频然后处理，而是使用实时流将音频数据以小片段的形式发送到语音识别服务。这允许立即处理并减少整体延迟。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -159,7 +159,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">speech_recognize_continuous_async_from_microphone</span><span style="color:#1f2328">():</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">speech_recognize_continuous_async_from_microphone</span><span style="color:#1f2328">():</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;&#34;&#34;异步从麦克风输入进行连续语音识别&#34;&#34;&#34;</span>
 </span></span><span style="display:flex;"><span>    speech_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechConfig<span style="color:#1f2328">(</span>subscription<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>getenv<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;SUBSCRIPTION_KEY&#34;</span><span style="color:#1f2328">),</span> 
 </span></span><span style="display:flex;"><span>    region<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;centralIndia&#34;</span><span style="color:#1f2328">)</span>
@@ -199,9 +199,9 @@
 <p>详情请见 - <a href="https://learn.microsoft.com/en-us/azure/ai-services/speech-service/how-to-use-audio-input-streams?WT.mc_id=AI-MVP-5003172">Speech SDK 音频输入流概念 - Azure AI 服务 | Microsoft Learn</a></p>
 <p><strong>2.2 定义默认语言</strong><br>
 如果已知默认语言，请在转录过程开始时定义。这样可以消除检测输入语言所需的额外处理时间。如果不知道默认语言，请使用 &ldquo;SpeechServiceConnection_LanguageIdMode&rdquo; 在转录开始时检测语言，并指定预期语言的列表以减少处理时间</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -214,7 +214,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>speech_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechConfig<span style="color:#1f2328">(</span>subscription<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;YourSubscriptionKey&#34;</span><span style="color:#1f2328">,</span> 
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>speech_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechConfig<span style="color:#1f2328">(</span>subscription<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;YourSubscriptionKey&#34;</span><span style="color:#1f2328">,</span> 
 </span></span><span style="display:flex;"><span>region<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;YourServiceRegion&#34;</span><span style="color:#1f2328">)</span> 
 </span></span><span style="display:flex;"><span>speech_config<span style="color:#0550ae">.</span>speech_recognition_language <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;zh-CN&#34;</span> <span style="color:#57606a"># 设置默认语言</span>
 </span></span><span style="display:flex;"><span><span style="color:#57606a">## 或者 </span>
@@ -229,14 +229,14 @@
 </div>
 </div><p><strong>2.3 使用异步方法</strong><br>
 使用 <code>start_continuous_recognition_async</code> 而不是 <code>start_continuous_recognition</code>，以及 <code>stop_continuous_recognition_async</code> 而不是 <code>stop_continuous_recognition</code> 等异步方法。这些方法允许非阻塞操作并减少延迟。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>speech_recognizer<span style="color:#0550ae">.</span>start_continuous_recognition_async<span style="color:#1f2328">();</span> <span style="color:#57606a"># 执行其他任务</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>speech_recognizer<span style="color:#0550ae">.</span>start_continuous_recognition_async<span style="color:#1f2328">();</span> <span style="color:#57606a"># 执行其他任务</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>speech_recognizer<span style="color:#0550ae">.</span>stop_continuous_recognition_async<span style="color:#1f2328">()</span>
 </span></span></code></pre></td></tr></table>
@@ -247,9 +247,9 @@
 <p>对于文件转录，处理大型音频文件可能会引入显著的延迟。以下是一些减少延迟的策略：</p>
 <p><strong>3.1 将音频分割成小片段</strong><br>
 将音频文件分割成更小的片段，并并行运行每个片段的转录。这允许更快地处理并减少整体转录时间。音频分块的一个缺点是，根据分块策略，它可能会导致转录质量略有下降，但如果转录层之后是用于分析洞察、后期处理等的 LLM 智能层，那么质量下降应该会被 LLM 智能抵消。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -265,7 +265,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">pydub</span> <span style="color:#cf222e">import</span> AudioSegment  
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">pydub</span> <span style="color:#cf222e">import</span> AudioSegment  
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">concurrent.futures</span>  
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">transcribe_chunk</span><span style="color:#1f2328">(</span>chunk<span style="color:#1f2328">):</span>  
@@ -283,9 +283,9 @@
 </div>
 </div><p><strong>3.2 提高音频速度</strong><br>
 在发送转录之前，提高音频文件的播放速度。这样可以减少处理整个文件的时间，而对转录的准确性影响很小。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -299,7 +299,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">increase_audio_speed</span><span style="color:#1f2328">(</span>filename<span style="color:#1f2328">,</span> 
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">increase_audio_speed</span><span style="color:#1f2328">(</span>filename<span style="color:#1f2328">,</span> 
 </span></span><span style="display:flex;"><span>output_filename <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;modified_audio_file.wav&#34;</span><span style="color:#1f2328">,</span> speed_change_factor <span style="color:#0550ae">=</span> <span style="color:#0550ae">1.7</span><span style="color:#1f2328">):</span>  
 </span></span><span style="display:flex;"><span>    <span style="color:#57606a"># 加载音频文件  </span>
 </span></span><span style="display:flex;"><span>    audio <span style="color:#0550ae">=</span> AudioSegment<span style="color:#0550ae">.</span>from_file<span style="color:#1f2328">(</span>filename<span style="color:#1f2328">)</span>  <span style="color:#57606a"># 更改为您的文件格式  </span>
@@ -315,9 +315,9 @@
 </div>
 </div><p><strong>3.3 压缩输入音频</strong><br>
 在发送转录之前，压缩输入音频。这可以减少文件大小，以实现更快的传输，优化带宽使用和存储效率。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -330,7 +330,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">pydub</span> <span style="color:#cf222e">import</span> AudioSegment
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">pydub</span> <span style="color:#cf222e">import</span> AudioSegment
 </span></span><span style="display:flex;"><span>input_audio <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;raw_tts.wav&#39;</span>
 </span></span><span style="display:flex;"><span>output_audio <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;compressed_audio.mp3&#39;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
@@ -349,9 +349,9 @@
 不要使用 <code>speak_text_async</code> 进行语音合成，因为它会阻塞流直到整个音频被处理完毕，而是切换到 <code>start_speaking_text_async</code> 方法。此方法在接收到第一个音频块时就开始流式传输音频输出，从而显著减少延迟。</p>
 <p><strong>4.2 文本流</strong><br>
 流式传输文本允许 TTS 系统在收到文本的初始部分后立即开始处理和生成语音，而不是等待整个文本可用。这减少了语音输出开始前的初始延迟，使其成为交互式应用程序、现场活动和响应式 AI 驱动的对话的理想选择。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -377,9 +377,9 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># tts 句子结束标记</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># tts 句子结束标记</span>
 </span></span><span style="display:flex;"><span>tts_sentence_end <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span> <span style="color:#0a3069">&#34;.&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;!&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;?&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;;&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;。&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;！&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;？&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;；&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\
-</span></span></span><span style="display:flex;"><span><span style="color:#0a3069"></span><span style="color:#0a3069">&#34;</span> <span style="color:#1f2328">]</span>
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">&#34;</span> <span style="color:#1f2328">]</span>
 </span></span><span style="display:flex;"><span>completion <span style="color:#0550ae">=</span> gpt_client<span style="color:#0550ae">.</span>chat<span style="color:#0550ae">.</span>completions<span style="color:#0550ae">.</span>create<span style="color:#1f2328">(</span>
 </span></span><span style="display:flex;"><span>        model<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;gpt-4o&#34;</span><span style="color:#1f2328">,</span>
 </span></span><span style="display:flex;"><span>    messages<span style="color:#0550ae">=</span><span style="color:#1f2328">[,</span>
@@ -475,7 +475,7 @@
 
                     <footer id="footer">
     <div>
-        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
         
     </div>
     <br />

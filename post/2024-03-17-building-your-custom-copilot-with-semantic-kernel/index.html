@@ -103,9 +103,9 @@
         <div class="post-content">
             <p>本文重点介绍如何使用由 Azure OpenAI 服务提供支持的 Semantic Kernel 创建自己的 Copilot。我们将尝试利用大型语言模型（LLM）的优势与外部服务的集成。这将使您了解如何真正实现您的 Copilot 目标，不仅与零售业，而且与任何行业，无论是电力和公用事业，政府和公共部门等。它的整体功能和潜在的应用场景都远超于聊天机器人。</p>
 <p>让我们从使用 Semantic Kernel 构建一个基本的聊天客户端开始。这很简单，因为您所要做的就是使用 AddAzureOpenAIChatCompletion 类创建内核，并提供包含一些样板代码的系统提示。提供终结点和 API 密钥（我将其存储在环境变量中）后，生成 kernel，提供系统提示，其中包含一个循环，该循环通过流式处理调用 Azure OpenAI 服务。这个循环不会中断，因为它只是一个永无止境的聊天机器人。但是，您可能希望围绕它构建自己的逻辑。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -179,7 +179,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel</span><span style="color:#1f2328">;</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel.ChatCompletion</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel.Connectors.OpenAI</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">static</span> System<span style="color:#1f2328">.</span>Environment<span style="color:#1f2328">;</span>
@@ -262,9 +262,9 @@
 <p>这就是事情开始变得有趣的地方。当前的 LLMs 不善于告诉你时间，解决复杂的数学问题，让你了解事实（仅仅是因为它们没有连接到互联网，默认情况下）。</p>
 <p>Semantic Kernel 包含一些必要概念和功能，例如 AI 插件、原生函数、提示等，这里不再详细介绍了，可以去官网查阅文档。只是简要解释一下，插件是一种为 AI Copilot（或代理）添加功能和能力的方法。它们现在基于 OpenAI 插件规范，这意味着它们可以与其他 AI 平台（如 ChatGPT、Microsoft 365 等）互操作。插件可以包含本机代码（例如 C# 或 Python）和提示（例如对 AI 服务的请求）。您可以使用插件来访问数据、执行操作或使用其他 AI 模型增强您的代理。例如可以创建一个插件搜索网络，发送电子邮件，生成图像甚至使用Microsoft Word，插件就像 AI 应用程序的手，允许它与现实世界进行交互。Semantic Kernel 插件的另一个优点是，其中一些插件已由团队作为单独的软件包发布。这意味着您不必自己编写所有内容，而是也可以使用一些内置的。例如在我们的例子中，我们将使用 TimePlugin 来解决这个问题。</p>
 <p>你所要做的就是添加下面这些代码。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -279,7 +279,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Create a kernel with the Azure OpenAI chat completion service</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Create a kernel with the Azure OpenAI chat completion service</span>
 </span></span><span style="display:flex;"><span> <span style="color:#cf222e">var</span> builder <span style="color:#1f2328">=</span> Kernel<span style="color:#1f2328">.</span>CreateBuilder<span style="color:#1f2328">();</span>
 </span></span><span style="display:flex;"><span> builder<span style="color:#1f2328">.</span>AddAzureOpenAIChatCompletion<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;gpt-35-turbo-16k&#34;</span><span style="color:#1f2328">,</span>
 </span></span><span style="display:flex;"><span>     GetEnvironmentVariable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AOI_ENDPOINT_SWDN&#34;</span><span style="color:#1f2328">)!,</span>
@@ -300,9 +300,9 @@
 <li>使用内核的自动函数调用功能（超级酷，你会知道为什么！）</li>
 </ol>
 <p>因此，我们将使用自动函数调用，要启用它，您只需要一行代码。在 while 循环中，只需设置一个 ToolCallBehavior 属性。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -315,7 +315,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Get user input</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Get user input</span>
 </span></span><span style="display:flex;"><span>Console<span style="color:#1f2328">.</span>ForegroundColor <span style="color:#1f2328">=</span> ConsoleColor<span style="color:#1f2328">.</span>White<span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>Console<span style="color:#1f2328">.</span>Write<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;User &gt; &#34;</span><span style="color:#1f2328">);</span>
 </span></span><span style="display:flex;"><span>history<span style="color:#1f2328">.</span>AddUserMessage<span style="color:#1f2328">(</span>Console<span style="color:#1f2328">.</span>ReadLine<span style="color:#1f2328">()!);</span>
@@ -354,9 +354,9 @@
         </a>
     </p>
 <p>很明显，除非您提供正确的 IATA 代码名称，否则您无法真正从 API 获得任何响应，但有趣的是，事实并非如此。借助函数语义描述的强大功能，它需要 LLM 和我们编写的代码的强大功能才能为您带来最佳结果。以下是我为航班跟踪写的代码：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -393,7 +393,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel</span><span style="color:#1f2328">;</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Collections.Generic</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.ComponentModel</span><span style="color:#1f2328">;</span>
@@ -432,14 +432,14 @@
 </div>
 </div><p>这只是一个类的一个函数。这意味着，一个插件只有一个本机功能。如果你注意到，从定义到它的参数再到它的返回值，我已经为这个函数中的几乎所有内容提供了描述 。这些语义描述的原因是 Semantic Kernel 将有效地使用 AI 来处理请求。这就是为什么，如果您注意到源和目的地，我会分别为源/目的地位置编写 IATA 代码。通过提供此描述，无需调用单独的服务来解析城市名称，在我们的示例悉尼中，它可以自动将其转换为 SYD。</p>
 <p>一旦你完成了你的插件类，你所要做的就是回到你的 Program.cs 文件，并在 TimePlugin 之后 添加这个插件。下面是代码片段：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder<span style="color:#1f2328">.</span>Plugins<span style="color:#1f2328">.</span>AddFromObject<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> FlightTrackerPlugin<span style="color:#1f2328">(</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder<span style="color:#1f2328">.</span>Plugins<span style="color:#1f2328">.</span>AddFromObject<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> FlightTrackerPlugin<span style="color:#1f2328">(</span>
 </span></span><span style="display:flex;"><span>  GetEnvironmentVariable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AVIATIONSTACK_KEY&#34;</span><span style="color:#1f2328">)!),</span> 
 </span></span><span style="display:flex;"><span>  nameof<span style="color:#1f2328">(</span>FlightTrackerPlugin<span style="color:#1f2328">));</span>
 </span></span></code></pre></td></tr></table>
@@ -458,9 +458,9 @@
 <p>现在您可以轻松地看到，我们的 Copilot 已经开始通过与正确的插件交互并给我们预期的响应。</p>
 <h3 id="气象雷达">气象雷达</h3>
 <p>就像航班跟踪插件一样 ，您将编写气象雷达插件。这个插件将使用<a href="https://www.weatherapi.com/">天气 API</a>，它也是免费的，非常易于使用。我创建了一个单独的类文件，在其中创建了一个函数来获取天气。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -492,7 +492,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel</span><span style="color:#1f2328">;</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.Collections.Generic</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">System.ComponentModel</span><span style="color:#1f2328">;</span>
@@ -525,14 +525,14 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>按照前面的示例，您只需编写以下代码行即可注入它：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder<span style="color:#1f2328">.</span>Plugins<span style="color:#1f2328">.</span>AddFromObject<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> WeatherPlugin<span style="color:#1f2328">(</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder<span style="color:#1f2328">.</span>Plugins<span style="color:#1f2328">.</span>AddFromObject<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> WeatherPlugin<span style="color:#1f2328">(</span>
 </span></span><span style="display:flex;"><span>  GetEnvironmentVariable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;WEATHERAPI_KEY&#34;</span><span style="color:#1f2328">)!),</span> 
 </span></span><span style="display:flex;"><span>  nameof<span style="color:#1f2328">(</span>WeatherPlugin<span style="color:#1f2328">));</span>
 </span></span></code></pre></td></tr></table>
@@ -550,9 +550,9 @@
     </p>
 <h3 id="零售搜索">零售搜索</h3>
 <p>最后来编写一个零售搜索插件。此插件将使用 <a href="https://learn.microsoft.com/rest/api/maps/?view=rest-maps-2023-06-01&amp;WT.mc_id=AI-MVP-5003172">Azure Maps</a> （或必应地图 API）来定位我们想要的位置。同时调整一下系统消息为：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
@@ -560,7 +560,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>You&#39;re a virtual assistant responsible for only flight tracking, 
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>You&#39;re a virtual assistant responsible for only flight tracking, 
 </span></span><span style="display:flex;"><span>weather updates and finding out the right places within Australia 
 </span></span><span style="display:flex;"><span>after inquiring about the proximity or city. You should not talk 
 </span></span><span style="display:flex;"><span>anything outside of your scope. Your response should be very concise 
@@ -569,9 +569,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>这就是零售搜索插件代码的样子。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -627,7 +627,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Azure.Maps.Search.Models</span><span style="color:#1f2328">;</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Azure.Maps.Search.Models</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Azure.Maps.Search</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Azure</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.SemanticKernel</span><span style="color:#1f2328">;</span>
@@ -684,14 +684,14 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>现在，您只需将这行代码添加到现有的 Copilot 代码中，它应该就可以正常工作了。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder<span style="color:#1f2328">.</span>Plugins<span style="color:#1f2328">.</span>AddFromObject<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> PlaceSuggestionsPlugin<span style="color:#1f2328">(</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span>builder<span style="color:#1f2328">.</span>Plugins<span style="color:#1f2328">.</span>AddFromObject<span style="color:#1f2328">(</span><span style="color:#cf222e">new</span> PlaceSuggestionsPlugin<span style="color:#1f2328">(</span>
 </span></span><span style="display:flex;"><span>  GetEnvironmentVariable<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;AZUREMAPS_SUBSCRIPTION_KEY&#34;</span><span style="color:#1f2328">)!),</span> 
 </span></span><span style="display:flex;"><span>  nameof<span style="color:#1f2328">(</span>PlaceSuggestionsPlugin<span style="color:#1f2328">));</span>
 </span></span></code></pre></td></tr></table>
@@ -783,7 +783,7 @@
 
                     <footer id="footer">
     <div>
-        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
         
     </div>
     <br />

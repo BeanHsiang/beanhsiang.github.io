@@ -247,15 +247,15 @@
             <p>搜索索引是不可变的，这意味着如果需要更新索引，通常需要<a href="https://docs.microsoft.com/azure/search/search-howto-reindex?WT.mc_id=AI-MVP-5003172">删除并重新生成</a>索引或创建新索引，然后迁移应用程序。像这样交换搜索索引会增加管理搜索索引的复杂性，如果最终需要在多个位置更新应用程序设置或需要重新部署代码，则可能会很困难。</p>
 <p>为了帮助更轻松地交换索引，Azure 认知搜索现在支持预览版提供的<a href="https://docs.microsoft.com/azure/search/search-how-to-alias?tabs=rest&amp;WT.mc_id=AI-MVP-5003172">索引别名</a>。别名是辅助名称，可用于引用索引以进行查询、索引和其他文档操作。您可以通过 <a href="https://docs.microsoft.com/rest/api/searchservice/preview-api/create-or-update-alias?WT.mc_id=AI-MVP-5003172">REST API</a>、<a href="https://docs.microsoft.com/azure/search/search-how-to-alias?tabs=vscode&amp;WT.mc_id=AI-MVP-5003172#create-an-index-alias">Visual Studio Code 扩展</a>或 <a href="https://docs.microsoft.com/dotnet/api/azure.search.documents.indexes.searchindexclient.createorupdatealias?WT.mc_id=AI-MVP-5003172&amp;view=azure-dotnet-preview#azure-search-documents-indexes-searchindexclient-createorupdatealias(system-string-azure-search-documents-indexes-models-searchalias-system-boolean-system-threading-cancellationtoken)">SDK</a> 创建别名。</p>
 <p><strong>POST https://[service name].search.windows.net/aliases?api-version=2021-04-30-Preview</strong></p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
 </span></span><span style="display:flex;"><span>   <span style="color:#0550ae">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;my-alias&#34;</span><span style="color:#1f2328">,</span>
 </span></span><span style="display:flex;"><span>   <span style="color:#0550ae">&#34;indexes&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;hotel-samples-index&#34;</span><span style="color:#1f2328">]</span>
 </span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
@@ -448,7 +448,7 @@
 
                     <footer id="footer">
     <div>
-        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
         
     </div>
     <br />

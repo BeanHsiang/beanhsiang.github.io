@@ -105,9 +105,9 @@
 <h3 id="深度学习场景的扩展">深度学习场景的扩展</h3>
 <p>ML.NET 3.0增加了对象检测、命名实体识别和问答等深度学习场景的支持，这些场景都是基于 TorchSharp 和 ONNX 模型的集成和互操作性实现的。此外，还更新了与 LightGBM 的集成，使用了最新版本。</p>
 <p>对象检测需要引用 Microsoft.ML.TorchSharp 3.0.0 包的 Microsoft.ML.TorchSharp 和 Microsoft.ML.TorchSharp.AutoFormerV2 命名空间。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -168,7 +168,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">var</span> chain <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> EstimatorChain<span style="color:#1f2328">&lt;</span>ITransformer<span style="color:#1f2328">&gt;();</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">var</span> chain <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> EstimatorChain<span style="color:#1f2328">&lt;</span>ITransformer<span style="color:#1f2328">&gt;();</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> filteredPipeline <span style="color:#1f2328">=</span> chain<span style="color:#1f2328">.</span> Append<span style="color:#1f2328">(</span>
 </span></span><span style="display:flex;"><span>        mlContext<span style="color:#1f2328">.</span>Transforms<span style="color:#1f2328">.</span>Text<span style="color:#1f2328">.</span>TokenizeIntoWords<span style="color:#1f2328">(</span>
@@ -230,9 +230,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>命名实体识别和问答需要引用 Microsoft.ML.TorchSharp 3.0.0 包的 Microsoft.ML.TorchSharp 命名空间。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -251,7 +251,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// 问答训练器定义</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// 问答训练器定义</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> chain <span style="color:#1f2328">=</span> <span style="color:#cf222e">new</span> EstimatorChain<span style="color:#1f2328">&lt;</span>ITransformer<span style="color:#1f2328">&gt;();</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">var</span> estimatorQA <span style="color:#1f2328">=</span> chain<span style="color:#1f2328">.</span>Append<span style="color:#1f2328">(</span>
 </span></span><span style="display:flex;"><span>    mlContext<span style="color:#1f2328">.</span>MulticlassClassification<span style="color:#1f2328">.</span>Trainers<span style="color:#1f2328">.</span>QuestionAnswer<span style="color:#1f2328">(</span>
@@ -346,7 +346,7 @@
 
                     <footer id="footer">
     <div>
-        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
         
     </div>
     <br />

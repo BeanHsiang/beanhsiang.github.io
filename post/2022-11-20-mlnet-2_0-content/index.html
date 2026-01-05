@@ -115,9 +115,9 @@
     </p>
 <h2 id="句子相似性">句子相似性</h2>
 <p>在 ML.NET 2.0 中引入了一个新的句子相似性 API。此 API 使用与文本分类 API 相同的底层, 也是 NAS-BERT 模型的 TorchSharp 实现。但主要区别在于，该模型不是预测类别，而是计算一个数值，该数值表示两个短语的相似程度。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -148,7 +148,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Add using statements</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Add using statements</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.ML</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.ML.TorchSharp</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
@@ -185,9 +185,9 @@
 <p>为了实现文本分类和句子相似性等自然语言处理方案，开发者需要一种方法来处理文本数据。这通常是使用 tokenization 完成的。目前为 Roberta 模型实现了一个分词器，它使用<a href="https://en.wikipedia.org/wiki/Byte_pair_encoding">字节对编码</a>算法来满足 NAS-BERT 模型的要求。</p>
 <p>微软的 ML.NET 中发布了 Microsoft.ML.Tokenizers 包。开发者可以使用该包中提供的 API 导入自定义词汇表，并使用 <a href="https://learn.microsoft.com/zh-cn/dotnet/api/microsoft.ml.tokenizers.bpe?view=ml-dotnet-preview&amp;WT.mc_id=AI-MVP-5003172">BPE Tokenizer</a> 处理文本数据。</p>
 <p>此示例使用来自 HuggingFace <a href="https://huggingface.co/gpt2/tree/main">GPT-2</a> 存储库的词汇资源。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -211,7 +211,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Add using statements</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#57606a">// Add using statements</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.ML</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.ML.Tokenizers</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
@@ -378,7 +378,7 @@
 
                     <footer id="footer">
     <div>
-        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
         
     </div>
     <br />

@@ -159,9 +159,9 @@
 </ul>
 <h2 id="代码片段与智能决策">代码片段与智能决策</h2>
 <p>主流程在<code>app.py</code>里，核心逻辑大致如下：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -189,7 +189,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">main</span><span style="color:#1f2328">()</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">:</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">main</span><span style="color:#1f2328">()</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">:</span>
 </span></span><span style="display:flex;"><span>    conversation_history <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
 </span></span><span style="display:flex;"><span>    generated_reports <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
 </span></span><span style="display:flex;"><span>    
@@ -220,9 +220,9 @@
 </div><p>Agent会根据上下文自动选择是编译趋势报告还是存储数据，整个过程无需人工干预。</p>
 <h3 id="趋势编译器的自动化流程">趋势编译器的自动化流程</h3>
 <p><code>compiler.py</code>里的<code>TrendsCompiler</code>类实现了多步自验证的自动化：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -246,7 +246,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">TrendsCompiler</span><span style="color:#1f2328">:</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">TrendsCompiler</span><span style="color:#1f2328">:</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">compile_trends</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> user_query<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">:</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#cf222e">async</span> <span style="color:#cf222e">with</span> LocalPlaywrightComputer<span style="color:#1f2328">()</span> <span style="color:#cf222e">as</span> computer<span style="color:#1f2328">:</span>
 </span></span><span style="display:flex;"><span>            state <span style="color:#0550ae">=</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;trends_compiled&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">False</span><span style="color:#1f2328">}</span>
@@ -273,9 +273,9 @@
 </div><p>每一步都自检，遇到异常也能自动处理，完全不需要人工介入。</p>
 <h3 id="pinterest视觉坐标提取">Pinterest视觉坐标提取</h3>
 <p>CUA模型能直接“看”截图，提取图片的坐标：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -293,7 +293,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">_detect_search_results</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> computer<span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> List<span style="color:#1f2328">[</span>Tuple<span style="color:#1f2328">[</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">]]:</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">_detect_search_results</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> computer<span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> List<span style="color:#1f2328">[</span>Tuple<span style="color:#1f2328">[</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">]]:</span>
 </span></span><span style="display:flex;"><span>    screenshot_bytes <span style="color:#0550ae">=</span> <span style="color:#cf222e">await</span> computer<span style="color:#0550ae">.</span>screenshot<span style="color:#1f2328">()</span>
 </span></span><span style="display:flex;"><span>    screenshot_b64 <span style="color:#0550ae">=</span> base64<span style="color:#0550ae">.</span>b64encode<span style="color:#1f2328">(</span>screenshot_bytes<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>decode<span style="color:#1f2328">()</span>
 </span></span><span style="display:flex;"><span>    prompt <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;&#34;&#34;
@@ -312,9 +312,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>再通过中心点算法，确保点击精准：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
@@ -323,7 +323,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">calculate_centers</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> coordinates<span style="color:#1f2328">:</span> List<span style="color:#1f2328">[</span>Tuple<span style="color:#1f2328">[</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">]])</span> <span style="color:#0550ae">-&gt;</span> List<span style="color:#1f2328">[</span>Tuple<span style="color:#1f2328">[</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">]]:</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">calculate_centers</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> coordinates<span style="color:#1f2328">:</span> List<span style="color:#1f2328">[</span>Tuple<span style="color:#1f2328">[</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">]])</span> <span style="color:#0550ae">-&gt;</span> List<span style="color:#1f2328">[</span>Tuple<span style="color:#1f2328">[</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">]]:</span>
 </span></span><span style="display:flex;"><span>    centers <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> x1<span style="color:#1f2328">,</span> y1<span style="color:#1f2328">,</span> x2<span style="color:#1f2328">,</span> y2 <span style="color:#0550ae">in</span> coordinates<span style="color:#1f2328">:</span>
 </span></span><span style="display:flex;"><span>        center_x <span style="color:#0550ae">=</span> <span style="color:#1f2328">(</span>x1 <span style="color:#0550ae">+</span> x2<span style="color:#1f2328">)</span> <span style="color:#0550ae">//</span> <span style="color:#0550ae">2</span>
@@ -340,9 +340,9 @@
 </ul>
 <h2 id="自动生成markdown报告">自动生成Markdown报告</h2>
 <p>报告自动结构化，内容丰富：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -372,7 +372,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">_generate_markdown_report</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> user_query<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">:</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">_generate_markdown_report</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> user_query<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">:</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#0550ae">not</span> <span style="color:#6a737d">self</span><span style="color:#0550ae">.</span>image_analyses<span style="color:#1f2328">:</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#0a3069">&#34;No trend data collected for analysis.&#34;</span>
 </span></span><span style="display:flex;"><span>    report_sections <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span>
@@ -404,9 +404,9 @@
 </div>
 </div><h2 id="mcp一键集成">MCP一键集成</h2>
 <p>无需自己写MCP客户端，配置好就能用：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -419,7 +419,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">create_app_tools</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> mcp_server_url<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> available_functions<span style="color:#1f2328">:</span> Dict<span style="color:#1f2328">[</span><span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> Any<span style="color:#1f2328">])</span> <span style="color:#0550ae">-&gt;</span> List<span style="color:#1f2328">[</span>Dict<span style="color:#1f2328">[</span><span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> Any<span style="color:#1f2328">]]:</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">create_app_tools</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> mcp_server_url<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> available_functions<span style="color:#1f2328">:</span> Dict<span style="color:#1f2328">[</span><span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> Any<span style="color:#1f2328">])</span> <span style="color:#0550ae">-&gt;</span> List<span style="color:#1f2328">[</span>Dict<span style="color:#1f2328">[</span><span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> Any<span style="color:#1f2328">]]:</span>
 </span></span><span style="display:flex;"><span>    tools <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span>
 </span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
 </span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;mcp&#34;</span><span style="color:#1f2328">,</span>
@@ -504,7 +504,7 @@
 
                     <footer id="footer">
     <div>
-        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
         
     </div>
     <br />

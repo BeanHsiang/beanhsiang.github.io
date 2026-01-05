@@ -111,9 +111,9 @@
 <p>CSnakes 是一个 .NET 源代码生成器和运行时，它将 Python 代码和库以 C-API 层面的方式嵌入到 C#.NET 解决方案中，而无需使用 REST、HTTP 或微服务且具有高性能的运行时效率。在没有 .NET 原生库替代的情况下，CSnakes 可以帮助开发者在 .NET 环境中最快地复用已经稳定运行的 Python 代码，从而保障功能的实现。</p>
 <h2 id="关键代码介绍">关键代码介绍</h2>
 <p>假定我们有一个 Python 脚本 demo.py，其中有一个 <code>test_convert_pdf</code> 方法，用于将 PDF 文件转换为 Markdown 格式。我们的目标是在 .NET 应用程序中调用这个方法。</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
@@ -121,7 +121,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">markitdown</span> <span style="color:#cf222e">import</span> MarkItDown
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">markitdown</span> <span style="color:#cf222e">import</span> MarkItDown
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">test_convert_pdf</span><span style="color:#1f2328">(</span>path<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">):</span>
 </span></span><span style="display:flex;"><span>    md <span style="color:#0550ae">=</span> MarkItDown<span style="color:#1f2328">()</span>
@@ -130,9 +130,9 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>创建一个 C# Console 应用程序命名为 <code>CSharpConsoleApp</code>，并添加对 CSnakes.Runtime 的引用。打开项目文件 <code>CSharpConsoleApp.csproj</code>，使用以下内容：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -152,7 +152,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#0550ae">&lt;Project</span> <span style="color:#1f2328">Sdk=</span><span style="color:#0a3069">&#34;Microsoft.NET.Sdk&#34;</span><span style="color:#0550ae">&gt;</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#0550ae">&lt;Project</span> <span style="color:#1f2328">Sdk=</span><span style="color:#0a3069">&#34;Microsoft.NET.Sdk&#34;</span><span style="color:#0550ae">&gt;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&lt;PropertyGroup&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&lt;OutputType&gt;</span>Exe<span style="color:#0550ae">&lt;/OutputType&gt;</span>
@@ -174,9 +174,9 @@
 </div>
 </div><p>在 .csproj 文件中，除了添加 CSnakes.Runtime 引用外，最重要的是通过 <strong>AdditionalFiles</strong> 配置节把 Python 脚本文件 demo.py 添加到项目中。在我们运行 <code>dotnet build</code> 时，它会被 CSnakes 发现并编译。</p>
 <p>在 Program.cs 文件中，我们可以通过以下代码初始化，并调用 Python 脚本中的函数：</p>
-<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
@@ -227,7 +227,7 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">CSnakes.Runtime</span><span style="color:#1f2328">;</span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-csharp" data-lang="csharp"><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">CSnakes.Runtime</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.Extensions.DependencyInjection</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span><span style="color:#cf222e">using</span> <span style="color:#24292e">Microsoft.Extensions.Hosting</span><span style="color:#1f2328">;</span>
 </span></span><span style="display:flex;"><span>
@@ -351,7 +351,7 @@
 
                     <footer id="footer">
     <div>
-        &copy; 2025 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
         
     </div>
     <br />

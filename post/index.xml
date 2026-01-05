@@ -30,6 +30,13 @@
       <description>&lt;p&gt;智能体（Agentic）应用正在重塑企业自动化，但它们动态的工具链和“隐式推理”也让线上运行与排障变得格外棘手。本文整理并改写自 Microsoft Foundry Blog 的一篇文章，内容聚焦于：如何为基于 Microsoft Agent Framework 的服务接入 &lt;strong&gt;OpenTelemetry&lt;/strong&gt;，将 trace 投递到 &lt;strong&gt;Azure AI Foundry&lt;/strong&gt; 的可观测能力中，并建立一套实用工作流，用于在生产环境中调试、评估并持续改进多智能体行为。&lt;/p&gt;</description>
     </item>
     <item>
+      <title>使用 Azure AI Foundry 监控生成式 AI 应用</title>
+      <link>https://beanhsiang.github.io/post/2025-12-08-monitoring-generative-ai-applications-with-azure-ai-foundry/</link>
+      <pubDate>Mon, 08 Dec 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-12-08-monitoring-generative-ai-applications-with-azure-ai-foundry/</guid>
+      <description>&lt;h2 id=&#34;-引言&#34;&gt;🧭 引言&lt;/h2&gt;&#xA;&lt;p&gt;监控 AI 应用，早就不只是盯着「是否在线」和「有没有报错」这么简单了。面对生成式 AI 的工作负载，团队还需要持续回答三个更关键的问题：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;AI 的输出到底“好不好”（质量、准确性、帮助性）&lt;/li&gt;&#xA;&lt;li&gt;运行成本是多少（尤其是 token 消耗与推理成本）&lt;/li&gt;&#xA;&lt;li&gt;是否足够安全、合规、可控（有无有害输出、策略违规等）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Microsoft 在 Azure AI Foundry 中提供了一套集成式的可观测能力，把 Application Insights、持续评估（continuous evaluation）与可自定义仪表板串起来，从而实现对 AI 应用端到端的可见性；同时也与 Azure Baseline Monitoring Alerts 的思路保持一致。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文</title>
       <link>https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/</link>
       <pubDate>Sat, 22 Nov 2025 12:00:00 +0800</pubDate>
@@ -42,13 +49,6 @@
       <pubDate>Fri, 21 Nov 2025 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/</guid>
       <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260105114656-3f580f262ff74ddd96bc8d6400074e74.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260105114656-3f580f262ff74ddd96bc8d6400074e74.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;原文链接：https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework&amp;mdash;part-1/4470813?WT.mc_id=AI-MVP-5003172&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 Azure AI Foundry 监控生成式 AI 应用</title>
-      <link>https://beanhsiang.github.io/post/2025-11-08-monitoring-generative-ai-applications-with-azure-ai-foundry/</link>
-      <pubDate>Sat, 08 Nov 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-11-08-monitoring-generative-ai-applications-with-azure-ai-foundry/</guid>
-      <description>&lt;p&gt;原文链接：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/monitoring-generative-ai-applications-with-azure-ai-foundry/4466810?WT.mc_id=AI-MVP-5003172&#34;&gt;Monitoring Generative AI Applications with Azure AI Foundry&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;-引言&#34;&gt;🧭 引言&lt;/h2&gt;&#xA;&lt;p&gt;监控 AI 应用，早就不只是盯着「是否在线」和「有没有报错」这么简单了。面对生成式 AI 的工作负载，团队还需要持续回答三个更关键的问题：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;AI 的输出到底“好不好”（质量、准确性、帮助性）&lt;/li&gt;&#xA;&lt;li&gt;运行成本是多少（尤其是 token 消耗与推理成本）&lt;/li&gt;&#xA;&lt;li&gt;是否足够安全、合规、可控（有无有害输出、策略违规等）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Microsoft 在 Azure AI Foundry 中提供了一套集成式的可观测能力，把 Application Insights、持续评估（continuous evaluation）与可自定义仪表板串起来，从而实现对 AI 应用端到端的可见性；同时也与 Azure Baseline Monitoring Alerts 的思路保持一致。&lt;/p&gt;</description>
     </item>
     <item>
       <title>介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队</title>

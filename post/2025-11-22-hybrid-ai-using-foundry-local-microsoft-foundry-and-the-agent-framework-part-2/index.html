@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文 | Innovation with tech</title>
+    <meta property="og:title" content="使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2025-11-22T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2025-11-22T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文</h1>
+        </header>
+        
+  <time datetime="2025-11-22T04:00:00Z" class="post-meta meta-date dt-published">
+    2025年11月22日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260105115726-e614221e771e45749f7fc050ae0a4293.png">
+            <img class="mx-auto" alt="" src="/uploads/20260105115726-e614221e771e45749f7fc050ae0a4293.png" />
+        </a>
+    </p>
+<p>原文链接：https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework&mdash;part-2/4471983?WT.mc_id=AI-MVP-5003172</p>
+<p>本文基于 Microsoft Tech Community 的系列文章 Part 2 做中文整理与改写：这一次不是“本地 agent 需要时调用云端”，而是让 <strong>云端托管的 Microsoft Foundry agent</strong> 作为主控；当它需要 <strong>私密/敏感/与用户强相关</strong> 的上下文信息时，再通过 <strong>MCP</strong> 安全地“回拨”到用户设备旁边运行的 <strong>本地 agent</strong>。核心目标仍然是：让敏感数据留在本地，只把最小必要的信息以结构化形式提供给云端推理。</p>
+<blockquote>
+<p>说明：文中“症状分诊/医疗建议”等内容仅用于演示与信息说明，不构成医疗建议、诊断或治疗意见。</p>
+</blockquote>
+<h2 id="part-2让云端-agent-在需要时向本地要答案">Part 2：让云端 agent “在需要时向本地要答案”</h2>
+<p>在 Part 1（本地优先）里，模式是：本地 GPU 上跑的小模型处理原始敏感文本，必要时再调用云端模型获得更强推理能力；主题可以概括为“数据留在本地，智能按需引入”。</p>
+<p>Part 2 反过来：</p>
+<ul>
+<li>用户主要与 <strong>云端托管的 Microsoft Foundry agent</strong> 交互</li>
+<li>云端 agent 使用强推理模型（示例为 <strong>GPT-4.1</strong>）进行推理与编排</li>
+<li>一旦需要 <strong>个人病史/敏感上下文/用户特定信息</strong>，云端 agent 通过 <strong>MCP</strong> 安全调用本地的“Personal Health Coach”</li>
+<li>云端永远拿不到完整原始病史；本地只返回 <strong>去标识化、PII-free、最小必要</strong> 的结构化摘要</li>
+</ul>
+<p>原文用一个形象比喻来解释：</p>
+<ul>
+<li>云端 agent = “专科医生”</li>
+<li>本地 agent = 你信任的“健康教练”，知道你的病史</li>
+<li>云端不直接接触你的完整病史</li>
+<li>本地只提供支持推理所需的最少信息</li>
+</ul>
+<p>这是一种更“企业可用”的混合智能模式：<strong>云端负责高价值推理与治理，本地负责隐私与个性化上下文</strong>。</p>
+<h2 id="架构概览">架构概览</h2>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260105115730-eb002247cbb74807ac8bfce17956a1b9.png">
+            <img class="mx-auto" alt="" src="/uploads/20260105115730-eb002247cbb74807ac8bfce17956a1b9.png" />
+        </a>
+    </p>
+<p>这张图展示了一个典型的混合 AI 工作流：</p>
+<ul>
+<li>Azure 上的 <strong>Microsoft Foundry 托管 agent</strong> 接收用户症状，并用 frontier 模型（示例 <strong>GPT-4.1</strong>）做推理</li>
+<li>当需要个人上下文（例如病史）时，云端 agent 通过 dev tunnel 回拨到用户机器上的 <strong>本地 MCP server（Health Coach）</strong></li>
+<li>本地 MCP server 查询两类本地资源：
+<ul>
+<li><strong>Foundry Local</strong> 提供的本地 GPU 加速小模型（示例 Phi-4-mini）</li>
+<li>存储在本机的健康历史 JSON（或文件/内存）</li>
+</ul>
+</li>
+<li>本地只返回云端推理所需的“最小结构化背景信息”，云端再把这份背景与症状结合生成建议</li>
+</ul>
+<p>原文也强调了把 agent 托管在 Microsoft Foundry（Azure）上的价值：</p>
+<ul>
+<li>在云端集中管理 <strong>逻辑、策略、推理引擎</strong></li>
+<li>直接集成 Azure 的身份、监控、治理能力</li>
+<li>同时把隐私/重资源任务下沉到本地，获得“企业级控制 + 边缘级隐私与效率”的组合</li>
+</ul>
+<h2 id="demo-搭建">Demo 搭建</h2>
+<h3 id="1-创建云端托管-agent">1) 创建云端托管 agent</h3>
+<p>原文在 Microsoft Foundry 的 UI 中创建 agent，并选择 <code>gpt-4.1</code> 作为模型：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260105115730-86cc2f5bc6b64977ab4f6baefe525211.png">
+            <img class="mx-auto" alt="" src="/uploads/20260105115730-86cc2f5bc6b64977ab4f6baefe525211.png" />
+        </a>
+    </p>
+<p>并配置了非常严格的 system prompt 指令，明确：</p>
+<ul>
+<li>云端模型没有身份与完整病史访问权限</li>
+<li>必须通过 MCP 工具 <code>get_patient_background(symptoms)</code> 拉取本地背景</li>
+<li>禁止猜测/编造病史，禁止向用户索取敏感信息</li>
+<li>工具结果出来后再结合症状给出非紧急分诊建议</li>
+<li>必须以 “This is not medical advice.” 结尾</li>
+</ul>
+<p>原文 system prompt（保留原文代码块）：</p>
+<blockquote>
+<pre tabindex="0"><code>You are a medical-specialist reasoning assistant for non-emergency triage.
+You do NOT have access to the patient’s identity or private medical history.
+A privacy firewall limits what you can see.
+
+A local “Personal Health Coach” LLM exists on the user’s device.
+It holds the patient’s full medical history privately.
+
+You may request information from this local model ONLY by calling the MCP tool:
+   get_patient_background(symptoms)
+
+This tool returns a privacy-safe, PII-free medical summary, including:
+- chronic conditions
+- allergies
+- medications
+- relevant risk factors
+- relevant recent labs
+- family history relevance
+- age group
+
+Rules:
+1. When symptoms are provided, ALWAYS call get_patient_background BEFORE reasoning.
+2. NEVER guess or invent medical history — always retrieve it from the local tool.
+3. NEVER ask the user for sensitive personal details. The local model handles that.
+4. After the tool runs, combine:
+      (a) the patient_background output
+      (b) the user’s reported symptoms
+   to deliver high-level triage guidance.
+5. Do not diagnose or prescribe medication.
+6. Always end with: “This is not medical advice.”
+
+You MUST display the section “Local Health Coach Summary:” containing the JSON returned from the tool before giving your reasoning.
+</code></pre></blockquote>
+<h3 id="2-构建本地-mcp-server本地-llm--个人医疗记忆">2) 构建本地 MCP Server（本地 LLM + 个人医疗记忆）</h3>
+<p>原文给出了一个本地 MCP server 的关键实现片段。整体思路是：在本地启动一个极简 HTTP 服务，接受 MCP 风格的 JSON-RPC 请求，并提供一个工具 <code>get_patient_background</code> 给云端调用。</p>
+<h4 id="21-http-json-rpc-网关mcp-gateway">2.1 HTTP JSON-RPC 网关（“MCP Gateway”）</h4>
+<p>这个组件负责：</p>
+<ul>
+<li>监听本地端口</li>
+<li>接受 POST 的 JSON-RPC</li>
+<li>规范化 payload</li>
+<li>路由到 <code>handle_mcp_request()</code></li>
+<li>返回 JSON-RPC 响应</li>
+<li>暴露 <code>initialize</code> 与 <code>tools/list</code></li>
+</ul>
+<pre tabindex="0"><code>class MCPHandler(BaseHTTPRequestHandler):
+    def _set_headers(self, status=200):
+        self.send_response(status)
+        self.send_header(&#34;Content-Type&#34;, &#34;application/json&#34;)
+        self.end_headers()
+
+    def do_GET(self):
+        self._set_headers()
+        self.wfile.write(b&#34;OK&#34;)
+
+    def do_POST(self):
+        content_len = int(self.headers.get(&#34;Content-Length&#34;, 0))
+        raw = self.rfile.read(content_len)
+
+        print(&#34;---- RAW BODY ----&#34;)
+        print(raw)
+        print(&#34;-------------------&#34;)
+
+        try:
+            req = json.loads(raw.decode(&#34;utf-8&#34;))
+        except:
+            self._set_headers(400)
+            self.wfile.write(b&#39;{&#34;error&#34;:&#34;Invalid JSON&#34;}&#39;)
+            return
+
+        resp = handle_mcp_request(req)
+        self._set_headers()
+        self.wfile.write(json.dumps(resp).encode(&#34;utf-8&#34;))
+</code></pre><h4 id="22-工具契约get_patient_background">2.2 工具契约：<code>get_patient_background</code></h4>
+<p>这部分定义了云端 agent 能看到的工具“契约”，行为看起来就像一个云函数：</p>
+<ul>
+<li>通过 <code>tools/list</code> 广播工具信息</li>
+<li>接收云端传入的参数</li>
+<li>把本地推理委托给 GPU LLM</li>
+<li>返回结构化 JSON 给云端</li>
+</ul>
+<pre tabindex="0"><code>def handle_mcp_request(req):
+    method = req.get(&#34;method&#34;)
+    req_id = req.get(&#34;id&#34;)
+
+    if method == &#34;tools/list&#34;:
+        return {
+            &#34;jsonrpc&#34;: &#34;2.0&#34;,
+            &#34;id&#34;: req_id,
+            &#34;result&#34;: {
+                &#34;tools&#34;: [
+                    {
+                        &#34;name&#34;: &#34;get_patient_background&#34;,
+                        &#34;description&#34;: &#34;Returns anonymized personal medical context using your local LLM.&#34;,
+                        &#34;inputSchema&#34;: {
+                            &#34;type&#34;: &#34;object&#34;,
+                            &#34;properties&#34;: { &#34;symptoms&#34;: {&#34;type&#34;: &#34;string&#34;} },
+                            &#34;required&#34;: [&#34;symptoms&#34;]
+                        }
+                    }
+                ]
+            }
+        }
+
+    if method == &#34;tools/call&#34;:
+        tool = req[&#34;params&#34;][&#34;name&#34;]
+        args = req[&#34;params&#34;][&#34;arguments&#34;]
+
+        if tool == &#34;get_patient_background&#34;:
+            symptoms = args.get(&#34;symptoms&#34;, &#34;&#34;)
+            summary = summarize_patient_locally(symptoms)
+
+            return {
+                &#34;jsonrpc&#34;: &#34;2.0&#34;,
+                &#34;id&#34;: req_id,
+                &#34;result&#34;: {
+                    &#34;content&#34;: [
+                        {
+                            &#34;type&#34;: &#34;text&#34;,
+                            &#34;text&#34;: json.dumps(summary)
+                        }
+                    ]
+                }
+            }
+</code></pre><h4 id="23-本地-gpu-llm-调用foundry-local-集成">2.3 本地 GPU LLM 调用（Foundry Local 集成）</h4>
+<p>个性化发生在本地（不是云端）：</p>
+<ul>
+<li>通过 Foundry Local 调用本地 GPU 小模型</li>
+<li>注入本地私密医疗数据（文件/内存）</li>
+<li>生成去标识化、结构化输出</li>
+<li>打印日志，便于观察本地推理是否发生</li>
+</ul>
+<pre tabindex="0"><code>FOUNDRY_LOCAL_BASE_URL = &#34;http://127.0.0.1:52403&#34;
+FOUNDRY_LOCAL_CHAT_URL = f&#34;{FOUNDRY_LOCAL_BASE_URL}/v1/chat/completions&#34;
+FOUNDRY_LOCAL_MODEL_ID = &#34;Phi-4-mini-instruct-cuda-gpu:5&#34;
+
+def summarize_patient_locally(symptoms: str):
+    print(&#34;[LOCAL] Calling Foundry Local GPU model...&#34;)
+
+    payload = {
+        &#34;model&#34;: FOUNDRY_LOCAL_MODEL_ID,
+        &#34;messages&#34;: [
+            {&#34;role&#34;: &#34;system&#34;, &#34;content&#34;: PERSONAL_SYSTEM_PROMPT},
+            {&#34;role&#34;: &#34;user&#34;, &#34;content&#34;: symptoms}
+        ],
+        &#34;max_tokens&#34;: 300,
+        &#34;temperature&#34;: 0.1
+    }
+
+    resp = requests.post(
+        FOUNDRY_LOCAL_CHAT_URL,
+        headers={&#34;Content-Type&#34;: &#34;application/json&#34;},
+        data=json.dumps(payload),
+        timeout=60
+    )
+
+    llm_content = resp.json()[&#34;choices&#34;][0][&#34;message&#34;][&#34;content&#34;]
+    print(&#34;[LOCAL] Raw content:\n&#34;, llm_content)
+
+    cleaned = _strip_code_fences(llm_content)
+    return json.loads(cleaned)
+</code></pre><h3 id="3-打通公网回拨azure-dev-tunnels">3) 打通公网回拨：Azure Dev Tunnels</h3>
+<p>为了让云端能访问到本地 MCP endpoint，原文使用了 Azure Dev Tunnels。示例用 4 条 PowerShell 命令完成安装与隧道创建：</p>
+<pre tabindex="0"><code>PS C:\Windows\system32&gt; winget install Microsoft.DevTunnel
+
+PS C:\Windows\system32&gt; devtunnel create mcp-health
+
+PS C:\Windows\system32&gt; devtunnel port create mcp-health -p 8081 --protocol http
+
+PS C:\Windows\system32&gt; devtunnel host mcp-health
+</code></pre><p>随后会得到一个公网 endpoint，例如：</p>
+<pre tabindex="0"><code>https://xxxxxxxxx.devtunnels.ms:8081
+</code></pre><h3 id="4-在-azure-ai-foundry-ui-中把-mcp-工具接上">4) 在 Azure AI Foundry UI 中把 MCP 工具接上</h3>
+<p>原文接着在 Azure AI Foundry 的 UI 里为 agent 添加一个自定义工具（MCP）：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260105115731-481233c7cb204ade813737b99b2603c4.png">
+            <img class="mx-auto" alt="" src="/uploads/20260105115731-481233c7cb204ade813737b99b2603c4.png" />
+        </a>
+    </p>
+<p>并指向上一步创建的 dev tunnel 公网地址：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260105115732-df683e4c02824426998a189c20c1c689.png">
+            <img class="mx-auto" alt="" src="/uploads/20260105115732-df683e4c02824426998a189c20c1c689.png" />
+        </a>
+    </p>
+<p>到这里，基础 wiring 就完成了。</p>
+<h2 id="demo云端-agent-与本地私密-llm-对话">Demo：云端 agent 与本地私密 LLM 对话</h2>
+<p>原文使用的示例提示词是：</p>
+<p>“Hi, I’ve been feeling feverish, fatigued, and a bit short of breath since yesterday. Should I be worried?”</p>
+<blockquote>
+<p>说明：示例中的任何诊断结果或医疗建议仅用于演示与信息说明，不构成医疗建议、诊断或治疗意见。</p>
+</blockquote>
+<p>运行时的实时序列如下图所示：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260105115734-e71ed4eee68f488d960d15f4f2d37e15.gif">
+            <img class="mx-auto" alt="" src="/uploads/20260105115734-e71ed4eee68f488d960d15f4f2d37e15.gif" />
+        </a>
+    </p>
+<h2 id="结论为什么这个混合模式重要">结论：为什么这个混合模式重要</h2>
+<p>原文的结论很明确：混合 AI 的价值在于把智能放到“最合适的位置”——高价值推理在云端，敏感/上下文数据在本地。这样既能更好保护隐私，也能降低云端算力成本：大量例行查询、上下文收集、个人历史检索，都可以由轻量本地模型承担，而不是每次都消耗昂贵的 frontier 模型。</p>
+<p>更重要的是，这种模式能衍生出许多现实应用：</p>
+<ul>
+<li>本地财务数据 + 云端财务分析</li>
+<li>设备端的编码知识 + 云端规模化重构</li>
+<li>本地企业上下文 + 云端自动化 agent</li>
+</ul>
+<p>在工业与边缘场景里，本地 agent 甚至可以部署在传感器、摄像头、终端机、IoT 设备旁边，提供即时且私密的智能；云端则负责更复杂的决策与编排。</p>
+<p>混合 AI 让每个设备都能成为“智能协作者”，也让每个云端 agent 成为可以安全利用本地专长的“专家”。</p>
+<h2 id="参考链接">参考链接</h2>
+<ul>
+<li>Foundry Local 入门：<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/foundry-local/get-started?view=foundry-classic&amp;WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/ai-foundry/foundry-local/get-started?view=foundry-classic&amp;WT.mc_id=AI-MVP-5003172</a></li>
+<li>在 Agent Framework 中使用 MCP tools：<a href="https://learn.microsoft.com/en-us/agent-framework/user-guide/model-context-protocol/using-mcp-tools?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/agent-framework/user-guide/model-context-protocol/using-mcp-tools?WT.mc_id=AI-MVP-5003172</a></li>
+<li>在 Azure 上用 MCP 构建 Agents：<a href="https://learn.microsoft.com/en-us/azure/developer/ai/intro-agents-mcp?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/developer/ai/intro-agents-mcp?WT.mc_id=AI-MVP-5003172</a></li>
+</ul>
+<p>完整 demo 仓库：https://github.com/olivierb123/hybrid-ai-mcp-localhealthcoach?WT.mc_id=AI-MVP-5003172</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/">https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/">使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（上）：隐私优先的本地&#43;云端协同</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/" title="为 Azure Voice Live 构建可用于生产的 SIP 网关" target="_blank">为 Azure Voice Live 构建可用于生产的 SIP 网关</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/" title="使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文" target="_blank">使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/" title="使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（上）：隐私优先的本地&#43;云端协同" target="_blank">使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（上）：隐私优先的本地&#43;云端协同</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/" title="介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队" target="_blank">介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-07-02-building-advanced-multi-agent-ai-workflows-by-leveraging-autogen-and-semantic-kernel/" title="构建高级多智能体 AI 工作流：利用 AutoGen 和 Semantic Kernel" target="_blank">构建高级多智能体 AI 工作流：利用 AutoGen 和 Semantic Kernel</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-30-ai-automation-in-azure-foundry-through-turnkey-mcp-integration-and-computer-use/" title="通过MCP一键集成和Computer Use Agent模型，实现Azure Foundry中的AI自动化" target="_blank">通过MCP一键集成和Computer Use Agent模型，实现Azure Foundry中的AI自动化</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-17-interpretation-of-the-microsoft-azure-openai-api-version-lifecycle/" title="微软 Azure OpenAI API 版本生命周期解读" target="_blank">微软 Azure OpenAI API 版本生命周期解读</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-12-agents-will-ultimately-be-personalized/" title="Agent 终将是个性化的" target="_blank">Agent 终将是个性化的</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-11-enhancing-ai-security-azure-prompt-shields-and-azure-ai-content-safety/" title="增强AI安全性：Azure Prompt Shields 与 Azure AI Content Safety" target="_blank">增强AI安全性：Azure Prompt Shields 与 Azure AI Content Safety</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-10-the-design-agent-first-identifies-the-deterministic-parts/" title="设计 Agent 先找出确定性的部分" target="_blank">设计 Agent 先找出确定性的部分</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (38)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,1409 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>为 Azure Voice Live 构建可用于生产的 SIP 网关 | Innovation with tech</title>
+    <meta property="og:title" content="为 Azure Voice Live 构建可用于生产的 SIP 网关 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-01-04T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-01-04T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="为 Azure Voice Live 构建可用于生产的 SIP 网关">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">为 Azure Voice Live 构建可用于生产的 SIP 网关</h1>
+        </header>
+        
+  <time datetime="2026-01-04T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年1月4日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <h1 id="为-azure-voice-live-构建可用于生产的-sip-网关">为 Azure Voice Live 构建可用于生产的 SIP 网关</h1>
+<p>原文链接：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/from-zero-to-hero-building-a-production-ready-sip-gateway-for-azure-voice-live/4473405?WT.mc_id=AI-MVP-5003172">https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/from-zero-to-hero-building-a-production-ready-sip-gateway-for-azure-voice-live/4473405?WT.mc_id=AI-MVP-5003172</a></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260105102739-236de1e20b0f4b64a8b41a799b4589a0.png">
+            <img class="mx-auto" alt="" src="/uploads/20260105102739-236de1e20b0f4b64a8b41a799b4589a0.png" />
+        </a>
+    </p>
+<p><em>题图来源：Microsoft Tech Community / Microsoft Foundry Blog</em></p>
+<h2 id="引言">引言</h2>
+<p>语音技术正在重塑人和机器的交互方式，让与 AI 的对话比以往更自然。随着 Voice Live API 的 public beta 发布，开发者拥有了构建低延迟、多模态语音体验的工具，在应用中可以做出很多新玩法。</p>
+<p>过去，想做一个语音机器人，往往需要把多个模型“串起来”：比如用 ASR（自动语音识别）模型（像 Whisper）做转写、再用文本模型做推理、最后用 TTS（文本转语音）模型生成语音输出。这条链路通常会带来明显延迟，并且在情感表达等细节上会有损失。</p>
+<p>Voice Live API 的关键变化在于：它把这些能力整合到一次 API 调用里。开发者通过建立持久的 WebSocket 连接，就能直接流式传输输入/输出音频，显著降低延迟并提升对话的自然度。同时，API 还支持 function calling，让语音机器人可以在对话过程中即时执行动作（例如下单、查询客户信息等）。</p>
+<p>这篇文章从第三方技术博主视角，梳理 Microsoft 团队给出的一个完整方案：一个基于 Python 的 SIP 网关，用来把传统电话/语音系统（SIP/RTP）与 Azure 的 Voice Live 实时对话 API（WebSocket）连接起来。借助这个网关，任何 SIP 端点（座机、软电话、甚至经由 PSTN 转入的来电）都可以与 AI 进行自然的语音对话。</p>
+<p>读完本文，你将理解：</p>
+<ul>
+<li>生产级 SIP-to-WebSocket 网关的整体架构设计</li>
+<li>音频转码与重采样策略（保证媒体格式无缝转换）</li>
+<li>真实部署拓扑：云上电话系统与本地企业系统（如 Avaya、Genesys）对接</li>
+<li>本地测试与企业生产环境的逐步配置指南</li>
+</ul>
+<h2 id="架构概览">架构概览</h2>
+<h3 id="高层设计">高层设计</h3>
+<p><strong>Voice Live API 的工作方式</strong></p>
+<p>传统语音助手往往需要链路式组合：ASR（转写）+ 文本模型（推理）+ TTS（合成）。多步骤不仅增加延迟，也更容易丢失对话的“情绪/语气”细节。</p>
+<p>Voice Live API 通过一个持续的 WebSocket 连接把这些能力合在一起：可以实时流式输入音频并得到音频输出，从而显著降低端到端延迟，并增强对话的自然感。此外，function calling 让语音机器人可以在对话中主动触发业务动作。</p>
+<p>本文的网关在 SIP/RTP（电话语音世界）与 Azure Voice Live 的 WebSocket 实时 API 之间充当 <strong>双向媒体代理（bidirectional media proxy）</strong>：既翻译信令协议，也转换音频格式，从而让传统 VoIP 基础设施与现代 AI 对话代理实现“无感集成”。</p>
+<h3 id="关键设计原则">关键设计原则</h3>
+<ol>
+<li><strong>异步优先（Asynchronous-First）</strong>：基于 asyncio 构建非阻塞 I/O，追求低延迟与高并发潜力</li>
+<li><strong>关注点分离（Separation of Concerns）</strong>：SIP、媒体、Voice Live 集成分层模块化</li>
+<li><strong>生产级错误处理</strong>：音频队列下溢时，优雅降级（注入静音帧）而不是抖动/掉话</li>
+<li><strong>结构化日志</strong>：使用 structlog 输出可机器解析、带上下文的日志，便于可观测性</li>
+<li><strong>类型安全</strong>：pydantic 校验配置 + mypy 静态检查</li>
+</ol>
+<h2 id="核心组件">核心组件</h2>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260105102742-852d19aa680e4a6b8785dcd18d003809.png">
+            <img class="mx-auto" alt="" src="/uploads/20260105102742-852d19aa680e4a6b8785dcd18d003809.png" />
+        </a>
+    </p>
+<p>SBC（会话边界控制器）的关键作用：</p>
+<ul>
+<li>终止运营商侧 SIP，并向 Azure SIP/RTC 端点进行互通</li>
+<li>规范化 SIP Header、移除不支持的选项、并做编解码映射</li>
+<li>提供安全能力：TLS 信令、SRTP 媒体、拓扑隐藏、ACL</li>
+<li>可选做媒体锚定（media anchoring）：用于合规录音、QoS 平滑、合法监听等</li>
+</ul>
+<h3 id="项目结构">项目结构</h3>
+<pre tabindex="0"><code>src/voicelive_sip_gateway/
+├── config/
+│   ├── __init__.py
+│   └── settings.py          # Pydantic-based configuration
+├── gateway/
+│   └── main.py              # Application entry point &amp; lifecycle
+├── logging/
+│   ├── __init__.py
+│   └── setup.py             # Structlog configuration
+├── media/
+│   ├── __init__.py
+│   ├── stream_bridge.py     # Bidirectional audio queue manager
+│   └── transcode.py         # μ-law ↔ PCM16 + resampling
+├── sip/
+│   ├── __init__.py
+│   ├── agent.py             # pjsua2 wrapper &amp; call handling
+│   ├── rtp.py               # RTP utilities
+│   └── sdp.py               # SDP parsing/generation
+└── voicelive/
+    ├── __init__.py
+    ├── client.py            # Azure Voice Live SDK wrapper
+    └── events.py            # Event type mapping
+</code></pre><h3 id="呼叫流程call-flow">呼叫流程（Call Flow）</h3>
+<ol>
+<li>客户拨打你的号码</li>
+<li>Audiocodes SBC 从 PSTN 收到呼叫，并向 Asterisk 转发 SIP INVITE</li>
+<li>Asterisk 的路由逻辑把 INVITE 转到 <code>voicelive-bot@gateway.example.com</code></li>
+<li>Voice Live Gateway 以 SIP 终端方式向 Asterisk 注册并接听</li>
+<li>RTP 音频流：Caller ↔ SBC ↔ Asterisk ↔ Gateway ↔ Azure</li>
+</ol>
+<h2 id="音频流水线从-μ-law-到-pcm16">音频流水线：从 μ-law 到 PCM16</h2>
+<h3 id="挑战">挑战</h3>
+<p>传统电话语音常用 <strong>G.711 μ-law</strong> 编码，采样率 <strong>8 kHz</strong>（带宽效率高）。而 Azure Voice Live 期望的是 <strong>PCM16（16-bit 线性 PCM）</strong>，采样率 <strong>24 kHz</strong>。因此网关需要在实时链路中完成：</p>
+<ul>
+<li>编解码转换（μ-law ↔ PCM16）</li>
+<li>采样率转换（8 kHz ↔ 24 kHz）</li>
+</ul>
+<p>并且要尽可能低延迟。</p>
+<h3 id="音频流示意">音频流示意</h3>
+<pre tabindex="0"><code>Caller (SIP)                    Gateway                     Azure Voice Live
+─────────────                   ───────                     ────────────────
+    │                              │                               │
+    │ RTP: μ-law 8kHz              │                               │
+    ├──────────────────────────────►                               │
+    │                              │                               │
+    │                         ┌────▼────┐                          │
+    │                         │ pjsua2  │ (decodes to PCM16 8kHz)  │
+    │                         └────┬────┘                          │
+    │                              │                               │
+    │                         ┌────▼────────┐                      │
+    │                         │ Resample    │ (8kHz → 24kHz)       │
+    │                         │ PCM16       │                      │
+    │                         └────┬────────┘                      │
+    │                              │                               │
+    │                              ├───────────────────────────────►
+    │                              │   WebSocket: PCM16 24kHz      │
+    │                              │                               │
+    │                              │◄──────────────────────────────┤
+    │                              │   Response: PCM16 24kHz       │
+    │                              │                               │
+    │                         ┌────▼────────┐                      │
+    │                         │ Resample    │ (24kHz → 8kHz)       │
+    │                         │ PCM16       │                      │
+    │                         └────┬────────┘                      │
+    │                              │                               │
+    │                         ┌────▼────┐                          │
+    │◄────────────────────────┤ pjsua2  │ (encodes to μ-law)       │
+    │  RTP: μ-law 8kHz        └─────────┘                          │
+</code></pre><p>下面挑几个关键代码点，帮助理解端到端的音频流。</p>
+<h3 id="音频流桥接stream_bridgepy">音频流桥接：stream_bridge.py</h3>
+<p><code>AudioStreamBridge</code> 通过 asyncio 队列来编排双向音频流：</p>
+<pre tabindex="0"><code>class AudioStreamBridge:
+    &#34;&#34;&#34;Bidirectional audio pump between SIP (μ-law) and Voice Live (PCM16 24kHz).&#34;&#34;&#34;
+
+    VOICELIVE_SAMPLE_RATE = 24000
+    SIP_SAMPLE_RATE = 8000
+
+    def __init__(self, settings: Settings):
+        self._inbound_queue: asyncio.Queue[bytes] = asyncio.Queue()   # SIP → Voice Live
+        self._outbound_queue: asyncio.Queue[bytes] = asyncio.Queue()  # Voice Live → SIP
+</code></pre><p><strong>入站链路（Caller → AI）</strong>：</p>
+<pre tabindex="0"><code>async def _flush(self) -&gt; None:
+    &#34;&#34;&#34;Process inbound audio: PCM16 8kHz from SIP → PCM16 24kHz to Voice Live.&#34;&#34;&#34;
+    while True:
+        pcm16_8k = await self._inbound_queue.get()
+        pcm16_24k = resample_pcm16(pcm16_8k, self.SIP_SAMPLE_RATE, self.VOICELIVE_SAMPLE_RATE)
+        if self._voicelive_client:
+            await self._voicelive_client.send_audio_chunk(pcm16_24k)
+</code></pre><p><strong>出站链路（AI → Caller）</strong>：</p>
+<pre tabindex="0"><code>async def emit_audio_to_sip(self, pcm_chunk: bytes) -&gt; None:
+    &#34;&#34;&#34;Resample Voice Live audio down to 8 kHz PCM frames for SIP playback.&#34;&#34;&#34;
+    pcm_8k = resample_pcm16(pcm_chunk, self.VOICELIVE_SAMPLE_RATE, self.SIP_SAMPLE_RATE)
+
+    # Split into 20ms frames (160 samples @ 8kHz = 320 bytes)
+    frame_size_bytes = 320
+    for offset in range(0, len(pcm_8k), frame_size_bytes):
+        frame = pcm_8k[offset : offset + frame_size_bytes]
+        if frame:
+            await self._outbound_queue.put(frame)
+</code></pre><p><strong>帧时序（Frame Timing）</strong>：VoIP 常用 20ms 帧（ptime=20）。在 8 kHz 下：8000 samples/sec × 0.020 sec = 160 samples = 320 bytes（PCM16）。</p>
+<h2 id="使用-pjsua2-处理-sip-信令">使用 pjsua2 处理 SIP 信令</h2>
+<h3 id="为什么选-pjsua2">为什么选 pjsua2？</h3>
+<p><code>pjproject</code> 基本算是 SIP/RTP 的“工业标准”，很多商业产品（包括 Asterisk）都在用。<code>pjsua2</code> 提供的 API 具备：</p>
+<ul>
+<li>完整 SIP 协议栈（INVITE、ACK、BYE、REGISTER 等）</li>
+<li>RTP/RTCP 媒体处理</li>
+<li>内置多种编解码（G.711、G.722、Opus 等）</li>
+<li>NAT 穿透（STUN/TURN/ICE）</li>
+<li>线程安全的 C++ API + Python bindings</li>
+</ul>
+<h3 id="自定义媒体端口custom-media-ports">自定义媒体端口（Custom Media Ports）</h3>
+<p>为了把 pjsua2 的媒体管线与 asyncio 队列桥接起来，需要实现自定义的 <code>AudioMediaPort</code> 子类。</p>
+<h4 id="接收来电音频caller--voice-live">接收来电音频（Caller → Voice Live）</h4>
+<pre tabindex="0"><code>def onFrameReceived(self, frame: pj.MediaFrame) -&gt; None:
+    &#34;&#34;&#34;Called by pjsua when it receives audio from caller (to Voice Live).&#34;&#34;&#34;
+    if self._direction == &#34;to_voicelive&#34; and self._loop:
+        if frame.type == pj.PJMEDIA_FRAME_TYPE_AUDIO and frame.buf:
+            try:
+                asyncio.run_coroutine_threadsafe(
+                    self._bridge.enqueue_sip_audio(bytes(frame.buf)),
+                    self._loop
+                )
+            except Exception as e:
+                self._logger.warning(&#34;media.enqueue_failed&#34;, error=str(e))
+</code></pre><p><strong>线程模型注意点</strong>：pjsua2 的事件循环运行在专用线程里，示例用 <code>asyncio.run_coroutine_threadsafe()</code> 把音频数据安全地投递回主 asyncio loop。</p>
+<h4 id="向来电方发送音频voice-live--caller">向来电方发送音频（Voice Live → Caller）</h4>
+<pre tabindex="0"><code>def onFrameRequested(self, frame: pj.MediaFrame) -&gt; None:
+    &#34;&#34;&#34;Called by pjsua when it needs audio to send to caller (from Voice Live).&#34;&#34;&#34;
+    if self._direction == &#34;from_voicelive&#34; and self._loop:
+        try:
+            future = asyncio.run_coroutine_threadsafe(
+                self._bridge.dequeue_sip_audio_nonblocking(),
+                self._loop
+            )
+            pcm_data = future.result(timeout=0.050)
+
+            # Ensure exactly 320 bytes (160 samples @ 8kHz)
+            if len(pcm_data) != 320:
+                pcm_data = (pcm_data + b&#39;\x00&#39; * 320)[:320]
+
+            frame.type = pj.PJMEDIA_FRAME_TYPE_AUDIO
+            frame.buf = pj.ByteVector(pcm_data)
+            frame.size = len(pcm_data)
+        except Exception:
+            # Return silence on timeout/error
+            frame.type = pj.PJMEDIA_FRAME_TYPE_AUDIO
+            frame.buf = pj.ByteVector(b&#39;\x00&#39; * 320)
+            frame.size = 320
+</code></pre><p><strong>优雅降级（Graceful Degradation）</strong>：如果出站队列为空（AI 还没生成音频），就注入静音帧，避免 RTP 抖动/断续。</p>
+<h3 id="呼叫状态管理call-state-management">呼叫状态管理（Call State Management）</h3>
+<pre tabindex="0"><code>class GatewayCall(pj.Call):
+    &#34;&#34;&#34;Handles SIP call lifecycle and connects media bridge.&#34;&#34;&#34;
+
+    def onCallState(self, prm: pj.OnCallStateParam) -&gt; None:
+        ci = self.getInfo()
+        self._logger.info(&#34;sip.call_state&#34;, remote_uri=ci.remoteUri, state=ci.stateText)
+
+        if ci.state == pj.PJSIP_INV_STATE_DISCONNECTED:
+            self._cleanup()
+            self._account.current_call = None
+
+    def onCallMediaState(self, prm: pj.OnCallMediaStateParam) -&gt; None:
+        ci = self.getInfo()
+        for mi in ci.media:
+            if mi.type == pj.PJMEDIA_TYPE_AUDIO and mi.status == pj.PJSUA_CALL_MEDIA_ACTIVE:
+                media = self.getMedia(mi.index)
+                aud_media = pj.AudioMedia.typecastFromMedia(media)
+
+                # Create bidirectional media bridge
+                self._to_voicelive_port = CustomAudioMediaPort(self._bridge, &#34;to_voicelive&#34;, self._logger)
+                self._from_voicelive_port = CustomAudioMediaPort(self._bridge, &#34;from_voicelive&#34;, self._logger)
+
+                # Connect: Caller → to_voicelive_port → Voice Live
+                aud_media.startTransmit(self._to_voicelive_port)
+                # Connect: Voice Live → from_voicelive_port → Caller
+                self._from_voicelive_port.startTransmit(aud_media)
+
+                # Start AI conversation with greeting
+                asyncio.run_coroutine_threadsafe(
+                    self._voicelive_client.request_response(interrupt=False),
+                    self._loop
+                )
+</code></pre><h3 id="账户注册account-registration">账户注册（Account Registration）</h3>
+<p>在与 Asterisk 组合的生产部署中，网关需要像标准 SIP 终端一样向 PBX 注册：</p>
+<pre tabindex="0"><code>class SipAgent:
+    def _run_pjsua_thread(self, loop: asyncio.AbstractEventLoop) -&gt; None:
+        self._ep = pj.Endpoint()
+        self._ep.libCreate()
+        self._ep.libInit(ep_cfg)
+        self._ep.transportCreate(pj.PJSIP_TRANSPORT_UDP, transport_cfg)
+        self._ep.libStart()
+
+        self._account = GatewayAccount(self._logger, self._bridge, self._voicelive_client, loop)
+
+        if self._settings.sip.register_with_server and self._settings.sip.server:
+            acc_cfg = pj.AccountConfig()
+            acc_cfg.idUri = f&#34;sip:{self._settings.sip.user}@{self._settings.sip.server}&#34;
+            acc_cfg.regConfig.registrarUri = f&#34;sip:{self._settings.sip.server}&#34;
+
+            # Digest authentication credentials
+            cred = pj.AuthCredInfo()
+            cred.scheme = &#34;digest&#34;
+            cred.realm = self._settings.sip.auth_realm or &#34;*&#34;
+            cred.username = self._settings.sip.auth_user
+            cred.data = self._settings.sip.auth_password
+            cred.dataType = pj.PJSIP_CRED_DATA_PLAIN_PASSWD
+            acc_cfg.sipConfig.authCreds.append(cred)
+
+            self._account.create(acc_cfg)
+</code></pre><h2 id="voice-live-集成">Voice Live 集成</h2>
+<h3 id="azure-voice-live-概览">Azure Voice Live 概览</h3>
+<p>Azure Voice Live 是一个 <strong>实时、双向的对话式 AI 服务</strong>，把下面能力整合到一起：</p>
+<ul>
+<li><strong>GPT-4o Realtime Preview</strong>：面向口语对话优化的超低延迟语言模型</li>
+<li><strong>流式语音识别</strong>：连续转写，并提供词级时间戳</li>
+<li><strong>神经 TTS</strong>：更自然的合成声音，并具备情感表达</li>
+<li><strong>服务端 VAD</strong>：通过语音活动检测（VAD）做自动轮次切换，无需额外提示词</li>
+</ul>
+<h3 id="客户端实现clientpy">客户端实现：client.py</h3>
+<pre tabindex="0"><code>class VoiceLiveClient:
+    &#34;&#34;&#34;Manages lifecycle of an Azure Voice Live WebSocket connection.&#34;&#34;&#34;
+
+    async def connect(self) -&gt; None:
+        if self._settings.azure.api_key:
+            credential = AzureKeyCredential(self._settings.azure.api_key)
+        else:
+            # Use AAD authentication (Managed Identity or Service Principal)
+            self._aad_credential = DefaultAzureCredential()
+            credential = await self._aad_credential.__aenter__()
+
+        self._connection_cm = connect(
+            endpoint=self._settings.azure.endpoint,
+            credential=credential,
+            model=self._settings.azure.model,
+        )
+        self._connection = await self._connection_cm.__aenter__()
+
+        # Configure session parameters
+        session = RequestSession(
+            model=&#34;gpt-4o&#34;,
+            modalities=[Modality.TEXT, Modality.AUDIO],
+            instructions=self._settings.azure.instructions,
+            input_audio_format=InputAudioFormat.PCM16,
+            output_audio_format=OutputAudioFormat.PCM16,
+            input_audio_transcription=AudioInputTranscriptionOptions(model=&#34;azure-speech&#34;),
+            turn_detection=ServerVad(
+                threshold=0.5,
+                prefix_padding_ms=200,
+                silence_duration_ms=400
+            ),
+            voice=AzureStandardVoice(name=self._settings.azure.voice)
+        )
+        await self._connection.session.update(session=session)
+</code></pre><p><strong>关键配置点</strong>：</p>
+<ul>
+<li><code>turn_detection=ServerVad(...)</code>：由 Azure 判断用户何时停止说话，并自动触发 AI 生成响应；无需唤醒词或显式提示</li>
+<li><code>prefix_padding_ms=200</code>：保留语音检测前 200ms 音频，避免截断过硬</li>
+<li><code>silence_duration_ms=400</code>：检测到 400ms 静音后认定轮次结束</li>
+</ul>
+<p><strong>流式响应音频</strong>：AI 生成的语音会以 <code>RESPONSE_AUDIO_DELTA</code> 事件分片到达（base64 编码的 PCM16 chunks）。网关解码后立即通过音频桥接下发，实现低延迟播放。</p>
+<h2 id="生产部署audiocodes--asterisk">生产部署：Audiocodes + Asterisk</h2>
+<h3 id="为什么选择这种拓扑">为什么选择这种拓扑？</h3>
+<table>
+  <thead>
+      <tr>
+          <th>组件</th>
+          <th>角色</th>
+          <th>收益</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Audiocodes SBC</strong></td>
+          <td>会话边界控制器</td>
+          <td>- NAT/防火墙穿透 - 安全（DOS 防护、加密） - 协议规范化 - 拓扑隐藏 - 媒体锚定（可选转码）</td>
+      </tr>
+      <tr>
+          <td><strong>Asterisk PBX</strong></td>
+          <td>SIP 服务器</td>
+          <td>- 呼叫路由与 IVR - 用户目录与鉴权 - 转接/保持/会议等高级呼叫能力 - CDR/分析 - 与企业电话系统集成</td>
+      </tr>
+      <tr>
+          <td><strong>Voice Live Gateway</strong></td>
+          <td>AI 对话端点</td>
+          <td>- 实时 AI 对话 - 自然语言理解 - 动态响应生成 - 多语言支持</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="网络架构">网络架构</h3>
+<pre tabindex="0"><code>                    Internet
+                       │
+                       │ SIP/RTP
+                       ▼
+         ┌─────────────────────────┐
+         │   Audiocodes SBC        │
+         │   Public IP: X.X.X.X    │
+         │   Ports: 5060, 10000+   │
+         └────────────┬────────────┘
+                      │ Private Network
+         ┌────────────▼────────────┐
+         │   Asterisk PBX          │
+         │   Internal: 10.0.1.10   │
+         │   Port: 5060            │
+         └────────────┬────────────┘
+                      │
+         ┌────────────▼────────────┐
+         │  Voice Live Gateway     │
+         │  Internal: 10.0.1.20    │
+         │  Port: 5060             │
+         │  ┌───────────────────┐  │
+         │  │ Outbound HTTPS    │  │
+         │  │ to Azure          │  │
+         │  └─────────┬─────────┘  │
+         └────────────┼────────────┘
+                      │ Internet (HTTPS/WSS)
+                      ▼
+         ┌────────────────────────┐
+         │  Azure Voice Live API  │
+         │  *.cognitiveservices   │
+         └────────────────────────┘
+</code></pre><h3 id="audiocodes-sbc-配置">Audiocodes SBC 配置</h3>
+<h4 id="1-到-asterisk-的-sip-trunkip-group">1. 到 Asterisk 的 SIP Trunk（IP Group）</h4>
+<pre tabindex="0"><code>IP Group Settings:
+- Name: Asterisk-Trunk
+- Type: Server
+- SIP Group Name: asterisk.internal.example.com
+- Media Realm: Private
+- Proxy Set: Asterisk-ProxySet
+- Classification: Classify by Proxy Set
+- SBC Operation Mode: SBC-Only
+- Topology Location: Internal Network
+</code></pre><h4 id="2-asterisk-的-proxy-set">2. Asterisk 的 Proxy Set</h4>
+<pre tabindex="0"><code>Proxy Set Name: Asterisk-ProxySet
+Proxy Address: 10.0.1.10:5060
+Transport Type: UDP
+Load Balancing Method: Parking Lot
+</code></pre><h4 id="3-ip-to-ip-路由规则">3. IP-to-IP 路由规则</h4>
+<pre tabindex="0"><code>Rule Name: PSTN-to-Gateway
+Source IP Group: PSTN-Trunk
+Destination IP Group: Asterisk-Trunk
+Call Trigger: Any
+Destination Prefix Manipulation: None
+Message Manipulation: None
+</code></pre><h4 id="4-媒体设置">4. 媒体设置</h4>
+<pre tabindex="0"><code>Media Realm: Private
+IPv4 Interface: LAN1 (10.0.1.1)
+Media Security: None (or SRTP if required)
+Codec Preference Order: G711Ulaw, G711Alaw
+Transcoding: Disabled (pass-through)
+RTP Port Range: 10000-20000
+</code></pre><h3 id="asterisk-配置">Asterisk 配置</h3>
+<h4 id="etcasteriskpjsipconf">/etc/asterisk/pjsip.conf</h4>
+<pre tabindex="0"><code>;=====================================
+; Transport Configuration
+;=====================================
+[transport-udp]
+type=transport
+protocol=udp
+bind=0.0.0.0:5060
+local_net=10.0.0.0/8
+
+;=====================================
+; Voice Live Gateway Endpoint
+;=====================================
+[voicelive-gateway]
+type=endpoint
+context=voicelive-routing
+aors=voicelive-gateway
+auth=voicelive-auth
+disallow=all
+allow=ulaw
+allow=alaw
+direct_media=no
+force_rport=yes
+rewrite_contact=yes
+rtp_symmetric=yes
+ice_support=no
+
+[voicelive-gateway]
+type=aor
+contact=sip:10.0.1.20:5060
+qualify_frequency=30
+
+[voicelive-auth]
+type=auth
+auth_type=userpass
+username=
+password=
+realm=sip.example.com
+
+;=====================================
+; SBC Trunk (for inbound calls)
+;=====================================
+[audiocodes-sbc]
+type=endpoint
+context=from-sbc
+aors=audiocodes-sbc
+disallow=all
+allow=ulaw
+allow=alaw
+
+[audiocodes-sbc]
+type=aor
+contact=sip:10.0.1.1:5060
+</code></pre><h4 id="etcasteriskextensionsconf">/etc/asterisk/extensions.conf</h4>
+<pre tabindex="0"><code>;=====================================
+; Incoming calls from SBC
+;=====================================
+[from-sbc]
+; Example: Route calls to 800-AI-VOICE to the gateway
+exten =&gt; 8002486423,1,NoOp(Routing to Voice Live Gateway)
+ same =&gt; n,Set(CALLERID(name)=AI Assistant)
+ same =&gt; n,Dial(PJSIP/voicelive-bot@voicelive-gateway,30)
+ same =&gt; n,Hangup()
+
+; Default handler for unmatched numbers
+exten =&gt; _X.,1,NoOp(Unrouted call: ${EXTEN})
+ same =&gt; n,Playback(invalid)
+ same =&gt; n,Hangup()
+
+;=====================================
+; Voice Live Gateway routing context
+;=====================================
+[voicelive-routing]
+exten =&gt; _X.,1,NoOp(Call from gateway: ${CALLERID(num)})
+ same =&gt; n,Hangup()
+</code></pre><h3 id="网关配置">网关配置</h3>
+<p>创建 <code>/opt/voicelive-gateway/.env</code>：</p>
+<pre tabindex="0"><code>#=====================================
+# SIP Configuration
+#=====================================
+SIP_SERVER=asterisk.internal.example.com
+SIP_PORT=5060
+SIP_USER=voicelive-bot@sip.example.com
+AUTH_USER=voicelive-bot
+AUTH_REALM=sip.example.com
+AUTH_PASSWORD=
+REGISTER_WITH_SIP_SERVER=true
+DISPLAY_NAME=Voice Live Bot
+
+#=====================================
+# Network Configuration
+#=====================================
+SIP_LOCAL_ADDRESS=0.0.0.0
+SIP_VIA_ADDR=10.0.1.20
+MEDIA_ADDRESS=10.0.1.20
+MEDIA_PORT=10000
+MEDIA_PORT_COUNT=1000
+
+#=====================================
+# Azure Voice Live
+#=====================================
+AZURE_VOICELIVE_ENDPOINT=wss://xxxxxx.cognitiveservices.azure.com/openai/realtime
+AZURE_VOICELIVE_API_KEY=
+VOICE_LIVE_MODEL=gpt-4o
+VOICE_LIVE_VOICE=en-US-AvaNeural
+VOICE_LIVE_INSTRUCTIONS=You are a helpful customer service assistant for Contoso Inc. Answer questions about account balances, order status, and general inquiries. Be friendly and concise.
+VOICE_LIVE_MAX_RESPONSE_OUTPUT_TOKENS=200
+VOICE_LIVE_PROACTIVE_GREETING_ENABLED=true
+VOICE_LIVE_PROACTIVE_GREETING=Thank you for calling Contoso customer service. How can I help you today?
+
+#=====================================
+# Logging
+#=====================================
+LOG_LEVEL=INFO
+VOICE_LIVE_LOG_FILE=/var/log/voicelive-gateway/gateway.log
+</code></pre><h3 id="systemd-服务linux">Systemd 服务（Linux）</h3>
+<p>创建 <code>/etc/systemd/system/voicelive-gateway.service</code>：</p>
+<pre tabindex="0"><code>[Unit]
+Description=Voice Live SIP Gateway
+After=network.target
+
+[Service]
+Type=simple
+User=voicelive
+Group=voicelive
+WorkingDirectory=/opt/voicelive-gateway
+EnvironmentFile=/opt/voicelive-gateway/.env
+ExecStart=/opt/voicelive-gateway/.venv/bin/python3 -m voicelive_sip_gateway.gateway.main
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/var/log/voicelive-gateway
+
+[Install]
+WantedBy=multi-user.target
+</code></pre><p>启用并启动：</p>
+<p>sudo systemctl daemon-reload sudo systemctl enable voicelive-gateway sudo systemctl start voicelive-gateway sudo systemctl status voicelive-gateway</p>
+<h2 id="配置指南">配置指南</h2>
+<h3 id="环境变量参考">环境变量参考</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Variable</th>
+          <th>Description</th>
+          <th>Example</th>
+          <th>Required</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Azure Voice Live</strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>AZURE_VOICELIVE_ENDPOINT</td>
+          <td>WebSocket endpoint URL</td>
+          <td>wss://myresource.cognitiveservices.azure.com/openai/realtime</td>
+          <td>✅</td>
+      </tr>
+      <tr>
+          <td>AZURE_VOICELIVE_API_KEY</td>
+          <td>API key (or use AAD)</td>
+          <td>abc123&hellip;</td>
+          <td>✅*</td>
+      </tr>
+      <tr>
+          <td>VOICE_LIVE_MODEL</td>
+          <td>Model identifier</td>
+          <td>gpt-4o</td>
+          <td>❌ (default: gpt-4o)</td>
+      </tr>
+      <tr>
+          <td>VOICE_LIVE_VOICE</td>
+          <td>TTS voice name</td>
+          <td>en-US-AvaNeural</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td>VOICE_LIVE_INSTRUCTIONS</td>
+          <td>System prompt</td>
+          <td>You are a helpful assistant</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td>VOICE_LIVE_MAX_RESPONSE_OUTPUT_TOKENS</td>
+          <td>Max tokens per response</td>
+          <td>200</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td>VOICE_LIVE_PROACTIVE_GREETING_ENABLED</td>
+          <td>Enable greeting on connect</td>
+          <td>true</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td>VOICE_LIVE_PROACTIVE_GREETING</td>
+          <td>Greeting message</td>
+          <td>Hello! How can I help?</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td><strong>SIP Configuration</strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>SIP_SERVER</td>
+          <td>Asterisk/PBX hostname</td>
+          <td>asterisk.example.com</td>
+          <td>✅**</td>
+      </tr>
+      <tr>
+          <td>SIP_PORT</td>
+          <td>SIP port</td>
+          <td>5060</td>
+          <td>❌ (default: 5060)</td>
+      </tr>
+      <tr>
+          <td>SIP_USER</td>
+          <td>SIP user URI</td>
+          <td><a href="mailto:bot@sip.example.com">bot@sip.example.com</a></td>
+          <td>✅**</td>
+      </tr>
+      <tr>
+          <td>AUTH_USER</td>
+          <td>Auth username</td>
+          <td>bot</td>
+          <td>✅**</td>
+      </tr>
+      <tr>
+          <td>AUTH_REALM</td>
+          <td>Auth realm</td>
+          <td>sip.example.com</td>
+          <td>✅**</td>
+      </tr>
+      <tr>
+          <td>AUTH_PASSWORD</td>
+          <td>Auth password</td>
+          <td>securepass</td>
+          <td>✅**</td>
+      </tr>
+      <tr>
+          <td>REGISTER_WITH_SIP_SERVER</td>
+          <td>Enable registration</td>
+          <td>true</td>
+          <td>❌ (default: false)</td>
+      </tr>
+      <tr>
+          <td>DISPLAY_NAME</td>
+          <td>Caller ID name</td>
+          <td>Voice Live Bot</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td><strong>Network Settings</strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>SIP_LOCAL_ADDRESS</td>
+          <td>Local bind address</td>
+          <td>0.0.0.0</td>
+          <td>❌ (default: 127.0.0.1)</td>
+      </tr>
+      <tr>
+          <td>SIP_VIA_ADDR</td>
+          <td>Via header IP</td>
+          <td>10.0.1.20</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td>MEDIA_ADDRESS</td>
+          <td>RTP bind address</td>
+          <td>10.0.1.20</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td>MEDIA_PORT</td>
+          <td>RTP port range start</td>
+          <td>10000</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td>MEDIA_PORT_COUNT</td>
+          <td>RTP port range count</td>
+          <td>1000</td>
+          <td>❌</td>
+      </tr>
+      <tr>
+          <td><strong>Logging</strong></td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td>LOG_LEVEL</td>
+          <td>Log verbosity</td>
+          <td>INFO</td>
+          <td>❌ (default: INFO)</td>
+      </tr>
+      <tr>
+          <td>VOICE_LIVE_LOG_FILE</td>
+          <td>Log file path</td>
+          <td>logs/gateway.log</td>
+          <td>❌</td>
+      </tr>
+  </tbody>
+</table>
+<p>*Either <code>AZURE_VOICELIVE_API_KEY</code> or AAD environment variables (<code>AZURE_CLIENT_ID</code>, <code>AZURE_TENANT_ID</code>, <code>AZURE_CLIENT_SECRET</code>) are required.</p>
+<p>**Required only when <code>REGISTER_WITH_SIP_SERVER=true</code>.</p>
+<h2 id="本地测试搭建local-testing-setup">本地测试搭建（Local Testing Setup）</h2>
+<p>如果你想不依赖 SBC/PBX 基础设施进行快速验证，可以按下面步骤做本地测试。</p>
+<h3 id="前置条件prerequisites">前置条件（Prerequisites）</h3>
+<ol>
+<li><strong>安装 pjproject 及 Python bindings</strong>：</li>
+</ol>
+<pre tabindex="0"><code>
+git clone https://github.com/pjsip/pjproject.git?WT.mc_id=AI-MVP-5003172 cd pjproject ./configure CFLAGS=&#34;-O2 -DNDEBUG&#34; &amp;&amp; make dep &amp;&amp; make cd pjsip-apps/src/swig make export PYTHONPATH=$PWD:$PYTHONPATH
+</code></pre><ol>
+<li><strong>安装网关依赖</strong>：</li>
+</ol>
+<pre tabindex="0"><code>cd /path/to/azure-voicelive-sip-python python3 -m venv .venv source .venv/bin/activate pip install -e .[dev]
+</code></pre><ol>
+<li><strong>安装 PortAudio</strong>（可选：用于本机扬声器播放）：</li>
+</ol>
+<pre tabindex="0"><code># macOS brew install portaudio # Ubuntu/Debian sudo apt-get install portaudio19-dev
+</code></pre><h3 id="本地配置">本地配置</h3>
+<p>创建 <code>.env</code>：</p>
+<pre tabindex="0"><code># No SIP server - direct connection
+REGISTER_WITH_SIP_SERVER=false
+SIP_LOCAL_ADDRESS=127.0.0.1
+SIP_VIA_ADDR=127.0.0.1
+MEDIA_ADDRESS=127.0.0.1
+
+# Azure Voice Live
+AZURE_VOICELIVE_ENDPOINT=wss://your-resource.cognitiveservices.azure.com/openai/realtime
+AZURE_VOICELIVE_API_KEY=your-api-key
+
+# Logging
+LOG_LEVEL=DEBUG
+VOICE_LIVE_LOG_FILE=logs/gateway.log
+</code></pre><h3 id="运行网关">运行网关</h3>
+<pre tabindex="0"><code># Load environment variables set -a &amp;&amp; source .env &amp;&amp; set +a # Start gateway make run # Or manually: PYTHONPATH=src python3 -m voicelive_sip_gateway.gateway.main
+</code></pre><p>期望输出（示例）：</p>
+<p>2025-11-27 10:15:32 [info ] voicelive.connected endpoint=wss://&hellip; 2025-11-27 10:15:32 [info ] sip.transport_created port=5060 2025-11-27 10:15:32 [info ] sip.agent_started address=127.0.0.1 port=5060</p>
+<h3 id="连接-sip-软电话softphone">连接 SIP 软电话（Softphone）</h3>
+<p>可用的免费 SIP 客户端：</p>
+<ul>
+<li><strong>Windows/macOS</strong>: <a href="https://www.microsip.org/?WT.mc_id=AI-MVP-5003172">MicroSIP</a>、<a href="https://www.zoiper.com/?WT.mc_id=AI-MVP-5003172">Zoiper</a></li>
+<li><strong>Linux</strong>: <a href="https://www.linphone.org/?WT.mc_id=AI-MVP-5003172">Linphone</a></li>
+<li><strong>iOS/Android</strong>: Linphone、Zoiper</li>
+</ul>
+<p>配置软电话（示例）：</p>
+<p>Account Settings: - Username: test - Domain: 127.0.0.1 - Port: 5060 - Transport: UDP - Registration: Disabled (direct connection) To call: sip:test@127.0.0.1:5060</p>
+<p><strong>预期呼叫流程</strong>：</p>
+<ol>
+<li>Dial <code>sip:test@127.0.0.1:5060</code></li>
+<li>Gateway answers with 200 OK</li>
+<li>Hear AI greeting: &ldquo;Thank you for calling. How can I help you today?&rdquo;</li>
+<li>Speak your question</li>
+<li>Hear AI-generated response</li>
+</ol>
+<h3 id="延迟预算latency-budget">延迟预算（Latency Budget）</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Component</th>
+          <th>Typical Latency</th>
+          <th>Notes</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Network (caller → gateway)</strong></td>
+          <td>10-50ms</td>
+          <td>Depends on ISP, distance</td>
+      </tr>
+      <tr>
+          <td><strong>SIP/RTP processing</strong></td>
+          <td>&lt;5ms</td>
+          <td>pjproject is highly optimized</td>
+      </tr>
+      <tr>
+          <td><strong>Audio resampling</strong></td>
+          <td>&lt;2ms</td>
+          <td>scipy.resample_poly is efficient</td>
+      </tr>
+      <tr>
+          <td><strong>WebSocket (gateway → Azure)</strong></td>
+          <td>20-80ms</td>
+          <td>Depends on region, network</td>
+      </tr>
+      <tr>
+          <td><strong>Voice Live processing</strong></td>
+          <td>200-500ms</td>
+          <td>STT + LLM inference + TTS</td>
+      </tr>
+      <tr>
+          <td><strong>Total round-trip</strong></td>
+          <td><strong>250-650ms</strong></td>
+          <td>Perceived as near real-time</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>优化建议</strong>：</p>
+<ol>
+<li>尽量把网关部署在与 Voice Live 资源相同的 Azure 区域</li>
+<li>在 Audiocodes SBC 上启用 expedited routing（同时关闭不必要的 media anchoring）</li>
+<li>尽量减少 SIP hop：简单场景可直接 SBC → Gateway（跳过 Asterisk）</li>
+<li>监控队列深度：当 <code>_inbound_queue</code> 或 <code>_outbound_queue</code> 超过 10 个 item 时输出警告</li>
+</ol>
+<h3 id="关键日志事件key-log-events">关键日志事件（Key Log Events）</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Event</th>
+          <th>Meaning</th>
+          <th>Action</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>sip.agent_started</td>
+          <td>Gateway listening</td>
+          <td>✅ Normal</td>
+      </tr>
+      <tr>
+          <td>sip.incoming_call</td>
+          <td>New call received</td>
+          <td>✅ Normal</td>
+      </tr>
+      <tr>
+          <td>sip.media_active</td>
+          <td>Audio bridge established</td>
+          <td>✅ Normal</td>
+      </tr>
+      <tr>
+          <td>voicelive.connected</td>
+          <td>WebSocket connected</td>
+          <td>✅ Normal</td>
+      </tr>
+      <tr>
+          <td>voicelive.audio_delta</td>
+          <td>AI audio chunk received</td>
+          <td>✅ Normal</td>
+      </tr>
+      <tr>
+          <td>voicelive.event_error</td>
+          <td>Voice Live API error</td>
+          <td>⚠️ Check API key, quota</td>
+      </tr>
+      <tr>
+          <td>media.enqueue_failed</td>
+          <td>Audio queue full</td>
+          <td>⚠️ CPU overload or slow network</td>
+      </tr>
+      <tr>
+          <td>sip.thread_error</td>
+          <td>pjsua crash</td>
+          <td>🔴 Restart gateway</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="常见问题common-issues">常见问题（Common Issues）</h3>
+<h4 id="1-听不到来电方音频">1. <strong>听不到来电方音频</strong></h4>
+<p><strong>现象</strong>：AI 对你的讲话没有响应</p>
+<p><strong>诊断</strong>：</p>
+<h1 id="check-rtp-packets-arriving-sudo-tcpdump--i-any--n-udp-port-10000-11000">Check RTP packets arriving sudo tcpdump -i any -n udp port 10000-11000</h1>
+<p><strong>解决</strong>：</p>
+<ul>
+<li>确认 <code>MEDIA_ADDRESS</code> 与网关可达 IP 一致</li>
+<li>检查防火墙（放行 UDP 10000-11000）</li>
+<li>确认 Asterisk 配置：<code>direct_media=no</code> 且 <code>rtp_symmetric=yes</code></li>
+</ul>
+<h4 id="2-音频断续卡顿choppy-audio">2. <strong>音频断续/卡顿（Choppy audio）</strong></h4>
+<p><strong>现象</strong>：声音发“机械音”、有明显掉包</p>
+<p><strong>诊断</strong>：查看日志中的队列深度</p>
+<p><strong>解决</strong>：</p>
+<ul>
+<li>增加 CPU 资源</li>
+<li>降低 <code>VOICE_LIVE_MAX_RESPONSE_OUTPUT_TOKENS</code>，减少生成时间</li>
+<li>检查网络抖动（目标 &lt;30ms）</li>
+</ul>
+<h4 id="3-sip-注册失败">3. <strong>SIP 注册失败</strong></h4>
+<p><strong>现象</strong>：Asterisk 执行 <code>pjsip show endpoints</code> 显示 <code>Unreachable</code></p>
+<p><strong>诊断</strong>：</p>
+<h1 id="on-asterisk-pjsip-set-logger-on--watch-for-register-attempts">On Asterisk pjsip set logger on # Watch for REGISTER attempts</h1>
+<p><strong>解决</strong>：</p>
+<ul>
+<li>核对 <code>AUTH_USER</code> / <code>AUTH_PASSWORD</code> / <code>AUTH_REALM</code> 与 Asterisk <code>pjsip.conf</code> 一致</li>
+<li>检查网络连通性：<code>ping asterisk.example.com</code></li>
+<li>确认 <code>REGISTER_WITH_SIP_SERVER=true</code></li>
+</ul>
+<h2 id="结语">结语</h2>
+<p>这套方案给出了一个“生产级桥接器”的参考实现：在电话语音世界与 Azure 的 AI Voice Live 服务之间建立稳定、低延迟的双向媒体通道。文章中强调的成果包括：</p>
+<p>✅ <strong>实时音频转码</strong>：额外开销 &lt;5ms
+✅ <strong>健壮的 SIP 栈</strong>：基于工业级 pjproject
+✅ <strong>异步架构</strong>：具备更高并发潜力
+✅ <strong>企业级部署拓扑</strong>：Audiocodes SBC + Asterisk PBX
+✅ <strong>可观测性</strong>：结构化日志贯穿全链路</p>
+<h3 id="下一步next-steps">下一步（Next Steps）</h3>
+<p>可以考虑的增强方向：</p>
+<ol>
+<li><strong>多通话支持</strong>：重构为单实例支持多个并发呼叫</li>
+<li><strong>DTMF</strong>：实现 RFC 2833，用于 IVR 场景</li>
+<li><strong>呼叫转接</strong>：支持 SIP REFER，把来电转给人工坐席</li>
+<li><strong>录音与合规</strong>：将会话写入 Azure Blob Storage</li>
+<li><strong>指标体系</strong>：输出 Prometheus 指标（时长、错误率、延迟分位数）</li>
+<li><strong>Kubernetes</strong>：用 Helm chart 做网关的自动扩缩</li>
+<li><strong>TLS/SRTP</strong>：端到端加密 SIP 信令与 RTP 媒体</li>
+</ol>
+<h3 id="参考资源">参考资源</h3>
+<ul>
+<li><strong>Azure Voice Live Documentation</strong>: <a href="https://learn.microsoft.com/azure/ai-services/speech-service/voice-live?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/azure/ai-services/speech-service/voice-live?WT.mc_id=AI-MVP-5003172</a></li>
+</ul>
+<h3 id="获取代码get-the-code">获取代码（Get the Code）</h3>
+<p>完整源码在 GitHub：</p>
+<p><a href="https://github.com/monuminu/azure-voicelive-sip-python?WT.mc_id=AI-MVP-5003172">https://github.com/monuminu/azure-voicelive-sip-python?WT.mc_id=AI-MVP-5003172</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/">https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/" title="为 Azure Voice Live 构建可用于生产的 SIP 网关" target="_blank">为 Azure Voice Live 构建可用于生产的 SIP 网关</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/" title="介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队" target="_blank">介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-07-02-building-advanced-multi-agent-ai-workflows-by-leveraging-autogen-and-semantic-kernel/" title="构建高级多智能体 AI 工作流：利用 AutoGen 和 Semantic Kernel" target="_blank">构建高级多智能体 AI 工作流：利用 AutoGen 和 Semantic Kernel</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-30-ai-automation-in-azure-foundry-through-turnkey-mcp-integration-and-computer-use/" title="通过MCP一键集成和Computer Use Agent模型，实现Azure Foundry中的AI自动化" target="_blank">通过MCP一键集成和Computer Use Agent模型，实现Azure Foundry中的AI自动化</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-17-interpretation-of-the-microsoft-azure-openai-api-version-lifecycle/" title="微软 Azure OpenAI API 版本生命周期解读" target="_blank">微软 Azure OpenAI API 版本生命周期解读</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-12-agents-will-ultimately-be-personalized/" title="Agent 终将是个性化的" target="_blank">Agent 终将是个性化的</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-11-enhancing-ai-security-azure-prompt-shields-and-azure-ai-content-safety/" title="增强AI安全性：Azure Prompt Shields 与 Azure AI Content Safety" target="_blank">增强AI安全性：Azure Prompt Shields 与 Azure AI Content Safety</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-10-the-design-agent-first-identifies-the-deterministic-parts/" title="设计 Agent 先找出确定性的部分" target="_blank">设计 Agent 先找出确定性的部分</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-07-mastering-model-context-protocol-mcp-building-multi-server/" title="精通模型上下文协议（MCP）：基于 Azure OpenAI 构建多服务器 MCP 实践" target="_blank">精通模型上下文协议（MCP）：基于 Azure OpenAI 构建多服务器 MCP 实践</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-06-06-the-programming-models-are-clearing-the-way-in-the-field-of-software-development/" title="编程大模型正在软件开发领域“清理门户”" target="_blank">编程大模型正在软件开发领域“清理门户”</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (38)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

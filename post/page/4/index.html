@@ -75,6 +75,35 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2024-12-23-ai-agents-manipulation-engines/" title="AI 代理将成为操纵引擎" target="_blank">AI 代理将成为操纵引擎</a>
+            </h1>
+        </header>
+        
+  <time datetime="2024-12-23T04:00:00Z" class="post-meta meta-date dt-published">
+    2024年12月23日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85' target="_blank">穿越人机融合之际</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>在2025年，我们可能会习惯于与一个个人AI代理聊天，这个代理了解我们的日程、朋友圈和我们去过的地方。它们被设计得如此贴心，以至于我们愿意让它们深入我们生活的方方面面。通过语音交流，这种亲密感变得更加强烈。</p>
+<p>但这种亲密感其实是一种错觉，我们以为自己在和一个真正像人的代理互动，但实际上背后是一个服务于工业利益的系统，这些利益并不总是和我们的利益一致。这些AI代理拥有强大的能力，它们能微妙地影响我们的消费选择、去向和阅读内容。它们以一种几乎不易察觉的方式，让我们忘记它们真正的忠诚所在。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2024-12-23-ai-agents-manipulation-engines/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2024-12-14-fireug-net-conf-china-2024/" title="FireUG x .NET Conf China 2024" target="_blank">FireUG x .NET Conf China 2024</a>
             </h1>
         </header>
@@ -349,297 +378,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" title="Azure OpenAI 语音聊天" target="_blank">Azure OpenAI 语音聊天</a>
-            </h1>
-        </header>
-        
-  <time datetime="2024-05-15T04:00:00Z" class="post-meta meta-date dt-published">
-    2024年5月15日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>本文介绍使用 Azure AI 语音与 Azure OpenAI 服务实现全语音对话聊天，以及如何改进非阻塞式的对话。</p>
-<h3 id="要点">要点</h3>
-<ul>
-<li>Azure AI 语音服务识别文本</li>
-<li>将文本发送到 Azure OpenAI，获取流式回复</li>
-<li>Azure AI 语音服务对流式响应的文本合成语音</li>
-</ul>
-<h3 id="代码示例python">代码示例（Python）</h3>
-<p>以下是 Python 版本的示例，想要了解更多语言的示例，请参考 <a href="https://learn.microsoft.com/zh-cn/azure/ai-services/speech-service/openai-speech?WT.mc_id=AI-MVP-5003172">OpenAI-Speech</a></p>
-<h4 id="安装依赖">安装依赖</h4>
-<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install azure-cognitiveservices-speech
-</span></span><span style="display:flex;"><span>pip install openai
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h4 id="添加代码">添加代码</h4>
-<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">os</span>
-</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">azure.cognitiveservices.speech</span> <span style="color:#cf222e">as</span> <span style="color:#24292e">speechsdk</span>
-</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">openai</span> <span style="color:#cf222e">import</span> AzureOpenAI
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># This example requires environment variables named </span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># &#34;OPEN_AI_KEY&#34;, &#34;OPEN_AI_ENDPOINT&#34; and &#34;OPEN_AI_DEPLOYMENT_NAME&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># Your endpoint should look like the following:</span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># https://YOUR_OPEN_AI_RESOURCE_NAME.openai.azure.com/</span>
-</span></span><span style="display:flex;"><span>client <span style="color:#0550ae">=</span> AzureOpenAI<span style="color:#1f2328">(</span>
-</span></span><span style="display:flex;"><span>azure_endpoint<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;OPEN_AI_ENDPOINT&#39;</span><span style="color:#1f2328">),</span>
-</span></span><span style="display:flex;"><span>api_key<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;OPEN_AI_KEY&#39;</span><span style="color:#1f2328">),</span>
-</span></span><span style="display:flex;"><span>api_version<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;2024-05-01-preview&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># This will correspond to the custom name you chose for </span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># your deployment when you deployed a model.</span>
-</span></span><span style="display:flex;"><span>deployment_id<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;OPEN_AI_DEPLOYMENT_NAME&#39;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># This example requires environment variables </span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># named &#34;SPEECH_KEY&#34; and &#34;SPEECH_REGION&#34;</span>
-</span></span><span style="display:flex;"><span>speech_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechConfig<span style="color:#1f2328">(</span>subscription<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;SPEECH_KEY&#39;</span><span style="color:#1f2328">),</span> 
-</span></span><span style="display:flex;"><span>                                       region<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#39;SPEECH_REGION&#39;</span><span style="color:#1f2328">))</span>
-</span></span><span style="display:flex;"><span>audio_output_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>audio<span style="color:#0550ae">.</span>AudioOutputConfig<span style="color:#1f2328">(</span>use_default_speaker<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>audio_config <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>audio<span style="color:#0550ae">.</span>AudioConfig<span style="color:#1f2328">(</span>use_default_microphone<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># Should be the locale for the speaker&#39;s language.</span>
-</span></span><span style="display:flex;"><span>speech_config<span style="color:#0550ae">.</span>speech_recognition_language<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;zh-CN&#34;</span>
-</span></span><span style="display:flex;"><span>speech_recognizer <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechRecognizer<span style="color:#1f2328">(</span>speech_config<span style="color:#0550ae">=</span>speech_config<span style="color:#1f2328">,</span> 
-</span></span><span style="display:flex;"><span>                                               audio_config<span style="color:#0550ae">=</span>audio_config<span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># The language of the voice that responds on behalf of Azure OpenAI.</span>
-</span></span><span style="display:flex;"><span>speech_config<span style="color:#0550ae">.</span>speech_synthesis_voice_name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#39;zh-CN-YunyiMultilingualNeural&#39;</span>
-</span></span><span style="display:flex;"><span>speech_synthesizer <span style="color:#0550ae">=</span> speechsdk<span style="color:#0550ae">.</span>SpeechSynthesizer<span style="color:#1f2328">(</span>speech_config<span style="color:#0550ae">=</span>speech_config<span style="color:#1f2328">,</span> 
-</span></span><span style="display:flex;"><span>                                                 audio_config<span style="color:#0550ae">=</span>audio_output_config<span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># tts sentence end mark</span>
-</span></span><span style="display:flex;"><span>tts_sentence_end <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span> <span style="color:#0a3069">&#34;.&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;!&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;?&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;;&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;。&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;！&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;？&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;；&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;</span><span style="color:#0a3069">\n</span><span style="color:#0a3069">&#34;</span> <span style="color:#1f2328">]</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># Prompts Azure OpenAI with a request and synthesizes the response.</span>
-</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">ask_openai</span><span style="color:#1f2328">(</span>prompt<span style="color:#1f2328">):</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># Ask Azure OpenAI in streaming way</span>
-</span></span><span style="display:flex;"><span>    response <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>chat<span style="color:#0550ae">.</span>completions<span style="color:#0550ae">.</span>create<span style="color:#1f2328">(</span>model<span style="color:#0550ae">=</span>deployment_id<span style="color:#1f2328">,</span> 
-</span></span><span style="display:flex;"><span>                                              max_tokens<span style="color:#0550ae">=</span><span style="color:#0550ae">200</span><span style="color:#1f2328">,</span> 
-</span></span><span style="display:flex;"><span>                                              stream<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">,</span> 
-</span></span><span style="display:flex;"><span>                                              messages<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>
-</span></span><span style="display:flex;"><span>                                                <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;content&#34;</span><span style="color:#1f2328">:</span> prompt<span style="color:#1f2328">}</span>
-</span></span><span style="display:flex;"><span>                                              <span style="color:#1f2328">])</span>
-</span></span><span style="display:flex;"><span>    collected_messages <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
-</span></span><span style="display:flex;"><span>    last_tts_request <span style="color:#0550ae">=</span> <span style="color:#cf222e">None</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#57606a"># iterate through the stream response stream</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">for</span> chunk <span style="color:#0550ae">in</span> response<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> <span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>chunk<span style="color:#0550ae">.</span>choices<span style="color:#1f2328">)</span> <span style="color:#0550ae">&gt;</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># extract the message</span>
-</span></span><span style="display:flex;"><span>            chunk_message <span style="color:#0550ae">=</span> chunk<span style="color:#0550ae">.</span>choices<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>delta<span style="color:#0550ae">.</span>content  
-</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> chunk_message <span style="color:#0550ae">is</span> <span style="color:#0550ae">not</span> <span style="color:#cf222e">None</span><span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#57606a"># save the message</span>
-</span></span><span style="display:flex;"><span>                collected_messages<span style="color:#0550ae">.</span>append<span style="color:#1f2328">(</span>chunk_message<span style="color:#1f2328">)</span>  
-</span></span><span style="display:flex;"><span>                <span style="color:#57606a"># sentence end found</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">if</span> chunk_message <span style="color:#0550ae">in</span> tts_sentence_end<span style="color:#1f2328">:</span> 
-</span></span><span style="display:flex;"><span>                    <span style="color:#57606a"># join the recieved message together to build a sentence</span>
-</span></span><span style="display:flex;"><span>                    text <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#0550ae">.</span>join<span style="color:#1f2328">(</span>collected_messages<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>strip<span style="color:#1f2328">()</span> 
-</span></span><span style="display:flex;"><span>                    <span style="color:#cf222e">if</span> text <span style="color:#0550ae">!=</span> <span style="color:#0a3069">&#39;&#39;</span><span style="color:#1f2328">:</span> 
-</span></span><span style="display:flex;"><span>                        <span style="color:#57606a"># if sentence only have \n or space, we could skip</span>
-</span></span><span style="display:flex;"><span>                        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Speech synthesized to speaker for: </span><span style="color:#0a3069">{</span>text<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>                        last_tts_request <span style="color:#0550ae">=</span> speech_synthesizer
-</span></span><span style="display:flex;"><span>                                                    <span style="color:#0550ae">.</span>speak_text_async<span style="color:#1f2328">(</span>text<span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>                        collected_messages<span style="color:#0550ae">.</span>clear<span style="color:#1f2328">()</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> last_tts_request<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>        last_tts_request<span style="color:#0550ae">.</span>get<span style="color:#1f2328">()</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># Continuously listens for speech input to recognize </span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># and send as text to Azure OpenAI</span>
-</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">chat_with_open_ai</span><span style="color:#1f2328">():</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">while</span> <span style="color:#cf222e">True</span><span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;&#34;&#34;Azure OpenAI is listening. 
-</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">               Say &#39;Stop&#39; or press Ctrl-Z to end the conversation.&#34;&#34;&#34;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># Get audio from the microphone and </span>
-</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># then send it to the TTS service.</span>
-</span></span><span style="display:flex;"><span>            speech_recognition_result <span style="color:#0550ae">=</span> speech_recognizer<span style="color:#0550ae">.</span>
-</span></span><span style="display:flex;"><span>                                           recognize_once_async<span style="color:#1f2328">()</span><span style="color:#0550ae">.</span>get<span style="color:#1f2328">()</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># If speech is recognized, send it to Azure OpenAI </span>
-</span></span><span style="display:flex;"><span>            <span style="color:#57606a"># and listen for the response.</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> speech_recognition_result<span style="color:#0550ae">.</span>reason <span style="color:#0550ae">==</span> speechsdk<span style="color:#0550ae">.</span>ResultReason
-</span></span><span style="display:flex;"><span>                                                         <span style="color:#0550ae">.</span>RecognizedSpeech<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">if</span> speech_recognition_result<span style="color:#0550ae">.</span>text <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;Stop.&#34;</span> 
-</span></span><span style="display:flex;"><span>                             <span style="color:#0550ae">or</span> speech_recognition_result<span style="color:#0550ae">.</span>text <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;Stop。&#34;</span><span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>                    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Conversation ended.&#34;</span><span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>                    <span style="color:#cf222e">break</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Recognized speech: </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#34;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>
-</span></span><span style="display:flex;"><span>                                            speech_recognition_result<span style="color:#0550ae">.</span>text<span style="color:#1f2328">))</span>
-</span></span><span style="display:flex;"><span>                ask_openai<span style="color:#1f2328">(</span>speech_recognition_result<span style="color:#0550ae">.</span>text<span style="color:#1f2328">)</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">elif</span> speech_recognition_result<span style="color:#0550ae">.</span>reason <span style="color:#0550ae">==</span> speechsdk<span style="color:#0550ae">.</span>ResultReason
-</span></span><span style="display:flex;"><span>                                                                  <span style="color:#0550ae">.</span>NoMatch<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;No speech could be recognized: </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#34;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>
-</span></span><span style="display:flex;"><span>                                speech_recognition_result<span style="color:#0550ae">.</span>no_match_details<span style="color:#1f2328">))</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">break</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">elif</span> speech_recognition_result<span style="color:#0550ae">.</span>reason <span style="color:#0550ae">==</span> speechsdk<span style="color:#0550ae">.</span>ResultReason
-</span></span><span style="display:flex;"><span>                                                                  <span style="color:#0550ae">.</span>Canceled<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>                cancellation_details <span style="color:#0550ae">=</span> speech_recognition_result
-</span></span><span style="display:flex;"><span>                                                      <span style="color:#0550ae">.</span>cancellation_details
-</span></span><span style="display:flex;"><span>                <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Speech Recognition canceled: </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#34;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>
-</span></span><span style="display:flex;"><span>                                               cancellation_details<span style="color:#0550ae">.</span>reason<span style="color:#1f2328">))</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">if</span> cancellation_details<span style="color:#0550ae">.</span>reason <span style="color:#0550ae">==</span> speechsdk<span style="color:#0550ae">.</span>CancellationReason
-</span></span><span style="display:flex;"><span>                                                                    <span style="color:#0550ae">.</span>Error<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>                    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Error details: </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#34;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>
-</span></span><span style="display:flex;"><span>                                        cancellation_details<span style="color:#0550ae">.</span>error_details<span style="color:#1f2328">))</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">except</span> EOFError<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">break</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#57606a"># Main</span>
-</span></span><span style="display:flex;"><span><span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>    chat_with_open_ai<span style="color:#1f2328">()</span>
-</span></span><span style="display:flex;"><span><span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> err<span style="color:#1f2328">:</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Encountered exception. </span><span style="color:#0a3069">{}</span><span style="color:#0a3069">&#34;</span><span style="color:#0550ae">.</span>format<span style="color:#1f2328">(</span>err<span style="color:#1f2328">))</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h3 id="非阻塞式改进">非阻塞式改进</h3>
-<p>前面的示例运行起来的效果是固定一问一答交流的，如果希望实现对话的过程是可以被打断的，可以改变识别语音的代码为非阻塞式。
-即把调用 ask_openai 的地方改为创建另一个线程来执行。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2024-05-15-azure-openai-speech/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -677,6 +415,10 @@
     
     <li >
         <a href="https://beanhsiang.github.io/post/page/7/">7</a>
+    </li>
+    
+    <li >
+        <a href="https://beanhsiang.github.io/post/page/8/">8</a>
     </li>
     
 
@@ -736,6 +478,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/" title="为 Azure Voice Live 构建可用于生产的 SIP 网关" target="_blank">为 Azure Voice Live 构建可用于生产的 SIP 网关</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/" title="介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队" target="_blank">介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队</a>
     </li>
     
@@ -771,10 +517,6 @@
         <a href="https://beanhsiang.github.io/post/2025-06-06-the-programming-models-are-clearing-the-way-in-the-field-of-software-development/" title="编程大模型正在软件开发领域“清理门户”" target="_blank">编程大模型正在软件开发领域“清理门户”</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2025-06-03-make-vscode-a-versatile-content-creation-tool/" title="将 VSCode 打造为全能型内容创作工具" target="_blank">将 VSCode 打造为全能型内容创作工具</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -793,6 +535,8 @@
     <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (1)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
@@ -850,6 +594,8 @@
     <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
     
     <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
     
     <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
     

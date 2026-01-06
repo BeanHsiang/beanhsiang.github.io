@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Tue, 06 Jan 2026 10:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 06 Jan 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AI 时代的代码审查</title>
+      <link>https://beanhsiang.github.io/post/2026-01-06-code-review-in-the-age-of-ai/</link>
+      <pubDate>Tue, 06 Jan 2026 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-01-06-code-review-in-the-age-of-ai/</guid>
+      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260106115049-1a9806d1e05348ffb8741833f12a1ba7.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;封面图：Code Review in the Age of AI&#34; src=&#34;https://beanhsiang.github.io/uploads/20260106115049-1a9806d1e05348ffb8741833f12a1ba7.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;封面图来源：Addy Osmani / Substack（见原文页面）。&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;原文链接：&lt;a href=&#34;https://addyo.substack.com/p/code-review-in-the-age-of-ai?WT.mc_id=AI-MVP-5003172&#34;&gt;https://addyo.substack.com/p/code-review-in-the-age-of-ai?WT.mc_id=AI-MVP-5003172&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;AI 让写代码更快，但并没有“杀死”代码审查；相反，它把“举证责任”变得更明确了：你可以让 AI 帮你更快地产出改动，但你仍然需要用证据证明它真的能跑、真的符合预期。&lt;/p&gt;&#xA;&lt;p&gt;作者 Addy Osmani 在文中给出的核心观点很直白：如果一个 Pull Request 里没有“它能工作”的证据（手动验证步骤、日志/截图、自动化测试结果等），那并不是在更快地交付，只是在把风险和返工推给下游。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>[译]基于模型的机器学习 - 第二章 评估人们的技能</title>
       <link>https://beanhsiang.github.io/post/2026-01-06-mbml-learning-skills/</link>

@@ -6,8 +6,15 @@
     <description>Recent content in Microsoft Foundry on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Tue, 06 Jan 2026 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 07 Jan 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/categories/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>2026 年值得关注的 7 个 Agentic AI 趋势</title>
+      <link>https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/</link>
+      <pubDate>Wed, 07 Jan 2026 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/</guid>
+      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260107140920-59cc34cabe2f496e9e651d8125295014.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Agentic AI Trends Watch 2026&#34; src=&#34;https://beanhsiang.github.io/uploads/20260107140920-59cc34cabe2f496e9e651d8125295014.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;2026 年是 agentic AI（具备“规划 + 工具调用 + 迭代执行”的自主/半自主智能体）从原型走向生产的关键拐点：不再只是“把 agent 跑起来”，而是开始进入&lt;strong&gt;架构化、标准化、可治理、可算账&lt;/strong&gt;的阶段。&lt;/p&gt;&#xA;&lt;h2 id=&#34;基础概念先把造车零件补齐&#34;&gt;基础概念：先把“造车零件”补齐&lt;/h2&gt;&#xA;&lt;p&gt;在进入 7 个趋势之前，一组“底座能力”的延伸阅读：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Agent 设计模式（例如 ReAct、Reflection、Tool Use、Planning、多智能体协作、串行工作流、Human-in-the-Loop）：&lt;a href=&#34;https://machinelearningmastery.com/7-must-know-agentic-ai-design-patterns/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/7-must-know-agentic-ai-design-patterns/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;让 agent 有“长期记忆”的三种形态（episodic / semantic / procedural）：&lt;a href=&#34;https://machinelearningmastery.com/beyond-short-term-memory-the-3-types-of-long-term-memory-ai-agents-need/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/beyond-short-term-memory-the-3-types-of-long-term-memory-ai-agents-need/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;用小模型（SLM）替代超大模型，做高频/低风险任务以降低成本：&lt;a href=&#34;https://machinelearningmastery.com/small-language-models-are-the-future-of-agentic-ai/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/small-language-models-are-the-future-of-agentic-ai/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;选型与实践路线：&lt;a href=&#34;https://machinelearningmastery.com/top-5-agentic-ai-llm-models/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/top-5-agentic-ai-llm-models/&lt;/a&gt;、&lt;a href=&#34;https://machinelearningmastery.com/the-machine-learning-practitioners-guide-to-agentic-ai-systems/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/the-machine-learning-practitioners-guide-to-agentic-ai-systems/&lt;/a&gt;、&lt;a href=&#34;https://machinelearningmastery.com/the-roadmap-for-mastering-agentic-ai-in-2026/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/the-roadmap-for-mastering-agentic-ai-in-2026/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;如果团队还在“单一大模型 + 一把梭”的阶段，建议先把这些概念统一语言，再谈规模化。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>AI 时代的代码审查</title>
       <link>https://beanhsiang.github.io/post/2026-01-06-code-review-in-the-age-of-ai/</link>

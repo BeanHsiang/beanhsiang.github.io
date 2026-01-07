@@ -9,19 +9,19 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
     
 
-    <title>在 Azure ML 中引入可缩放的企业级基因学工作流 | Innovation with tech</title>
-    <meta property="og:title" content="在 Azure ML 中引入可缩放的企业级基因学工作流 - Innovation with tech">
+    <title>2026 年值得关注的 7 个 Agentic AI 趋势 | Innovation with tech</title>
+    <meta property="og:title" content="2026 年值得关注的 7 个 Agentic AI 趋势 - Innovation with tech">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content='2023-02-26T11:15:00&#43;08:00'>
+    <meta property="article:published_time" content='2026-01-07T12:00:00&#43;08:00'>
         
         
-    <meta property="article:modified_time" content='2023-02-26T11:15:00&#43;08:00'>
+    <meta property="article:modified_time" content='2026-01-07T12:00:00&#43;08:00'>
         
     <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
-    <meta name="description" content="在 Azure ML 中引入可缩放的企业级基因学工作流">
+    <meta name="description" content="2026 年值得关注的 7 个 Agentic AI 趋势">
     <meta name="author" content="">
-    <meta property="og:url" content="https://beanhsiang.github.io/post/2023-02-25-introducing-scalable-and-enterprise-grade-genomics-workflows-in/">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/">
     <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
 
     <link rel="stylesheet" href='/css/normalize.css'>
@@ -76,18 +76,18 @@
     
     <article class="post">
         <header>
-            <h1 class="post-title">在 Azure ML 中引入可缩放的企业级基因学工作流</h1>
+            <h1 class="post-title">2026 年值得关注的 7 个 Agentic AI 趋势</h1>
         </header>
         
-  <time datetime="2023-02-26T03:15:00Z" class="post-meta meta-date dt-published">
-    2023年2月26日
+  <time datetime="2026-01-07T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年1月7日
   </time>
 
 
 <div class="post-meta meta-category">
   <span>&nbsp;|</span>
   
-    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
   
 </div>
 
@@ -101,37 +101,82 @@
         
         
         <div class="post-content">
-            <p>基因学工作流程在生物信息学中至关重要，因为它们可以帮助研究人员分析和解释大量的基因组数据。但是，使用专用软件和复杂的依赖项创建一致且可重复的环境可能具有挑战性，因此与 CI/CD 工具的集成也很困难。</p>
-<p>Azure 机器学习 （Azure ML） 是一个基于云的平台，提供一组全面的工具和服务，用于开发、部署和管理机器学习模型。Azure ML 原生提供出色的可重复性和可审核性功能，而没有多少工作流解决方案提供这些功能。它为运行工作流提供了一个高度集成和标准化的环境，确保每个步骤都以一致且可重复的方式执行。此功能对于需要使用具有特定依赖项的某些版本的多个工具和软件包的基因学工作流特别有用。</p>
-<p>在这篇博文中，我们将展示 Azure ML 如何高效且有效地运行基因学工作流，以及作为机器学习模型训练和部署的端到端平台。图 1 说明了此类工作流的示例。</p>
-<p>
-        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223907592-895d908b-41f1-4b66-b9b4-2a52824e54c9.png">
-            <img class="mx-auto" alt="image1" src="https://user-images.githubusercontent.com/3881276/223907592-895d908b-41f1-4b66-b9b4-2a52824e54c9.png" />
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260107140920-59cc34cabe2f496e9e651d8125295014.png">
+            <img class="mx-auto" alt="Agentic AI Trends Watch 2026" src="/uploads/20260107140920-59cc34cabe2f496e9e651d8125295014.png" />
         </a>
     </p>
-<p>图 1：在 Azure ML 中运行的示例基因学工作流，包含 3 个步骤。参考基因组输入数据集流入索引器步骤，而序列质量步骤从DNA序列文件夹（“.fastq”文件）获取数据。</p>
-<p>Azure ML 具有全面的审核和日志记录功能，可跟踪和记录工作流的每个步骤，确保可跟踪性和可重复性。Azure ML 实现这些功能的关键功能之一是它支持用户能够为每个工作流步骤指定 Docker 和 Conda 环境，从而保证一致的环境执行。这些环境可以进行版本控制和集中共享。然后，管道中的工作流步骤可以引用特定环境。图 2 显示了一个这样的环境，bwa，版本“5”。当我们对环境定义进行修改时，新版本将被注册为“6”，但是，我们仍然可以继续使用旧版本。</p>
-<p>
-        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223907826-ae6136ca-e055-4b0c-8ebe-0029f23e2574.png">
-            <img class="mx-auto" alt="image2" src="https://user-images.githubusercontent.com/3881276/223907826-ae6136ca-e055-4b0c-8ebe-0029f23e2574.png" />
-        </a>
-    </p>
-<p>图 2：一个示例 Azure ML 环境，定义包含 BWA 生物信息学软件包的 Docker 映像。这是此环境的第 5 个版本，以“bwa”的名称注册。</p>
-<p>与环境一样，Azure ML 支持用户创建的管道组件，这些组件可以集中注册以便在其他管道中重复使用，也可以进行版本控制，并带有其使用情况的审核日志。运行与基础进程生成的标准输出流和错误流一起自动记录。 还支持 MLflow 日志记录以及向所有资产和运行添加自定义标记。此功能可确保结果一致且可重复，从而节省用户的时间。示例版本化组件如图 3 所示。</p>
-<p>
-        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/223907932-5760a2c4-358d-43ac-9e1b-984e829776da.png">
-            <img class="mx-auto" alt="image3" src="https://user-images.githubusercontent.com/3881276/223907932-5760a2c4-358d-43ac-9e1b-984e829776da.png" />
-        </a>
-    </p>
-<p>图 3：名为“BWA 索引器”的 Azure ML 组件。它是一段独立的、可重用的、受版本控制的代码段，在机器学习管道中执行一个步骤：在此实例中运行 bwa 索引器命令。</p>
-<p>版本控制不限于环境和管道组件。Azure ML 的另一个基本功能是它支持对所有输入数据集和基因组数据进行版本控制，包括整体管道输入，以及中间步骤和最终输出（如果需要）。此功能使用户能够跟踪数据集更改，并确保在工作流的不同运行或其他运行中一致地使用相同的版本。</p>
-<p>有许多基因学工作流引擎在并行处理文件时非常适合多次并行执行。但是，Azure ML 并行步骤支持在文件级别（一个接一个，或一次 3 个文件等）和文件块级别（每个进程 50 MB 数据，或每个节点 20 KB 文本等）并行运行，前提是使用应用程序支持，从而可以跨可自动缩放的弹性计算群集高效处理大型基因组数据集。管道甚至可以在笔记本电脑上本地运行，用于测试/开发阶段，当然还支持强大的基于 CPU 和 GPU 的 VM、低优先级或按需计算群集、 Spark 引擎和其他计算目标（如 Azure Kubernetes），使其灵活适用于不同的用例。</p>
-<p>Azure ML 与 Azure DevOps 和 GitHub Actions for CI/CD 集成，使得在生产环境中部署和管理基因学工作流变得容易，从而使 GenomicsOps 成为可能。可以发布准备用于“生产用途”的已建立管道，并按需调用或从其他 Azure 服务（包括 Azure 数据工厂和 Synapse）调用。这意味着我们可以为自动运行管道或在数据可用时创建计划。</p>
-<p>得益于其 Python SDK、命令行实用程序（az cli、ml 扩展）、REST-API 和用户友好的 UI，它使得从任何首选方式开发管道和启动管道运行成为可能，同时还可以轻松监控和管理工作流。也就是说，还支持基于事件的触发器和通知。例如，可以设置一个电子邮件警报，每当基因学管道完成执行时就会触发该警报。</p>
-<p>由于计算和存储已分离，Azure ML 的 Jupyter 笔记本也可以访问存储在 Azure ML 数据存储或 blob 存储中的任何管道输入或输出，以进行任何上游或下游分析。</p>
-<p>Azure ML 是一项托管的 PaaS 服务，使其成为基因学研究人员和生物信息学家可访问且易于设置的平台。此外，它还具有用于本地开发的Visual Studio Code集成，并具有用于管理管道项目，启用协作和Azure基于角色的访问控制（RBAC）的工作区概念。</p>
-<p>总之，Azure ML 具有高级安全功能，包括 AD 身份验证、公共和专用终结点、基于订阅的事件触发器、由 Azure 存储服务支持的存储（附带静态和传输中加密）以及应用程序见解，使其成为可靠且经过验证的企业平台，也可以本机用于基因学研究。</p>
-<p>有关演示如何设置和运行图 1 中所示的示例工作流的更详细教程，以及用于创建上述示例环境和组件的所有源代码，请查看此 GitHub 存储库：Truehand/AzureML-Genomics</p>
+<p>2026 年是 agentic AI（具备“规划 + 工具调用 + 迭代执行”的自主/半自主智能体）从原型走向生产的关键拐点：不再只是“把 agent 跑起来”，而是开始进入<strong>架构化、标准化、可治理、可算账</strong>的阶段。</p>
+<h2 id="基础概念先把造车零件补齐">基础概念：先把“造车零件”补齐</h2>
+<p>在进入 7 个趋势之前，一组“底座能力”的延伸阅读：</p>
+<ul>
+<li>Agent 设计模式（例如 ReAct、Reflection、Tool Use、Planning、多智能体协作、串行工作流、Human-in-the-Loop）：<a href="https://machinelearningmastery.com/7-must-know-agentic-ai-design-patterns/?WT.mc_id=AI-MVP-5003172">https://machinelearningmastery.com/7-must-know-agentic-ai-design-patterns/</a></li>
+<li>让 agent 有“长期记忆”的三种形态（episodic / semantic / procedural）：<a href="https://machinelearningmastery.com/beyond-short-term-memory-the-3-types-of-long-term-memory-ai-agents-need/?WT.mc_id=AI-MVP-5003172">https://machinelearningmastery.com/beyond-short-term-memory-the-3-types-of-long-term-memory-ai-agents-need/</a></li>
+<li>用小模型（SLM）替代超大模型，做高频/低风险任务以降低成本：<a href="https://machinelearningmastery.com/small-language-models-are-the-future-of-agentic-ai/?WT.mc_id=AI-MVP-5003172">https://machinelearningmastery.com/small-language-models-are-the-future-of-agentic-ai/</a></li>
+<li>选型与实践路线：<a href="https://machinelearningmastery.com/top-5-agentic-ai-llm-models/?WT.mc_id=AI-MVP-5003172">https://machinelearningmastery.com/top-5-agentic-ai-llm-models/</a>、<a href="https://machinelearningmastery.com/the-machine-learning-practitioners-guide-to-agentic-ai-systems/?WT.mc_id=AI-MVP-5003172">https://machinelearningmastery.com/the-machine-learning-practitioners-guide-to-agentic-ai-systems/</a>、<a href="https://machinelearningmastery.com/the-roadmap-for-mastering-agentic-ai-in-2026/?WT.mc_id=AI-MVP-5003172">https://machinelearningmastery.com/the-roadmap-for-mastering-agentic-ai-in-2026/</a></li>
+</ul>
+<p>如果团队还在“单一大模型 + 一把梭”的阶段，建议先把这些概念统一语言，再谈规模化。</p>
+<h2 id="2026-年的-7-个趋势">2026 年的 7 个趋势</h2>
+<h3 id="1-多智能体编排ai-的微服务时刻">1) 多智能体编排：AI 的“微服务时刻”</h3>
+<p>核心判断在于：<strong>单体万能 agent 会被“编排 + 专家 agent 团队”取代</strong>。这会把工程问题从 prompt/模型选择，推向分布式系统式的挑战：</p>
+<ul>
+<li>Agent 间协议与消息格式（输入/输出 schema、失败语义、幂等与重试）</li>
+<li>跨 agent 状态管理（共享记忆、任务上下文、trace、权限）</li>
+<li>冲突与仲裁（多个 agent 给出不同结论时如何合并/投票/回退到人）</li>
+</ul>
+<p>可落地的起步方式：从“一个 orchestrator + 两三个角色 agent（检索/执行/验证）”开始，先把边界、接口、观测做对，再扩展规模。</p>
+<h3 id="2-协议标准化mcp-与-a2a-让-agent-变成可互联组件">2) 协议标准化：MCP 与 A2A 让 agent 变成“可互联组件”</h3>
+<p>不妨将 Anthropic 的 MCP（工具/数据源接入的标准化）与 Google 的 A2A（agent-to-agent 通信）类比为 agent 世界的“HTTP”。工程上它意味着：</p>
+<ul>
+<li>工具接入从定制脚本变成“按协议插拔”</li>
+<li>agent 组合从“写死的系统”变成“可编排的组件生态”</li>
+</ul>
+<p>对团队的建议：把工具层、数据层、权限层尽可能放到标准接口后面，减少每个 agent 自己做集成的“雪球式技术债”。</p>
+<h3 id="3-企业规模化鸿沟从试点到生产的关键不是模型">3) 企业规模化鸿沟：从试点到生产的关键不是模型</h3>
+<p>一个常见现象是：很多组织在试点 agent，但能稳定上生产并规模化的比例明显更低。差距往往不在“模型更强”，而在：</p>
+<ul>
+<li>是否愿意<strong>重构工作流</strong>（agent-first）而不是给旧流程“贴外挂”</li>
+<li>是否定义了可度量的成功标准（质量、时延、成本、人工介入率、事故率等）</li>
+</ul>
+<p>落地抓手：先选 1–2 个高价值流程做端到端改造（如 IT 运维知识流、客服分流、工程协作、供应链决策支持），把质量/成本/风险三角测量起来。</p>
+<h3 id="4-治理与安全从合规成本变成竞争优势">4) 治理与安全：从“合规成本”变成“竞争优势”</h3>
+<p>agent 的风险点在于它有自主性：可能在运行时做决策、访问敏感数据、触发真实动作。建议以“<strong>有界自治（bounded autonomy）</strong>”为目标：</p>
+<ul>
+<li>明确操作边界与权限最小化（能做什么、不能做什么）</li>
+<li>高风险动作升级到人（审批/二次确认）</li>
+<li>全链路审计（谁在何时基于什么证据做了什么动作）</li>
+</ul>
+<p>进一步的做法是“用 agent 管 agent”：治理/安全 agent 监控策略违规与异常行为。即使不做这么激进，至少也要把策略、权限、审计、回滚与告警纳入第一天的架构。</p>
+<h3 id="5-human-in-the-loop从不得不变成刻意设计">5) Human-in-the-Loop：从“不得不”变成“刻意设计”</h3>
+<p>需要强调的是：追求 100% 自动化并不总是最优目标。更现实的架构是分层自治：</p>
+<ul>
+<li>低风险重复任务：全自动</li>
+<li>中风险决策：监督式自治（抽检、阈值触发复核）</li>
+<li>高风险场景：人主导、agent 辅助</li>
+</ul>
+<p>工程上要避免“只有一个总开关”的 HITL，而要做成可配置的策略：何时请求人、请求谁、给人什么证据、如何记录与学习。</p>
+<h3 id="6-agent-finops成本优化进入架构核心">6) Agent FinOps：成本优化进入架构核心</h3>
+<p>当 agent fleet 每天产生大量 LLM 调用时，成本与性能的权衡会变成一等公民。典型的优化方向包括：</p>
+<ul>
+<li>异构模型：复杂推理/规划用强模型，常规执行用中等模型，高频任务用小模型</li>
+<li>模式级优化：Plan-and-Execute（强模型规划、弱模型执行）、缓存、批处理、结构化输出减少 token</li>
+</ul>
+<p>建议把“每个任务的单位成本 + 质量指标”做成 dashboard，并在架构层预留降级路径（模型降级、功能降级、人工接管）。</p>
+<h3 id="7-agent-native-创业潮生态将被重新分层">7) Agent-native 创业潮：生态将被重新分层</h3>
+<p>目前的生态大致可以分成三层：</p>
+<ul>
+<li>基础设施与底座模型（hyperscalers）</li>
+<li>传统企业软件把 agent 当能力嵌入现有平台</li>
+<li>从一开始就以 agent 为主界面的 agent-native 产品</li>
+</ul>
+<p>对使用方来说，风险在于“agent washing”（把旧自动化包装成 agent）。采购与评估时，应重点看：是否具备规划/工具调用/记忆/自我纠错/可观测与可治理，而不是只看“有个聊天框”。</p>
+<h2 id="实操建议把趋势落回工程决策">实操建议：把趋势落回工程决策</h2>
+<ul>
+<li>先做单 agent 并把模式、观测、权限做好；只有在单体遇到瓶颈时再引入多 agent。</li>
+<li>把工具接入与权限控制做成平台能力（而不是每个 agent 私有实现）。</li>
+<li>用“有界自治 + 审计 + 回滚”建立组织对 agent 的信任，再扩大覆盖面。</li>
+<li>从 Day 1 做 FinOps：预算、配额、缓存、批处理、模型分层与降级。</li>
+</ul>
 
         </div>
 
@@ -139,7 +184,7 @@
 <div class="post-archive">
     <ul class="post-copyright">
         <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
-        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2023-02-25-introducing-scalable-and-enterprise-grade-genomics-workflows-in/">https://beanhsiang.github.io/post/2023-02-25-introducing-scalable-and-enterprise-grade-genomics-workflows-in/</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/">https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/</a></li>
         <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
     </ul>
 </div>
@@ -153,15 +198,15 @@
     <h2>相关文章</h2>
     <ul class="listing">
         
-        <li><a href="/post/2023-02-25-3-microsoft-azure-ai-product-features-that-accelerate-language-learning/">3个加速语言学习的微软 Azure AI 产品功能</a></li>
+        <li><a href="/post/2026-01-06-code-review-in-the-age-of-ai/">AI 时代的代码审查</a></li>
         
-        <li><a href="/post/2023-02-21-train-and-benchmark-a-custom-forms-recognizer-using-forms/">训练自定义表单识别器并对其进行基准测试</a></li>
+        <li><a href="/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/">为 Azure Voice Live 构建可用于生产的 SIP 网关</a></li>
         
-        <li><a href="/post/2022-12-10-the-ai-technology-that-predicts-which-clothing-items-appearing/">AI 预测你在视频中可能购买哪些服装</a></li>
+        <li><a href="/post/2026-01-01-why-web-ai-agents-are-more-vulnerable-than-standalone-llms-and-how-we-should-actually-fix-it/">为什么 Web AI Agent 比独立 LLM 更脆弱——以及我们应该如何真正修复它</a></li>
         
-        <li><a href="/post/2022-10-18-generate-searchable-pdfs-with-azure-form-recognizer/">使用 Azure 表单识别器生成可搜索的 PDF</a></li>
+        <li><a href="/post/2025-12-12-observability-for-multi-agent-systems-with-microsoft-agent-framework-and-azure-ai-foundry/">使用 Microsoft Agent Framework 与 Azure AI Foundry 为多智能体系统构建可观测性</a></li>
         
-        <li><a href="/post/2022-10-14-make-use-of-the-training-code-behind-your-automatedml-model/">利用 AutomatedML 模型背后的训练代码</a></li>
+        <li><a href="/post/2025-12-08-monitoring-generative-ai-applications-with-azure-ai-foundry/">使用 Azure AI Foundry 监控生成式 AI 应用</a></li>
         
     </ul>
 </div>
@@ -171,7 +216,7 @@
             
             <ul class="clearfix">
                 
-                <li><a href='/tags/Azure-AI' target="_blank">Azure AI</a></li>
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
                 
             </ul>
             

@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>使用 Microsoft Agent Framework 构建 Human-in-the-loop 的 AI 工作流 | Innovation with tech</title>
+    <meta property="og:title" content="使用 Microsoft Agent Framework 构建 Human-in-the-loop 的 AI 工作流 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2025-10-11T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2025-10-11T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="使用 Microsoft Agent Framework 构建 Human-in-the-loop 的 AI 工作流">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2025-10-11-building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">使用 Microsoft Agent Framework 构建 Human-in-the-loop 的 AI 工作流</h1>
+        </header>
+        
+  <time datetime="2025-10-11T04:00:00Z" class="post-meta meta-date dt-published">
+    2025年10月11日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>原文链接：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/4460342?WT.mc_id=AI-MVP-5003172">https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/4460342?WT.mc_id=AI-MVP-5003172</a></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260107121419-0f605ecc540d420ea89d4a7bd85c3179.png">
+            <img class="mx-auto" alt="" src="/uploads/20260107121419-0f605ecc540d420ea89d4a7bd85c3179.png" />
+        </a>
+    </p>
+<h2 id="一个把确定性编排与自主代理结合起来的欺诈检测示例">一个把确定性编排与自主代理结合起来的欺诈检测示例</h2>
+<p>现代企业系统经常面临一个非常现实的问题：<strong>如何让 AI 的决策可靠、可解释，并且真正能在生产环境落地？</strong></p>
+<p>原文围绕一个“欺诈检测（Fraud Detection）”示例，展示了 Microsoft Agent Framework 如何把 AI 驱动的推理步骤放进一个可控的工作流里：</p>
+<ul>
+<li>工作流图（workflow graph）负责<strong>确定性编排</strong>：控制执行顺序、并行与合流、容错与恢复</li>
+<li>专家代理（agents）负责<strong>LLM 推理</strong>：在结构化/半结构化数据上做领域判断</li>
+</ul>
+<p>完整实现代码仓库在这里：</p>
+<ul>
+<li><a href="https://github.com/microsoft/OpenAIWorkshop/tree/main/agentic_ai/workflow/fraud_detection?WT.mc_id=AI-MVP-5003172">OpenAIWorkshop - fraud_detection</a></li>
+</ul>
+<h3 id="为什么要把-workflows-和-agents-组合起来">为什么要把 Workflows 和 Agents 组合起来？</h3>
+<p>在金融、医疗、物流、客服等行业，AI 系统往往都遇到同一种核心矛盾：既要“聪明”（能理解复杂、模糊的数据），又要“可控”（能追溯、可复现、能稳定运维）。</p>
+<ul>
+<li>规则/流程（rule-based workflows）擅长可预测、合规，但对变化的适应性弱。</li>
+<li>纯代理（pure AI agents）能处理模糊复杂场景，但常缺少生产环境所需的保证：可复现性、可观测性、失败后的安全恢复等。</li>
+</ul>
+<p>Microsoft Agent Framework 的思路是把两者优势拼起来：</p>
+<ul>
+<li><strong>确定性工作流图</strong>：管执行、管结构、管容错</li>
+<li><strong>自主代理</strong>：做最适合 LLM 的推理步骤</li>
+</ul>
+<p>在欺诈检测里，这意味着工作流端到端编排流程，而不同的专家代理分别理解使用模式、地理位置异常、账单/收费异常等。</p>
+<p>各司其职：</p>
+<ul>
+<li><strong>Workflow：</strong> 结构化、类型安全、容错</li>
+<li><strong>Agents：</strong> 领域推理与上下文洞察</li>
+</ul>
+<h2 id="系统架构">系统架构</h2>
+<p>该欺诈检测 <a href="https://github.com/microsoft/OpenAIWorkshop/tree/int-agentic/agentic_ai/workflow/fraud_detection?WT.mc_id=AI-MVP-5003172">scenario</a> 使用典型的 <strong>fan-out / fan-in</strong> 编排模式：</p>
+<ul>
+<li>fan-out：同时触发多个专家代理并行分析</li>
+<li>fan-in：汇总各分支结果，最后进行确定性决策</li>
+</ul>
+<p>整体由四个组件构成：Alert Router、Specialist Agents、Fraud Risk Aggregator、Deterministic Decision Logic。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260107121419-a6b2937451ca44459435fa2f6e777513.png">
+            <img class="mx-auto" alt="" src="/uploads/20260107121419-a6b2937451ca44459435fa2f6e777513.png" />
+        </a>
+    </p>
+<h3 id="alert-router">Alert Router</h3>
+<p>Alert Router 是工作流入口。当新告警到达时（例如：来自多个国家的登录尝试、交易突然激增），它会启动工作流并把任务并行分发给多个代理。它负责的是“编排”，而不是“解释数据”。</p>
+<p>它通常会封装：</p>
+<ul>
+<li>工作流初始化（告警接入与元数据记录）</li>
+<li>上下文创建（customer ID、时间窗口、告警类型）</li>
+<li>启动多个代理的并行执行</li>
+<li>fan-out 协调与错误传播处理</li>
+</ul>
+<p>这一阶段是完全确定性的。</p>
+<h3 id="specialist-agents专家代理">Specialist Agents（专家代理）</h3>
+<p>工作流中有三个领域代理，每个代理都通过 MCP（Model Context Protocol）被限制在<strong>严格的工具/数据访问范围</strong>内：</p>
+<table>
+  <thead>
+      <tr>
+          <th>Agent</th>
+          <th>责任</th>
+          <th>示例数据访问</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>UsagePatternAgent</td>
+          <td>分析用量/行为异常</td>
+          <td>访问用量指标 API</td>
+      </tr>
+      <tr>
+          <td>LocationAgent</td>
+          <td>检测地理位置不一致或异常登录来源</td>
+          <td>GeoIP 查询或登录日志</td>
+      </tr>
+      <tr>
+          <td>BillingAgent</td>
+          <td>检视近期交易趋势与异常扣费</td>
+          <td>账单或支付服务 API</td>
+      </tr>
+  </tbody>
+</table>
+<p>这些代理在工作流运行时以“自主”的方式执行：</p>
+<ul>
+<li>使用 LLM 推理解释结构化或半结构化数据</li>
+<li>产出类型化输出（例如：带分数与解释的异常报告）</li>
+<li>将日志与 traces 写入共享的可观测性通道</li>
+</ul>
+<p>三者并行运行，从而能快速完成彼此独立的分析。</p>
+<h3 id="fraud-risk-aggregator风险聚合器">Fraud Risk Aggregator（风险聚合器）</h3>
+<p>当专家代理全部完成后，结果进入 Risk Aggregator，执行 fan-in 阶段。它相当于“推理层”：作为一个 LLM 驱动的代理，把多个专家的结构化结果整合成统一评估。</p>
+<p>它会输出一个类型化的 <code>RiskAssessment</code> 对象，包含：</p>
+<ul>
+<li><code>risk_score</code> (float)</li>
+<li><code>recommendation</code>（例如：<code>LOCK_ACCOUNT</code> 或 <code>ALLOW</code>）</li>
+<li><code>justification</code>（简短的推理总结）</li>
+</ul>
+<p>聚合器通常会使用 prompt 模板与 schema 来约束输出一致性，避免不可预测的响应。AI 推理发生在这里，但仍处于“可控且可验证”的边界内。</p>
+<h3 id="deterministic-decision-logic确定性决策逻辑">Deterministic Decision Logic（确定性决策逻辑）</h3>
+<p>最后，工作流基于聚合结果执行一个确定性规则。例如：</p>
+<pre tabindex="0"><code>if risk_score &gt; 0.6:
+    route_to_human(&#34;analyst_review&#34;)
+else:
+    auto_resolve()
+</code></pre><p>这一层是完全非 AI 的：提供企业流程所需的可预测性、可追溯性与治理能力。</p>
+<p>当案例高风险时，系统会 checkpoint 并暂停，等待人工审核。分析师批准或拒绝后，工作流从 checkpoint 继续执行直至完成。这样每条决策路径都能被复现并被记录，使系统既“智能”也“可审计”。</p>
+<h2 id="执行特性">执行特性</h2>
+<h3 id="checkpointing检查点">Checkpointing（检查点）</h3>
+<p>每个工作流步骤都可以保存并恢复状态。等待人工审批时会写入 checkpoint；即使进程重启或机器故障，也能从最后状态继续，不丢数据。</p>
+<p>框架运行时内置 checkpoint 机制：它会序列化执行上下文以及已完成步骤的输出，并存入持久化后端。保存的状态通常包含：</p>
+<ul>
+<li>工作流变量</li>
+<li>已完成步骤输出</li>
+<li>待执行任务</li>
+<li>执行元数据</li>
+</ul>
+<p>因此可以做到容错恢复与确定性 replay。</p>
+<h3 id="parallelism并行">Parallelism（并行）</h3>
+<p>三个专家代理互不依赖，因此工作流用并行执行取代顺序阻塞；运行时会安全地管理并发，按完成顺序收集结果并在 fan-in 合流。</p>
+<h3 id="fault-tolerance-and-recovery容错与恢复">Fault Tolerance and Recovery（容错与恢复）</h3>
+<p>如果某个代理或执行器失败，运行时可以从 checkpoint 重启该节点，而不重复运行已完成步骤。恢复过程是确定性且幂等的——这对金融/医疗等自动化场景很关键。</p>
+<h3 id="observability可观测性">Observability（可观测性）</h3>
+<p>框架会发出：</p>
+<ul>
+<li>每个节点执行的 OpenTelemetry traces</li>
+<li>用于仪表盘实时可视化的 WebSocket 事件流</li>
+<li>结构化审计日志：记录每次代理调用与 LLM 响应</li>
+</ul>
+<h3 id="human-in-the-loop-integration人机协同--hitl">Human in the Loop Integration（人机协同 / HITL）</h3>
+<p>并非所有决策都应该自动化。这里的工作流包含一个“人工复核节点”，当风险评估较高时触发：节点会挂起执行并等待审批；分析师批准或拒绝后，再从 checkpoint 恢复。</p>
+<p>这种模式能在不引入复杂外部流程编排的前提下，把自动化与必要的人类监督融合起来。</p>
+<h2 id="实现概览">实现概览</h2>
+<p>在 Microsoft Agent Framework 中，欺诈检测工作流以 <strong>workflow graph（工作流图）</strong> 实现：它由一组连接起来的 executors（节点）组成，定义精确的操作顺序、数据流与控制逻辑。</p>
+<p>整体流程可以概括为：</p>
+<ol>
+<li>将可疑告警 <strong>fan-out</strong> 给多个领域专家代理（使用、位置、账单）并行分析</li>
+<li>将并行结果 <strong>fan-in</strong> 到一个 AI 聚合代理</li>
+<li>将聚合后的风险评估交给 <strong>确定性决策逻辑</strong></li>
+<li>对高风险案例可选地在 <strong>HITL checkpoint</strong> 暂停等待人工复核</li>
+<li>恢复后执行最终的反欺诈动作并通知用户</li>
+</ol>
+<h3 id="fan-out--fan-in并行代理">Fan-Out / Fan-In（并行代理）</h3>
+<p>这是核心编排模式。</p>
+<ul>
+<li>
+<p><strong>Fan-Out：</strong> 一条告警被分发到多个 executor 并行执行。在代码里可以写成：</p>
+<pre tabindex="0"><code># Create workflow builder
+builder = WorkflowBuilder()
+
+# Fan-out: AlertRouter → Usage, Location, Billing executors
+builder.add_fan_out_edges(alert_router, [
+    usage_executor,
+    location_executor,
+    billing_executor
+])
+</code></pre><p>这表示 <code>AlertRouterExecutor</code> 会把同一条告警发送给三个专门的代理（各自使用受限的 MCP 工具），并发完成分析。</p>
+</li>
+<li>
+<p><strong>Fan-In：</strong> 工作流等待所有并行分支完成，然后把结果合并到 <code>FraudRiskAggregatorExecutor</code>：</p>
+<pre tabindex="0"><code># Fan-in: Usage, Location, Billing → Aggregator
+builder.add_fan_in_edges(
+    [usage_executor, location_executor, billing_executor],
+    aggregator
+)
+</code></pre><p>聚合器作为 LLM 推理代理，会综合各分支发现，计算统一风险分数并给出建议，同时受 schema 约束。</p>
+</li>
+</ul>
+<h3 id="路由与-hitl">路由与 HITL</h3>
+<p>当聚合器输出 <code>FraudRiskAssessment</code> 后，工作流应用确定性决策逻辑：</p>
+<pre tabindex="0"><code>builder.add_switch_case_edge_group(
+    aggregator,
+    [
+        # High risk → Analyst review via ReviewGatewayExecutor
+        Case(condition=lambda assessment: assessment.overall_risk_score &gt;= 0.6,
+             target=review_gateway),
+        # Low risk → Auto clear
+        Default(target=auto_clear),
+    ],
+)
+</code></pre><ul>
+<li><strong>高风险</strong> 会通过 <code>RequestInfoExecutor</code> 路由给人工分析师复核，并在此处 checkpoint，确保可安全暂停/恢复。</li>
+<li><strong>低风险</strong> 由 <code>AutoClearExecutor</code> 自动放行。</li>
+</ul>
+<p>两条路径最终都会汇聚到 <code>FinalNotificationExecutor</code>，发送客户通知并记录审计轨迹。</p>
+<h3 id="这套设计为什么重要">这套设计为什么重要</h3>
+<p>这种模块化、图驱动的设计意味着：</p>
+<ul>
+<li><strong>并行分析</strong> 能随计算资源线性扩展。</li>
+<li><strong>确定性编排</strong> 保证可复现与容错。</li>
+<li><strong>HITL checkpoint</strong> 能把自动化与必要的人类监督自然融合。</li>
+<li><strong>可扩展性</strong>：替换代理或新增代理不需要改变编排模式。</li>
+</ul>
+<h2 id="应用视图">应用视图</h2>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260107121420-ff17015679954f39a24915dec1e49872.png">
+            <img class="mx-auto" alt="" src="/uploads/20260107121420-ff17015679954f39a24915dec1e49872.png" />
+        </a>
+    </p>
+<h2 id="部署灵活性">部署灵活性</h2>
+<p>原文总结了这套方案在部署层面的可选项：</p>
+<ul>
+<li>Runtime：基于 Microsoft Agent Framework 核心，提供工作流执行、checkpoint 持久化与 tracing。</li>
+<li>Models：代理可调用任何可用的 LLM（通过 Azure OpenAI、Azure AI Foundry 或其他渠道）。</li>
+<li>Storage：checkpoint 与日志可使用常见后端（例如 Azure Blob、PostgreSQL）。</li>
+<li>Security：MCP 工具隔离访问；凭据与密钥不进入 LLM 上下文。</li>
+<li><a href="https://github.com/microsoft/agent-framework/tree/3d31a4a204b3abfcba61e1dcb2c247c3bf0bab8f/python/samples/getting_started/observability?WT.mc_id=AI-MVP-5003172">Monitoring and Observability</a>：OpenTelemetry 数据可对接 Azure Monitor、Grafana 或 Azure AI Foundry。</li>
+<li>开发者既可以本地跑完整系统，也可以以容器化组件部署到 Azure Kubernetes Service。</li>
+</ul>
+<h2 id="扩展这种模式">扩展这种模式</h2>
+<p>同样的架构也适用于其他受监管流程，例如：</p>
+<ul>
+<li>保险理赔审核</li>
+<li>医疗授权审批</li>
+<li>贷款核保</li>
+<li>需要人工复核的文档分类</li>
+</ul>
+<p>通常只需要替换“代理定义”和“工具绑定”，编排逻辑可以保持不变。</p>
+<h2 id="总结">总结</h2>
+<p>这个欺诈检测工作流示例展示了一种实用的组合方式：用确定性工作流确保可控、可追溯、可恢复；用 AI 代理在合适的环节做领域推理。</p>
+<p>一条告警会 fan-out 到三个专家代理（使用、位置、账单）并行分析；结果 fan-in 给 AI 聚合代理输出类型化的风险评估；最后由确定性规则决定是自动放行还是进入人工复核 checkpoint。整个流程还覆盖了 checkpointing、并行执行、类型安全消息与 OpenTelemetry 可观测性，确保在中断后可从最后状态恢复，形成可靠、可审计、可复现的执行路径。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2025-10-11-building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/">https://beanhsiang.github.io/post/2025-10-11-building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-06-code-review-in-the-age-of-ai/" title="AI 时代的代码审查" target="_blank">AI 时代的代码审查</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-06-mbml-learning-skills/" title="[译]基于模型的机器学习 - 第二章 评估人们的技能" target="_blank">[译]基于模型的机器学习 - 第二章 评估人们的技能</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-05-mbml-murder-mystery_extending_the_model/" title="[译]基于模型的机器学习 - 1.4 扩展模型" target="_blank">[译]基于模型的机器学习 - 1.4 扩展模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/" title="为 Azure Voice Live 构建可用于生产的 SIP 网关" target="_blank">为 Azure Voice Live 构建可用于生产的 SIP 网关</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-01-why-web-ai-agents-are-more-vulnerable-than-standalone-llms-and-how-we-should-actually-fix-it/" title="为什么 Web AI Agent 比独立 LLM 更脆弱——以及我们应该如何真正修复它" target="_blank">为什么 Web AI Agent 比独立 LLM 更脆弱——以及我们应该如何真正修复它</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-12-12-observability-for-multi-agent-systems-with-microsoft-agent-framework-and-azure-ai-foundry/" title="使用 Microsoft Agent Framework 与 Azure AI Foundry 为多智能体系统构建可观测性" target="_blank">使用 Microsoft Agent Framework 与 Azure AI Foundry 为多智能体系统构建可观测性</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-12-08-monitoring-generative-ai-applications-with-azure-ai-foundry/" title="使用 Azure AI Foundry 监控生成式 AI 应用" target="_blank">使用 Azure AI Foundry 监控生成式 AI 应用</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/" title="使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文" target="_blank">使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/" title="使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（上）：隐私优先的本地&#43;云端协同" target="_blank">使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（上）：隐私优先的本地&#43;云端协同</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/" title="使用 Agent Framework 构建带人工审批的多智能体顺序工作流" target="_blank">使用 Agent Framework 构建带人工审批的多智能体顺序工作流</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (38)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

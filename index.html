@@ -370,29 +370,35 @@
     <article class="post">
         <header>
             <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/" title="介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队" target="_blank">介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队</a>
+                <a href="https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/" title="使用 Agent Framework 构建带人工审批的多智能体顺序工作流" target="_blank">使用 Agent Framework 构建带人工审批的多智能体顺序工作流</a>
             </h1>
         </header>
         
-  <time datetime="2025-07-03T02:00:00Z" class="post-meta meta-date dt-published">
-    2025年7月3日
+  <time datetime="2025-10-31T04:00:00Z" class="post-meta meta-date dt-published">
+    2025年10月31日
   </time>
 
 
 <div class="post-meta meta-category">
   <span>&nbsp;|</span>
   
-    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
   
 </div>
 
 
         <div class="post-content">
-            <p>GitHub 官方近日宣布推出了一个令人兴奋的社区资源 —— <a href="https://github.com/github/awesome-copilot?WT.mc_id=AI-MVP-5003172">Awesome GitHub Copilot Customizations</a> 仓库！这个社区驱动的资源库包含了大量的自定义指令、可重用提示和自定义聊天模式，帮助开发者获得更一致、更个性化的 AI 编程辅助体验。</p>
-<h2 id="什么是-awesome-copilot-仓库">什么是 Awesome Copilot 仓库？</h2>
-<p>Awesome Copilot 仓库是一个旨在帮助开发者充分利用 GitHub Copilot 的资源集合。通过将 Copilot 定制为符合特定需求的工具，开发者可以获得更加精准和有用的代码建议。随着越来越多的开发者贡献自己的指令、提示和聊天模式，这个仓库的内容将不断丰富和完善。</p>……
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260107112735-5f20492722ae4b239416b97e0f27ff8a.png">
+            <img class="mx-auto" alt="" src="/uploads/20260107112735-5f20492722ae4b239416b97e0f27ff8a.png" />
+        </a>
+    </p>
+<p><em>题图来源：Microsoft Tech Community 原文页面（见文末链接）。</em></p>
+<h2 id="摘要">摘要</h2>
+<p>在需要“高自动化 + 强审计/合规”的 AI 工作流里，人类审批（human-in-the-loop）往往是绕不过去的一环：既要让多智能体协作把流程跑起来，又要在关键动作（例如停机、触发维护）前强制停下来等人确认。</p>
+<p>Microsoft 在一篇示例文章中给出了一套脚本化方案：使用 Agent Framework 编排一个<strong>顺序（sequential）多智能体工作流</strong>，底层调用 <strong>Azure AI Foundry 的持久化（persistent）agents</strong>，并利用 **workflow checkpointing（检查点）**实现“暂停—等待审批—从检查点恢复继续执行”。</p>……
         </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/" target="_blank">阅读全文</a></p>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/" target="_blank">阅读全文</a></p>
     </article>
     
     
@@ -529,7 +535,7 @@
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/" title="介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队" target="_blank">介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队</a>
+        <a href="https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/" title="使用 Agent Framework 构建带人工审批的多智能体顺序工作流" target="_blank">使用 Agent Framework 构建带人工审批的多智能体顺序工作流</a>
     </li>
     
 </ul>
@@ -551,7 +557,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (7)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (8)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

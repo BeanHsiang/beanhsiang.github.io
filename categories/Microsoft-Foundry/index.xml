@@ -57,5 +57,12 @@
       <guid>https://beanhsiang.github.io/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/</guid>
       <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260105114656-3f580f262ff74ddd96bc8d6400074e74.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260105114656-3f580f262ff74ddd96bc8d6400074e74.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;原文链接：https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework&amp;mdash;part-1/4470813?WT.mc_id=AI-MVP-5003172&lt;/p&gt;</description>
     </item>
+    <item>
+      <title>使用 Agent Framework 构建带人工审批的多智能体顺序工作流</title>
+      <link>https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/</link>
+      <pubDate>Fri, 31 Oct 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/</guid>
+      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260107112735-5f20492722ae4b239416b97e0f27ff8a.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260107112735-5f20492722ae4b239416b97e0f27ff8a.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;题图来源：Microsoft Tech Community 原文页面（见文末链接）。&lt;/em&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;摘要&#34;&gt;摘要&lt;/h2&gt;&#xA;&lt;p&gt;在需要“高自动化 + 强审计/合规”的 AI 工作流里，人类审批（human-in-the-loop）往往是绕不过去的一环：既要让多智能体协作把流程跑起来，又要在关键动作（例如停机、触发维护）前强制停下来等人确认。&lt;/p&gt;&#xA;&lt;p&gt;Microsoft 在一篇示例文章中给出了一套脚本化方案：使用 Agent Framework 编排一个&lt;strong&gt;顺序（sequential）多智能体工作流&lt;/strong&gt;，底层调用 &lt;strong&gt;Azure AI Foundry 的持久化（persistent）agents&lt;/strong&gt;，并利用 **workflow checkpointing（检查点）**实现“暂停—等待审批—从检查点恢复继续执行”。&lt;/p&gt;</description>
+    </item>
   </channel>
 </rss>

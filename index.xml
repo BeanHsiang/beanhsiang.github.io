@@ -93,6 +93,34 @@
       <description>&lt;p&gt;原文链接：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/4460342?WT.mc_id=AI-MVP-5003172&#34;&gt;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/4460342?WT.mc_id=AI-MVP-5003172&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260107121419-0f605ecc540d420ea89d4a7bd85c3179.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260107121419-0f605ecc540d420ea89d4a7bd85c3179.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;h2 id=&#34;一个把确定性编排与自主代理结合起来的欺诈检测示例&#34;&gt;一个把确定性编排与自主代理结合起来的欺诈检测示例&lt;/h2&gt;&#xA;&lt;p&gt;现代企业系统经常面临一个非常现实的问题：&lt;strong&gt;如何让 AI 的决策可靠、可解释，并且真正能在生产环境落地？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;原文围绕一个“欺诈检测（Fraud Detection）”示例，展示了 Microsoft Agent Framework 如何把 AI 驱动的推理步骤放进一个可控的工作流里：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;工作流图（workflow graph）负责&lt;strong&gt;确定性编排&lt;/strong&gt;：控制执行顺序、并行与合流、容错与恢复&lt;/li&gt;&#xA;&lt;li&gt;专家代理（agents）负责&lt;strong&gt;LLM 推理&lt;/strong&gt;：在结构化/半结构化数据上做领域判断&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;完整实现代码仓库在这里：&lt;/p&gt;</description>
     </item>
     <item>
+      <title>将 Azure AI Foundry 与 Copilot Studio 集成:战略与技术概览</title>
+      <link>https://beanhsiang.github.io/post/2025-09-30-integrating-azure-ai-foundry-with-copilot-studio/</link>
+      <pubDate>Tue, 30 Sep 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-09-30-integrating-azure-ai-foundry-with-copilot-studio/</guid>
+      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260108114743-347696f0249c4842ba1c0a110609bd2a.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Integrating Azure AI Foundry with Copilot Studio&#34; src=&#34;https://beanhsiang.github.io/uploads/20260108114743-347696f0249c4842ba1c0a110609bd2a.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;原文链接&lt;/strong&gt;: &lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/integrating-azure-ai-foundry-with-copilot-studio-a-strategic-and-technical-overv/4457370?WT.mc_id=AI-MVP-5003172&#34;&gt;Integrating Azure AI Foundry with Copilot Studio: A Strategic and Technical Overview&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;随着组织加速 AI 采用,对灵活、可扩展和安全的平台需求变得至关重要。我之前在文章《&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/navigating-ai-solutions-microsoft-copilot-studio-vs-azure-ai-foundry/4411678?WT.mc_id=AI-MVP-5003172&#34;&gt;导航 AI 解决方案:Microsoft Copilot Studio 与 Azure AI Foundry&lt;/a&gt;》中介绍过两种强大但截然不同的 AI 代理构建方法。Copilot Studio 提供了低代码/无代码界面以便快速部署,面向各类业务用户;而 Azure AI Foundry 则提供了专业代码环境,具备深度定制和编排能力,面向开发者群体。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Azure AI Foundry Agents:构建智能的、目标驱动的自主 AI 系统</title>
+      <link>https://beanhsiang.github.io/post/2025-09-05-azure-ai-foundry-agents-build-intelligent-goal-driven-ai-that-acts-autonomously/</link>
+      <pubDate>Fri, 05 Sep 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-09-05-azure-ai-foundry-agents-build-intelligent-goal-driven-ai-that-acts-autonomously/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://azure.microsoft.com/products/ai-foundry?WT.mc_id=AI-MVP-5003172&#34;&gt;Azure AI Foundry Agents&lt;/a&gt; 是 Azure AI Foundry 平台中的一项新功能,它让我们能够构建智能的、目标驱动的 AI 系统,这些系统可以自主行动以完成复杂的任务。&lt;/p&gt;&#xA;&lt;h2 id=&#34;什么是-ai-agent&#34;&gt;什么是 AI Agent?&lt;/h2&gt;&#xA;&lt;p&gt;在我使用 Azure AI Foundry 的过程中,我发现 AI Agent 与传统的 AI 应用有着本质的区别。传统的 AI 应用通常是响应式的——它们等待用户输入,处理请求,然后返回结果。而 AI Agent 则具有主动性,它们能够:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>超越提示词：Agentic AI 如何重塑人机协作</title>
+      <link>https://beanhsiang.github.io/post/2025-08-21-beyond-prompts-agentic-ai-redefining-human-ai-collaboration/</link>
+      <pubDate>Thu, 21 Aug 2025 10:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-08-21-beyond-prompts-agentic-ai-redefining-human-ai-collaboration/</guid>
+      <description>&lt;p&gt;原文：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/beyond-prompts-how-agentic-ai-is-redefining-human-ai-collaboration/4445774?WT.mc_id=AI-MVP-5003172&#34;&gt;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/beyond-prompts-how-agentic-ai-is-redefining-human-ai-collaboration/4445774?WT.mc_id=AI-MVP-5003172&lt;/a&gt;（原文标注日期：2025-08-20）&lt;/p&gt;&#xA;&lt;p&gt;这篇来自 Microsoft Foundry Blog 的文章聚焦一个正在快速成型的趋势：从“写好提示词、等模型回答”的交互方式，转向“能够思考、规划、调用工具、并在反馈中调整”的 Agentic AI（智能体式 AI）。文章将其视为从被动助手到主动协作者的跃迁，并用一个学习助理的例子拆解了智能体系统的关键组成。&lt;/p&gt;&#xA;&lt;h2 id=&#34;从反应式到主动式&#34;&gt;从“反应式”到“主动式”&lt;/h2&gt;&#xA;&lt;p&gt;传统的 AI 使用方式高度依赖 prompt：用户提问，模型给出一次性回答。这类系统往往是&lt;strong&gt;反应式&lt;/strong&gt;的——更擅长单轮任务，缺少跨步骤的规划能力，也缺少在动态环境里自我调整的机制。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>AI 智能体 MCP 工具:使用 Azure AI Foundry SDK 快速开始 MCP 工具开发</title>
+      <link>https://beanhsiang.github.io/post/2025-08-12-ai-agent-mcp-tools-quickstart-to-mcp-tools-development-with-azure-ai-foundry-sdk/</link>
+      <pubDate>Tue, 12 Aug 2025 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-08-12-ai-agent-mcp-tools-quickstart-to-mcp-tools-development-with-azure-ai-foundry-sdk/</guid>
+      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260108114135-2319315ac0f04a8baaf4e00c0b02e022.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260108114135-2319315ac0f04a8baaf4e00c0b02e022.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;随着 AI 智能体变得越来越复杂,对与强大云端工具无缝集成的需求也在不断增长。我发现 Azure AI Foundry SDK 与 MCP(模型上下文协议)工具的结合,创造了一个强大的组合,让开发者能够轻松地构建、部署和管理智能代理。&lt;/p&gt;&#xA;&lt;h2 id=&#34;解决方案概述&#34;&gt;解决方案概述&lt;/h2&gt;&#xA;&lt;p&gt;我在使用 &lt;a href=&#34;https://github.com/ccoellomsft/AI-Foundry-Agent-MCP?WT.mc_id=AI-MVP-5003172&#34;&gt;AI-Foundry-Agent-MCP GitHub 仓库&lt;/a&gt;时发现,它为将 MCP 工具与 Azure AI Foundry SDK 集成提供了一个实用的解决方案。通过这个设置,我们可以:&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队</title>
       <link>https://beanhsiang.github.io/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/</link>
       <pubDate>Thu, 03 Jul 2025 10:00:00 +0800</pubDate>

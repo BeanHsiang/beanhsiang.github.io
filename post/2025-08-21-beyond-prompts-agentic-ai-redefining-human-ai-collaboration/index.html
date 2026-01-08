@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>超越提示词：Agentic AI 如何重塑人机协作 | Innovation with tech</title>
+    <meta property="og:title" content="超越提示词：Agentic AI 如何重塑人机协作 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2025-08-21T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2025-08-21T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="超越提示词：Agentic AI 如何重塑人机协作">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2025-08-21-beyond-prompts-agentic-ai-redefining-human-ai-collaboration/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">超越提示词：Agentic AI 如何重塑人机协作</h1>
+        </header>
+        
+  <time datetime="2025-08-21T02:00:00Z" class="post-meta meta-date dt-published">
+    2025年8月21日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>原文：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/beyond-prompts-how-agentic-ai-is-redefining-human-ai-collaboration/4445774?WT.mc_id=AI-MVP-5003172">https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/beyond-prompts-how-agentic-ai-is-redefining-human-ai-collaboration/4445774?WT.mc_id=AI-MVP-5003172</a>（原文标注日期：2025-08-20）</p>
+<p>这篇来自 Microsoft Foundry Blog 的文章聚焦一个正在快速成型的趋势：从“写好提示词、等模型回答”的交互方式，转向“能够思考、规划、调用工具、并在反馈中调整”的 Agentic AI（智能体式 AI）。文章将其视为从被动助手到主动协作者的跃迁，并用一个学习助理的例子拆解了智能体系统的关键组成。</p>
+<h2 id="从反应式到主动式">从“反应式”到“主动式”</h2>
+<p>传统的 AI 使用方式高度依赖 prompt：用户提问，模型给出一次性回答。这类系统往往是<strong>反应式</strong>的——更擅长单轮任务，缺少跨步骤的规划能力，也缺少在动态环境里自我调整的机制。</p>
+<p>在需要多步推理、记忆与一定自主性的场景里（例如研究、复杂任务编排、个性化长期辅导等），这种模式很容易成为瓶颈。</p>
+<p>文章提出，Agentic AI 的核心在于“循环式的工作流”，通常包含三类动作：</p>
+<ol>
+<li><strong>思考（Think）</strong>：分析输入、对任务进行推理、形成行动计划。</li>
+<li><strong>行动（Act）</strong>：选择并执行工具（函数、插件、外部系统等）来推进任务。</li>
+<li><strong>学习/调整（Learn）</strong>：根据结果或反馈（可选地）更新策略，持续改进。</li>
+</ol>
+<p>与静态工作流相比，智能体系统往往更强调：</p>
+<ul>
+<li><strong>自主决策</strong>：在目标与上下文约束下自行选择下一步动作</li>
+<li><strong>环境适配</strong>：面对变化能调整策略</li>
+<li><strong>协作能力</strong>：与人或其他智能体分工协作</li>
+</ul>
+<p>文章把这种变化概括为：AI 从“被动回答问题的助手”，逐步成为“能推进结果的协作者”。</p>
+<h2 id="什么是-agentic-ai">什么是 Agentic AI？</h2>
+<p>文章给出的定义是：Agentic AI 指那些不止生成静态文本响应的 AI 系统——它们能够在一定程度上<strong>推理、规划、行动并自适应</strong>。这些系统运行在更动态的环境中，围绕目标做决策，并通过调用工具去完成任务，尽量减少人类在每一步的介入。</p>
+<p>文中也提到，构建 Agentic AI 的框架生态正在丰富，例如 LangChain、Semantic Kernel、AutoGen、Crew AI、MetaGPT 等；底层模型选择也更灵活，可能是 Azure OpenAI、Anthropic Claude、Google Gemini、Mistral AI、Hugging Face Transformers 等。</p>
+<h2 id="agentic-ai-的关键特征">Agentic AI 的关键特征</h2>
+<p>文章将智能体式系统的能力拆解为四类特征：</p>
+<ol>
+<li><strong>自主性（Autonomy）</strong>：能基于上下文与目标自行决定采取哪些动作。</li>
+<li><strong>记忆（Memory）</strong>：能保留长期与短期上下文，从而实现跨会话的个性化与连贯性。</li>
+<li><strong>规划（Planning）</strong>：以函数调用（function calling）为代表的工具调用机制，让系统能够把复杂任务拆成多步，并在每一步获取结果后迭代调整策略（文章以 Semantic Kernel 的智能体为例来说明这类多步规划/执行）。</li>
+<li><strong>适应性（Adaptability）</strong>：能根据用户输入、环境变化或反馈动态改变行为，适用于任务管理、学习助手、研究 Copilot 等更“现实世界”的应用。</li>
+</ol>
+<h2 id="支撑-agentic-ai-的框架与平台">支撑 Agentic AI 的框架与平台</h2>
+<p>文章列举了几类“让智能体落地”的工具/平台，并给出了官方参考链接：</p>
+<ul>
+<li><strong>Semantic Kernel</strong>：用于构建具备技能（skills）、记忆与编排能力（orchestration）的智能体框架，支持插件、规划、多智能体协作。
+<ul>
+<li>参考：<a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-architecture?pivots=programming-language-csharp&amp;WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-architecture?pivots=programming-language-csharp&amp;WT.mc_id=AI-MVP-5003172</a></li>
+</ul>
+</li>
+<li><strong>Azure AI Foundry</strong>：偏托管的平台形态，用于部署可扩展、具备治理能力并能集成工具的智能体。
+<ul>
+<li>参考：<a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-types/azure-ai-agent?pivots=programming-language-csharp&amp;WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-types/azure-ai-agent?pivots=programming-language-csharp&amp;WT.mc_id=AI-MVP-5003172</a></li>
+</ul>
+</li>
+<li><strong>LangGraph</strong>：偏 JavaScript 生态的 SDK，用于构建具备记忆与工具调用能力的 agentic 应用，适合 Web 场景。
+<ul>
+<li>参考：<a href="https://learn.microsoft.com/en-us/azure/app-service/tutorial-ai-agent-web-app-langgraph-foundry-node?tabs=langgraph&amp;WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/app-service/tutorial-ai-agent-web-app-langgraph-foundry-node?tabs=langgraph&amp;WT.mc_id=AI-MVP-5003172</a></li>
+</ul>
+</li>
+<li><strong>Copilot Studio</strong>：低代码方式构建定制 Copilot 与 agentic 工作流，支持生成式 AI、插件与编排，更贴近企业级对话式代理。
+<ul>
+<li>参考：<a href="https://www.microsoft.com/en-us/microsoft-copilot/blog/copilot-studio/building-your-own-copilot-with-copilot-studio/?WT.mc_id=AI-MVP-5003172">https://www.microsoft.com/en-us/microsoft-copilot/blog/copilot-studio/building-your-own-copilot-with-copilot-studio/?WT.mc_id=AI-MVP-5003172</a></li>
+</ul>
+</li>
+<li><strong>Microsoft 365 Copilot</strong>：把类似的 agentic 能力嵌入 Word、Excel、Teams 等生产力工具，提供上下文相关的多步辅助。
+<ul>
+<li>参考：<a href="https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-overview?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-overview?WT.mc_id=AI-MVP-5003172</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="为什么重要从计算器到聪明队友">为什么重要：从“计算器”到“聪明队友”</h2>
+<p>文章用一个直观类比说明两类系统的差异：</p>
+<ul>
+<li>传统生成式 AI 更像<strong>计算器</strong>：输入问题，输出答案；偏单次、反应式、上下文有限。</li>
+<li>Agentic AI 更像<strong>聪明队友</strong>：理解目标、规划多步动作、记住历史互动，并能随着需求变化调整做法。</li>
+</ul>
+<p>对应到特性对比，文章给出了一个表格：</p>
+<table>
+  <thead>
+      <tr>
+          <th>特性</th>
+          <th>生成式 AI</th>
+          <th>Agentic AI</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>交互方式</td>
+          <td>一次性响应（one-shot）</td>
+          <td>多轮、目标驱动</td>
+      </tr>
+      <tr>
+          <td>上下文感知</td>
+          <td>有限</td>
+          <td>持久记忆</td>
+      </tr>
+      <tr>
+          <td>任务执行</td>
+          <td>静态</td>
+          <td>动态且更自主</td>
+      </tr>
+      <tr>
+          <td>适应性</td>
+          <td>低</td>
+          <td>高（可基于反馈/输入调整）</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="工作方式示例面向学生的智能学习助理">工作方式示例：面向学生的“智能学习助理”</h2>
+<p>为了更具体地解释“智能体到底怎么工作”，文章构造了一个学生 Alice 备考期末考试的场景：Alice 使用一个由 Agentic AI 驱动的 Smart Study Assistant（智能学习助理）。文章把系统拆成四个模块来讲清楚其运行逻辑。</p>
+<h3 id="技能--函数skills--functions">技能 / 函数（Skills / Functions）</h3>
+<p>这类“技能”可以理解为智能体可调用的动作单元（callable units of logic），例如：</p>
+<ul>
+<li>总结课堂笔记</li>
+<li>生成测验题</li>
+<li>搜索学术论文</li>
+<li>安排学习日程</li>
+</ul>
+<p>文章强调，这些能力像“即插即用”的插件：智能体会在合适时机选择调用。</p>
+<h3 id="记忆memory">记忆（Memory）</h3>
+<p>为了个性化，助理会记住 Alice 的信息，例如：</p>
+<ul>
+<li>过去测验的分数</li>
+<li>她薄弱的知识点</li>
+<li>偏好的学习时间段</li>
+</ul>
+<p>这样做的目的，是让推荐更贴近个人，同时避免重复她已经掌握的内容。</p>
+<h3 id="规划器planner">规划器（Planner）</h3>
+<p>智能体不会试图“一次性做完所有事”，而是把目标拆解为步骤，并在每个阶段选择合适的技能/函数：</p>
+<ul>
+<li>将“备考”拆成多个阶段</li>
+<li>生成按周推进的学习计划</li>
+<li>决定每个阶段该调用哪些能力</li>
+</ul>
+<p>文章把它比作“能制定个性化路线图的家教”。</p>
+<h3 id="编排器orchestrator">编排器（Orchestrator）</h3>
+<p>编排器是负责协调的“大脑”：它决定何时读写记忆、何时调用哪个函数，并在 Alice 错过学习安排、或测验成绩不理想时调整计划。</p>
+<h2 id="结语">结语</h2>
+<p>文章的结论是：Agentic AI 正在把智能系统的角色从“被动助手”推向“主动协作者”。当交互模式不再局限于提示词，系统就能在自治性、适应性与人机协同上打开更多可能。</p>
+<p>对开发者、教育者或业务策略制定者而言，理解智能体框架与相关平台不再是可选项，而更像是一项基础能力。</p>
+<h2 id="官方资源用-microsoft-资源入门-agentic-ai">官方资源：用 Microsoft 资源入门 Agentic AI</h2>
+<p>文章给出了一组“只用官方 Microsoft 资源”的入门路径（并附上链接）：</p>
+<ol>
+<li>理解智能体概念与用例：<a href="https://learn.microsoft.com/en-us/training/modules/ai-agent-fundamentals/?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/training/modules/ai-agent-fundamentals/?WT.mc_id=AI-MVP-5003172</a></li>
+<li>配置 Azure 环境，并了解 Azure AI Foundry Agent Service 的 Quickstart：<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/agents/quickstart?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/ai-foundry/agents/quickstart?WT.mc_id=AI-MVP-5003172</a></li>
+<li>在 Azure AI Foundry 中创建第一个智能体（同 Quickstart）：<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/agents/quickstart?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/ai-foundry/agents/quickstart?WT.mc_id=AI-MVP-5003172</a></li>
+<li>用 Semantic Kernel 或 Foundry 构建一个 .NET 的 agentic Web 应用（教程）：<a href="https://learn.microsoft.com/en-us/azure/app-service/tutorial-ai-agent-web-app-semantic-kernel-foundry-dotnet?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/app-service/tutorial-ai-agent-web-app-semantic-kernel-foundry-dotnet?WT.mc_id=AI-MVP-5003172</a></li>
+<li>部署并测试智能体应用（同教程）：<a href="https://learn.microsoft.com/en-us/azure/app-service/tutorial-ai-agent-web-app-semantic-kernel-foundry-dotnet?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/app-service/tutorial-ai-agent-web-app-semantic-kernel-foundry-dotnet?WT.mc_id=AI-MVP-5003172</a></li>
+</ol>
+<p>进一步学习：</p>
+<ul>
+<li>用 Azure OpenAI 与 Semantic Kernel 开发生成式 AI 应用（此链接已含 WT 参数）：<a href="https://learn.microsoft.com/en-us/training/paths/develop-ai-agents-azure-open-ai-semantic-kernel-sdk/?WT.mc_id=api_CatalogApi&amp;context=sso&amp;source=viva-learning">https://learn.microsoft.com/en-us/training/paths/develop-ai-agents-azure-open-ai-semantic-kernel-sdk/?WT.mc_id=api_CatalogApi&amp;context=sso&amp;source=viva-learning</a></li>
+<li>Agentic app with Semantic Kernel or Azure AI Foundry (.NET)：<a href="https://learn.microsoft.com/en-us/azure/app-service/tutorial-ai-agent-web-app-semantic-kernel-foundry-dotnet?tabs=semantickernel&amp;WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/app-service/tutorial-ai-agent-web-app-semantic-kernel-foundry-dotnet?tabs=semantickernel&amp;WT.mc_id=AI-MVP-5003172</a></li>
+<li>AI Agent Orchestration Patterns（Azure Architecture Center）：<a href="https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/ai-agent-design-patterns?WT.mc_id=AI-MVP-5003172</a></li>
+<li>配置智能体的 Semantic Kernel 插件/函数：<a href="https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-functions?pivots=programming-language-csharp&amp;WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-functions?pivots=programming-language-csharp&amp;WT.mc_id=AI-MVP-5003172</a></li>
+<li>Logic Apps 中的 AI Agents &amp; Workflows 概念：<a href="https://learn.microsoft.com/en-us/azure/logic-apps/agent-workflows-concepts?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/logic-apps/agent-workflows-concepts?WT.mc_id=AI-MVP-5003172</a></li>
+</ul>
+<h2 id="关于作者原文信息整理">关于作者（原文信息整理）</h2>
+<p>原文作者为 Juliet Rajan（Lead Technical Trainer），长期从事 AI 教育相关工作，关注以 Azure AI Foundry 与 Semantic Kernel 为代表的平台之上，如何构建更具自主性的人机协作智能体。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2025-08-21-beyond-prompts-agentic-ai-redefining-human-ai-collaboration/">https://beanhsiang.github.io/post/2025-08-21-beyond-prompts-agentic-ai-redefining-human-ai-collaboration/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2025-08-12-ai-agent-mcp-tools-quickstart-to-mcp-tools-development-with-azure-ai-foundry-sdk/">AI 智能体 MCP 工具:使用 Azure AI Foundry SDK 快速开始 MCP 工具开发</a></li>
+        
+        <li><a href="/post/2025-04-24-using-pydanticai-for-agentic-development/">使用 PydanticAI 构建智能代理系统：从 MCP 到智能工单助手</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+                <li><a href='/tags/Agentic-AI' target="_blank">Agentic AI</a></li>
+                
+                <li><a href='/tags/Prompt-Engineering' target="_blank">Prompt Engineering</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/" title="2026 年值得关注的 7 个 Agentic AI 趋势" target="_blank">2026 年值得关注的 7 个 Agentic AI 趋势</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-06-code-review-in-the-age-of-ai/" title="AI 时代的代码审查" target="_blank">AI 时代的代码审查</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-06-mbml-learning-skills/" title="[译]基于模型的机器学习 - 第二章 评估人们的技能" target="_blank">[译]基于模型的机器学习 - 第二章 评估人们的技能</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-05-mbml-murder-mystery_extending_the_model/" title="[译]基于模型的机器学习 - 1.4 扩展模型" target="_blank">[译]基于模型的机器学习 - 1.4 扩展模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/" title="为 Azure Voice Live 构建可用于生产的 SIP 网关" target="_blank">为 Azure Voice Live 构建可用于生产的 SIP 网关</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-01-why-web-ai-agents-are-more-vulnerable-than-standalone-llms-and-how-we-should-actually-fix-it/" title="为什么 Web AI Agent 比独立 LLM 更脆弱——以及我们应该如何真正修复它" target="_blank">为什么 Web AI Agent 比独立 LLM 更脆弱——以及我们应该如何真正修复它</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-12-12-observability-for-multi-agent-systems-with-microsoft-agent-framework-and-azure-ai-foundry/" title="使用 Microsoft Agent Framework 与 Azure AI Foundry 为多智能体系统构建可观测性" target="_blank">使用 Microsoft Agent Framework 与 Azure AI Foundry 为多智能体系统构建可观测性</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-12-08-monitoring-generative-ai-applications-with-azure-ai-foundry/" title="使用 Azure AI Foundry 监控生成式 AI 应用" target="_blank">使用 Azure AI Foundry 监控生成式 AI 应用</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/" title="使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文" target="_blank">使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/" title="使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（上）：隐私优先的本地&#43;云端协同" target="_blank">使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（上）：隐私优先的本地&#43;云端协同</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (38)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (14)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Prompt Engineering on Innovation with tech</title>
+    <link>https://beanhsiang.github.io/tags/Prompt-Engineering/</link>
+    <description>Recent content in Prompt Engineering on Innovation with tech</description>
+    <generator>Hugo</generator>
+    <language>zh-Hans</language>
+    <lastBuildDate>Thu, 21 Aug 2025 10:00:00 +0800</lastBuildDate>
+    <atom:link href="https://beanhsiang.github.io/tags/Prompt-Engineering/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>超越提示词：Agentic AI 如何重塑人机协作</title>
+      <link>https://beanhsiang.github.io/post/2025-08-21-beyond-prompts-agentic-ai-redefining-human-ai-collaboration/</link>
+      <pubDate>Thu, 21 Aug 2025 10:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-08-21-beyond-prompts-agentic-ai-redefining-human-ai-collaboration/</guid>
+      <description>&lt;p&gt;原文：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/beyond-prompts-how-agentic-ai-is-redefining-human-ai-collaboration/4445774?WT.mc_id=AI-MVP-5003172&#34;&gt;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/beyond-prompts-how-agentic-ai-is-redefining-human-ai-collaboration/4445774?WT.mc_id=AI-MVP-5003172&lt;/a&gt;（原文标注日期：2025-08-20）&lt;/p&gt;&#xA;&lt;p&gt;这篇来自 Microsoft Foundry Blog 的文章聚焦一个正在快速成型的趋势：从“写好提示词、等模型回答”的交互方式，转向“能够思考、规划、调用工具、并在反馈中调整”的 Agentic AI（智能体式 AI）。文章将其视为从被动助手到主动协作者的跃迁，并用一个学习助理的例子拆解了智能体系统的关键组成。&lt;/p&gt;&#xA;&lt;h2 id=&#34;从反应式到主动式&#34;&gt;从“反应式”到“主动式”&lt;/h2&gt;&#xA;&lt;p&gt;传统的 AI 使用方式高度依赖 prompt：用户提问，模型给出一次性回答。这类系统往往是&lt;strong&gt;反应式&lt;/strong&gt;的——更擅长单轮任务，缺少跨步骤的规划能力，也缺少在动态环境里自我调整的机制。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

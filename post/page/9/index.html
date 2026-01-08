@@ -75,6 +75,144 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2022-10-13-enabling-deep-learning-with-azure-container-for-pytorch-in-azure/" title="在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习" target="_blank">在 Azure Machine Learning 中使用 Azure Container for PyTorch 启用深度学习</a>
+            </h1>
+        </header>
+        
+  <time datetime="2022-10-13T03:00:00Z" class="post-meta meta-date dt-published">
+    2022年10月13日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <h2 id="概述">概述</h2>
+<p>由于AzureML是许多PyTorch开发人员的首选平台，我们开发了新的Azure Container for PyTorch（ACPT），这是一个精心策划的环境，包括最好的Microsoft技术，用于在Azure上使用PyTorch进行训练。我们很高兴地宣布 Azure 机器学习 （AzureML） 中的 ACPT 公共预览版。这个新的特选环境是一个轻量级的独立环境，其中包含在 AzureML 上有效运行大型模型优化训练所需的组件。默认情况下，AzureML 特选环境在用户的工作区中可用，并由使用最新版本的 AzureML SDK 的缓存 Docker 映像提供支持。它有助于降低准备成本并缩短部署时间。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2022-10-13-enabling-deep-learning-with-azure-container-for-pytorch-in-azure/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2022-07-02-azure-cognitive-search-now-supports-swapping-indexes/" title="Azure Cognitive Search 支持交换索引" target="_blank">Azure Cognitive Search 支持交换索引</a>
+            </h1>
+        </header>
+        
+  <time datetime="2022-07-02T02:00:00Z" class="post-meta meta-date dt-published">
+    2022年7月2日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>搜索索引是不可变的，这意味着如果需要更新索引，通常需要<a href="https://docs.microsoft.com/azure/search/search-howto-reindex?WT.mc_id=AI-MVP-5003172">删除并重新生成</a>索引或创建新索引，然后迁移应用程序。像这样交换搜索索引会增加管理搜索索引的复杂性，如果最终需要在多个位置更新应用程序设置或需要重新部署代码，则可能会很困难。</p>
+<p>为了帮助更轻松地交换索引，Azure 认知搜索现在支持预览版提供的<a href="https://docs.microsoft.com/azure/search/search-how-to-alias?tabs=rest&amp;WT.mc_id=AI-MVP-5003172">索引别名</a>。别名是辅助名称，可用于引用索引以进行查询、索引和其他文档操作。您可以通过 <a href="https://docs.microsoft.com/rest/api/searchservice/preview-api/create-or-update-alias?WT.mc_id=AI-MVP-5003172">REST API</a>、<a href="https://docs.microsoft.com/azure/search/search-how-to-alias?tabs=vscode&amp;WT.mc_id=AI-MVP-5003172#create-an-index-alias">Visual Studio Code 扩展</a>或 <a href="https://docs.microsoft.com/dotnet/api/azure.search.documents.indexes.searchindexclient.createorupdatealias?WT.mc_id=AI-MVP-5003172&amp;view=azure-dotnet-preview#azure-search-documents-indexes-searchindexclient-createorupdatealias(system-string-azure-search-documents-indexes-models-searchalias-system-boolean-system-threading-cancellationtoken)">SDK</a> 创建别名。</p>
+<p><strong>POST https://[service name].search.windows.net/aliases?api-version=2021-04-30-Preview</strong></p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#0550ae">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;my-alias&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#0550ae">&#34;indexes&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;hotel-samples-index&#34;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果您发现自己相当频繁地更新搜索索引，则可能会从使用别名中受益。下图显示了在应用程序中使用索引别名的典型工作流。
+
+        <a data-fancybox="gallery" href="https://user-images.githubusercontent.com/3881276/224216713-4a1e6d70-0277-46cd-832a-1194d5decd2d.png">
+            <img class="mx-auto" alt="image" src="https://user-images.githubusercontent.com/3881276/224216713-4a1e6d70-0277-46cd-832a-1194d5decd2d.png" />
+        </a>
+    </p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2022-07-02-azure-cognitive-search-now-supports-swapping-indexes/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2022-06-22-azure-machine-learning-s-new-integration-with-h2o-ai/" title="Azure 机器学习与 H2O.ai 的新集成" target="_blank">Azure 机器学习与 H2O.ai 的新集成</a>
+            </h1>
+        </header>
+        
+  <time datetime="2022-06-22T02:00:00Z" class="post-meta meta-date dt-published">
+    2022年6月22日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>在当今复杂的云环境中，公司使用来自多个来源的技术是很常见的。云计算平台通常是企业IT环境的基础，由独立软件供应商和满足业务和工业垂直需求的产品补充。通过 H2O.ai 和 Azure 机器学习之间的集成，我们使客户能够使用类似 SaaS 的工具实现模型创建民主化，并选择符合其企业要求的部署技术。</p>
+<p>使用 H2O.ai 的 AzureML 集成，H2O.ai 中构建的模型现在显示为 AzureML 工作区中的已部署模型。这意味着任何用户或产品现在都可以通过简单的 API 调用利用 AzureML 中托管的 H2O.ai 模型的推理终结点。这使得组织模型的采用更加容易，允许用户访问整个企业 IT 环境中的模型，而无需更改现有的部署策略。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2022-06-22-azure-machine-learning-s-new-integration-with-h2o-ai/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/" title="有关 ML.NET 深度学习的计划" target="_blank">有关 ML.NET 深度学习的计划</a>
+            </h1>
+        </header>
+        
+  <time datetime="2021-09-21T08:43:00Z" class="post-meta meta-date dt-published">
+    2021年9月21日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/ML.NET' target="_blank">ML.NET</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>ML.NET 最需要的功能之一是能够从零开始创建神经网络模型，以便在 ML.NET 中进行深度学习。ML.NET 团队已经采纳了用户调研的反馈，并制定了开始实施此功能的计划。</p>
+<h2 id="mlnet-深度学习的现状">ML.NET 深度学习的现状</h2>
+<p>目前，ML.NET 没有一种方法可以创建神经网络，从零开始建立深度学习模型。然而，对于采用现有的深度学习模型并将其用于预测，框架给予极大的支持。如果您有 TensorFlow 或 ONNX 模型，则这些模型可用于 ML.NET 进行预测。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2021-09-21-mlnet-deep-learning-plans/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2021-09-02-mlnet-cheatsheet/" title="ML.NET 代码速查手册，高清图手慢无！" target="_blank">ML.NET 代码速查手册，高清图手慢无！</a>
             </h1>
         </header>
@@ -297,7 +435,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (10)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (14)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
@@ -371,6 +509,8 @@
     <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
     
     <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
     
     <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
     

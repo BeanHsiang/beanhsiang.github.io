@@ -9,11 +9,11 @@
     <lastBuildDate>Tue, 13 Jan 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/categories/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>用后端替换推理模型：成本降低96.9%，速度提升93.8%，准确率依然在线</title>
+      <title>我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</title>
       <link>https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/</link>
       <pubDate>Tue, 13 Jan 2026 12:00:00 +0800</pubDate>
       <guid>https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://miro.medium.com/v2/resize:fit:1400/format:webp/1*sWqAFbgWQjyc3VTbsB-bPQ.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Cover Image&#34; src=&#34;https://miro.medium.com/v2/resize:fit:1400/format:webp/1*sWqAFbgWQjyc3VTbsB-bPQ.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;最近,我在一个项目中遇到了一个有趣的挑战:如何在保持准确性的同时,显著降低AI推理的成本和延迟。经过一番探索,我发现了一个令人惊讶的解决方案——用传统的后端逻辑替换昂贵的推理模型。&lt;/p&gt;&#xA;&lt;h2 id=&#34;问题背景&#34;&gt;问题背景&lt;/h2&gt;&#xA;&lt;p&gt;在我的应用中,我使用OpenAI的o1-mini模型来处理用户查询并生成结构化的响应。虽然这个模型表现出色,但它存在两个主要问题:&lt;/p&gt;</description>
+      <description>&lt;p&gt;在研究 AI Agent 的过程中,我发现了一个有趣的现象:虽然质量至关重要,但成本和执行时间(推理时间)往往成为 Agent 管道中最大的争议点。&lt;/p&gt;&#xA;&lt;p&gt;像 GPT-5.2 或 Gemini 3 Pro 这样的&amp;quot;推理&amp;quot;大语言模型确实可以提高质量。然而,我注意到它们往往存在生成时间长和 token 使用量增加的问题,从而推高了成本和延迟。当 Agent 需要在每个任务中做出大量决策时,这种权衡就会成为一个重大瓶颈。&lt;/p&gt;</description>
     </item>
     <item>
       <title>2026 年值得关注的 7 个 Agentic AI 趋势</title>

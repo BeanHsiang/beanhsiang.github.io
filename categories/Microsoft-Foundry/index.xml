@@ -6,8 +6,15 @@
     <description>Recent content in Microsoft Foundry on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Wed, 07 Jan 2026 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 13 Jan 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/categories/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>用后端替换推理模型：成本降低96.9%，速度提升93.8%，准确率依然在线</title>
+      <link>https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/</link>
+      <pubDate>Tue, 13 Jan 2026 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/</guid>
+      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://miro.medium.com/v2/resize:fit:1400/format:webp/1*sWqAFbgWQjyc3VTbsB-bPQ.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Cover Image&#34; src=&#34;https://miro.medium.com/v2/resize:fit:1400/format:webp/1*sWqAFbgWQjyc3VTbsB-bPQ.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;最近,我在一个项目中遇到了一个有趣的挑战:如何在保持准确性的同时,显著降低AI推理的成本和延迟。经过一番探索,我发现了一个令人惊讶的解决方案——用传统的后端逻辑替换昂贵的推理模型。&lt;/p&gt;&#xA;&lt;h2 id=&#34;问题背景&#34;&gt;问题背景&lt;/h2&gt;&#xA;&lt;p&gt;在我的应用中,我使用OpenAI的o1-mini模型来处理用户查询并生成结构化的响应。虽然这个模型表现出色,但它存在两个主要问题:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>2026 年值得关注的 7 个 Agentic AI 趋势</title>
       <link>https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/</link>

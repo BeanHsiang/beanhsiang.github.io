@@ -16,6 +16,13 @@
       <description>&lt;p&gt;在研究 AI Agent 的过程中,我发现了一个有趣的现象:虽然质量至关重要,但成本和执行时间(推理时间)往往成为 Agent 管道中最大的争议点。&lt;/p&gt;&#xA;&lt;p&gt;像 GPT-5.2 或 Gemini 3 Pro 这样的&amp;quot;推理&amp;quot;大语言模型确实可以提高质量。然而,我注意到它们往往存在生成时间长和 token 使用量增加的问题,从而推高了成本和延迟。当 Agent 需要在每个任务中做出大量决策时,这种权衡就会成为一个重大瓶颈。&lt;/p&gt;</description>
     </item>
     <item>
+      <title>如何通过 Entra ID 身份验证使用 Microsoft Foundry</title>
+      <link>https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/</link>
+      <pubDate>Sat, 10 Jan 2026 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/</guid>
+      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260114150426-5e9b445b7c284d47820bd38456e71c9a.jpeg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Microsoft Foundry&#34; src=&#34;https://beanhsiang.github.io/uploads/20260114150426-5e9b445b7c284d47820bd38456e71c9a.jpeg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;Microsoft Foundry(2025 年 11 月之前称为 Azure AI Foundry)在使用服务时提供两种身份验证方式,包括 LLM 推理:基于密钥的身份验证和 Entra ID 身份验证。虽然基于密钥的身份验证更容易使用,但我想在这里分享使用 Entra ID 身份验证的优势,以及如何开始使用它的分步说明!&lt;/p&gt;&#xA;&lt;h2 id=&#34;entra-id-身份验证的优势&#34;&gt;Entra ID 身份验证的优势&lt;/h2&gt;&#xA;&lt;p&gt;基于密钥的身份验证快速简单……只需从 Foundry 门户获取 API 密钥,将其作为 header 插入 &lt;code&gt;api-key&lt;/code&gt; 名称下,就可以开始使用了!然而,由于其简单性,基于密钥的身份验证也存在一些限制。主要限制之一是安全性。虽然基于密钥的身份验证很简单,但它是&amp;quot;全有或全无&amp;quot;的访问方式——任何拥有该密钥的人都可以执行资源允许的任何操作。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>2026 年值得关注的 7 个 Agentic AI 趋势</title>
       <link>https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/</link>
       <pubDate>Wed, 07 Jan 2026 12:00:00 +0800</pubDate>

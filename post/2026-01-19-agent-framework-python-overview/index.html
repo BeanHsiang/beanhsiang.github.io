@@ -1,0 +1,1335 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>Agent Framework (Python) 完全指南 | Innovation with tech</title>
+    <meta property="og:title" content="Agent Framework (Python) 完全指南 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-01-19T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-01-19T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="Agent Framework (Python) 完全指南">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">Agent Framework (Python) 完全指南</h1>
+        </header>
+        
+  <time datetime="2026-01-19T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年1月19日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p><strong>agent_framework</strong> 是微软推出的 Python 库,专门用于构建 AI 代理应用程序。我在研究这个框架时发现,它为聊天代理、工作流、工具调用和中间件提供了非常优雅的抽象。核心类包括实现 <code>AgentProtocol</code> 协议的<strong>代理</strong>、用于在工作流中运行代理的<strong>执行器</strong>、用于聊天输入/输出的<strong>消息</strong>,以及用于定义工作流拓扑的<strong>构建器</strong>。例如,<code>AgentProtocol</code> 是一个结构化接口,任何代理都必须遵循它(比如 ChatAgent 就实现了这个接口)。</p>
+<h2 id="代理和执行器">代理和执行器</h2>
+<p>我发现代理是由 <code>AgentExecutor</code> 包装的,它可以适应流式或非流式模式。在使用时,你向执行器发送一个 <code>AgentExecutorRequest</code>(包含 <code>ChatMessage</code> 列表),执行器会产生一个包含代理回复的 <code>AgentExecutorResponse</code>。<code>AgentExecutorResponse</code> 包含一个 <code>AgentRunResponse</code>(实际的代理输出)和一个唯一的执行器 ID。在内部,<code>AgentThread</code> 为每个代理维护会话状态和历史记录,可以在本地或通过服务线程进行。</p>
+<h2 id="聊天消息和响应">聊天消息和响应</h2>
+<p>基于聊天的代理使用 <code>ChatMessage</code> 对象来表示消息。一个 <code>ChatMessage</code> 具有 <code>role</code>(例如 &ldquo;user&rdquo;、&ldquo;assistant&rdquo;、&ldquo;system&rdquo;)以及可选的 <code>text</code> 或丰富的 <code>contents</code>(例如函数调用或文件内容)。例如:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> ChatMessage
+</span></span><span style="display:flex;"><span>user_msg <span style="color:#0550ae">=</span> ChatMessage<span style="color:#1f2328">(</span>role<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span> text<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;What&#39;s the weather?&#34;</span><span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="代理和聊天框架">代理和聊天框架</h2>
+<h3 id="chatagent">ChatAgent</h3>
+<p>这是一个基于 ChatClient 的代理,用于驱动与 AI 模型的对话。它支持工具、上下文提供者、中间件,以及流式和非流式模式。</p>
+<p>我通常通过传递聊天客户端和系统指令来创建 <code>ChatAgent</code>。例如:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> ChatAgent<span style="color:#1f2328">,</span> ai_function
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework.openai</span> <span style="color:#cf222e">import</span> OpenAIChatClient
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 定义一个简单的工具(可选)</span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">@ai_function</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">get_weather</span><span style="color:#1f2328">(</span>location<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Weather in </span><span style="color:#0a3069">{</span>location<span style="color:#0a3069">}</span><span style="color:#0a3069">: sunny&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 创建聊天客户端和代理</span>
+</span></span><span style="display:flex;"><span>client <span style="color:#0550ae">=</span> OpenAIChatClient<span style="color:#1f2328">(</span>model_id<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;gpt-4&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>agent <span style="color:#0550ae">=</span> ChatAgent<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;assistant&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    chat_client<span style="color:#0550ae">=</span>client<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    instructions<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;You are a helpful assistant.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    tools<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>get_weather<span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 在用户消息上运行代理</span>
+</span></span><span style="display:flex;"><span>result <span style="color:#0550ae">=</span> <span style="color:#cf222e">await</span> agent<span style="color:#0550ae">.</span>run<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;What&#39;s the weather in London?&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>result<span style="color:#0550ae">.</span>messages<span style="color:#1f2328">[</span><span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>text<span style="color:#1f2328">)</span>  <span style="color:#57606a"># 例如 &#34;Weather in London: sunny&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这会产生一个包含生成消息的 <code>ChatResponse</code>。默认情况下,代理是无状态的;要维护对话上下文,需要使用 <code>AgentThread</code>(见下文)。</p>
+<h3 id="chatmessage">ChatMessage</h3>
+<p>表示对话中的单个聊天消息(角色 + 内容)。它具有 <code>role</code>(SYSTEM、USER 或 ASSISTANT)和 <code>text</code> 等属性。例如:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> ChatMessage
+</span></span><span style="display:flex;"><span>msg <span style="color:#0550ae">=</span> ChatMessage<span style="color:#1f2328">(</span>role<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span> text<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Hello, how are you?&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>msg<span style="color:#0550ae">.</span>role<span style="color:#1f2328">,</span> msg<span style="color:#0550ae">.</span>text<span style="color:#1f2328">)</span>  <span style="color:#57606a"># &#34;user Hello, how are you?&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>ChatResponse</code> 表示助手的完整回复。你可以从文本或消息构造它,它也支持流式更新。它有 <code>messages</code>、<code>text</code>、<code>finish_reason</code> 等字段。例如:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> ChatResponse<span style="color:#1f2328">,</span> ChatMessage
+</span></span><span style="display:flex;"><span>response <span style="color:#0550ae">=</span> ChatResponse<span style="color:#1f2328">(</span>text<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Hello, how can I help you?&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>msg <span style="color:#0550ae">=</span> ChatMessage<span style="color:#1f2328">(</span>role<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;assistant&#34;</span><span style="color:#1f2328">,</span> text<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;The weather is sunny.&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>response2 <span style="color:#0550ae">=</span> ChatResponse<span style="color:#1f2328">(</span>messages<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>msg<span style="color:#1f2328">],</span> finish_reason<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;stop&#34;</span><span style="color:#1f2328">,</span> model_id<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;gpt-4&#34;</span><span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>ChatResponseUpdate</code> 是来自聊天客户端的部分流式块。你可以使用 <code>ChatResponse.from_chat_response_updates(updates)</code> 将更新组合成最终响应。</p>
+<h3 id="聊天存储和选项">聊天存储和选项</h3>
+<p><code>agent_framework</code> 还包括聊天历史存储和设置。<code>ChatMessageStore</code>(使用协议 <code>ChatMessageStoreProtocol</code>)处理消息的持久化(内存中或自定义存储)。<code>ChatOptions</code> 封装请求设置:模型、温度、最大令牌数、停止序列、工具等。例如:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> ChatOptions
+</span></span><span style="display:flex;"><span>opts <span style="color:#0550ae">=</span> ChatOptions<span style="color:#1f2328">(</span>model_id<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;gpt-4&#34;</span><span style="color:#1f2328">,</span> temperature<span style="color:#0550ae">=</span><span style="color:#0550ae">0.7</span><span style="color:#1f2328">,</span> max_tokens<span style="color:#0550ae">=</span><span style="color:#0550ae">1000</span><span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这些选项在创建代理或发出请求时传递给聊天客户端(例如 AzureOpenAIChatClient)。</p>
+<h3 id="agentexecutor">AgentExecutor</h3>
+<p>这是一个包装代理的工作流执行器。<code>AgentExecutor</code> 根据工作流上下文调整其行为,支持流式或非流式。</p>
+<p>在工作流中嵌入代理时使用它。要直接使用它,请包装一个代理并调用 <code>run()</code> 或 <code>run_stream()</code>:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> AgentExecutor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>executor <span style="color:#0550ae">=</span> AgentExecutor<span style="color:#1f2328">(</span><span style="color:#6639ba">id</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;my_exec&#34;</span><span style="color:#1f2328">,</span> agent<span style="color:#0550ae">=</span>agent<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>response <span style="color:#0550ae">=</span> <span style="color:#cf222e">await</span> executor<span style="color:#0550ae">.</span>run<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Hello!&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>response<span style="color:#0550ae">.</span>agent_run_response<span style="color:#0550ae">.</span>messages<span style="color:#1f2328">[</span><span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>text<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在这里,<code>response</code> 是一个包含代理输出消息和元数据的 <code>AgentExecutorResponse</code>。在工作流中,你可以通过 <code>WorkflowBuilder</code> 将代理添加为执行器节点。</p>
+<h3 id="agentruncontext">AgentRunContext</h3>
+<p>传递给代理中间件函数的上下文。包含有关代理调用的信息(代理标识、输入消息等)。</p>
+<p>它仅在中间件内部使用;你不需要直接创建它。例如,在代理中间件中,你会收到一个 <code>AgentRunContext</code>:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> AgentRunContext<span style="color:#1f2328">,</span> agent_middleware<span style="color:#1f2328">,</span> ChatAgent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">@agent_middleware</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">logging_middleware</span><span style="color:#1f2328">(</span>context<span style="color:#1f2328">:</span> AgentRunContext<span style="color:#1f2328">,</span> <span style="color:#6639ba">next</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;[Before] Agent: </span><span style="color:#0a3069">{</span>context<span style="color:#0550ae">.</span>agent<span style="color:#0550ae">.</span>name<span style="color:#0a3069">}</span><span style="color:#0a3069">, Message: </span><span style="color:#0a3069">{</span>context<span style="color:#0550ae">.</span>messages<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">await</span> <span style="color:#6639ba">next</span><span style="color:#1f2328">(</span>context<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;[After] Response: </span><span style="color:#0a3069">{</span>context<span style="color:#0550ae">.</span>result<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>agent <span style="color:#0550ae">=</span> ChatAgent<span style="color:#1f2328">(</span>chat_client<span style="color:#0550ae">=</span>client<span style="color:#1f2328">,</span> name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;assistant&#34;</span><span style="color:#1f2328">,</span> middleware<span style="color:#0550ae">=</span>logging_middleware<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个中间件示例在代理运行之前和之后记录消息。</p>
+<h3 id="agentthread">AgentThread</h3>
+<p>管理 <code>ChatAgent</code> 的对话状态。<code>AgentThread</code> 保存消息历史,可以使用服务管理的线程或本地 <code>ChatMessageStore</code>。</p>
+<p>你可以通过 <code>agent.get_new_thread()</code> 获得一个新线程。示例:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>thread <span style="color:#0550ae">=</span> agent<span style="color:#0550ae">.</span>get_new_thread<span style="color:#1f2328">()</span>            <span style="color:#57606a"># 开始一个新的对话线程</span>
+</span></span><span style="display:flex;"><span>res1 <span style="color:#0550ae">=</span> <span style="color:#cf222e">await</span> agent<span style="color:#0550ae">.</span>run<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;What&#39;s 2+2?&#34;</span><span style="color:#1f2328">,</span> thread<span style="color:#0550ae">=</span>thread<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>res1<span style="color:#0550ae">.</span>messages<span style="color:#1f2328">[</span><span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>text<span style="color:#1f2328">)</span>  <span style="color:#57606a"># 例如 &#34;4&#34;</span>
+</span></span><span style="display:flex;"><span>res2 <span style="color:#0550ae">=</span> <span style="color:#cf222e">await</span> agent<span style="color:#0550ae">.</span>run<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Multiply that by 10.&#34;</span><span style="color:#1f2328">,</span> thread<span style="color:#0550ae">=</span>thread<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>res2<span style="color:#0550ae">.</span>messages<span style="color:#1f2328">[</span><span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>text<span style="color:#1f2328">)</span>  <span style="color:#57606a"># 例如 &#34;40&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用相同的 <code>thread</code> 对象确保代理&quot;记住&quot;之前的交流。如果不使用线程,每次 <code>run</code> 都是独立的(无状态)。</p>
+<h2 id="工作流和构建器">工作流和构建器</h2>
+<p><code>Workflow</code> 编排执行器(处理单元)的有向图。你使用 <code>WorkflowBuilder</code> <strong>构建</strong>工作流 - 不要直接实例化 <code>Workflow</code>。<code>WorkflowBuilder</code> 提供流畅的 API 来通过边连接执行器(如 <code>AgentExecutor</code>、<code>FunctionExecutor</code> 或任何 <code>Executor</code> 子类)。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> WorkflowBuilder
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework.azure</span> <span style="color:#cf222e">import</span> AzureChatClient
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>client <span style="color:#0550ae">=</span> AzureChatClient<span style="color:#1f2328">(</span>credential<span style="color:#0550ae">=</span>credential<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>agent1 <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>create_agent<span style="color:#1f2328">(</span>instructions<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;You write content.&#34;</span><span style="color:#1f2328">,</span> name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;writer&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>agent2 <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>create_agent<span style="color:#1f2328">(</span>instructions<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;You review content.&#34;</span><span style="color:#1f2328">,</span> name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;reviewer&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>builder <span style="color:#0550ae">=</span> WorkflowBuilder<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>builder<span style="color:#0550ae">.</span>set_start_executor<span style="color:#1f2328">(</span>agent1<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>builder<span style="color:#0550ae">.</span>add_edge<span style="color:#1f2328">(</span>agent1<span style="color:#1f2328">,</span> agent2<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>workflow <span style="color:#0550ae">=</span> builder<span style="color:#0550ae">.</span>build<span style="color:#1f2328">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个 <code>workflow</code> 接收输入聊天消息,将其发送到 <code>agent1</code>,然后将 <code>agent1</code> 的输出转发到 <code>agent2</code>。</p>
+<p>要执行工作流:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>result <span style="color:#0550ae">=</span> <span style="color:#cf222e">await</span> workflow<span style="color:#0550ae">.</span>run<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Draft an introduction to AI.&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>outputs <span style="color:#0550ae">=</span> result<span style="color:#0550ae">.</span>get_outputs<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">for</span> msg <span style="color:#0550ae">in</span> outputs<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>msg<span style="color:#0550ae">.</span>text<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>该框架包括<strong>工作流构建器</strong>来定义代理/执行器的执行图。</p>
+<h3 id="workflowbuilder">WorkflowBuilder</h3>
+<p>使用 <code>WorkflowBuilder()</code> 通过有向边连接执行器(代理或自定义执行器)。流畅的 API 允许你添加链(<code>.add_edge</code>)、扇入/扇出组、switch-case 逻辑,并设置起始执行器,然后调用 <code>.build()</code> 获得 <code>Workflow</code> 实例。例如:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> Executor<span style="color:#1f2328">,</span> WorkflowBuilder<span style="color:#1f2328">,</span> handler<span style="color:#1f2328">,</span> WorkflowContext
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">UpperCaseExecutor</span><span style="color:#1f2328">(</span>Executor<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">@handler</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">process</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> text<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> ctx<span style="color:#1f2328">:</span> WorkflowContext<span style="color:#1f2328">[</span><span style="color:#6639ba">str</span><span style="color:#1f2328">]):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">await</span> ctx<span style="color:#0550ae">.</span>send_message<span style="color:#1f2328">(</span>text<span style="color:#0550ae">.</span>upper<span style="color:#1f2328">())</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">ReverseExecutor</span><span style="color:#1f2328">(</span>Executor<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">@handler</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">process</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> text<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> ctx<span style="color:#1f2328">:</span> WorkflowContext<span style="color:#1f2328">[</span><span style="color:#6639ba">str</span><span style="color:#1f2328">]):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">await</span> ctx<span style="color:#0550ae">.</span>yield_output<span style="color:#1f2328">(</span>text<span style="color:#1f2328">[::</span><span style="color:#0550ae">-</span><span style="color:#0550ae">1</span><span style="color:#1f2328">])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>workflow <span style="color:#0550ae">=</span> <span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    WorkflowBuilder<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">.</span>add_edge<span style="color:#1f2328">(</span>UpperCaseExecutor<span style="color:#1f2328">(</span><span style="color:#6639ba">id</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;upper&#34;</span><span style="color:#1f2328">),</span> ReverseExecutor<span style="color:#1f2328">(</span><span style="color:#6639ba">id</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;reverse&#34;</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">.</span>set_start_executor<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;upper&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">.</span>build<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>events <span style="color:#0550ae">=</span> <span style="color:#cf222e">await</span> workflow<span style="color:#0550ae">.</span>run<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;hello&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>events<span style="color:#0550ae">.</span>get_outputs<span style="color:#1f2328">())</span>  <span style="color:#57606a"># [&#39;OLLEH&#39;]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这定义了一个两步工作流:用户文本 → 大写执行器 → 反转执行器。构建器强制执行类型兼容性和连接性。</p>
+<h3 id="handoffbuilder">HandoffBuilder</h3>
+<p>对于具有&quot;协调器&quot;和&quot;专家&quot;代理的多代理场景,使用 <code>HandoffBuilder</code>。这支持单层或多层切换。</p>
+<p>你指定一个协调器和专家,框架会自动生成切换工具(例如 <code>handoff_to_refund_agent</code>)来切换控制。它在代理之间保留对话历史,并支持自定义终止逻辑。</p>
+<p>例如:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> HandoffBuilder<span style="color:#1f2328">,</span> InMemoryCheckpointStorage
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>workflow <span style="color:#0550ae">=</span> <span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    HandoffBuilder<span style="color:#1f2328">(</span>participants<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>coordinator<span style="color:#1f2328">,</span> refund_agent<span style="color:#1f2328">,</span> ship_agent<span style="color:#1f2328">])</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">.</span>set_coordinator<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;coordinator_agent&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">.</span>with_termination_condition<span style="color:#1f2328">(</span><span style="color:#cf222e">lambda</span> conv<span style="color:#1f2328">:</span> <span style="color:#6639ba">any</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;goodbye&#34;</span> <span style="color:#0550ae">in</span> msg<span style="color:#0550ae">.</span>text <span style="color:#cf222e">for</span> msg <span style="color:#0550ae">in</span> conv<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">.</span>with_checkpointing<span style="color:#1f2328">(</span>InMemoryCheckpointStorage<span style="color:#1f2328">())</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">.</span>build<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当专家需要更多用户输入时,工作流会发出一个 <code>HandoffUserInputRequest</code> 事件,其中包含完整对话、等待代理 ID 和提示。应用程序应收集用户输入并通过 <code>workflow.send_response(request_id, user_input)</code> 发送回去。</p>
+<h3 id="groupchatbuilder">GroupChatBuilder</h3>
+<p>对于编排的多方聊天,使用 <code>GroupChatBuilder</code>。它让<strong>管理器</strong>(Python 函数或 LLM 代理)决定哪个参与者接下来发言。</p>
+<p>例如,你可以使用 <code>set_select_speakers_func</code> 设置一个简单的轮流函数,或使用 <code>set_manager(manager_agent)</code> 让协调器代理选择下一个发言者。传递给管理器的状态快照(<code>GroupChatStateSnapshot</code>)包括任务、参与者、完整对话、每轮历史记录和轮次索引,因此管理器可以做出决策。然后,构建的工作流在参与者之间动态路由消息。</p>
+<h3 id="边和流程">边和流程</h3>
+<p>工作流使用<strong>边</strong>来连接执行器。你可以添加链式边(<code>.add_chain</code>)、扇入组(<code>.add_fan_in_edges</code> 来同步多个源)、扇出(<code>.add_fan_out_edges</code> 来广播)、多选边,或 switch-case(<code>.add_switch_case_edge_group</code>)来有条件地路由消息。</p>
+<p>验证(例如没有无终止的循环、类型检查)在构建时或通过 <code>validate_workflow_graph</code> 实用程序完成。</p>
+<h3 id="executor基类">Executor(基类)</h3>
+<p><code>Executor</code> 是工作流中处理消息的节点。我通常会子类化 <code>Executor</code> 并用 <code>@handler</code> 装饰处理方法。处理程序是接受 <code>(self, message, ctx)</code> 的 <code>async</code> 函数。例如:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> Executor<span style="color:#1f2328">,</span> handler<span style="color:#1f2328">,</span> WorkflowContext
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">MyExecutor</span><span style="color:#1f2328">(</span>Executor<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">__init__</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">super</span><span style="color:#1f2328">()</span><span style="color:#0550ae">.</span><span style="color:#6639ba">__init__</span><span style="color:#1f2328">(</span><span style="color:#6639ba">id</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;my_executor&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">@handler</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">handle_string</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> message<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> ctx<span style="color:#1f2328">:</span> WorkflowContext<span style="color:#1f2328">[</span><span style="color:#6639ba">int</span><span style="color:#1f2328">]):</span>
+</span></span><span style="display:flex;"><span>        result <span style="color:#0550ae">=</span> message<span style="color:#0550ae">.</span>upper<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">await</span> ctx<span style="color:#0550ae">.</span>send_message<span style="color:#1f2328">(</span>result<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="workflowrunresult">WorkflowRunResult</h3>
+<p><code>workflow.run()</code> 的结果是一个 <code>WorkflowRunResult</code> 对象。它包含运行期间生成的<strong>所有事件</strong>,包括执行器输出和控制事件。</p>
+<p>关键方法包括 <code>get_outputs()</code>(提取所有生成的工作流输出)、<code>get_request_info_events()</code>(外部输入请求)和 <code>get_final_state()</code>。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>result <span style="color:#0550ae">=</span> <span style="color:#cf222e">await</span> workflow<span style="color:#0550ae">.</span>run<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Start task&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>outputs <span style="color:#0550ae">=</span> result<span style="color:#0550ae">.</span>get_outputs<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">for</span> out_msg <span style="color:#0550ae">in</span> outputs<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>out_msg<span style="color:#0550ae">.</span>text<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在内部,每个代理或执行器步骤都向工作流生成消息,<code>WorkflowRunResult</code> 聚合它们。在流式模式(<code>run_stream()</code>)中,你将迭代事件。</p>
+<h3 id="workflowcontext">WorkflowContext</h3>
+<p>传递给执行器处理程序,<code>WorkflowContext</code> 提供与工作流交互的方法。它是泛型类型的,以强制执行输入/输出类型。例如,上下文 <code>WorkflowContext[int, str]</code> 可以发送整数消息并生成字符串输出。</p>
+<p>示例处理程序签名包括:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> WorkflowContext
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 向下游发送整数消息</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">process</span><span style="color:#1f2328">(</span>msg<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> ctx<span style="color:#1f2328">:</span> WorkflowContext<span style="color:#1f2328">[</span><span style="color:#6639ba">int</span><span style="color:#1f2328">]):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">await</span> ctx<span style="color:#0550ae">.</span>send_message<span style="color:#1f2328">(</span><span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>msg<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 发送 int 并生成工作流输出 str</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">dual</span><span style="color:#1f2328">(</span>msg<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> ctx<span style="color:#1f2328">:</span> WorkflowContext<span style="color:#1f2328">[</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">]):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">await</span> ctx<span style="color:#0550ae">.</span>send_message<span style="color:#1f2328">(</span><span style="color:#0550ae">42</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">await</span> ctx<span style="color:#0550ae">.</span>yield_output<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;complete&#34;</span><span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这使工作流类型安全。你不需要自己实例化 <code>WorkflowContext</code>;它由框架在运行执行器时提供。</p>
+<h3 id="handoffbuilder-1">HandoffBuilder</h3>
+<p>用于<strong>切换工作流</strong>的高级构建器,具有协调器代理和专家。<code>HandoffBuilder</code> 自动创建在代理之间切换任务的工具。</p>
+<p>在最简单的(单层)情况下,你指定所有代理和一个协调器:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> HandoffBuilder
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>workflow <span style="color:#0550ae">=</span> <span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    HandoffBuilder<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;support&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        participants<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>coordinator_agent<span style="color:#1f2328">,</span> refund_agent<span style="color:#1f2328">,</span> shipping_agent<span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">.</span>set_coordinator<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;coordinator_agent&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">.</span>build<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这创建了一个工作流,协调器可以切换到专家。你可以使用 <code>.with_termination_condition(...)</code> 或 <code>.add_handoff(...)</code> 自定义终止条件或多层切换。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>events <span style="color:#0550ae">=</span> workflow<span style="color:#0550ae">.</span>run_stream<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;My package hasn&#39;t arrived yet&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">for</span> ev <span style="color:#0550ae">in</span> events<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> <span style="color:#6639ba">isinstance</span><span style="color:#1f2328">(</span>ev<span style="color:#1f2328">,</span> RequestInfoEvent<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        answer <span style="color:#0550ae">=</span> <span style="color:#6639ba">input</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;User: &#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">await</span> workflow<span style="color:#0550ae">.</span>send_response<span style="color:#1f2328">(</span>ev<span style="color:#0550ae">.</span>data<span style="color:#0550ae">.</span>request_id<span style="color:#1f2328">,</span> answer<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="workflowcheckpoint">WorkflowCheckpoint</h3>
+<p>表示工作流状态的保存快照,启用暂停/恢复。<code>WorkflowCheckpoint</code> 包括所有执行器状态、传输中的消息和共享状态。</p>
+<p>在 <code>WorkflowBuilder</code> 上使用 <code>.with_checkpointing(storage)</code> 启用检查点,其中 <code>storage</code> 实现 <code>CheckpointStorage</code>。例如,使用内存存储:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> InMemoryCheckpointStorage
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>storage <span style="color:#0550ae">=</span> InMemoryCheckpointStorage<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>workflow <span style="color:#0550ae">=</span> WorkflowBuilder<span style="color:#1f2328">()</span><span style="color:#0550ae">.</span>with_checkpointing<span style="color:#1f2328">(</span>storage<span style="color:#1f2328">)</span><span style="color:#0550ae">.</span>build<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 现在每次运行都会通过 &#39;storage&#39; 检查点状态。</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>检查点允许通过加载存储的状态在中断后恢复工作流。</p>
+<h2 id="中间件和实用程序">中间件和实用程序</h2>
+<h3 id="代理中间件">代理中间件</h3>
+<p>子类化 <code>AgentMiddleware</code> 来拦截代理调用。它提供一个 <code>async process(context, next)</code> 方法,你可以在其中检查或修改 <code>AgentRunContext</code>(包含代理实例、消息、流式标志等)。例如,重试中间件可以捕获错误并重新调用代理最多 <em>n</em> 次。</p>
+<p>例如,使用 <code>@agent_middleware</code> 装饰器创建中间件函数:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> agent_middleware<span style="color:#1f2328">,</span> AgentRunContext<span style="color:#1f2328">,</span> ChatAgent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">@agent_middleware</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">logging_mw</span><span style="color:#1f2328">(</span>ctx<span style="color:#1f2328">:</span> AgentRunContext<span style="color:#1f2328">,</span> <span style="color:#6639ba">next</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;[AgentMiddleware before] </span><span style="color:#0a3069">{</span>ctx<span style="color:#0550ae">.</span>agent<span style="color:#0550ae">.</span>name<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">await</span> <span style="color:#6639ba">next</span><span style="color:#1f2328">(</span>ctx<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;[AgentMiddleware after] result = </span><span style="color:#0a3069">{</span>ctx<span style="color:#0550ae">.</span>result<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>agent <span style="color:#0550ae">=</span> ChatAgent<span style="color:#1f2328">(</span>chat_client<span style="color:#0550ae">=</span>client<span style="color:#1f2328">,</span> name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;assistant&#34;</span><span style="color:#1f2328">,</span> middleware<span style="color:#0550ae">=</span>logging_mw<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这将在每次 <code>agent.run()</code> 之前和之后运行。</p>
+<h3 id="聊天中间件">聊天中间件</h3>
+<p>类似地,子类化 <code>ChatMiddleware</code> 来拦截聊天客户端调用(例如添加系统提示、日志记录)。这些中间件管道在内置代理/客户端上自动启用,但可以通过 <code>@use_agent_middleware</code> 和 <code>@use_chat_middleware</code> 装饰器添加到自定义类。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> chat_middleware<span style="color:#1f2328">,</span> ChatContext<span style="color:#1f2328">,</span> ChatAgent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">@chat_middleware</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">chat_logger</span><span style="color:#1f2328">(</span>ctx<span style="color:#1f2328">:</span> ChatContext<span style="color:#1f2328">,</span> <span style="color:#6639ba">next</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;[ChatMiddleware] Sending </span><span style="color:#0a3069">{</span><span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>ctx<span style="color:#0550ae">.</span>messages<span style="color:#1f2328">)</span><span style="color:#0a3069">}</span><span style="color:#0a3069"> messages&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">await</span> <span style="color:#6639ba">next</span><span style="color:#1f2328">(</span>ctx<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;[ChatMiddleware] Received response&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>agent <span style="color:#0550ae">=</span> ChatAgent<span style="color:#1f2328">(</span>chat_client<span style="color:#0550ae">=</span>client<span style="color:#1f2328">,</span> name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;assistant&#34;</span><span style="color:#1f2328">,</span> middleware<span style="color:#0550ae">=</span>chat_logger<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="工具和函数中间件">工具和函数中间件</h3>
+<p><code>@function_middleware</code> 装饰器标记拦截工具调用流程的函数。在执行器内部使用 <code>@handler</code> 来标记处理某些消息类型的方法。</p>
+<h3 id="实用函数">实用函数</h3>
+<p>该包提供实用程序,如 <code>get_logger(name='agent_framework')</code> 获取日志记录器,<code>validate_workflow_graph</code> 检查构建的工作流的一致性,<code>prepare_function_call_results</code> 格式化模型的函数输出。装饰器 <code>@use_function_invocation</code> 可以包装聊天客户端,以便自动执行模型建议的工具调用并返回。</p>
+<h2 id="工具和函数调用">工具和函数调用</h2>
+<p>该框架包括集成外部工具的类:</p>
+<h3 id="aifunction">AIFunction</h3>
+<p>一个帮助程序,将 Python 函数包装为 AI 可调用工具。它从类型注释生成 JSON 模式,验证输入/输出,并在响应中生成 <code>FunctionCallContent</code> 对象。你可以将其用作装饰器或实例化它:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> AIFunction
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">@ai_function</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">get_weather</span><span style="color:#1f2328">(</span>city<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Sunny in </span><span style="color:#0a3069">{</span>city<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里 <code>@ai_function</code> 装饰 <code>get_weather</code>,以便模型可以调用它,框架会自动处理调用结果。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> ai_function
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">typing</span> <span style="color:#cf222e">import</span> Annotated
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">@ai_function</span><span style="color:#1f2328">(</span>name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;add_numbers&#34;</span><span style="color:#1f2328">,</span> description<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Add two numbers&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">add</span><span style="color:#1f2328">(</span>a<span style="color:#1f2328">:</span> Annotated<span style="color:#1f2328">[</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;first addend&#34;</span><span style="color:#1f2328">],</span> b<span style="color:#1f2328">:</span> Annotated<span style="color:#1f2328">[</span><span style="color:#6639ba">int</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;second addend&#34;</span><span style="color:#1f2328">])</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> a <span style="color:#0550ae">+</span> b
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这创建了一个 AI 可调用函数。AI 模型(通过函数调用)可以使用与签名匹配的 JSON 参数调用它。然后,你可以通过将它们添加到 <code>ChatAgent</code> 工具或在 <code>FunctionExecutor</code> 中处理函数调用来将这些集成到聊天中。</p>
+<h3 id="函数调用协议">函数调用协议</h3>
+<p>在聊天期间,如果 AI 模型返回函数调用,装饰器 <code>@use_function_invocation</code> 将拦截它,执行相应的 <code>AIFunction</code>,并将结果反馈给模型。像 <code>FunctionCallContent</code>、<code>FunctionResultContent</code>、<code>FunctionApprovalRequestContent</code> 等类保存这些调用和批准的数据(例如用于人工参与)在聊天消息中。</p>
+<h3 id="托管工具">托管工具</h3>
+<p>该包提供几个预构建的工具类,你可以通过 <code>ChatOptions.tools</code> 传递以启用特定功能:</p>
+<p><strong>HostedWebSearchTool</strong>: 让模型搜索网络。它是一个标记工具(它本身不运行搜索;后端必须支持它),可以包含 <code>description</code> 或上下文属性。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> HostedWebSearchTool
+</span></span><span style="display:flex;"><span>search_tool <span style="color:#0550ae">=</span> HostedWebSearchTool<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>agent <span style="color:#0550ae">=</span> ChatAgent<span style="color:#1f2328">(</span>chat_client<span style="color:#0550ae">=</span>client<span style="color:#1f2328">,</span> name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;assistant&#34;</span><span style="color:#1f2328">,</span> tools<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>search_tool<span style="color:#1f2328">])</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>HostedFileSearchTool</strong>: 启用文件搜索(例如在向量存储中)。你可以配置输入内容(例如 <code>HostedVectorStoreContent</code>)和最大结果数。</p>
+<p><strong>HostedCodeInterpreterTool</strong>: 表示可以执行生成的代码(服务需要支持它)。你可以选择附加代码可能使用的文件输入。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> HostedCodeInterpreterTool
+</span></span><span style="display:flex;"><span>tool <span style="color:#0550ae">=</span> HostedCodeInterpreterTool<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>agent <span style="color:#0550ae">=</span> ChatAgent<span style="color:#1f2328">(</span>chat_client<span style="color:#0550ae">=</span>client<span style="color:#1f2328">,</span> name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;assistant&#34;</span><span style="color:#1f2328">,</span> tools<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>tool<span style="color:#1f2328">])</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> HostedWebSearchTool<span style="color:#1f2328">,</span> HostedCodeInterpreterTool
+</span></span><span style="display:flex;"><span>tools <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span>HostedWebSearchTool<span style="color:#1f2328">(),</span> HostedCodeInterpreterTool<span style="color:#1f2328">()]</span>
+</span></span><span style="display:flex;"><span>options <span style="color:#0550ae">=</span> ChatOptions<span style="color:#1f2328">(</span>model_id<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;gpt-4&#34;</span><span style="color:#1f2328">,</span> tools<span style="color:#0550ae">=</span>tools<span style="color:#1f2328">,</span> tool_choice<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;auto&#34;</span><span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这些工具对象被序列化到聊天请求中,以便 AI 模型&quot;知道&quot;这些工具存在。</p>
+<h3 id="functionexecutor">FunctionExecutor</h3>
+<p>将用户定义的函数包装为工作流中的执行器。</p>
+<p>我可以这样做,而不是编写完整的 <code>Executor</code> 子类:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> FunctionExecutor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">square</span><span style="color:#1f2328">(</span>x<span style="color:#1f2328">:</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">int</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> x <span style="color:#0550ae">*</span> x
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>executor <span style="color:#0550ae">=</span> FunctionExecutor<span style="color:#1f2328">(</span>square<span style="color:#1f2328">)</span>  <span style="color:#57606a"># executor.id 默认为函数名</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 在 WorkflowBuilder 中使用执行器:</span>
+</span></span><span style="display:flex;"><span>builder <span style="color:#0550ae">=</span> WorkflowBuilder<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>builder<span style="color:#0550ae">.</span>set_start_executor<span style="color:#1f2328">(</span>executor<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>当轮到它时,框架运行函数(同步或异步)。同步函数在线程池上执行以避免阻塞。</p>
+<h3 id="functioncallcontent">FunctionCallContent</h3>
+<p>表示模型可能发出的函数调用请求(名称 + 参数)。它通常在内部创建。为了完整性,你可以手动创建一个:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> FunctionCallContent
+</span></span><span style="display:flex;"><span>content <span style="color:#0550ae">=</span> FunctionCallContent<span style="color:#1f2328">(</span>name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;get_time&#34;</span><span style="color:#1f2328">,</span> arguments<span style="color:#0550ae">=</span><span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;timezone&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;UTC&#34;</span><span style="color:#1f2328">})</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="类装饰器">类装饰器</h3>
+<p><code>@use_agent_middleware</code> 和 <code>@use_chat_middleware</code> 向自定义类添加中间件支持。它们已经应用于内置代理/客户端。如果实现自己的类,请使用它们:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> use_agent_middleware
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">@use_agent_middleware</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">CustomAgent</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">run</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> messages<span style="color:#1f2328">,</span> <span style="color:#0550ae">**</span>kwargs<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 自定义运行逻辑</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#0550ae">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">run_stream</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> messages<span style="color:#1f2328">,</span> <span style="color:#0550ae">**</span>kwargs<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 自定义流式逻辑</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#0550ae">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> use_chat_middleware
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">@use_chat_middleware</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">class</span> <span style="color:#1f2328">CustomChatClient</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">get_response</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> messages<span style="color:#1f2328">,</span> <span style="color:#0550ae">**</span>kwargs<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 实现聊天调用</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">pass</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">get_streaming_response</span><span style="color:#1f2328">(</span><span style="color:#6a737d">self</span><span style="color:#1f2328">,</span> messages<span style="color:#1f2328">,</span> <span style="color:#0550ae">**</span>kwargs<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">pass</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这些装饰器包装 <code>run</code> 或 <code>get_response</code> 方法以集成中间件执行。</p>
+<h3 id="functionmiddleware-和-function_middleware">FunctionMiddleware 和 @function_middleware</h3>
+<p>像聊天和代理中间件一样,这拦截函数/工具调用。使用装饰器标记处理 <code>FunctionInvocationContext</code> 的函数:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> function_middleware<span style="color:#1f2328">,</span> FunctionInvocationContext<span style="color:#1f2328">,</span> ChatAgent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">@function_middleware</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">async</span> <span style="color:#cf222e">def</span> <span style="color:#6639ba">func_logger</span><span style="color:#1f2328">(</span>ctx<span style="color:#1f2328">:</span> FunctionInvocationContext<span style="color:#1f2328">,</span> <span style="color:#6639ba">next</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Calling function: </span><span style="color:#0a3069">{</span>ctx<span style="color:#0550ae">.</span>function<span style="color:#0550ae">.</span>name<span style="color:#0a3069">}</span><span style="color:#0a3069"> with args </span><span style="color:#0a3069">{</span>ctx<span style="color:#0550ae">.</span>arguments<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">await</span> <span style="color:#6639ba">next</span><span style="color:#1f2328">(</span>ctx<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;Function result: </span><span style="color:#0a3069">{</span>ctx<span style="color:#0550ae">.</span>result<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>agent <span style="color:#0550ae">=</span> ChatAgent<span style="color:#1f2328">(</span>chat_client<span style="color:#0550ae">=</span>client<span style="color:#1f2328">,</span> name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;assistant&#34;</span><span style="color:#1f2328">,</span> middleware<span style="color:#0550ae">=</span>func_logger<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="handler-装饰器handler">Handler 装饰器(@handler)</h3>
+<p>在工作流执行器中用于标记消息处理方法。<code>@handler</code> 装饰器必须注释 <code>Executor</code> 的 <code>async</code> 方法以指定其输入类型。</p>
+<h2 id="实用程序和消息类型">实用程序和消息类型</h2>
+<h3 id="chatoptions">ChatOptions</h3>
+<p>保存 AI 请求的常见设置(模型 ID、温度、最大令牌数、工具等)。</p>
+<p>使用它来独立于代理配置聊天请求。示例:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> ChatOptions
+</span></span><span style="display:flex;"><span>opts <span style="color:#0550ae">=</span> ChatOptions<span style="color:#1f2328">(</span>model_id<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;gpt-4&#34;</span><span style="color:#1f2328">,</span> temperature<span style="color:#0550ae">=</span><span style="color:#0550ae">0.7</span><span style="color:#1f2328">,</span> max_tokens<span style="color:#0550ae">=</span><span style="color:#0550ae">500</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>opts<span style="color:#0550ae">.</span>temperature<span style="color:#1f2328">)</span>  <span style="color:#57606a"># 0.7</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="chatmessagestore">ChatMessageStore</h3>
+<p>聊天消息的内存存储,对自定义线程有用。它实现 <code>ChatMessageStoreProtocol</code> 并支持异步操作。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> ChatMessageStore<span style="color:#1f2328">,</span> ChatMessage
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>store <span style="color:#0550ae">=</span> ChatMessageStore<span style="color:#1f2328">()</span>               <span style="color:#57606a"># 空存储</span>
+</span></span><span style="display:flex;"><span>msg <span style="color:#0550ae">=</span> ChatMessage<span style="color:#1f2328">(</span>role<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span> text<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Hi&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">await</span> store<span style="color:#0550ae">.</span>add_messages<span style="color:#1f2328">([</span>msg<span style="color:#1f2328">])</span>          <span style="color:#57606a"># 添加消息</span>
+</span></span><span style="display:flex;"><span>msgs <span style="color:#0550ae">=</span> <span style="color:#cf222e">await</span> store<span style="color:#0550ae">.</span>list_messages<span style="color:#1f2328">()</span>       <span style="color:#57606a"># 检索所有</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>msgs<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>text<span style="color:#1f2328">)</span>  <span style="color:#57606a"># &#34;Hi&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="hostedfilecontent">HostedFileContent</h3>
+<p>表示托管在 URI 的文件内容。例如,引用在线文件:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> HostedFileContent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>file_content <span style="color:#0550ae">=</span> HostedFileContent<span style="color:#1f2328">(</span>name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;data&#34;</span><span style="color:#1f2328">,</span> uri<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;https://example.com/data.json?WT.mc_id=AI-MVP-5003172&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>file_content<span style="color:#0550ae">.</span>uri<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这可以在工作流或 RAG 上下文中使用以包含文件数据。(这个类只是一个容器;实际的托管和检索是外部管理的。)</p>
+<h3 id="datacontent">DataContent</h3>
+<p>具有媒体类型的二进制数据(例如图像或作为数据 URI 的文件)。例如:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> DataContent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>binary <span style="color:#0550ae">=</span> DataContent<span style="color:#1f2328">(</span>media_type<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;image/png&#34;</span><span style="color:#1f2328">,</span> data<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;iVBORw0KGgoAAAANS...&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>binary<span style="color:#0550ae">.</span>media_type<span style="color:#1f2328">)</span>  <span style="color:#57606a"># &#34;image/png&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="textcontent-和-textreasoningcontent">TextContent 和 TextReasoningContent</h3>
+<p>表示纯文本内容。<code>TextContent</code> 是通用文本,而 <code>TextReasoningContent</code> 可以携带注释的推理步骤(它们具有相同的结构)。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> TextContent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>text <span style="color:#0550ae">=</span> TextContent<span style="color:#1f2328">(</span>text<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;Some information&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>text<span style="color:#0550ae">.</span>text<span style="color:#1f2328">)</span>  <span style="color:#57606a"># &#34;Some information&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在将附加文本注入聊天或作为函数输入时使用 <code>TextContent</code>。</p>
+<h3 id="uricontent">UriContent</h3>
+<p>表示由 URI 标识的内容(图像、文件链接等)。例如:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> UriContent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>image <span style="color:#0550ae">=</span> UriContent<span style="color:#1f2328">(</span>uri<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;https://example.com/image.png?WT.mc_id=AI-MVP-5003172&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>image<span style="color:#0550ae">.</span>uri<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="usagecontent">UsageContent</h3>
+<p>保存令牌使用指标(例如来自 OpenAI)。示例:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> UsageContent
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>usage <span style="color:#0550ae">=</span> UsageContent<span style="color:#1f2328">(</span>completion_tokens<span style="color:#0550ae">=</span><span style="color:#0550ae">10</span><span style="color:#1f2328">,</span> prompt_tokens<span style="color:#0550ae">=</span><span style="color:#0550ae">5</span><span style="color:#1f2328">,</span> total_tokens<span style="color:#0550ae">=</span><span style="color:#0550ae">15</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>usage<span style="color:#0550ae">.</span>total_tokens<span style="color:#1f2328">)</span>  <span style="color:#57606a"># 15</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这些字段可能出现在 <code>ChatResponse</code> 或函数调用交换中以报告 API 使用情况。</p>
+<h2 id="总结">总结</h2>
+<p>我在深入研究 Microsoft Agent Framework 后发现,它不仅仅是一个工具集 - 它是 AI 创新的催化剂。通过将复杂性抽象为可组合的原语,它使开发者能够构建能够对话、协作和适应的代理,具有前所未有的优雅性。对于关注下一波智能系统的开发者来说,这是你的基础。我建议你可以尝试创建一个 ChatAgent,体验这个框架的强大功能。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/">https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a></li>
+        
+        <li><a href="/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/">如何通过 Entra ID 身份验证使用 Microsoft Foundry</a></li>
+        
+        <li><a href="/post/2026-01-07-agentic-ai-trends-2026/">2026 年值得关注的 7 个 Agentic AI 趋势</a></li>
+        
+        <li><a href="/post/2026-01-06-code-review-in-the-age-of-ai/">AI 时代的代码审查</a></li>
+        
+        <li><a href="/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/">为 Azure Voice Live 构建可用于生产的 SIP 网关</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/" title="Agent Framework (Python) 完全指南" target="_blank">Agent Framework (Python) 完全指南</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/" title="我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色" target="_blank">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/" title="如何通过 Entra ID 身份验证使用 Microsoft Foundry" target="_blank">如何通过 Entra ID 身份验证使用 Microsoft Foundry</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/" title="2026 年值得关注的 7 个 Agentic AI 趋势" target="_blank">2026 年值得关注的 7 个 Agentic AI 趋势</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-06-code-review-in-the-age-of-ai/" title="AI 时代的代码审查" target="_blank">AI 时代的代码审查</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-06-mbml-learning-skills/" title="[译]基于模型的机器学习 - 第二章 评估人们的技能" target="_blank">[译]基于模型的机器学习 - 第二章 评估人们的技能</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-05-mbml-murder-mystery_extending_the_model/" title="[译]基于模型的机器学习 - 1.4 扩展模型" target="_blank">[译]基于模型的机器学习 - 1.4 扩展模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/" title="为 Azure Voice Live 构建可用于生产的 SIP 网关" target="_blank">为 Azure Voice Live 构建可用于生产的 SIP 网关</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-01-why-web-ai-agents-are-more-vulnerable-than-standalone-llms-and-how-we-should-actually-fix-it/" title="为什么 Web AI Agent 比独立 LLM 更脆弱——以及我们应该如何真正修复它" target="_blank">为什么 Web AI Agent 比独立 LLM 更脆弱——以及我们应该如何真正修复它</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2025-12-12-observability-for-multi-agent-systems-with-microsoft-agent-framework-and-azure-ai-foundry/" title="使用 Microsoft Agent Framework 与 Azure AI Foundry 为多智能体系统构建可观测性" target="_blank">使用 Microsoft Agent Framework 与 Azure AI Foundry 为多智能体系统构建可观测性</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (38)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (17)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

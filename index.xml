@@ -6,8 +6,15 @@
     <description>Recent content on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Tue, 13 Jan 2026 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 19 Jan 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agent Framework (Python) 完全指南</title>
+      <link>https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/</link>
+      <pubDate>Mon, 19 Jan 2026 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;agent_framework&lt;/strong&gt; 是微软推出的 Python 库,专门用于构建 AI 代理应用程序。我在研究这个框架时发现,它为聊天代理、工作流、工具调用和中间件提供了非常优雅的抽象。核心类包括实现 &lt;code&gt;AgentProtocol&lt;/code&gt; 协议的&lt;strong&gt;代理&lt;/strong&gt;、用于在工作流中运行代理的&lt;strong&gt;执行器&lt;/strong&gt;、用于聊天输入/输出的&lt;strong&gt;消息&lt;/strong&gt;,以及用于定义工作流拓扑的&lt;strong&gt;构建器&lt;/strong&gt;。例如,&lt;code&gt;AgentProtocol&lt;/code&gt; 是一个结构化接口,任何代理都必须遵循它(比如 ChatAgent 就实现了这个接口)。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</title>
       <link>https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/</link>

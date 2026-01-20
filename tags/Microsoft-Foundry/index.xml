@@ -6,8 +6,15 @@
     <description>Recent content in Microsoft Foundry on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Mon, 19 Jan 2026 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 20 Jan 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</title>
+      <link>https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/</link>
+      <pubDate>Tue, 20 Jan 2026 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/</guid>
+      <description>&lt;p&gt;微软研究院发布了 OptiMind,这是一个基于 AI 的系统,能够将复杂决策问题的自然语言描述转换为优化求解器可执行的数学公式。它解决了运筹学中长期存在的一个瓶颈问题:将业务意图转换为混合整数线性规划通常需要专业建模人员和数天的工作。&lt;/p&gt;&#xA;&lt;h2 id=&#34;optimind-是什么以及它输出什么&#34;&gt;OptiMind 是什么以及它输出什么?&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://huggingface.co/microsoft/OptiMind-SFT?WT.mc_id=AI-MVP-5003172&#34;&gt;OptiMind-SFT&lt;/a&gt; 是 gpt-oss transformer 系列中的一个专业化 200 亿参数专家混合模型。每个 token 约激活 36 亿参数,因此推理成本更接近中型模型,同时保持较高的容量。上下文长度为 128,000 tokens,这允许在单个请求中处理长规范和多步推理轨迹。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Agent Framework (Python) 完全指南</title>
       <link>https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/</link>

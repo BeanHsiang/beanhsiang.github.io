@@ -6,8 +6,15 @@
     <description>Recent content in Microsoft Foundry on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Tue, 20 Jan 2026 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 02 Feb 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</title>
+      <link>https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/</link>
+      <pubDate>Mon, 02 Feb 2026 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/</guid>
+      <description>&lt;p&gt;我发现 Microsoft Agent Framework 现在与 &lt;a href=&#34;https://github.com/github/copilot-sdk?WT.mc_id=AI-MVP-5003172&#34;&gt;GitHub Copilot SDK&lt;/a&gt; 集成,让我们能够构建由 GitHub Copilot 驱动的 AI 代理。这个集成将 Agent Framework 一致的代理抽象与 GitHub Copilot 的强大功能结合在一起,包括函数调用、流式响应、多轮对话、Shell 命令执行、文件操作、URL 获取以及 Model Context Protocol (MCP) 服务器集成 —— 所有这些功能在 .NET 和 Python 中都可用。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么将-agent-framework-与-github-copilot-sdk-结合使用&#34;&gt;为什么将 Agent Framework 与 GitHub Copilot SDK 结合使用?&lt;/h2&gt;&#xA;&lt;p&gt;你可以单独使用 GitHub Copilot SDK 来构建代理。那么为什么要通过 Agent Framework 来使用它呢?以下是几个关键原因:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</title>
       <link>https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/</link>

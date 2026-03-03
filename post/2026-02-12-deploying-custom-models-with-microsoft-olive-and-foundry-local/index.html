@@ -101,7 +101,7 @@
         
         
         <div class="post-content">
-            <p>在过去的几周里,我一直在探索小语言模型(SLM)的部署之旅。从最初了解 <a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/phi-4-small-language-models-that-pack-a-punch/4464167?WT.mc_id=AI-MVP-5003172">Phi-4 和小语言模型的强大之处</a>,到实践<a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/running-phi-4-locally-with-microsoft-foundry-local-a-step-by-step-guide/4466304?WT.mc_id=AI-MVP-5003172">使用 Foundry Local 在本地运行模型</a>,再到学习<a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/function-calling-with-small-language-models/4472720?WT.mc_id=AI-MVP-5003172">函数调用</a>,最近还构建了一个完整的<a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/advanced-function-calling-and-multi-agent-systems-with-small-language-models-in-/4481180?WT.mc_id=AI-MVP-5003172">多智能体测验应用</a>,其中包含一个协调专家智能体的编排器。</p>
+            <p>在过去的几周里,我一直在探索小语言模型(SLM)的部署之旅。从最初了解 Phi-4 和小语言模型的强大之处,到实践使用 Foundry Local 在本地运行模型,再到学习函数调用,最近还构建了一个完整的多智能体测验应用,其中包含一个协调专家智能体的编排器。</p>
 <p>这个测验应用在本地运行得很好,但它依赖于 Foundry Local 目录中的模型——这些模型经过预优化且随时可用。但如果想部署一个不在目录中的模型该怎么办?也许你已经在特定领域的测验数据上微调了一个模型,或者 Hugging Face 上刚发布了一个你想使用的新模型。今天我将展示如何从 Hugging Face 获取一个模型,使用 Microsoft Olive 优化它,在 Foundry Local 中注册它,并在测验应用中运行它。同样的工作流程适用于你可能为特定用例微调的任何模型。</p>
 <h2 id="理解部署选项">理解部署选项</h2>
 <p>在深入之前,让我们先了解 SLM 应用程序的部署选项全景。根据目标环境,有几种部署 SLM 应用程序的途径。</p>
@@ -121,7 +121,6 @@
 <li><strong>Foundry Local</strong> 版本 0.8.117 或更高</li>
 <li><strong>Python 3.10+</strong> 用于测验应用(foundry-local-sdk 需要)</li>
 <li><strong>单独的 Python 3.9 环境</strong>用于 Olive(Olive 0.9.x 有此要求)</li>
-<li><a href="https://github.com/HamidOna/multi_agent_slm?WT.mc_id=AI-MVP-5003172">上一篇文章</a>中的测验应用</li>
 </ul>
 <p>使用两个 Python 版本可能看起来有些奇怪,但这反映了一个常见的实际设置:在一个环境中优化模型,在另一个环境中提供服务。优化是一次性的步骤。</p>
 <h3 id="安装-olive-依赖项">安装 Olive 依赖项</h3>
@@ -367,7 +366,7 @@
 <h3 id="问题-2工具调用格式">问题 2:工具调用格式</h3>
 <p>对于目录模型,Foundry 的服务器端中间件会拦截模型输出中的 &lt;tool_call&gt; 标签,并将它们转换为 API 响应中的结构化 tool_calls 对象。这是通过 foundry.modelinfo.json 中的元数据配置的。</p>
 <p>对于自定义模型,这些元数据字段不被识别——Foundry 在 inference_model.json 中忽略它们。&lt;tool_call&gt; 标签作为原始文本传递到 response.choices[0].message.content 中。</p>
-<p>由于我们的自定义模型输出完全相同的 &lt;tool_call&gt; 格式,我们在 agents/base_agent.py 中添加了一个小的回退解析器——这与我们在<a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/function-calling-with-small-language-models/4472720?WT.mc_id=AI-MVP-5003172">函数调用文章</a>中探索的模式相同。</p>
+<p>由于我们的自定义模型输出完全相同的 &lt;tool_call&gt; 格式,我们在 agents/base_agent.py 中添加了一个小的回退解析器——这与我们在函数调用中探索的模式相同。</p>
 <p>模型的行为是相同的;只是解析位置发生了变化——从服务器端(Foundry 中间件)到客户端(我们的代码)。</p>
 <h3 id="测试部署">测试部署</h3>
 <p>模型在一个终端中运行,在另一个终端启动测验应用。</p>
@@ -419,7 +418,6 @@
 <p>现在我掌握了构建生产 SLM 应用程序的端到端技能:理解全景、使用 Foundry Local 进行本地开发、使用函数调用的智能体应用、多智能体架构、使用 Olive 进行模型优化,以及将自定义模型部署到边缘。</p>
 <h2 id="接下来做什么">接下来做什么</h2>
 <p>下一个逻辑步骤是针对你的领域进行微调。在 USMLE 问题上训练的医学测验导师,在案例法上训练的法律助理,在内部文档上训练的公司入职机器人——使用相同的 Olive 工作流程来优化和部署你的微调模型。我们使用 Foundry Local 注册的相同 ONNX 模型也可以通过 ONNX Runtime Mobile 在移动设备上运行,或者容器化用于服务器端边缘部署。</p>
-<p>完整的源代码,包括优化和注册脚本,可在 <a href="https://github.com/HamidOna/multi_agent_slm?WT.mc_id=AI-MVP-5003172">GitHub 仓库</a>中找到。</p>
 <p><strong>资源:</strong></p>
 <ul>
 <li><a href="https://github.com/microsoft/Olive?WT.mc_id=AI-MVP-5003172">Microsoft Olive</a> — 模型优化工具包</li>
@@ -427,7 +425,6 @@
 <li><a href="https://learn.microsoft.com/azure/ai-foundry/foundry-local/how-to/how-to-compile-hugging-face-models?WT.mc_id=AI-MVP-5003172">为 Foundry Local 编译 Hugging Face 模型</a> — 官方指南</li>
 <li><a href="https://github.com/microsoft/onnxruntime-genai?WT.mc_id=AI-MVP-5003172">ONNX Runtime GenAI</a> — 为 Foundry Local 的推理提供支持</li>
 <li><a href="https://github.com/microsoft/edgeai-for-beginners?WT.mc_id=AI-MVP-5003172">边缘 AI 入门</a> — Microsoft 的 8 模块边缘 AI 课程</li>
-<li><a href="https://github.com/HamidOna/multi_agent_slm?WT.mc_id=AI-MVP-5003172">测验应用源代码</a> — 包含部署脚本的完整仓库</li>
 </ul>
 <hr>
 <p>原文链接: <a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/deploying-custom-models-with-microsoft-olive-and-foundry-local/4489002?WT.mc_id=AI-MVP-5003172">Deploying Custom Models with Microsoft Olive and Foundry Local</a></p>

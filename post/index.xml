@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Thu, 12 Feb 2026 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 13 Feb 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</title>
+      <link>https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/</link>
+      <pubDate>Fri, 13 Feb 2026 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/</guid>
+      <description>&lt;p&gt;Microsoft Agent Framework 现已集成 &lt;a href=&#34;https://github.com/anthropics/claude-agent-sdk-python?WT.mc_id=AI-MVP-5003172&#34;&gt;Claude Agent SDK&lt;/a&gt;，让我们能够构建由 Claude 完整代理能力驱动的 AI 代理。这个集成将 Agent Framework 的一致代理抽象与 Claude 的强大功能结合在一起，包括文件编辑、代码执行、函数调用、流式响应、多轮对话以及模型上下文协议（MCP）服务器集成——目前在 Python 中可用。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么将-agent-framework-与-claude-agent-sdk-结合使用&#34;&gt;为什么将 Agent Framework 与 Claude Agent SDK 结合使用？&lt;/h2&gt;&#xA;&lt;p&gt;我们可以单独使用 Claude Agent SDK 来构建代理。那么为什么要通过 Agent Framework 来使用它呢？以下是主要原因：&lt;/p&gt;</description>
+    </item>
     <item>
       <title>使用 Microsoft Olive 和 Foundry Local 部署自定义模型</title>
       <link>https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/</link>

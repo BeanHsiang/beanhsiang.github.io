@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>使用 Microsoft Olive 和 Foundry Local 部署自定义模型 | Innovation with tech</title>
+    <meta property="og:title" content="使用 Microsoft Olive 和 Foundry Local 部署自定义模型 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-02-12T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-02-12T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="使用 Microsoft Olive 和 Foundry Local 部署自定义模型">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</h1>
+        </header>
+        
+  <time datetime="2026-02-12T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年2月12日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>在过去的几周里,我一直在探索小语言模型(SLM)的部署之旅。从最初了解 <a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/phi-4-small-language-models-that-pack-a-punch/4464167?WT.mc_id=AI-MVP-5003172">Phi-4 和小语言模型的强大之处</a>,到实践<a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/running-phi-4-locally-with-microsoft-foundry-local-a-step-by-step-guide/4466304?WT.mc_id=AI-MVP-5003172">使用 Foundry Local 在本地运行模型</a>,再到学习<a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/function-calling-with-small-language-models/4472720?WT.mc_id=AI-MVP-5003172">函数调用</a>,最近还构建了一个完整的<a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/advanced-function-calling-and-multi-agent-systems-with-small-language-models-in-/4481180?WT.mc_id=AI-MVP-5003172">多智能体测验应用</a>,其中包含一个协调专家智能体的编排器。</p>
+<p>这个测验应用在本地运行得很好,但它依赖于 Foundry Local 目录中的模型——这些模型经过预优化且随时可用。但如果想部署一个不在目录中的模型该怎么办?也许你已经在特定领域的测验数据上微调了一个模型,或者 Hugging Face 上刚发布了一个你想使用的新模型。今天我将展示如何从 Hugging Face 获取一个模型,使用 Microsoft Olive 优化它,在 Foundry Local 中注册它,并在测验应用中运行它。同样的工作流程适用于你可能为特定用例微调的任何模型。</p>
+<h2 id="理解部署选项">理解部署选项</h2>
+<p>在深入之前,让我们先了解 SLM 应用程序的部署选项全景。根据目标环境,有几种部署 SLM 应用程序的途径。</p>
+<h3 id="三种主要路径">三种主要路径</h3>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260303141410-d8506f2f.png">
+            <img class="mx-auto" alt="" src="/uploads/20260303141410-d8506f2f.png" />
+        </a>
+    </p>
+<p><strong>vLLM</strong> 是云部署的行业标准——容器化、可扩展、处理许多并发用户。非常适合 Azure VM 或 Kubernetes。</p>
+<p><strong>Ollama</strong> 提供了一个中间地带——比 vLLM 简单,但仍然提供 Docker 支持,便于共享和部署。</p>
+<p><strong>Foundry Local + Olive</strong> 是 Microsoft 的边缘优先方法。使用 Olive 优化你的模型,使用 Foundry Local 或自定义服务器提供服务。非常适合本地部署、离线或注重隐私的部署。</p>
+<p>为了保持本系列文章的边缘优先主题,我将专注于 Foundry Local 路径。我将使用 Qwen 2.5-0.5B-Instruct——足够小,可以快速优化并演示完整的工作流程。可以把它看作是你在自己的测验数据上微调的模型的替代品。</p>
+<h2 id="前置要求">前置要求</h2>
+<p>你需要:</p>
+<ul>
+<li><strong>Foundry Local</strong> 版本 0.8.117 或更高</li>
+<li><strong>Python 3.10+</strong> 用于测验应用(foundry-local-sdk 需要)</li>
+<li><strong>单独的 Python 3.9 环境</strong>用于 Olive(Olive 0.9.x 有此要求)</li>
+<li><a href="https://github.com/HamidOna/multi_agent_slm?WT.mc_id=AI-MVP-5003172">上一篇文章</a>中的测验应用</li>
+</ul>
+<p>使用两个 Python 版本可能看起来有些奇怪,但这反映了一个常见的实际设置:在一个环境中优化模型,在另一个环境中提供服务。优化是一次性的步骤。</p>
+<h3 id="安装-olive-依赖项">安装 Olive 依赖项</h3>
+<p>在你的 Python 3.9 环境中:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install olive-ai onnxruntime onnxruntime-genai
+</span></span><span style="display:flex;"><span>pip install transformers&gt;<span style="color:#0550ae">=</span>4.45.0,&lt;5.0.0
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>重要提示:</strong> Olive 与 Transformers 5.x 不兼容。必须使用 4.x 版本。</p>
+<h2 id="使用-olive-进行模型优化">使用 Olive 进行模型优化</h2>
+<p><a href="https://github.com/microsoft/Olive?WT.mc_id=AI-MVP-5003172">Microsoft Olive</a> 是 Hugging Face 模型与 Foundry Local 可服务内容之间的桥梁。它在一个命令中处理 ONNX 转换、图优化和量化。</p>
+<h3 id="理解量化">理解量化</h3>
+<p>量化通过将权重从高精度浮点转换为低精度整数来减小模型大小:</p>
+<table>
+  <thead>
+      <tr>
+          <th>精度</th>
+          <th>大小减少</th>
+          <th>质量</th>
+          <th>最适合</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>FP32</strong></td>
+          <td>基线</td>
+          <td>最佳</td>
+          <td>开发、调试</td>
+      </tr>
+      <tr>
+          <td><strong>FP16</strong></td>
+          <td>减小 50%</td>
+          <td>优秀</td>
+          <td>具有充足 VRAM 的 GPU 推理</td>
+      </tr>
+      <tr>
+          <td><strong>INT8</strong></td>
+          <td>减小 75%</td>
+          <td>非常好</td>
+          <td><strong>平衡生产</strong></td>
+      </tr>
+      <tr>
+          <td><strong>INT4</strong></td>
+          <td>减小 87.5%</td>
+          <td>良好</td>
+          <td>边缘设备、资源受限</td>
+      </tr>
+  </tbody>
+</table>
+<p>我将使用 <strong>INT4</strong> 来展示最大压缩。对于具有更好质量的生产环境,可以考虑 <strong>INT8</strong>——只需在下面的命令中将 &ndash;precision int4 更改为 &ndash;precision int8。</p>
+<h3 id="运行优化">运行优化</h3>
+<p>scripts/optimize_model.py 处理两件事:在本地下载模型(以避免身份验证问题),然后运行 Olive。</p>
+<p>下载步骤很重要。ONNX Runtime GenAI 模型构建器内部请求 HuggingFace 身份验证,即使对于公共模型也是如此。我们不配置令牌,而是首先使用 token=False 下载模型,然后将 Olive 指向本地路径:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">huggingface_hub</span> <span style="color:#cf222e">import</span> snapshot_download
+</span></span><span style="display:flex;"><span>local_path <span style="color:#0550ae">=</span> snapshot_download<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Qwen/Qwen2.5-0.5B-Instruct&#34;</span><span style="color:#1f2328">,</span> token<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后针对本地副本运行 Olive 命令:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>cmd <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    sys<span style="color:#0550ae">.</span>executable<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;-m&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;olive&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;auto-opt&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;--model_name_or_path&#34;</span><span style="color:#1f2328">,</span> local_path<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;--trust_remote_code&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;--output_path&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;models/qwen2.5-0.5b-int4&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;--device&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;cpu&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;--provider&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;CPUExecutionProvider&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;--precision&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;int4&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;--use_model_builder&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;--use_ort_genai&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;--log_level&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;1&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>关键标志:&ndash;precision int4 将权重量化为 4 位整数,&ndash;use_model_builder 读取每个 transformer 层并将其导出为 ONNX,&ndash;use_ort_genai 以 Foundry Local 使用的格式输出。</p>
+<p>运行它:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python scripts/optimize_model.py
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>此过程大约需要一分钟。完成后,你将看到输出目录结构。</p>
+<pre tabindex="0"><code>models/qwen2.5-0.5b-int4/model/
+├── model.onnx              # ONNX 图 (162 KB)
+├── model.onnx.data         # 量化的 INT4 权重 (823 MB)
+├── genai_config.json       # ONNX Runtime GenAI 配置
+├── tokenizer.json          # 分词器词汇表 (11 MB)
+├── vocab.json              # Token-to-ID 映射 (2.7 MB)
+├── merges.txt              # BPE 合并 (1.6 MB)
+├── tokenizer_config.json
+├── config.json
+├── generation_config.json
+├── special_tokens_map.json
+└── added_tokens.json
+</code></pre><p>总大小:约 <strong>838MB</strong>——与原始模型相比大幅减小,同时保持了结构化任务(如测验生成)的可用质量。</p>
+<h2 id="在-foundry-local-中注册">在 Foundry Local 中注册</h2>
+<p>模型优化完成后,我们需要在 Foundry Local 中注册它。与云模型注册表不同,这里没有 CLI 命令——你将文件放在正确的目录中,Foundry 会自动发现它们。</p>
+<h3 id="foundry-的模型注册表">Foundry 的模型注册表</h3>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>foundry cache <span style="color:#6639ba">cd</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Windows: C:\Users\&lt;username&gt;\.foundry\cache\</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># macOS/Linux: ~/.foundry/cache/</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Foundry 按发布者组织模型:</p>
+<pre tabindex="0"><code>.foundry/cache/models/
+├── foundry.modelinfo.json  ← 官方模型目录
+├── Microsoft/               ← 预优化的 Microsoft 模型
+│   ├── qwen2.5-7b-instruct-cuda-gpu-4/
+│   ├── Phi-4-cuda-gpu-1/
+│   └── ...
+└── Custom/                  ← 你的模型放在这里
+</code></pre><p>
+        <a data-fancybox="gallery" href="/uploads/20260303141418-1604097d.png">
+            <img class="mx-auto" alt="" src="/uploads/20260303141418-1604097d.png" />
+        </a>
+    </p>
+<h4 id="注册脚本">注册脚本</h4>
+<p>scripts/register_model.sh 脚本做两件事:将所有模型文件复制到 Foundry 缓存,并创建 inference_model.json 配置文件。</p>
+<p>关键文件是 inference_model.json——没有它,Foundry 不会识别你的模型:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;Name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;qwen-quiz-int4&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;PromptTemplate&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;system&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;&lt;|im_start|&gt;system\n{Content}&lt;|im_end|&gt;&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;user&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;&lt;|im_start|&gt;user\n{Content}&lt;|im_end|&gt;&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;assistant&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;&lt;|im_start|&gt;assistant\n{Content}&lt;|im_end|&gt;&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;prompt&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;&lt;|im_start|&gt;user\n{Content}&lt;|im_end|&gt;\n&lt;|im_start|&gt;assistant&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>PromptTemplate 定义了 Qwen 2.5 期望的 ChatML 格式。{Content} 占位符是 Foundry 在运行时注入实际消息内容的位置。如果你部署的是 Llama 或 Phi 模型,你将使用它们各自的提示模板。</p>
+<p>运行注册:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>scripts/register_model.sh
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="验证注册">验证注册</h3>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>foundry cache ls
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>
+        <a data-fancybox="gallery" href="/uploads/20260303141422-671616b8.png">
+            <img class="mx-auto" alt="" src="/uploads/20260303141422-671616b8.png" />
+        </a>
+    </p>
+<h3 id="测试模型">测试模型</h3>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>foundry model run qwen-quiz-int4
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>
+        <a data-fancybox="gallery" href="/uploads/20260303141424-dbc6d3db.png">
+            <img class="mx-auto" alt="" src="/uploads/20260303141424-dbc6d3db.png" />
+        </a>
+    </p>
+<p>模型通过 CPU 上的 ONNX Runtime 加载。尝试一个简单的提示来验证它是否响应。</p>
+<h2 id="与测验应用集成">与测验应用集成</h2>
+<p>这就是有趣的地方。应用程序级别的更改只需在 utils/foundry_client.py 中修改一行:</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># 之前:</span>
+</span></span><span style="display:flex;"><span>DEFAULT_MODEL_ALIAS <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;qwen2.5-7b-instruct-cuda-gpu&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 之后:</span>
+</span></span><span style="display:flex;"><span>DEFAULT_MODEL_ALIAS <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;qwen-quiz-int4&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>但这一行修改引发了一些值得理解的问题。</p>
+<h3 id="问题-1sdk-无法看到自定义模型">问题 1:SDK 无法看到自定义模型</h3>
+<p>Foundry Local Python SDK 通过在官方目录中查找模型来解析模型——这是一个 Microsoft 发布的模型 JSON 文件。Custom/ 目录中的自定义模型不在该目录中。因此 FoundryLocalManager(&ldquo;qwen-quiz-int4&rdquo;) 会抛出&quot;找不到模型&quot;错误,尽管 foundry cache ls 和 foundry model run 都完美工作。</p>
+<p>foundry_client.py 中的修复是双代码路径。它首先尝试 SDK(适用于目录模型),当失败并显示&quot;在目录中找不到&quot;错误时,它会回退到直接发现正在运行的服务端点。</p>
+<p>工作流程变成两个终端:</p>
+<p>终端 1: foundry model run qwen-quiz-int4</p>
+<p>终端 2: python main.py</p>
+<p>客户端自动发现端点并连接。对于目录模型,现有的 FoundryLocalManager 路径保持不变。</p>
+<h3 id="问题-2工具调用格式">问题 2:工具调用格式</h3>
+<p>对于目录模型,Foundry 的服务器端中间件会拦截模型输出中的 &lt;tool_call&gt; 标签,并将它们转换为 API 响应中的结构化 tool_calls 对象。这是通过 foundry.modelinfo.json 中的元数据配置的。</p>
+<p>对于自定义模型,这些元数据字段不被识别——Foundry 在 inference_model.json 中忽略它们。&lt;tool_call&gt; 标签作为原始文本传递到 response.choices[0].message.content 中。</p>
+<p>由于我们的自定义模型输出完全相同的 &lt;tool_call&gt; 格式,我们在 agents/base_agent.py 中添加了一个小的回退解析器——这与我们在<a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/function-calling-with-small-language-models/4472720?WT.mc_id=AI-MVP-5003172">函数调用文章</a>中探索的模式相同。</p>
+<p>模型的行为是相同的;只是解析位置发生了变化——从服务器端(Foundry 中间件)到客户端(我们的代码)。</p>
+<h3 id="测试部署">测试部署</h3>
+<p>模型在一个终端中运行,在另一个终端启动测验应用。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260303141427-e29e443b.png">
+            <img class="mx-auto" alt="" src="/uploads/20260303141427-e29e443b.png" />
+        </a>
+    </p>
+<p>编排器成功调用了 generate_new_quiz 工具,QuizGeneratorAgent 生成了结构良好的测验 JSON。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260303141429-b6dc8246.png">
+            <img class="mx-auto" alt="" src="/uploads/20260303141429-b6dc8246.png" />
+        </a>
+    </p>
+<h3 id="模型限制">模型限制</h3>
+<p>0.5B INT4 模型偶尔会在复杂推理或基本算术方面遇到困难。这是如此小且大量量化的模型的预期行为。对于需要更高准确性的生产用例,可以使用 Qwen 2.5-1.5B 或 Qwen 2.5-7B 以获得更好的质量,或使用 INT8 量化而不是 INT4。部署工作流程保持不变——只需在优化脚本中更改模型名称和精度。</p>
+<h2 id="你已经完成的工作">你已经完成的工作</h2>
+<p>花点时间欣赏一下整个系列的完整旅程:</p>
+<table>
+  <thead>
+      <tr>
+          <th>文章</th>
+          <th>你学到了什么</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1. Phi-4 介绍</td>
+          <td>为什么 SLM 重要,性能与大小的权衡</td>
+      </tr>
+      <tr>
+          <td>2. 本地运行</td>
+          <td>Foundry Local 设置,基本推理</td>
+      </tr>
+      <tr>
+          <td>3. 函数调用</td>
+          <td>工具使用,外部 API 集成</td>
+      </tr>
+      <tr>
+          <td>4. 多智能体系统</td>
+          <td>编排,专家智能体</td>
+      </tr>
+      <tr>
+          <td><strong>5. 部署</strong></td>
+          <td><strong>Olive 优化,Foundry Local 注册,自定义模型部署</strong></td>
+      </tr>
+  </tbody>
+</table>
+<p>现在我掌握了构建生产 SLM 应用程序的端到端技能:理解全景、使用 Foundry Local 进行本地开发、使用函数调用的智能体应用、多智能体架构、使用 Olive 进行模型优化,以及将自定义模型部署到边缘。</p>
+<h2 id="接下来做什么">接下来做什么</h2>
+<p>下一个逻辑步骤是针对你的领域进行微调。在 USMLE 问题上训练的医学测验导师,在案例法上训练的法律助理,在内部文档上训练的公司入职机器人——使用相同的 Olive 工作流程来优化和部署你的微调模型。我们使用 Foundry Local 注册的相同 ONNX 模型也可以通过 ONNX Runtime Mobile 在移动设备上运行,或者容器化用于服务器端边缘部署。</p>
+<p>完整的源代码,包括优化和注册脚本,可在 <a href="https://github.com/HamidOna/multi_agent_slm?WT.mc_id=AI-MVP-5003172">GitHub 仓库</a>中找到。</p>
+<p><strong>资源:</strong></p>
+<ul>
+<li><a href="https://github.com/microsoft/Olive?WT.mc_id=AI-MVP-5003172">Microsoft Olive</a> — 模型优化工具包</li>
+<li><a href="https://learn.microsoft.com/azure/ai-foundry/foundry-local/?WT.mc_id=AI-MVP-5003172">Foundry Local 文档</a> — 设置和 CLI 参考</li>
+<li><a href="https://learn.microsoft.com/azure/ai-foundry/foundry-local/how-to/how-to-compile-hugging-face-models?WT.mc_id=AI-MVP-5003172">为 Foundry Local 编译 Hugging Face 模型</a> — 官方指南</li>
+<li><a href="https://github.com/microsoft/onnxruntime-genai?WT.mc_id=AI-MVP-5003172">ONNX Runtime GenAI</a> — 为 Foundry Local 的推理提供支持</li>
+<li><a href="https://github.com/microsoft/edgeai-for-beginners?WT.mc_id=AI-MVP-5003172">边缘 AI 入门</a> — Microsoft 的 8 模块边缘 AI 课程</li>
+<li><a href="https://github.com/HamidOna/multi_agent_slm?WT.mc_id=AI-MVP-5003172">测验应用源代码</a> — 包含部署脚本的完整仓库</li>
+</ul>
+<hr>
+<p>原文链接: <a href="https://techcommunity.microsoft.com/blog/educatordeveloperblog/deploying-custom-models-with-microsoft-olive-and-foundry-local/4489002?WT.mc_id=AI-MVP-5003172">Deploying Custom Models with Microsoft Olive and Foundry Local</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/">https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/">使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</a></li>
+        
+        <li><a href="/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/">微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</a></li>
+        
+        <li><a href="/post/2026-01-19-agent-framework-python-overview/">Agent Framework (Python) 完全指南</a></li>
+        
+        <li><a href="/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a></li>
+        
+        <li><a href="/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/">如何通过 Entra ID 身份验证使用 Microsoft Foundry</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+                <li><a href='/tags/Olive' target="_blank">Olive</a></li>
+                
+                <li><a href='/tags/Edge-AI' target="_blank">Edge AI</a></li>
+                
+                <li><a href='/tags/SLM' target="_blank">SLM</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/" title="使用 Microsoft Olive 和 Foundry Local 部署自定义模型" target="_blank">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/" title="使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/" title="微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型" target="_blank">微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/" title="Agent Framework (Python) 完全指南" target="_blank">Agent Framework (Python) 完全指南</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/" title="我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色" target="_blank">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/" title="如何通过 Entra ID 身份验证使用 Microsoft Foundry" target="_blank">如何通过 Entra ID 身份验证使用 Microsoft Foundry</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/" title="2026 年值得关注的 7 个 Agentic AI 趋势" target="_blank">2026 年值得关注的 7 个 Agentic AI 趋势</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-06-code-review-in-the-age-of-ai/" title="AI 时代的代码审查" target="_blank">AI 时代的代码审查</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-06-mbml-learning-skills/" title="[译]基于模型的机器学习 - 第二章 评估人们的技能" target="_blank">[译]基于模型的机器学习 - 第二章 评估人们的技能</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-05-mbml-murder-mystery_extending_the_model/" title="[译]基于模型的机器学习 - 1.4 扩展模型" target="_blank">[译]基于模型的机器学习 - 1.4 扩展模型</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (38)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (5)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (20)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

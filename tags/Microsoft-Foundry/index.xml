@@ -6,8 +6,15 @@
     <description>Recent content in Microsoft Foundry on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Mon, 02 Feb 2026 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 12 Feb 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/tags/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 Microsoft Olive 和 Foundry Local 部署自定义模型</title>
+      <link>https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/</link>
+      <pubDate>Thu, 12 Feb 2026 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/</guid>
+      <description>&lt;p&gt;在过去的几周里,我一直在探索小语言模型(SLM)的部署之旅。从最初了解 &lt;a href=&#34;https://techcommunity.microsoft.com/blog/educatordeveloperblog/phi-4-small-language-models-that-pack-a-punch/4464167?WT.mc_id=AI-MVP-5003172&#34;&gt;Phi-4 和小语言模型的强大之处&lt;/a&gt;,到实践&lt;a href=&#34;https://techcommunity.microsoft.com/blog/educatordeveloperblog/running-phi-4-locally-with-microsoft-foundry-local-a-step-by-step-guide/4466304?WT.mc_id=AI-MVP-5003172&#34;&gt;使用 Foundry Local 在本地运行模型&lt;/a&gt;,再到学习&lt;a href=&#34;https://techcommunity.microsoft.com/blog/educatordeveloperblog/function-calling-with-small-language-models/4472720?WT.mc_id=AI-MVP-5003172&#34;&gt;函数调用&lt;/a&gt;,最近还构建了一个完整的&lt;a href=&#34;https://techcommunity.microsoft.com/blog/educatordeveloperblog/advanced-function-calling-and-multi-agent-systems-with-small-language-models-in-/4481180?WT.mc_id=AI-MVP-5003172&#34;&gt;多智能体测验应用&lt;/a&gt;,其中包含一个协调专家智能体的编排器。&lt;/p&gt;&#xA;&lt;p&gt;这个测验应用在本地运行得很好,但它依赖于 Foundry Local 目录中的模型——这些模型经过预优化且随时可用。但如果想部署一个不在目录中的模型该怎么办?也许你已经在特定领域的测验数据上微调了一个模型,或者 Hugging Face 上刚发布了一个你想使用的新模型。今天我将展示如何从 Hugging Face 获取一个模型,使用 Microsoft Olive 优化它,在 Foundry Local 中注册它,并在测验应用中运行它。同样的工作流程适用于你可能为特定用例微调的任何模型。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</title>
       <link>https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/</link>

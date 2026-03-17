@@ -6,8 +6,15 @@
     <description>Recent content in FireUG on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Sat, 15 Mar 2025 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 06 Jun 2025 21:30:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/categories/FireUG/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>FireUG AI Breakthrough Night: When Microsoft Experts Meet Developers Over Coffee</title>
+      <link>https://beanhsiang.github.io/post/2025-06-06-fireug-ai-breakthrough-night-hangzhou/</link>
+      <pubDate>Fri, 06 Jun 2025 21:30:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2025-06-06-fireug-ai-breakthrough-night-hangzhou/</guid>
+      <description>&lt;h2 id=&#34;why-this-evening-was-worth-writing-about&#34;&gt;Why This Evening Was Worth Writing About&lt;/h2&gt;&#xA;&lt;p&gt;Honestly, if you just glanced at the event poster, you might think it was another one of those&#xA;casual developer get-togethers — a weeknight, a coffee shop in Hangzhou, a handful of talks.&#xA;But the moment you walked in, sat down, and started listening, it felt different.&lt;/p&gt;&#xA;&lt;p&gt;The whole evening was built around a very practical question: how is AI actually being used in&#xA;real software projects right now? Not the hype, not the demos that look good on a slide deck,&#xA;but the real stuff — the tools developers are reaching for, the workflows that are actually&#xA;sticking, the gotchas nobody warns you about. Every session on the night was essentially an&#xA;answer to some version of that question, whether it was wiring up MCP to a Teams bot, rethinking&#xA;how you structure a codebase so AI tooling can reason about it better, or using AI to finally fix&#xA;the eternal mess of vague requirements. That focus gave the whole event a coherent energy that&#xA;you don&amp;rsquo;t always get when talks are just loosely grouped under an &amp;ldquo;AI&amp;rdquo; banner.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>FireUG x Global AI Bootcamp 2025</title>
       <link>https://beanhsiang.github.io/post/2025-03-22-fireug-global-ai-bootcamp-2025/</link>

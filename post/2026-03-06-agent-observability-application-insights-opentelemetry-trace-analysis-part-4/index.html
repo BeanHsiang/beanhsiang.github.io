@@ -1,0 +1,1207 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析 | Innovation with tech</title>
+    <meta property="og:title" content="Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-03-06T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-03-06T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</h1>
+        </header>
+        
+  <time datetime="2026-03-06T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年3月6日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>这篇文章记录的是如何观察和了解 Agent 在现实中的实际运行状态。</p>
+<p>Agent 与普通 API 有根本的不同。它不是简单的请求/响应就结束，而是一套多阶段流程：LLM 推理 → 工具调用 → 结果处理 → 再推理。出错时，很难立即看出是哪个阶段因为什么原因失败了。速度慢时，也搞不清楚时间消耗在哪里。在成本方面，更难分析是哪个查询消耗了大量 Token。</p>
+<p><strong>可观测性（Observability）</strong> 正是解决这个问题的手段。下面我整理了如何将追踪（Tracing）、指标（Metrics）、日志（Logging）这三个维度应用到 Agent 上的方法，配合实战代码一起说明。</p>
+<h2 id="agent-可观测性的三个维度">Agent 可观测性的三个维度</h2>
+<p>三者缺一不可：</p>
+<ul>
+<li><strong>追踪（Tracing）</strong>：&ldquo;问题出在哪里？&rdquo;</li>
+<li><strong>指标（Metrics）</strong>：&ldquo;严重程度如何？&rdquo;</li>
+<li><strong>日志（Logging）</strong>：&ldquo;到底哪里出了问题？&rdquo;</li>
+</ul>
+<h2 id="准备工作">准备工作</h2>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#57606a"># Agent SDK</span>
+</span></span><span style="display:flex;"><span>pip install azure-ai-agents azure-identity
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># OpenTelemetry 核心</span>
+</span></span><span style="display:flex;"><span>pip install opentelemetry-sdk
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Azure Monitor（Application Insights）导出器</span>
+</span></span><span style="display:flex;"><span>pip install azure-monitor-opentelemetry
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Azure SDK OpenTelemetry 桥接</span>
+</span></span><span style="display:flex;"><span>pip install azure-core-tracing-opentelemetry
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>环境变量设置：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#6639ba">export</span> <span style="color:#953800">PROJECT_ENDPOINT</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;https://your-project.services.ai.azure.com/api/projects/your-project&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">export</span> <span style="color:#953800">AZURE_AI_MODEL_DEPLOYMENT_NAME</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;gpt-4o&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Application Insights 连接字符串</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># Azure Portal &gt; Application Insights &gt; 概述 &gt; 连接字符串</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">export</span> <span style="color:#953800">APPLICATIONINSIGHTS_CONNECTION_STRING</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;InstrumentationKey=xxx;IngestionEndpoint=https://...&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="方法-1foundry-门户内置追踪">方法 1：Foundry 门户内置追踪</h2>
+<p>一行代码都不用改。只需在 Foundry 门户里打开设置，就能自动收集 Agent 执行 Trace。</p>
+<p><strong>配置步骤：</strong></p>
+<ol>
+<li><a href="https://ai.azure.com?WT.mc_id=AI-MVP-5003172">Microsoft Foundry</a> → 进入项目</li>
+<li>左侧菜单 → <strong>Tracing</strong></li>
+<li>连接 Application Insights 资源（选择现有的或新建）</li>
+</ol>
+<p>仅此设置，就能自动收集以下内容：</p>
+<ul>
+<li>Run 开始/完成时间</li>
+<li>LLM 调用次数与延迟</li>
+<li>Token 使用量（输入/输出）</li>
+<li>工具调用情况与结果</li>
+<li>发生错误时的详细信息</li>
+</ul>
+<p><strong>在门户中查看：</strong><br>
+Foundry 门户的 Tracing 标签页以时间轴视图显示每个 Run 各阶段的执行情况，一眼就能看出每个阶段花了多少秒。</p>
+<h2 id="方法-2通过-opentelemetry-直接计测">方法 2：通过 OpenTelemetry 直接计测</h2>
+<p>门户追踪收集的是基本信息，而 OpenTelemetry 直接计测可以将追踪扩展到业务逻辑层面。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">os</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">logging</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.identity</span> <span style="color:#cf222e">import</span> DefaultAzureCredential
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.agents</span> <span style="color:#cf222e">import</span> AgentsClient
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.agents.models</span> <span style="color:#cf222e">import</span> FunctionTool<span style="color:#1f2328">,</span> ToolSet
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># ─── OpenTelemetry 设置 ─────────────────────────────</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">opentelemetry</span> <span style="color:#cf222e">import</span> trace
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">opentelemetry.sdk.trace</span> <span style="color:#cf222e">import</span> TracerProvider
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">opentelemetry.sdk.trace.export</span> <span style="color:#cf222e">import</span> BatchSpanProcessor
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.monitor.opentelemetry.exporter</span> <span style="color:#cf222e">import</span> AzureMonitorTraceExporter
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.core.settings</span> <span style="color:#cf222e">import</span> settings
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 让 Azure SDK 使用 OpenTelemetry</span>
+</span></span><span style="display:flex;"><span>settings<span style="color:#0550ae">.</span>tracing_implementation <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;opentelemetry&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>只需加一行 <code>settings.tracing_implementation = &quot;opentelemetry&quot;</code>，Azure SDK 的所有 API 调用就会自动被追踪。</p>
+<h2 id="实战完整的计测-agent-示例">实战：完整的计测 Agent 示例</h2>
+<p>下面是在真实 Agent 上附加可观测性的完整代码：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">132
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">133
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">134
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">135
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">136
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">137
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">138
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">139
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">140
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">141
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">142
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">143
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">144
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">145
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">146
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">147
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">148
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">149
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">os</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">time</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">json</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">logging</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.identity</span> <span style="color:#cf222e">import</span> DefaultAzureCredential
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.agents</span> <span style="color:#cf222e">import</span> AgentsClient
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.agents.models</span> <span style="color:#cf222e">import</span> FunctionTool<span style="color:#1f2328">,</span> ToolSet
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">opentelemetry</span> <span style="color:#cf222e">import</span> trace
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">opentelemetry.sdk.trace</span> <span style="color:#cf222e">import</span> TracerProvider
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">opentelemetry.sdk.trace.export</span> <span style="color:#cf222e">import</span> BatchSpanProcessor<span style="color:#1f2328">,</span> ConsoleSpanExporter
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.monitor.opentelemetry.exporter</span> <span style="color:#cf222e">import</span> AzureMonitorTraceExporter
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.core.settings</span> <span style="color:#cf222e">import</span> settings
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># ─── 日志配置 ─────────────────────────────────────────</span>
+</span></span><span style="display:flex;"><span>logging<span style="color:#0550ae">.</span>basicConfig<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    level<span style="color:#0550ae">=</span>logging<span style="color:#0550ae">.</span>INFO<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">format</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;</span><span style="color:#0a3069">%(asctime)s</span><span style="color:#0a3069"> [</span><span style="color:#0a3069">%(levelname)s</span><span style="color:#0a3069">] </span><span style="color:#0a3069">%(name)s</span><span style="color:#0a3069">: </span><span style="color:#0a3069">%(message)s</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#0550ae">=</span> logging<span style="color:#0550ae">.</span>getLogger<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;hr-agent&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># ─── OpenTelemetry 配置 ──────────────────────────────</span>
+</span></span><span style="display:flex;"><span>settings<span style="color:#0550ae">.</span>tracing_implementation <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;opentelemetry&#34;</span>
+</span></span><span style="display:flex;"><span>tracer_provider <span style="color:#0550ae">=</span> TracerProvider<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 导出到 Application Insights</span>
+</span></span><span style="display:flex;"><span>connection_string <span style="color:#0550ae">=</span> os<span style="color:#0550ae">.</span>environ<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;APPLICATIONINSIGHTS_CONNECTION_STRING&#34;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>exporter <span style="color:#0550ae">=</span> AzureMonitorTraceExporter<span style="color:#1f2328">(</span>connection_string<span style="color:#0550ae">=</span>connection_string<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>tracer_provider<span style="color:#0550ae">.</span>add_span_processor<span style="color:#1f2328">(</span>BatchSpanProcessor<span style="color:#1f2328">(</span>exporter<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>trace<span style="color:#0550ae">.</span>set_tracer_provider<span style="color:#1f2328">(</span>tracer_provider<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>tracer <span style="color:#0550ae">=</span> trace<span style="color:#0550ae">.</span>get_tracer<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;hr-agent&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>client <span style="color:#0550ae">=</span> AgentsClient<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    endpoint<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;PROJECT_ENDPOINT&#34;</span><span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>    credential<span style="color:#0550ae">=</span>DefaultAzureCredential<span style="color:#1f2328">(),</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">get_employee_info</span><span style="color:#1f2328">(</span>employee_id<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;&#34;&#34;查询员工信息&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">with</span> tracer<span style="color:#0550ae">.</span>start_as_current_span<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;tool.get_employee_info&#34;</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">as</span> span<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        start <span style="color:#0550ae">=</span> time<span style="color:#0550ae">.</span>time<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;employee_id&#34;</span><span style="color:#1f2328">,</span> employee_id<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        employees <span style="color:#0550ae">=</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;EMP001&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;张伟&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;department&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;工程部&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;position&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;高级工程师&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;EMP002&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;王芳&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;department&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;设计部&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;position&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;UX 设计师&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        result <span style="color:#0550ae">=</span> employees<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>employee_id<span style="color:#1f2328">,</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;error&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;找不到该员工&#34;</span><span style="color:#1f2328">})</span>
+</span></span><span style="display:flex;"><span>        elapsed <span style="color:#0550ae">=</span> time<span style="color:#0550ae">.</span>time<span style="color:#1f2328">()</span> <span style="color:#0550ae">-</span> start
+</span></span><span style="display:flex;"><span>        span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;found&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;error&#34;</span> <span style="color:#0550ae">not</span> <span style="color:#0550ae">in</span> result<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;latency_ms&#34;</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">round</span><span style="color:#1f2328">(</span>elapsed <span style="color:#0550ae">*</span> <span style="color:#0550ae">1000</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        logger<span style="color:#0550ae">.</span>info<span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;[tool] get_employee_info(</span><span style="color:#0a3069">{</span>employee_id<span style="color:#0a3069">}</span><span style="color:#0a3069">) → </span><span style="color:#0a3069">{</span>elapsed<span style="color:#0a3069">:</span><span style="color:#0a3069">.3f</span><span style="color:#0a3069">}</span><span style="color:#0a3069">s&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> json<span style="color:#0550ae">.</span>dumps<span style="color:#1f2328">({</span><span style="color:#0a3069">&#34;employee_id&#34;</span><span style="color:#1f2328">:</span> employee_id<span style="color:#1f2328">,</span> <span style="color:#0550ae">**</span>result<span style="color:#1f2328">},</span> ensure_ascii<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">get_remaining_vacation</span><span style="color:#1f2328">(</span>employee_id<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> year<span style="color:#1f2328">:</span> <span style="color:#6639ba">int</span> <span style="color:#0550ae">=</span> <span style="color:#0550ae">2025</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;&#34;&#34;查询员工年假剩余天数&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">with</span> tracer<span style="color:#0550ae">.</span>start_as_current_span<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;tool.get_remaining_vacation&#34;</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">as</span> span<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;employee_id&#34;</span><span style="color:#1f2328">,</span> employee_id<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;year&#34;</span><span style="color:#1f2328">,</span> year<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        vacations <span style="color:#0550ae">=</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;EMP001&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;total&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">15</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;used&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">7</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;remaining&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">8</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;EMP002&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;total&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">15</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;used&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">12</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;remaining&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">3</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        result <span style="color:#0550ae">=</span> vacations<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>employee_id<span style="color:#1f2328">,</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;total&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;used&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;remaining&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">})</span>
+</span></span><span style="display:flex;"><span>        span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;remaining_days&#34;</span><span style="color:#1f2328">,</span> result<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;remaining&#34;</span><span style="color:#1f2328">])</span>
+</span></span><span style="display:flex;"><span>        logger<span style="color:#0550ae">.</span>info<span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;[tool] get_remaining_vacation(</span><span style="color:#0a3069">{</span>employee_id<span style="color:#0a3069">}</span><span style="color:#0a3069">, </span><span style="color:#0a3069">{</span>year<span style="color:#0a3069">}</span><span style="color:#0a3069">) → remaining=</span><span style="color:#0a3069">{</span>result<span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;remaining&#39;</span><span style="color:#1f2328">]</span><span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> json<span style="color:#0550ae">.</span>dumps<span style="color:#1f2328">({</span><span style="color:#0a3069">&#34;employee_id&#34;</span><span style="color:#1f2328">:</span> employee_id<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;year&#34;</span><span style="color:#1f2328">:</span> year<span style="color:#1f2328">,</span> <span style="color:#0550ae">**</span>result<span style="color:#1f2328">},</span> ensure_ascii<span style="color:#0550ae">=</span><span style="color:#cf222e">False</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># ─── 创建 Agent ────────────────────────────────────</span>
+</span></span><span style="display:flex;"><span>functions <span style="color:#0550ae">=</span> FunctionTool<span style="color:#1f2328">(</span>functions<span style="color:#0550ae">=</span><span style="color:#1f2328">{</span>get_employee_info<span style="color:#1f2328">,</span> get_remaining_vacation<span style="color:#1f2328">})</span>
+</span></span><span style="display:flex;"><span>toolset <span style="color:#0550ae">=</span> ToolSet<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>toolset<span style="color:#0550ae">.</span>add<span style="color:#1f2328">(</span>functions<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>agent <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>create_agent<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    model<span style="color:#0550ae">=</span>os<span style="color:#0550ae">.</span>environ<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;AZURE_AI_MODEL_DEPLOYMENT_NAME&#34;</span><span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>    name<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;hr-agent-observed&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    instructions<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;回答 HR 相关问题的助手。使用工具获取准确数据。&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    toolset<span style="color:#0550ae">=</span>toolset<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">run_agent_observed</span><span style="color:#1f2328">(</span>user_message<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">dict</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">with</span> tracer<span style="color:#0550ae">.</span>start_as_current_span<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;agent.run&#34;</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">as</span> span<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        start_total <span style="color:#0550ae">=</span> time<span style="color:#0550ae">.</span>time<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;user.message&#34;</span><span style="color:#1f2328">,</span> user_message<span style="color:#1f2328">[:</span><span style="color:#0550ae">200</span><span style="color:#1f2328">])</span>
+</span></span><span style="display:flex;"><span>        thread <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>threads<span style="color:#0550ae">.</span>create<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>        client<span style="color:#0550ae">.</span>messages<span style="color:#0550ae">.</span>create<span style="color:#1f2328">(</span>thread_id<span style="color:#0550ae">=</span>thread<span style="color:#0550ae">.</span>id<span style="color:#1f2328">,</span> role<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span> content<span style="color:#0550ae">=</span>user_message<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#57606a"># 执行 Run（手动轮询以追踪详细状态）</span>
+</span></span><span style="display:flex;"><span>        run <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>runs<span style="color:#0550ae">.</span>create<span style="color:#1f2328">(</span>thread_id<span style="color:#0550ae">=</span>thread<span style="color:#0550ae">.</span>id<span style="color:#1f2328">,</span> agent_id<span style="color:#0550ae">=</span>agent<span style="color:#0550ae">.</span>id<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;run.id&#34;</span><span style="color:#1f2328">,</span> run<span style="color:#0550ae">.</span>id<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        tool_call_count <span style="color:#0550ae">=</span> <span style="color:#0550ae">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">while</span> run<span style="color:#0550ae">.</span>status <span style="color:#0550ae">in</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;queued&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;in_progress&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;requires_action&#34;</span><span style="color:#1f2328">]:</span>
+</span></span><span style="display:flex;"><span>            time<span style="color:#0550ae">.</span>sleep<span style="color:#1f2328">(</span><span style="color:#0550ae">1</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            run <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>runs<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>thread_id<span style="color:#0550ae">=</span>thread<span style="color:#0550ae">.</span>id<span style="color:#1f2328">,</span> run_id<span style="color:#0550ae">=</span>run<span style="color:#0550ae">.</span>id<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">if</span> run<span style="color:#0550ae">.</span>status <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;requires_action&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                tool_outputs <span style="color:#0550ae">=</span> <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">for</span> tool_call <span style="color:#0550ae">in</span> run<span style="color:#0550ae">.</span>required_action<span style="color:#0550ae">.</span>submit_tool_outputs<span style="color:#0550ae">.</span>tool_calls<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    tool_call_count <span style="color:#0550ae">+=</span> <span style="color:#0550ae">1</span>
+</span></span><span style="display:flex;"><span>                    func_name <span style="color:#0550ae">=</span> tool_call<span style="color:#0550ae">.</span>function<span style="color:#0550ae">.</span>name
+</span></span><span style="display:flex;"><span>                    func_args <span style="color:#0550ae">=</span> json<span style="color:#0550ae">.</span>loads<span style="color:#1f2328">(</span>tool_call<span style="color:#0550ae">.</span>function<span style="color:#0550ae">.</span>arguments<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#cf222e">with</span> tracer<span style="color:#0550ae">.</span>start_as_current_span<span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;agent.tool_call.</span><span style="color:#0a3069">{</span>func_name<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span> <span style="color:#cf222e">as</span> tool_span<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                        tool_span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;tool.name&#34;</span><span style="color:#1f2328">,</span> func_name<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                        tool_span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;tool.arguments&#34;</span><span style="color:#1f2328">,</span> json<span style="color:#0550ae">.</span>dumps<span style="color:#1f2328">(</span>func_args<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#cf222e">if</span> func_name <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;get_employee_info&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                            result <span style="color:#0550ae">=</span> get_employee_info<span style="color:#1f2328">(</span><span style="color:#0550ae">**</span>func_args<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#cf222e">elif</span> func_name <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;get_remaining_vacation&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                            result <span style="color:#0550ae">=</span> get_remaining_vacation<span style="color:#1f2328">(</span><span style="color:#0550ae">**</span>func_args<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#cf222e">else</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                            result <span style="color:#0550ae">=</span> json<span style="color:#0550ae">.</span>dumps<span style="color:#1f2328">({</span><span style="color:#0a3069">&#34;error&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;未知函数：</span><span style="color:#0a3069">{</span>func_name<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">})</span>
+</span></span><span style="display:flex;"><span>                        tool_span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;tool.result_length&#34;</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">len</span><span style="color:#1f2328">(</span>result<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>                    tool_outputs<span style="color:#0550ae">.</span>append<span style="color:#1f2328">({</span><span style="color:#0a3069">&#34;tool_call_id&#34;</span><span style="color:#1f2328">:</span> tool_call<span style="color:#0550ae">.</span>id<span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;output&#34;</span><span style="color:#1f2328">:</span> result<span style="color:#1f2328">})</span>
+</span></span><span style="display:flex;"><span>                run <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>runs<span style="color:#0550ae">.</span>submit_tool_outputs<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>                    thread_id<span style="color:#0550ae">=</span>thread<span style="color:#0550ae">.</span>id<span style="color:#1f2328">,</span> run_id<span style="color:#0550ae">=</span>run<span style="color:#0550ae">.</span>id<span style="color:#1f2328">,</span> tool_outputs<span style="color:#0550ae">=</span>tool_outputs<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        elapsed_total <span style="color:#0550ae">=</span> time<span style="color:#0550ae">.</span>time<span style="color:#1f2328">()</span> <span style="color:#0550ae">-</span> start_total
+</span></span><span style="display:flex;"><span>        span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;run.status&#34;</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">(</span>run<span style="color:#0550ae">.</span>status<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;run.tool_call_count&#34;</span><span style="color:#1f2328">,</span> tool_call_count<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;run.total_latency_ms&#34;</span><span style="color:#1f2328">,</span> <span style="color:#6639ba">round</span><span style="color:#1f2328">(</span>elapsed_total <span style="color:#0550ae">*</span> <span style="color:#0550ae">1000</span><span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> run<span style="color:#0550ae">.</span>usage<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;llm.prompt_tokens&#34;</span><span style="color:#1f2328">,</span> run<span style="color:#0550ae">.</span>usage<span style="color:#0550ae">.</span>prompt_tokens<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;llm.completion_tokens&#34;</span><span style="color:#1f2328">,</span> run<span style="color:#0550ae">.</span>usage<span style="color:#0550ae">.</span>completion_tokens<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            span<span style="color:#0550ae">.</span>set_attribute<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;llm.total_tokens&#34;</span><span style="color:#1f2328">,</span> run<span style="color:#0550ae">.</span>usage<span style="color:#0550ae">.</span>total_tokens<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>            logger<span style="color:#0550ae">.</span>info<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;[usage] tokens: prompt=</span><span style="color:#0a3069">{</span>run<span style="color:#0550ae">.</span>usage<span style="color:#0550ae">.</span>prompt_tokens<span style="color:#0a3069">}</span><span style="color:#0a3069">, &#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;completion=</span><span style="color:#0a3069">{</span>run<span style="color:#0550ae">.</span>usage<span style="color:#0550ae">.</span>completion_tokens<span style="color:#0a3069">}</span><span style="color:#0a3069">, &#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;total=</span><span style="color:#0a3069">{</span>run<span style="color:#0550ae">.</span>usage<span style="color:#0550ae">.</span>total_tokens<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        response_text <span style="color:#0550ae">=</span> <span style="color:#0a3069">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">if</span> run<span style="color:#0550ae">.</span>status <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;completed&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>            messages <span style="color:#0550ae">=</span> <span style="color:#6639ba">list</span><span style="color:#1f2328">(</span>client<span style="color:#0550ae">.</span>messages<span style="color:#0550ae">.</span>list<span style="color:#1f2328">(</span>thread_id<span style="color:#0550ae">=</span>thread<span style="color:#0550ae">.</span>id<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#cf222e">for</span> msg <span style="color:#0550ae">in</span> <span style="color:#6639ba">reversed</span><span style="color:#1f2328">(</span>messages<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#cf222e">if</span> msg<span style="color:#0550ae">.</span>role <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;assistant&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>                    response_text <span style="color:#0550ae">=</span> msg<span style="color:#0550ae">.</span>content<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>text<span style="color:#0550ae">.</span>value <span style="color:#cf222e">if</span> msg<span style="color:#0550ae">.</span>content <span style="color:#cf222e">else</span> <span style="color:#0a3069">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#cf222e">break</span>
+</span></span><span style="display:flex;"><span>        logger<span style="color:#0550ae">.</span>info<span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;[agent] 完成：latency=</span><span style="color:#0a3069">{</span><span style="color:#6639ba">round</span><span style="color:#1f2328">(</span>elapsed_total<span style="color:#0550ae">*</span><span style="color:#0550ae">1000</span><span style="color:#1f2328">)</span><span style="color:#0a3069">}</span><span style="color:#0a3069">ms, tools=</span><span style="color:#0a3069">{</span>tool_call_count<span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;response&#34;</span><span style="color:#1f2328">:</span> response_text<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;run_id&#34;</span><span style="color:#1f2328">:</span> run<span style="color:#0550ae">.</span>id<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;thread_id&#34;</span><span style="color:#1f2328">:</span> thread<span style="color:#0550ae">.</span>id<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;status&#34;</span><span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">(</span>run<span style="color:#0550ae">.</span>status<span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;tool_calls&#34;</span><span style="color:#1f2328">:</span> tool_call_count<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;latency_ms&#34;</span><span style="color:#1f2328">:</span> <span style="color:#6639ba">round</span><span style="color:#1f2328">(</span>elapsed_total <span style="color:#0550ae">*</span> <span style="color:#0550ae">1000</span><span style="color:#1f2328">),</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;tokens&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">&#34;prompt&#34;</span><span style="color:#1f2328">:</span> run<span style="color:#0550ae">.</span>usage<span style="color:#0550ae">.</span>prompt_tokens <span style="color:#cf222e">if</span> run<span style="color:#0550ae">.</span>usage <span style="color:#cf222e">else</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">&#34;completion&#34;</span><span style="color:#1f2328">:</span> run<span style="color:#0550ae">.</span>usage<span style="color:#0550ae">.</span>completion_tokens <span style="color:#cf222e">if</span> run<span style="color:#0550ae">.</span>usage <span style="color:#cf222e">else</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">&#34;total&#34;</span><span style="color:#1f2328">:</span> run<span style="color:#0550ae">.</span>usage<span style="color:#0550ae">.</span>total_tokens <span style="color:#cf222e">if</span> run<span style="color:#0550ae">.</span>usage <span style="color:#cf222e">else</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 清理</span>
+</span></span><span style="display:flex;"><span>client<span style="color:#0550ae">.</span>delete_agent<span style="color:#1f2328">(</span>agent<span style="color:#0550ae">.</span>id<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 强制刷新缓冲区中的剩余 Trace</span>
+</span></span><span style="display:flex;"><span>tracer_provider<span style="color:#0550ae">.</span>force_flush<span style="color:#1f2328">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>run.usage</code> 中包含 Run 完成后的总 Token 使用量。将其记录为 Trace 属性，就能在事后分析&quot;哪个查询消耗了最多 Token&quot;。</p>
+<h2 id="在-application-insights-中查看-trace">在 Application Insights 中查看 Trace</h2>
+<p>运行代码后，数据会积累在 Application Insights 中。在 Azure Portal 中查看的方法如下：</p>
+<h3 id="事务搜索">事务搜索</h3>
+<p>Azure Portal → Application Insights 资源 → 搜索</p>
+<p>用 <code>agent.run</code> 名称找到 Trace 并点击，就能以时间轴视图看到各执行阶段。一眼就能看出哪个阶段慢、工具调用了几次。</p>
+<h2 id="用-kql-分析数据">用 KQL 分析数据</h2>
+<p>使用 <a href="https://learn.microsoft.com/zh-cn/kusto/query/kql-quick-reference?view=azure-data-explorer&amp;preserve-view=true&amp;WT.mc_id=AI-MVP-5003172">KQL（Kusto 查询语言）</a>分析积累在 Application Insights 中的数据。</p>
+<h3 id="1-agent-执行统计摘要">1. Agent 执行统计摘要</h3>
+<pre tabindex="0"><code class="language-kql" data-lang="kql">// 最近 24 小时 Agent 执行状况
+dependencies
+| where timestamp &gt; ago(24h)
+| where name == &#34;agent.run&#34;
+| summarize
+    total_runs = count(),
+    success_runs = countif(success == true),
+    avg_latency_ms = avg(duration),
+    p95_latency_ms = percentile(duration, 95),
+    p99_latency_ms = percentile(duration, 99)
+| extend success_rate = round(100.0 * success_runs / total_runs, 2)
+</code></pre><h3 id="2-按时间段的-token-使用量趋势">2. 按时间段的 Token 使用量趋势</h3>
+<pre tabindex="0"><code class="language-kql" data-lang="kql">// 当 Token 使用量以自定义属性记录时
+dependencies
+| where timestamp &gt; ago(24h)
+| where name == &#34;agent.run&#34;
+| extend
+    total_tokens = toint(customDimensions[&#34;llm.total_tokens&#34;]),
+    prompt_tokens = toint(customDimensions[&#34;llm.prompt_tokens&#34;]),
+    completion_tokens = toint(customDimensions[&#34;llm.completion_tokens&#34;])
+| summarize
+    sum_total = sum(total_tokens),
+    sum_prompt = sum(prompt_tokens),
+    sum_completion = sum(completion_tokens)
+    by bin(timestamp, 1h)
+| order by timestamp asc
+</code></pre><h3 id="3-工具调用频率分析">3. 工具调用频率分析</h3>
+<pre tabindex="0"><code class="language-kql" data-lang="kql">// 哪个工具被调用了多少次？
+dependencies
+| where timestamp &gt; ago(7d)
+| where name startswith &#34;agent.tool_call.&#34;
+| extend tool_name = replace_string(name, &#34;agent.tool_call.&#34;, &#34;&#34;)
+| summarize
+    call_count = count(),
+    avg_duration_ms = avg(duration),
+    p95_duration_ms = percentile(duration, 95),
+    error_count = countif(success == false)
+    by tool_name
+| order by call_count desc
+</code></pre><h3 id="4-查找慢-run">4. 查找慢 Run</h3>
+<pre tabindex="0"><code class="language-kql" data-lang="kql">// 超过 3 秒的 Agent 执行列表
+dependencies
+| where timestamp &gt; ago(24h)
+| where name == &#34;agent.run&#34;
+| where duration &gt; 3000
+| project
+    timestamp,
+    run_id = tostring(customDimensions[&#34;run.id&#34;]),
+    latency_ms = duration,
+    tool_calls = toint(customDimensions[&#34;run.tool_call_count&#34;]),
+    total_tokens = toint(customDimensions[&#34;llm.total_tokens&#34;]),
+    user_message = tostring(customDimensions[&#34;user.message&#34;])
+| order by latency_ms desc
+</code></pre><h3 id="5-错误分析">5. 错误分析</h3>
+<pre tabindex="0"><code class="language-kql" data-lang="kql">// 最近 24 小时失败的 Run 详情
+dependencies
+| where timestamp &gt; ago(24h)
+| where name == &#34;agent.run&#34;
+| where success == false
+| project
+    timestamp,
+    run_id = tostring(customDimensions[&#34;run.id&#34;]),
+    run_status = tostring(customDimensions[&#34;run.status&#34;]),
+    error_message = tostring(customDimensions[&#34;error.message&#34;])
+| order by timestamp desc
+</code></pre><h2 id="成本追踪仪表板">成本追踪仪表板</h2>
+<p>可以创建 Azure Monitor Workbook 来可视化成本：</p>
+<pre tabindex="0"><code class="language-kql" data-lang="kql">dependencies
+| where timestamp &gt; ago(30d)
+| where name == &#34;agent.run&#34;
+| extend
+    prompt_tokens = tolong(customDimensions[&#34;llm.prompt_tokens&#34;]),
+    completion_tokens = tolong(customDimensions[&#34;llm.completion_tokens&#34;])
+| summarize
+    total_prompt = sum(prompt_tokens),
+    total_completion = sum(completion_tokens)
+    by bin(timestamp, 1d)
+| extend
+    // GPT-4o 定价：输入 $2.50/1M，输出 $10/1M
+    estimated_cost_usd = (total_prompt / 1000000.0 * 2.50) + (total_completion / 1000000.0 * 10.0)
+| project
+    day = bin(timestamp, 1d),
+    total_prompt,
+    total_completion,
+    estimated_cost_usd = round(estimated_cost_usd, 4)
+| order by day asc
+</code></pre><h2 id="异常检测告警设置">异常检测告警设置</h2>
+<p>当 Agent 错误率急剧上升或延迟超过阈值时，自动接收告警通知。</p>
+<h3 id="azure-portal-告警配置">Azure Portal 告警配置</h3>
+<p>Application Insights → 告警 → + 创建 → 告警规则</p>
+<p><strong>场景 1：错误率告警</strong></p>
+<ul>
+<li>信号：自定义查询（KQL）</li>
+<li>条件：最近 5 分钟错误率 &gt; 10%</li>
+<li>操作：邮件 / Teams 通知</li>
+</ul>
+<pre tabindex="0"><code class="language-kql" data-lang="kql">// 告警评估用 KQL
+dependencies
+| where timestamp &gt; ago(5m)
+| where name == &#34;agent.run&#34;
+| summarize
+    total = count(),
+    errors = countif(success == false)
+| extend error_rate = 100.0 * errors / total
+| where error_rate &gt; 10
+</code></pre><p><strong>场景 2：延迟告警</strong></p>
+<ul>
+<li>条件：p95 延迟 &gt; 5 秒</li>
+</ul>
+<pre tabindex="0"><code class="language-kql" data-lang="kql">dependencies
+| where timestamp &gt; ago(5m)
+| where name == &#34;agent.run&#34;
+| summarize p95 = percentile(duration, 95)
+| where p95 &gt; 5000
+</code></pre><h2 id="用结构化日志丰富上下文">用结构化日志丰富上下文</h2>
+<p>同时使用结构化日志和 OpenTelemetry Trace，分析会更加方便：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">import</span> <span style="color:#24292e">structlog</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>log <span style="color:#0550ae">=</span> structlog<span style="color:#0550ae">.</span>get_logger<span style="color:#1f2328">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">run_agent_with_logging</span><span style="color:#1f2328">(</span>user_message<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">,</span> user_id<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">dict</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    run_logger <span style="color:#0550ae">=</span> log<span style="color:#0550ae">.</span>bind<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        agent_id<span style="color:#0550ae">=</span>agent<span style="color:#0550ae">.</span>id<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        user_id<span style="color:#0550ae">=</span>user_id<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        message_preview<span style="color:#0550ae">=</span>user_message<span style="color:#1f2328">[:</span><span style="color:#0550ae">50</span><span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    run_logger<span style="color:#0550ae">.</span>info<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;agent_run_started&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">try</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        result <span style="color:#0550ae">=</span> run_agent_observed<span style="color:#1f2328">(</span>user_message<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        run_logger<span style="color:#0550ae">.</span>info<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;agent_run_completed&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            latency_ms<span style="color:#0550ae">=</span>result<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;latency_ms&#34;</span><span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>            tool_calls<span style="color:#0550ae">=</span>result<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;tool_calls&#34;</span><span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>            total_tokens<span style="color:#0550ae">=</span>result<span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;tokens&#34;</span><span style="color:#1f2328">][</span><span style="color:#0a3069">&#34;total&#34;</span><span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> result
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">except</span> Exception <span style="color:#cf222e">as</span> e<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        run_logger<span style="color:#0550ae">.</span>error<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;agent_run_failed&#34;</span><span style="color:#1f2328">,</span> error<span style="color:#0550ae">=</span><span style="color:#6639ba">str</span><span style="color:#1f2328">(</span>e<span style="color:#1f2328">))</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">raise</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>结构化日志会累积在 Application Insights 的 <code>traces</code> 表中。由于是 JSON 格式，用 KQL 提取字段非常方便。</p>
+<h2 id="用-azure-monitor-workbook-搭建仪表板">用 Azure Monitor Workbook 搭建仪表板</h2>
+<p>数据在 Application Insights 中积累后，就可以用 Azure Monitor Workbook 搭建仪表板了。</p>
+<p><strong>推荐仪表板配置：</strong></p>
+<ul>
+<li>Agent 运行成功率（实时）</li>
+<li>p95 / p99 延迟趋势</li>
+<li>每小时/每天 Token 使用量</li>
+<li>各工具调用频率</li>
+<li>错误率趋势 + 告警历史</li>
+</ul>
+<p>可以用 Azure Bicep 或 ARM 模板部署 Workbook 模板 JSON，让整个团队可以立即使用同一个仪表板。</p>
+<h2 id="在开发环境中本地查看-trace">在开发环境中本地查看 Trace</h2>
+<p>在发送到 Application Insights 之前，如果想先在本地确认 Trace，可以使用控制台输出：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">opentelemetry.sdk.trace.export</span> <span style="color:#cf222e">import</span> ConsoleSpanExporter<span style="color:#1f2328">,</span> SimpleSpanProcessor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 开发环境：控制台输出</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> os<span style="color:#0550ae">.</span>environ<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;ENVIRONMENT&#34;</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;development&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    tracer_provider<span style="color:#0550ae">.</span>add_span_processor<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        SimpleSpanProcessor<span style="color:#1f2328">(</span>ConsoleSpanExporter<span style="color:#1f2328">())</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以用 Docker 启动本地追踪后端 Jaeger 或 Zipkin：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#57606a"># 本地运行 Jaeger</span>
+</span></span><span style="display:flex;"><span>docker run -d --name jaeger <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>  -p 16686:16686 <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>  -p 4317:4317 <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>  jaegertracing/all-in-one:latest
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">opentelemetry.exporter.otlp.proto.grpc.trace_exporter</span> <span style="color:#cf222e">import</span> OTLPSpanExporter
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#57606a"># 导出到 Jaeger</span>
+</span></span><span style="display:flex;"><span>jaeger_exporter <span style="color:#0550ae">=</span> OTLPSpanExporter<span style="color:#1f2328">(</span>endpoint<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;http://localhost:4317&#34;</span><span style="color:#1f2328">,</span> insecure<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>tracer_provider<span style="color:#0550ae">.</span>add_span_processor<span style="color:#1f2328">(</span>BatchSpanProcessor<span style="color:#1f2328">(</span>jaeger_exporter<span style="color:#1f2328">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在 <code>http://localhost:16686</code> 的 Jaeger UI 中查看 Trace。</p>
+<h2 id="上线前检查清单">上线前检查清单</h2>
+<p>在为生产环境的 Agent 附加可观测性之前，需要确认的事项：</p>
+<h3 id="追踪">追踪</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 设置 <code>settings.tracing_implementation = &quot;opentelemetry&quot;</code></li>
+<li><input disabled="" type="checkbox"> 配置 Application Insights 连接字符串环境变量</li>
+<li><input disabled="" type="checkbox"> 调用 <code>force_flush()</code> 在进程退出前刷新 Trace</li>
+<li><input disabled="" type="checkbox"> 将 Run ID、Thread ID 记录到 Trace 属性中</li>
+</ul>
+<h3 id="指标">指标</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 记录 Token 使用量（prompt/completion）</li>
+<li><input disabled="" type="checkbox"> 记录工具调用次数</li>
+<li><input disabled="" type="checkbox"> 记录延迟</li>
+<li><input disabled="" type="checkbox"> 追踪错误率</li>
+</ul>
+<h3 id="告警">告警</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 设置错误率阈值告警</li>
+<li><input disabled="" type="checkbox"> 设置 p95 延迟阈值告警</li>
+<li><input disabled="" type="checkbox"> 设置每日 Token 使用量上限告警</li>
+</ul>
+<h3 id="敏感信息">敏感信息</h3>
+<ul>
+<li><input disabled="" type="checkbox"> 确认 <code>user.message</code> 属性中是否包含 PII 信息</li>
+<li><input disabled="" type="checkbox"> 必要时进行脱敏处理：<code>user_message[:50]</code></li>
+</ul>
+<h2 id="总结">总结</h2>
+<p>我在实践 Azure AI Agent 可观测性中总结了以下要点：</p>
+<ul>
+<li><strong>Foundry 门户内置追踪</strong>：无需修改代码即可收集基本指标。快速上手的最佳方式。</li>
+<li><strong>OpenTelemetry 直接计测</strong>：一行代码 <code>settings.tracing_implementation = &quot;opentelemetry&quot;</code> 即可对整个 Azure SDK 进行计测。通过自定义 Span 将追踪扩展到业务逻辑层面。</li>
+<li><strong><code>run.usage</code></strong>：从已完成的 Run 中获取 Token 使用量，用于成本分析。</li>
+<li><strong>KQL</strong>：查询 Application Insights 数据，分析慢 Run、错误和成本趋势。</li>
+</ul>
+<p>构建 Agent 和运营 Agent 是两件不同的事。在没有可观测性的情况下将 Agent 上线到生产环境，一旦出现问题，就会对哪里出了问题、以何种方式出了问题一无所知。</p>
+<hr>
+<h3 id="参考资料">参考资料</h3>
+<ul>
+<li><a href="https://learn.microsoft.com/zh-cn/azure/foundry-classic/how-to/develop/trace-application?WT.mc_id=AI-MVP-5003172">Microsoft Foundry Tracing | Microsoft Learn</a></li>
+<li><a href="https://learn.microsoft.com/zh-cn/kusto/query/kql-quick-reference?view=azure-data-explorer&amp;preserve-view=true&amp;WT.mc_id=AI-MVP-5003172">KQL 快速参考 | Microsoft Learn</a></li>
+<li><a href="https://azure.microsoft.com/zh-cn/blog/agent-factory-top-5-agent-observability-best-practices-for-reliable-ai/?WT.mc_id=AI-MVP-5003172">Agent Factory：可观测性最佳实践</a></li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/">https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/">使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</a></li>
+        
+        <li><a href="/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</a></li>
+        
+        <li><a href="/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/">使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</a></li>
+        
+        <li><a href="/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/">微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</a></li>
+        
+        <li><a href="/post/2026-01-19-agent-framework-python-overview/">Agent Framework (Python) 完全指南</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/" title="Azure AI Foundry — 多代理编排与工作流" target="_blank">Azure AI Foundry — 多代理编排与工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/" title="Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析" target="_blank">Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/" title="使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/" title="使用 Microsoft Olive 和 Foundry Local 部署自定义模型" target="_blank">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/" title="使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/" title="微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型" target="_blank">微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/" title="Agent Framework (Python) 完全指南" target="_blank">Agent Framework (Python) 完全指南</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/" title="我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色" target="_blank">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/" title="如何通过 Entra ID 身份验证使用 Microsoft Foundry" target="_blank">如何通过 Entra ID 身份验证使用 Microsoft Foundry</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/" title="2026 年值得关注的 7 个 Agentic AI 趋势" target="_blank">2026 年值得关注的 7 个 Agentic AI 趋势</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (6)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (23)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

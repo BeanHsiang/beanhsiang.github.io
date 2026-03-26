@@ -16,6 +16,13 @@
       <description>&lt;p&gt;Azure AI Foundry（前身为 Azure AI Studio）是微软提供的端到端平台，用于构建、测试、部署和监控 AI 代理及应用程序。它将模型、工具、框架和治理能力整合到一个统一的系统中。&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;多代理编排概览&#34; src=&#34;https://beanhsiang.github.io/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;现代企业自动化往往需要多个 AI 系统协同完成任务。与其让单一的大型语言模型承担所有工作，Azure AI Foundry 引入了多代理编排机制——让专业化的 AI 代理在工作流中相互协作。&lt;/p&gt;</description>
     </item>
     <item>
+      <title>Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</title>
+      <link>https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/</link>
+      <pubDate>Fri, 06 Mar 2026 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/</guid>
+      <description>&lt;p&gt;这篇文章记录的是如何观察和了解 Agent 在现实中的实际运行状态。&lt;/p&gt;&#xA;&lt;p&gt;Agent 与普通 API 有根本的不同。它不是简单的请求/响应就结束，而是一套多阶段流程：LLM 推理 → 工具调用 → 结果处理 → 再推理。出错时，很难立即看出是哪个阶段因为什么原因失败了。速度慢时，也搞不清楚时间消耗在哪里。在成本方面，更难分析是哪个查询消耗了大量 Token。&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</title>
       <link>https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/</link>
       <pubDate>Fri, 13 Feb 2026 12:00:00 +0800</pubDate>

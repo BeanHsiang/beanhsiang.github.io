@@ -6,8 +6,15 @@
     <description>Recent content on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Fri, 13 Feb 2026 12:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 26 Mar 2026 08:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Azure AI Foundry — 多代理编排与工作流</title>
+      <link>https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/</link>
+      <pubDate>Thu, 26 Mar 2026 08:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/</guid>
+      <description>&lt;h1 id=&#34;azure-ai-foundry--多代理编排与工作流&#34;&gt;Azure AI Foundry — 多代理编排与工作流&lt;/h1&gt;&#xA;&lt;p&gt;Azure AI Foundry（前身为 Azure AI Studio）是微软提供的端到端平台，用于构建、测试、部署和监控 AI 代理及应用程序。它将模型、工具、框架和治理能力整合到一个统一的系统中。&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;多代理编排概览&#34; src=&#34;https://beanhsiang.github.io/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;现代企业自动化往往需要多个 AI 系统协同完成任务。与其让单一的大型语言模型承担所有工作，Azure AI Foundry 引入了多代理编排机制——让专业化的 AI 代理在工作流中相互协作。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</title>
       <link>https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/</link>

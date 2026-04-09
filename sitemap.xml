@@ -2,25 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/</loc>
-    <lastmod>2026-03-26T08:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-03-26T08:00:00+08:00</lastmod>
+    <lastmod>2026-04-09T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/</loc>
+    <lastmod>2026-04-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2026-03-26T08:00:00+08:00</lastmod>
+    <lastmod>2026-04-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
-    <lastmod>2026-03-26T08:00:00+08:00</lastmod>
+    <lastmod>2026-04-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
-    <lastmod>2026-03-26T08:00:00+08:00</lastmod>
+    <lastmod>2026-04-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-03-26T08:00:00+08:00</lastmod>
+    <lastmod>2026-04-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-04-09T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/</loc>
     <lastmod>2026-03-26T08:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/</loc>

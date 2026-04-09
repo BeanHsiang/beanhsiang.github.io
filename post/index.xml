@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Innovation with tech</description>
     <generator>Hugo</generator>
     <language>zh-Hans</language>
-    <lastBuildDate>Thu, 26 Mar 2026 08:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 09 Apr 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</title>
+      <link>https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/</link>
+      <pubDate>Thu, 09 Apr 2026 12:00:00 +0800</pubDate>
+      <guid>https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/</guid>
+      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260409144322-f7f14a3fbcbe44e68542addc98d9411b.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;封面图片&#34; src=&#34;https://beanhsiang.github.io/uploads/20260409144322-f7f14a3fbcbe44e68542addc98d9411b.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;在过去一年里，我一直在研究生产级 AI 智能体的构建。多智能体系统、RAG 流水线、一个全天候运行在 Mac mini 上的自主编程智能体……这些项目里最难搞的从来不是 AI 本身，而是基础设施。&lt;/p&gt;&#xA;&lt;p&gt;沙箱隔离、状态管理、工具执行、容器编排、凭据轮换、错误恢复——在智能体真正能做什么有用的事之前，往往需要好几个月的水管工程。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Azure AI Foundry — 多代理编排与工作流</title>
       <link>https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/</link>

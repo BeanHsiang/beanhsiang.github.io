@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略 | Innovation with tech</title>
+    <meta property="og:title" content="Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-04-09T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-04-09T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</h1>
+        </header>
+        
+  <time datetime="2026-04-09T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年4月9日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260409144322-f7f14a3fbcbe44e68542addc98d9411b.png">
+            <img class="mx-auto" alt="封面图片" src="/uploads/20260409144322-f7f14a3fbcbe44e68542addc98d9411b.png" />
+        </a>
+    </p>
+<p>在过去一年里，我一直在研究生产级 AI 智能体的构建。多智能体系统、RAG 流水线、一个全天候运行在 Mac mini 上的自主编程智能体……这些项目里最难搞的从来不是 AI 本身，而是基础设施。</p>
+<p>沙箱隔离、状态管理、工具执行、容器编排、凭据轮换、错误恢复——在智能体真正能做什么有用的事之前，往往需要好几个月的水管工程。</p>
+<p>Anthropic 刚刚把这些问题甩给了别人。</p>
+<p><strong>Claude 托管智能体（Claude Managed Agents）</strong> 正式进入公测，在亲手构建了几个智能体之后，我可以告诉大家：这不只是又一个 API 封装，这是一套完整的智能体云端运行时——容器、密钥管理、持久内存、自我评估循环、多智能体编排，应有尽有。</p>
+<p>但有一个视角目前还没人认真讨论：托管智能体如何嵌入以 <strong>Azure 为核心</strong>的企业技术栈。</p>
+<h2 id="真正被忽视的问题">真正被忽视的问题</h2>
+<p>作为一名帮助企业在 Azure 上构建方案的人，我每天都在思考不同 AI 服务如何协同工作。<strong>Azure AI Foundry</strong> 提供了 Microsoft 模型的统一编排层——GPT-4o、Phi 以及模型目录里的一切。但当某个工作负载需要 Claude 特有的优势时——深度代码推理、超长上下文分析、精细指令遵循——你就得手动打通两套生态系统。</p>
+<p>在此之前，这意味着运行并行基础设施：两条部署流水线、两套监控体系、两套认证系统。这种开销足以让企业默认选择单云方案，即使多云方案技术上更优。</p>
+<p><strong>这才是没人讨论的真问题</strong>——而托管智能体刚刚解决了其中一半。</p>
+<h2 id="claude-托管智能体究竟是什么">Claude 托管智能体究竟是什么</h2>
+<p>简单说：你定义智能体的行为，Anthropic 在他们的基础设施上运行它。</p>
+<p>这意味着：</p>
+<ul>
+<li><strong>安全容器</strong> — 每个会话都有独立的沙箱隔离环境</li>
+<li><strong>长时运行会话</strong> — 智能体可以持续运行数小时，而不只是单次请求-响应</li>
+<li><strong>内置工具执行</strong> — bash、文件读写、网络搜索、网页抓取、grep，全部内置</li>
+<li><strong>MCP 服务器连接</strong> — 接入 GitHub、Slack、CRM，或任何你已有的服务</li>
+<li><strong>事件流</strong> — 智能体工作时通过 SSE 实时推送更新</li>
+</ul>
+<p>无需自己搭 Docker，无需编排框架，无需从零构建工具执行层。</p>
+<h2 id="四个核心概念">四个核心概念</h2>
+<p>每个托管智能体都围绕四个概念运作，仅此而已。</p>
+<h3 id="1-agent智能体">1. Agent（智能体）</h3>
+<p>你的配置。选择哪个模型（claude-sonnet-4-6、claude-opus-4-6）、系统提示词、可使用的工具，以及连接哪些 MCP 服务器。一次创建，处处复用。</p>
+<h3 id="2-environment环境">2. Environment（环境）</h3>
+<p>智能体运行的容器。预装 Python 包、Node.js 依赖，按需而定。配置网络规则。每个会话都有独立的容器实例。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;python-dev&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;config&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;cloud&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;networking&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span><span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;unrestricted&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;packages&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;pip&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;pandas&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;numpy&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;pytest&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;black&#34;</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="3-session会话">3. Session（会话）</h3>
+<p>运行中的智能体实例。它引用你的智能体配置和环境，维护对话历史，并在交互间持久化文件。会话可以运行数小时。</p>
+<h3 id="4-events事件">4. Events（事件）</h3>
+<p>你的应用与智能体之间的消息。你发送用户消息进去，Claude 通过服务器发送事件流式返回响应、工具调用和状态更新。</p>
+<p>Agent → Environment → Session → Events，这就是完整的心智模型。</p>
+<h2 id="没人写出来的-azure-集成模式">没人写出来的 Azure 集成模式</h2>
+<p>以下是对以 Azure 为核心的企业来说最合理的架构模式。</p>
+<p><strong>Azure AI Foundry</strong> 处理微软模型工作负载——文档智能、Azure Cognitive Search 语义检索、Azure OpenAI 文本补全。它是深度嵌入微软生态系统的一切事物的编排层。</p>
+<p><strong>Claude 托管智能体</strong>处理 Claude 特有推理能力能带来差异化优势的工作负载——复杂多文件代码分析、超长文档综合、多步骤自主研究。</p>
+<p>两者的桥梁？<strong>Azure API Management（APIM）</strong> 和你已有的 Azure 身份基础设施。</p>
+<pre tabindex="0"><code>用户请求
+    ↓
+Azure API Management（认证 + 路由 + 限流）
+    ↓
+┌─────────────────────┬──────────────────────────────┐
+│  Azure AI Foundry   │  Claude 托管智能体             │
+│  (GPT-4o, Phi,      │  (claude-sonnet-4-6,         │
+│   Azure OpenAI)     │   claude-opus-4-6)           │
+└─────────────────────┴──────────────────────────────┘
+    ↓
+Azure Monitor + Application Insights（统一可观测性）
+</code></pre><p>两条路径共享同一套认证（Microsoft Entra ID）、同一套密钥管理（Azure Key Vault）、同一套可观测性体系（Azure Monitor）。你不是在运行并行基础设施——你是在现有 Azure 基础上叠加 Claude 的运行时。</p>
+<p><strong>这才是没人写出来的架构细节。</strong> 讨论总是停留在&quot;该用 Azure OpenAI 还是 Anthropic？&ldquo;上。真正该问的问题是：&ldquo;如何同时使用两者，而不把基础设施复杂度翻倍？&ldquo;托管智能体让这个问题有了答案。</p>
+<h2 id="让这套方案企业级就绪的权限系统">让这套方案企业级就绪的权限系统</h2>
+<p>这是托管智能体真正与开源替代品拉开差距的地方。</p>
+<p>两种权限模式：</p>
+<ul>
+<li><strong>always_allow</strong> — 工具自动运行，适合受信任的内部智能体</li>
+<li><strong>always_ask</strong> — 会话暂停，等待应用审批每次工具调用，适合面向用户的智能体</li>
+</ul>
+<p>可以按工具混合设置：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;tools&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span><span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;file_read&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">&#34;permission&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;always_allow&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span><span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;web_search&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">&#34;permission&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;always_allow&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span><span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;bash&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">&#34;permission&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;always_ask&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span><span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;file_write&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">&#34;permission&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;always_ask&#34;</span><span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>让智能体自由读文件、搜索网页，但在执行 bash 命令或写文件前要求审批。每个工具一个配置项。</p>
+<p>这对企业安全团队来说至关重要。LangGraph、CrewAI、AutoGen——这些框架都没有开箱即用的按工具权限作用域。你得自己构建。在这里，这只是一个配置项。这就是框架与平台的区别。</p>
+<h2 id="通过-mcp-将托管智能体接入-azure-服务">通过 MCP 将托管智能体接入 Azure 服务</h2>
+<p>Model Context Protocol 是集成层。你可以把任意 Azure 服务暴露为 MCP 服务器——Azure Blob Storage、Azure SQL、Azure Cognitive Search、Azure DevOps——然后托管智能体通过 APIM 与它们直接连接。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># 带有 MCP 服务器配置的智能体，指向 Azure APIM 网关</span>
+</span></span><span style="display:flex;"><span>agent_config <span style="color:#0550ae">=</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;enterprise-analyst&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;model&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;claude-sonnet-4-6&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;system_prompt&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;你是一名企业数据分析师，可以访问我们的 Azure 数据平台。&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;tools&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[{</span><span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;agent_toolset_20260401&#34;</span><span style="color:#1f2328">}],</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;mcp_servers&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;url&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;url&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;https://{apim-name}.azure-api.net/mcp&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;authorization_token&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;$</span><span style="color:#0a3069">{APIM_KEY}</span><span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>APIM 处理 OAuth 2.0/PKCE 流程，Entra ID 管理身份，Azure Key Vault 管理密钥，智能体负责推理。每一层都做它被设计来做的事——一种你的安全和平台团队会真正批准的清晰职责分离。</p>
+<h2 id="azure-企业今天能构建什么">Azure 企业今天能构建什么</h2>
+<p>这不是理论推演。工具链已经生产就绪。</p>
+<p><strong>企业代码审查智能体</strong> — 通过 MCP 连接 Azure DevOps，克隆仓库，分析代码质量，运行测试，发布 PR 评论。全程在有权限管控的沙箱环境中运行。</p>
+<p><strong>文档智能流水线</strong> — 将 Azure Document Intelligence 的提取能力与 Claude 的推理和综合能力结合。超长文档、复杂模式、细致分析——正是 Claude 的专长领域。</p>
+<p><strong>数据分析工作流</strong> — 给智能体一个指向 Azure Blob Storage 数据的指针，让它在容器里编写 Python 脚本、执行脚本、返回结构化洞察。全套 Python 环境预装就位。</p>
+<p><strong>多智能体编排</strong> — 用 Azure AI Foundry 做路由和编排层，针对需要 Claude 深度推理的具体子任务生成 Claude 托管智能体会话。</p>
+<h2 id="真正的多云-ai-战略">真正的多云 AI 战略</h2>
+<p>&ldquo;我们用 Azure 还是用 Anthropic&quot;这种非此即彼的框架是错误的，一直都是。真正的战略是：</p>
+<ol>
+<li>
+<p><strong>用 Azure AI Foundry</strong> 处理微软模型工作负载、深度 Azure 服务集成，以及 GPT-4o 或 Phi 是最优选择的任务。</p>
+</li>
+<li>
+<p><strong>用 Claude 托管智能体</strong>处理 Claude 深度推理能力是差异化关键的工作负载——代码理解、超长上下文任务、复杂多步骤分析。</p>
+</li>
+<li>
+<p><strong>在 Azure 基础设施上统一</strong> — 相同的认证、相同的可观测性、相同的密钥管理、相同的合规态势。模型是可替换的，基础设施是共享的。</p>
+</li>
+</ol>
+<p>这才是生产级多云 AI 的真实面貌。不是&quot;把一切都到处跑&rdquo;，而是&quot;在共享的企业基础上，用最适合的模型处理对应的工作负载&rdquo;。</p>
+<h2 id="复盘如果重来我会怎么做">复盘：如果重来，我会怎么做</h2>
+<p>回看我自己的基础设施工作——容器沙箱（2 周）、工具执行层（1 周）、状态持久化（3 天）、权限系统（4 天）、错误恢复（1 周）——差不多是 5 周的工程，而托管智能体用几个 API 调用就替代了。</p>
+<p>对 Azure 企业来说，基础设施层面的故事更干净。你不是从零开始搭 Anthropic 基础设施，而是用 Anthropic 的智能体运行时扩展你现有的 Azure 基础。APIM 成为统一网关，Entra ID 成为单一身份提供商，Azure Monitor 成为可观测性平面。</p>
+<p>&ldquo;我们的企业需要 Claude 的推理能力&quot;到&quot;Claude 智能体在我们的 Azure 生产环境中运行&quot;之间的距离，刚刚大幅缩短。</p>
+<h2 id="接下来会发生什么">接下来会发生什么</h2>
+<p>未来 12 个月，我预期会看到：</p>
+<ul>
+<li>Azure AI Foundry 与托管智能体的原生集成（统一编排两者的层）</li>
+<li>带有预建 Azure 服务连接器的 MCP 服务器市场</li>
+<li>允许托管智能体在 Azure 受监管行业中使用的合规认证</li>
+<li>基于任务复杂度和成本在模型间路由工作负载的成本优化模式</li>
+</ul>
+<p>多云 AI 的对话才刚刚开始。那些现在就摸清集成模式的企业——明白哪些工作负载适合哪些模型、跑在共享基础设施上——将获得显著的先发优势。</p>
+<p>基础设施问题基本已经解决，真正有意思的工作现在才开始。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/">https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/">Azure AI Foundry — 多代理编排与工作流</a></li>
+        
+        <li><a href="/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/">Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</a></li>
+        
+        <li><a href="/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/">使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</a></li>
+        
+        <li><a href="/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</a></li>
+        
+        <li><a href="/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/">使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/" title="Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略" target="_blank">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/" title="Azure AI Foundry — 多代理编排与工作流" target="_blank">Azure AI Foundry — 多代理编排与工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/" title="Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析" target="_blank">Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/" title="使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/" title="使用 Microsoft Olive 和 Foundry Local 部署自定义模型" target="_blank">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/" title="使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/" title="微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型" target="_blank">微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/" title="Agent Framework (Python) 完全指南" target="_blank">Agent Framework (Python) 完全指南</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/" title="我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色" target="_blank">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/" title="如何通过 Entra ID 身份验证使用 Microsoft Foundry" target="_blank">如何通过 Entra ID 身份验证使用 Microsoft Foundry</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (24)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

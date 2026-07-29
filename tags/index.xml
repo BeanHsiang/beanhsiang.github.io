@@ -1,355 +1,360 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Tags on Innovation with tech</title>
-    <link>https://beanhsiang.github.io/tags/</link>
-    <description>Recent content in Tags on Innovation with tech</description>
-    <generator>Hugo</generator>
-    <language>zh-Hans</language>
-    <lastBuildDate>Thu, 09 Apr 2026 12:00:00 +0800</lastBuildDate>
-    <atom:link href="https://beanhsiang.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Microsoft Foundry</title>
-      <link>https://beanhsiang.github.io/tags/Microsoft-Foundry/</link>
-      <pubDate>Thu, 09 Apr 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Microsoft-Foundry/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Edge AI</title>
-      <link>https://beanhsiang.github.io/tags/Edge-AI/</link>
-      <pubDate>Thu, 12 Feb 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Edge-AI/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Olive</title>
-      <link>https://beanhsiang.github.io/tags/Olive/</link>
-      <pubDate>Thu, 12 Feb 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Olive/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>SLM</title>
-      <link>https://beanhsiang.github.io/tags/SLM/</link>
-      <pubDate>Thu, 12 Feb 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/SLM/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Machine Learning</title>
-      <link>https://beanhsiang.github.io/tags/Machine-Learning/</link>
-      <pubDate>Tue, 06 Jan 2026 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Machine-Learning/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Model-Based</title>
-      <link>https://beanhsiang.github.io/tags/Model-Based/</link>
-      <pubDate>Tue, 06 Jan 2026 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Model-Based/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>FireUG</title>
-      <link>https://beanhsiang.github.io/tags/FireUG/</link>
-      <pubDate>Tue, 30 Dec 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/FireUG/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Agentic AI</title>
-      <link>https://beanhsiang.github.io/tags/Agentic-AI/</link>
-      <pubDate>Thu, 21 Aug 2025 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Agentic-AI/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Prompt Engineering</title>
-      <link>https://beanhsiang.github.io/tags/Prompt-Engineering/</link>
-      <pubDate>Thu, 21 Aug 2025 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Prompt-Engineering/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>GitHub Copilot</title>
-      <link>https://beanhsiang.github.io/tags/GitHub-Copilot/</link>
-      <pubDate>Thu, 03 Jul 2025 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/GitHub-Copilot/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>AutoGen</title>
-      <link>https://beanhsiang.github.io/tags/AutoGen/</link>
-      <pubDate>Wed, 02 Jul 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/AutoGen/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Gemini</title>
-      <link>https://beanhsiang.github.io/tags/Gemini/</link>
-      <pubDate>Wed, 02 Jul 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Gemini/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Semantic Kernel</title>
-      <link>https://beanhsiang.github.io/tags/Semantic-Kernel/</link>
-      <pubDate>Wed, 02 Jul 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Semantic-Kernel/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Azure AI</title>
-      <link>https://beanhsiang.github.io/tags/Azure-AI/</link>
-      <pubDate>Mon, 30 Jun 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Azure-AI/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>AI Agent</title>
-      <link>https://beanhsiang.github.io/tags/AI-Agent/</link>
-      <pubDate>Thu, 12 Jun 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/AI-Agent/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>穿越人机融合之际</title>
-      <link>https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/</link>
-      <pubDate>Fri, 06 Jun 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>VSCode</title>
-      <link>https://beanhsiang.github.io/tags/VSCode/</link>
-      <pubDate>Tue, 03 Jun 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/VSCode/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Azure AI Search</title>
-      <link>https://beanhsiang.github.io/tags/Azure-AI-Search/</link>
-      <pubDate>Thu, 29 May 2025 14:30:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Azure-AI-Search/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Semantic Ranking</title>
-      <link>https://beanhsiang.github.io/tags/Semantic-Ranking/</link>
-      <pubDate>Thu, 29 May 2025 14:30:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Semantic-Ranking/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vector Search</title>
-      <link>https://beanhsiang.github.io/tags/Vector-Search/</link>
-      <pubDate>Thu, 29 May 2025 14:30:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Vector-Search/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Q-Learning</title>
-      <link>https://beanhsiang.github.io/tags/q-learning/</link>
-      <pubDate>Thu, 29 May 2025 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/q-learning/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Reinforcement Learning</title>
-      <link>https://beanhsiang.github.io/tags/reinforcement-learning/</link>
-      <pubDate>Thu, 29 May 2025 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/reinforcement-learning/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Azure OpenAI</title>
-      <link>https://beanhsiang.github.io/tags/Azure-OpenAI/</link>
-      <pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Azure-OpenAI/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>GPT-4o</title>
-      <link>https://beanhsiang.github.io/tags/GPT-4o/</link>
-      <pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/GPT-4o/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Speech Recognition</title>
-      <link>https://beanhsiang.github.io/tags/Speech-Recognition/</link>
-      <pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Speech-Recognition/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Transcribe</title>
-      <link>https://beanhsiang.github.io/tags/Transcribe/</link>
-      <pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Transcribe/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Websocket</title>
-      <link>https://beanhsiang.github.io/tags/Websocket/</link>
-      <pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Websocket/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>MCP</title>
-      <link>https://beanhsiang.github.io/tags/MCP/</link>
-      <pubDate>Thu, 24 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/MCP/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>PydanticAI</title>
-      <link>https://beanhsiang.github.io/tags/PydanticAI/</link>
-      <pubDate>Thu, 24 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/PydanticAI/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>A2A</title>
-      <link>https://beanhsiang.github.io/tags/A2A/</link>
-      <pubDate>Fri, 18 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/A2A/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Azure AI Agent</title>
-      <link>https://beanhsiang.github.io/tags/Azure-AI-Agent/</link>
-      <pubDate>Mon, 14 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Azure-AI-Agent/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Model Context Protocol</title>
-      <link>https://beanhsiang.github.io/tags/Model-Context-Protocol/</link>
-      <pubDate>Mon, 14 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Model-Context-Protocol/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>.NET</title>
-      <link>https://beanhsiang.github.io/tags/.NET/</link>
-      <pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/.NET/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>CSnakes</title>
-      <link>https://beanhsiang.github.io/tags/CSnakes/</link>
-      <pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/CSnakes/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>MarkItDown</title>
-      <link>https://beanhsiang.github.io/tags/MarkItDown/</link>
-      <pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/MarkItDown/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>RAG</title>
-      <link>https://beanhsiang.github.io/tags/RAG/</link>
-      <pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/RAG/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>GPT-4o Realtime Preview</title>
-      <link>https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/</link>
-      <pubDate>Mon, 06 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>VoiceRAG</title>
-      <link>https://beanhsiang.github.io/tags/VoiceRAG/</link>
-      <pubDate>Mon, 06 Jan 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/VoiceRAG/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>MLX</title>
-      <link>https://beanhsiang.github.io/tags/MLX/</link>
-      <pubDate>Tue, 10 Dec 2024 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/MLX/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Phi-4</title>
-      <link>https://beanhsiang.github.io/tags/Phi-4/</link>
-      <pubDate>Tue, 10 Dec 2024 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Phi-4/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Magentic-One</title>
-      <link>https://beanhsiang.github.io/tags/Magentic-One/</link>
-      <pubDate>Tue, 05 Nov 2024 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Magentic-One/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Multi-Agent</title>
-      <link>https://beanhsiang.github.io/tags/Multi-Agent/</link>
-      <pubDate>Tue, 05 Nov 2024 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Multi-Agent/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Real-Time API</title>
-      <link>https://beanhsiang.github.io/tags/Real-Time-API/</link>
-      <pubDate>Tue, 15 Oct 2024 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Real-Time-API/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>RAFT</title>
-      <link>https://beanhsiang.github.io/tags/RAFT/</link>
-      <pubDate>Sun, 08 Sep 2024 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/RAFT/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Azure Speech</title>
-      <link>https://beanhsiang.github.io/tags/Azure-Speech/</link>
-      <pubDate>Fri, 09 Aug 2024 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Azure-Speech/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Azure Machine Learning</title>
-      <link>https://beanhsiang.github.io/tags/Azure-Machine-Learning/</link>
-      <pubDate>Fri, 07 Jun 2024 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Azure-Machine-Learning/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Phi-3</title>
-      <link>https://beanhsiang.github.io/tags/Phi-3/</link>
-      <pubDate>Fri, 07 Jun 2024 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Phi-3/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Microsoft Entra ID</title>
-      <link>https://beanhsiang.github.io/tags/Microsoft-Entra-ID/</link>
-      <pubDate>Wed, 17 Apr 2024 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/Microsoft-Entra-ID/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>ML.NET</title>
-      <link>https://beanhsiang.github.io/tags/ML.NET/</link>
-      <pubDate>Sun, 03 Dec 2023 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/tags/ML.NET/</guid>
-      <description></description>
-    </item>
-  </channel>
+	<channel>
+		<title>Tags on Innovation with tech</title>
+		<link>https://beanhsiang.github.io/tags/</link>
+		<description>Recent content in Tags on Innovation with tech</description>
+		<generator>Hugo</generator>
+		<language>zh-Hans</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 29 Apr 2026 12:00:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://beanhsiang.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Microsoft Foundry</title>
+				<link>https://beanhsiang.github.io/tags/Microsoft-Foundry/</link>
+				<pubDate>Wed, 29 Apr 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Microsoft-Foundry/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Edge AI</title>
+				<link>https://beanhsiang.github.io/tags/Edge-AI/</link>
+				<pubDate>Thu, 12 Feb 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Edge-AI/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Olive</title>
+				<link>https://beanhsiang.github.io/tags/Olive/</link>
+				<pubDate>Thu, 12 Feb 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Olive/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>SLM</title>
+				<link>https://beanhsiang.github.io/tags/SLM/</link>
+				<pubDate>Thu, 12 Feb 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/SLM/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Machine Learning</title>
+				<link>https://beanhsiang.github.io/tags/Machine-Learning/</link>
+				<pubDate>Tue, 06 Jan 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Machine-Learning/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Model-Based</title>
+				<link>https://beanhsiang.github.io/tags/Model-Based/</link>
+				<pubDate>Tue, 06 Jan 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Model-Based/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>FireUG</title>
+				<link>https://beanhsiang.github.io/tags/FireUG/</link>
+				<pubDate>Tue, 30 Dec 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/FireUG/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Agentic AI</title>
+				<link>https://beanhsiang.github.io/tags/Agentic-AI/</link>
+				<pubDate>Thu, 21 Aug 2025 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Agentic-AI/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Prompt Engineering</title>
+				<link>https://beanhsiang.github.io/tags/Prompt-Engineering/</link>
+				<pubDate>Thu, 21 Aug 2025 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Prompt-Engineering/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>GitHub Copilot</title>
+				<link>https://beanhsiang.github.io/tags/GitHub-Copilot/</link>
+				<pubDate>Thu, 03 Jul 2025 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/GitHub-Copilot/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>AutoGen</title>
+				<link>https://beanhsiang.github.io/tags/AutoGen/</link>
+				<pubDate>Wed, 02 Jul 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/AutoGen/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Gemini</title>
+				<link>https://beanhsiang.github.io/tags/Gemini/</link>
+				<pubDate>Wed, 02 Jul 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Gemini/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Semantic Kernel</title>
+				<link>https://beanhsiang.github.io/tags/Semantic-Kernel/</link>
+				<pubDate>Wed, 02 Jul 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Semantic-Kernel/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Azure AI</title>
+				<link>https://beanhsiang.github.io/tags/Azure-AI/</link>
+				<pubDate>Mon, 30 Jun 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Azure-AI/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>AI Agent</title>
+				<link>https://beanhsiang.github.io/tags/AI-Agent/</link>
+				<pubDate>Thu, 12 Jun 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/AI-Agent/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>穿越人机融合之际</title>
+				<link>https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/</link>
+				<pubDate>Fri, 06 Jun 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>VSCode</title>
+				<link>https://beanhsiang.github.io/tags/VSCode/</link>
+				<pubDate>Tue, 03 Jun 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/VSCode/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Azure AI Search</title>
+				<link>https://beanhsiang.github.io/tags/Azure-AI-Search/</link>
+				<pubDate>Thu, 29 May 2025 14:30:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Azure-AI-Search/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Semantic Ranking</title>
+				<link>https://beanhsiang.github.io/tags/Semantic-Ranking/</link>
+				<pubDate>Thu, 29 May 2025 14:30:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Semantic-Ranking/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Vector Search</title>
+				<link>https://beanhsiang.github.io/tags/Vector-Search/</link>
+				<pubDate>Thu, 29 May 2025 14:30:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Vector-Search/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Q-Learning</title>
+				<link>https://beanhsiang.github.io/tags/q-learning/</link>
+				<pubDate>Thu, 29 May 2025 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/q-learning/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Reinforcement Learning</title>
+				<link>https://beanhsiang.github.io/tags/reinforcement-learning/</link>
+				<pubDate>Thu, 29 May 2025 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/reinforcement-learning/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Azure OpenAI</title>
+				<link>https://beanhsiang.github.io/tags/Azure-OpenAI/</link>
+				<pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Azure-OpenAI/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>GPT-4o</title>
+				<link>https://beanhsiang.github.io/tags/GPT-4o/</link>
+				<pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/GPT-4o/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Speech Recognition</title>
+				<link>https://beanhsiang.github.io/tags/Speech-Recognition/</link>
+				<pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Speech-Recognition/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Transcribe</title>
+				<link>https://beanhsiang.github.io/tags/Transcribe/</link>
+				<pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Transcribe/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Websocket</title>
+				<link>https://beanhsiang.github.io/tags/Websocket/</link>
+				<pubDate>Sat, 03 May 2025 09:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Websocket/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>MCP</title>
+				<link>https://beanhsiang.github.io/tags/MCP/</link>
+				<pubDate>Thu, 24 Apr 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/MCP/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>PydanticAI</title>
+				<link>https://beanhsiang.github.io/tags/PydanticAI/</link>
+				<pubDate>Thu, 24 Apr 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/PydanticAI/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>A2A</title>
+				<link>https://beanhsiang.github.io/tags/A2A/</link>
+				<pubDate>Fri, 18 Apr 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/A2A/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Azure AI Agent</title>
+				<link>https://beanhsiang.github.io/tags/Azure-AI-Agent/</link>
+				<pubDate>Mon, 14 Apr 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Azure-AI-Agent/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Model Context Protocol</title>
+				<link>https://beanhsiang.github.io/tags/Model-Context-Protocol/</link>
+				<pubDate>Mon, 14 Apr 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Model-Context-Protocol/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>.NET</title>
+				<link>https://beanhsiang.github.io/tags/.NET/</link>
+				<pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/.NET/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>CSnakes</title>
+				<link>https://beanhsiang.github.io/tags/CSnakes/</link>
+				<pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/CSnakes/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>MarkItDown</title>
+				<link>https://beanhsiang.github.io/tags/MarkItDown/</link>
+				<pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/MarkItDown/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>RAG</title>
+				<link>https://beanhsiang.github.io/tags/RAG/</link>
+				<pubDate>Fri, 07 Mar 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/RAG/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>GPT-4o Realtime Preview</title>
+				<link>https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/</link>
+				<pubDate>Mon, 06 Jan 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>VoiceRAG</title>
+				<link>https://beanhsiang.github.io/tags/VoiceRAG/</link>
+				<pubDate>Mon, 06 Jan 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/VoiceRAG/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>MLX</title>
+				<link>https://beanhsiang.github.io/tags/MLX/</link>
+				<pubDate>Tue, 10 Dec 2024 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/MLX/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Phi-4</title>
+				<link>https://beanhsiang.github.io/tags/Phi-4/</link>
+				<pubDate>Tue, 10 Dec 2024 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Phi-4/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Magentic-One</title>
+				<link>https://beanhsiang.github.io/tags/Magentic-One/</link>
+				<pubDate>Tue, 05 Nov 2024 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Magentic-One/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Multi-Agent</title>
+				<link>https://beanhsiang.github.io/tags/Multi-Agent/</link>
+				<pubDate>Tue, 05 Nov 2024 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Multi-Agent/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Real-Time API</title>
+				<link>https://beanhsiang.github.io/tags/Real-Time-API/</link>
+				<pubDate>Tue, 15 Oct 2024 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Real-Time-API/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>RAFT</title>
+				<link>https://beanhsiang.github.io/tags/RAFT/</link>
+				<pubDate>Sun, 08 Sep 2024 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/RAFT/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Azure Speech</title>
+				<link>https://beanhsiang.github.io/tags/Azure-Speech/</link>
+				<pubDate>Fri, 09 Aug 2024 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Azure-Speech/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Azure Machine Learning</title>
+				<link>https://beanhsiang.github.io/tags/Azure-Machine-Learning/</link>
+				<pubDate>Fri, 07 Jun 2024 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Azure-Machine-Learning/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Phi-3</title>
+				<link>https://beanhsiang.github.io/tags/Phi-3/</link>
+				<pubDate>Fri, 07 Jun 2024 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Phi-3/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Microsoft Entra ID</title>
+				<link>https://beanhsiang.github.io/tags/Microsoft-Entra-ID/</link>
+				<pubDate>Wed, 17 Apr 2024 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Microsoft-Entra-ID/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>ML.NET</title>
+				<link>https://beanhsiang.github.io/tags/ML.NET/</link>
+				<pubDate>Sun, 03 Dec 2023 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/ML.NET/</guid>
+				<description></description>
+			</item>
+	</channel>
 </rss>

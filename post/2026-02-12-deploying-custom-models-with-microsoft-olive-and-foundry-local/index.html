@@ -141,40 +141,40 @@
 <h3 id="理解量化">理解量化</h3>
 <p>量化通过将权重从高精度浮点转换为低精度整数来减小模型大小:</p>
 <table>
-  <thead>
-      <tr>
-          <th>精度</th>
-          <th>大小减少</th>
-          <th>质量</th>
-          <th>最适合</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td><strong>FP32</strong></td>
-          <td>基线</td>
-          <td>最佳</td>
-          <td>开发、调试</td>
-      </tr>
-      <tr>
-          <td><strong>FP16</strong></td>
-          <td>减小 50%</td>
-          <td>优秀</td>
-          <td>具有充足 VRAM 的 GPU 推理</td>
-      </tr>
-      <tr>
-          <td><strong>INT8</strong></td>
-          <td>减小 75%</td>
-          <td>非常好</td>
-          <td><strong>平衡生产</strong></td>
-      </tr>
-      <tr>
-          <td><strong>INT4</strong></td>
-          <td>减小 87.5%</td>
-          <td>良好</td>
-          <td>边缘设备、资源受限</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>精度</th>
+					<th>大小减少</th>
+					<th>质量</th>
+					<th>最适合</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>FP32</strong></td>
+					<td>基线</td>
+					<td>最佳</td>
+					<td>开发、调试</td>
+			</tr>
+			<tr>
+					<td><strong>FP16</strong></td>
+					<td>减小 50%</td>
+					<td>优秀</td>
+					<td>具有充足 VRAM 的 GPU 推理</td>
+			</tr>
+			<tr>
+					<td><strong>INT8</strong></td>
+					<td>减小 75%</td>
+					<td>非常好</td>
+					<td><strong>平衡生产</strong></td>
+			</tr>
+			<tr>
+					<td><strong>INT4</strong></td>
+					<td>减小 87.5%</td>
+					<td>良好</td>
+					<td>边缘设备、资源受限</td>
+			</tr>
+	</tbody>
 </table>
 <p>我将使用 <strong>INT4</strong> 来展示最大压缩。对于具有更好质量的生产环境,可以考虑 <strong>INT8</strong>——只需在下面的命令中将 &ndash;precision int4 更改为 &ndash;precision int8。</p>
 <h3 id="运行优化">运行优化</h3>
@@ -386,34 +386,34 @@
 <h2 id="你已经完成的工作">你已经完成的工作</h2>
 <p>花点时间欣赏一下整个系列的完整旅程:</p>
 <table>
-  <thead>
-      <tr>
-          <th>文章</th>
-          <th>你学到了什么</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>1. Phi-4 介绍</td>
-          <td>为什么 SLM 重要,性能与大小的权衡</td>
-      </tr>
-      <tr>
-          <td>2. 本地运行</td>
-          <td>Foundry Local 设置,基本推理</td>
-      </tr>
-      <tr>
-          <td>3. 函数调用</td>
-          <td>工具使用,外部 API 集成</td>
-      </tr>
-      <tr>
-          <td>4. 多智能体系统</td>
-          <td>编排,专家智能体</td>
-      </tr>
-      <tr>
-          <td><strong>5. 部署</strong></td>
-          <td><strong>Olive 优化,Foundry Local 注册,自定义模型部署</strong></td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>文章</th>
+					<th>你学到了什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>1. Phi-4 介绍</td>
+					<td>为什么 SLM 重要,性能与大小的权衡</td>
+			</tr>
+			<tr>
+					<td>2. 本地运行</td>
+					<td>Foundry Local 设置,基本推理</td>
+			</tr>
+			<tr>
+					<td>3. 函数调用</td>
+					<td>工具使用,外部 API 集成</td>
+			</tr>
+			<tr>
+					<td>4. 多智能体系统</td>
+					<td>编排,专家智能体</td>
+			</tr>
+			<tr>
+					<td><strong>5. 部署</strong></td>
+					<td><strong>Olive 优化,Foundry Local 注册,自定义模型部署</strong></td>
+			</tr>
+	</tbody>
 </table>
 <p>现在我掌握了构建生产 SLM 应用程序的端到端技能:理解全景、使用 Foundry Local 进行本地开发、使用函数调用的智能体应用、多智能体架构、使用 Olive 进行模型优化,以及将自定义模型部署到边缘。</p>
 <h2 id="接下来做什么">接下来做什么</h2>
@@ -629,6 +629,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/" title="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载" target="_blank">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/" title="Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略" target="_blank">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a>
     </li>
     
@@ -664,10 +668,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/" title="我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色" target="_blank">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/" title="如何通过 Entra ID 身份验证使用 Microsoft Foundry" target="_blank">如何通过 Entra ID 身份验证使用 Microsoft Foundry</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -687,7 +687,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

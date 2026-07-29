@@ -112,84 +112,84 @@
 <p>通过结合 Azure Monitor 的基线告警框架与 AI Foundry 的内置指标/遥测，团队可以更主动地监控并对齐 Microsoft 的 Azure Baseline Monitoring Alerts。</p>
 <h2 id="-为什么-ai-应用的监控更重要">💡 为什么 AI 应用的监控更重要</h2>
 <table>
-  <thead>
-      <tr>
-          <th>维度</th>
-          <th>传统应用</th>
-          <th>生成式 AI 应用</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td><strong>性能</strong></td>
-          <td>API 延迟、失败率、可用性</td>
-          <td>单次模型调用的响应时间、不同模型版本的性能表现</td>
-      </tr>
-      <tr>
-          <td><strong>成本</strong></td>
-          <td>计算、存储</td>
-          <td>Token 使用量与模型推理成本</td>
-      </tr>
-      <tr>
-          <td><strong>质量</strong></td>
-          <td>功能正确性</td>
-          <td>回复质量、帮助性、准确性</td>
-      </tr>
-      <tr>
-          <td><strong>安全</strong></td>
-          <td>安全漏洞</td>
-          <td>有害输出检测、策略违规</td>
-      </tr>
-      <tr>
-          <td><strong>漂移</strong></td>
-          <td>版本不一致</td>
-          <td>模型漂移、提示词敏感性变化</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>维度</th>
+					<th>传统应用</th>
+					<th>生成式 AI 应用</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>性能</strong></td>
+					<td>API 延迟、失败率、可用性</td>
+					<td>单次模型调用的响应时间、不同模型版本的性能表现</td>
+			</tr>
+			<tr>
+					<td><strong>成本</strong></td>
+					<td>计算、存储</td>
+					<td>Token 使用量与模型推理成本</td>
+			</tr>
+			<tr>
+					<td><strong>质量</strong></td>
+					<td>功能正确性</td>
+					<td>回复质量、帮助性、准确性</td>
+			</tr>
+			<tr>
+					<td><strong>安全</strong></td>
+					<td>安全漏洞</td>
+					<td>有害输出检测、策略违规</td>
+			</tr>
+			<tr>
+					<td><strong>漂移</strong></td>
+					<td>版本不一致</td>
+					<td>模型漂移、提示词敏感性变化</td>
+			</tr>
+	</tbody>
 </table>
 <p>🎯 <em>生成式 AI 的监控 = 传统指标 + 智能/质量/安全等新维度。</em></p>
 <h2 id="-azure-ai-foundry-的监控能力一览">🧩 Azure AI Foundry 的监控能力一览</h2>
 <p>Azure AI Foundry 采用“分层”的可观测思路：</p>
 <table>
-  <thead>
-      <tr>
-          <th>能力</th>
-          <th>说明</th>
-          <th>目的</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td><strong>Application Insights 集成</strong></td>
-          <td>将项目连接到 Azure Monitor，用于请求、trace、异常等遥测。</td>
-          <td>采集核心遥测</td>
-      </tr>
-      <tr>
-          <td><strong>内置 Application Analytics 仪表板</strong></td>
-          <td>可视化延迟、token 用量、异常率、响应质量等。</td>
-          <td>快速运维可视化</td>
-      </tr>
-      <tr>
-          <td><strong>Agent 持续评估（Continuous Evaluation）</strong></td>
-          <td>自动评估 AI 回复的质量、安全性、准确性。</td>
-          <td>质量监控</td>
-      </tr>
-      <tr>
-          <td><strong>Kusto（KQL）查询访问</strong></td>
-          <td>用查询深入到原始遥测数据。</td>
-          <td>深度分析</td>
-      </tr>
-      <tr>
-          <td><strong>Azure Monitor 告警</strong></td>
-          <td>基于 KQL 结果触发规则（例如 latency &gt; 2s）。</td>
-          <td>主动告警</td>
-      </tr>
-      <tr>
-          <td><strong>可定制 Workbooks</strong></td>
-          <td>修改现成仪表板或自建可视化。</td>
-          <td>团队化洞察</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>能力</th>
+					<th>说明</th>
+					<th>目的</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Application Insights 集成</strong></td>
+					<td>将项目连接到 Azure Monitor，用于请求、trace、异常等遥测。</td>
+					<td>采集核心遥测</td>
+			</tr>
+			<tr>
+					<td><strong>内置 Application Analytics 仪表板</strong></td>
+					<td>可视化延迟、token 用量、异常率、响应质量等。</td>
+					<td>快速运维可视化</td>
+			</tr>
+			<tr>
+					<td><strong>Agent 持续评估（Continuous Evaluation）</strong></td>
+					<td>自动评估 AI 回复的质量、安全性、准确性。</td>
+					<td>质量监控</td>
+			</tr>
+			<tr>
+					<td><strong>Kusto（KQL）查询访问</strong></td>
+					<td>用查询深入到原始遥测数据。</td>
+					<td>深度分析</td>
+			</tr>
+			<tr>
+					<td><strong>Azure Monitor 告警</strong></td>
+					<td>基于 KQL 结果触发规则（例如 latency &gt; 2s）。</td>
+					<td>主动告警</td>
+			</tr>
+			<tr>
+					<td><strong>可定制 Workbooks</strong></td>
+					<td>修改现成仪表板或自建可视化。</td>
+					<td>团队化洞察</td>
+			</tr>
+	</tbody>
 </table>
 <p><strong>监控架构可视化概览：</strong></p>
 <p>
@@ -298,45 +298,45 @@ logger.info(&#34;AI Call&#34;, extra={
 </ul>
 <h3 id="复盘表格示例">复盘表格示例</h3>
 <table>
-  <thead>
-      <tr>
-          <th>指标</th>
-          <th>目标</th>
-          <th>实际</th>
-          <th>趋势</th>
-          <th>动作</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>Latency (ms)</td>
-          <td>&lt; 2500 ms</td>
-          <td>3100 ms</td>
-          <td>⬆️ Increasing</td>
-          <td>Optimize prompt size</td>
-      </tr>
-      <tr>
-          <td>Quality Score</td>
-          <td>&gt; 0.9</td>
-          <td>0.92</td>
-          <td>➡️ Stable</td>
-          <td>✅</td>
-      </tr>
-      <tr>
-          <td>Token Usage (per hour)</td>
-          <td>&lt; 400K</td>
-          <td>480K</td>
-          <td>⬆️ Increasing</td>
-          <td>Review model selection</td>
-      </tr>
-      <tr>
-          <td>Safety Violations</td>
-          <td>&lt; 1%</td>
-          <td>0.8%</td>
-          <td>➡️ Stable</td>
-          <td>✅</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>指标</th>
+					<th>目标</th>
+					<th>实际</th>
+					<th>趋势</th>
+					<th>动作</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Latency (ms)</td>
+					<td>&lt; 2500 ms</td>
+					<td>3100 ms</td>
+					<td>⬆️ Increasing</td>
+					<td>Optimize prompt size</td>
+			</tr>
+			<tr>
+					<td>Quality Score</td>
+					<td>&gt; 0.9</td>
+					<td>0.92</td>
+					<td>➡️ Stable</td>
+					<td>✅</td>
+			</tr>
+			<tr>
+					<td>Token Usage (per hour)</td>
+					<td>&lt; 400K</td>
+					<td>480K</td>
+					<td>⬆️ Increasing</td>
+					<td>Review model selection</td>
+			</tr>
+			<tr>
+					<td>Safety Violations</td>
+					<td>&lt; 1%</td>
+					<td>0.8%</td>
+					<td>➡️ Stable</td>
+					<td>✅</td>
+			</tr>
+	</tbody>
 </table>
 <h2 id="-step-7--闭环把监控接回-mlops">🧭 Step 7 — 闭环：把监控接回 MLOps</h2>
 <p>最后，把监控洞察接回 <strong>MLOps workflow</strong>：</p>
@@ -541,6 +541,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/" title="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载" target="_blank">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/" title="Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略" target="_blank">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a>
     </li>
     
@@ -576,10 +580,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/" title="我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色" target="_blank">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/" title="如何通过 Entra ID 身份验证使用 Microsoft Foundry" target="_blank">如何通过 Entra ID 身份验证使用 Microsoft Foundry</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -599,7 +599,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

@@ -1,0 +1,1119 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载 | Innovation with tech</title>
+    <meta property="og:title" content="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-04-29T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-04-29T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</h1>
+        </header>
+        
+  <time datetime="2026-04-29T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年4月29日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>最近我在梳理自家 GenAI 平台的模型调度方案时，重新研究了 Microsoft Foundry 里的 Model Router。它把&quot;每个请求该用哪个模型&quot;这件事从应用层的琐碎逻辑，变成了平台层可以治理的一件事。下面把我的理解和实践记录一下，原文可以参考 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/4514440?WT.mc_id=AI-MVP-5003172">Architecting Cost-Aware LLM Workloads with Model Router in Microsoft Foundry</a>。</p>
+<p>一句话概括我关注的点：把多模型路由收敛到一个受治理的部署里，自带故障转移、数据驻留边界强制，以及在 18 个底层 LLM 之间按每条 prompt 做成本/质量权衡。</p>
+<h2 id="架构上的真问题">架构上的真问题</h2>
+<p>只要 GenAI 平台稍微复杂一点，你最后一定会同时养一堆模型。便宜的模型跑分类和轻量对话，推理模型处理多步任务，前沿模型啃硬骨头，还有针对代码、视觉、长上下文的专用模型。</p>
+<p>真正的问题从来不是&quot;哪个模型最好&quot;，而是：怎么在规模化的前提下，为每个请求分派对的模型，同时不丢掉治理和可观测性？</p>
+<p>我把常见的几种做法列出来对比过，每一种都有自己的坑：</p>
+<table>
+	<thead>
+			<tr>
+					<th>模式</th>
+					<th>权衡</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>单模型部署</td>
+					<td>简单 prompt 上花冤枉钱，复杂 prompt 上又力不从心</td>
+			</tr>
+			<tr>
+					<td>应用层路由（规则/分类器）</td>
+					<td>脆弱，模型一迭代就得重新调</td>
+			</tr>
+			<tr>
+					<td>LLM 当路由</td>
+					<td>多一次调用跳转，治理更复杂，还多了自己那份失败模式</td>
+			</tr>
+			<tr>
+					<td>按用例分别部署</td>
+					<td>部署面爆炸，配额和成本报表被切得七零八落</td>
+			</tr>
+	</tbody>
+</table>
+<p>Microsoft Foundry 的 Model Router 给的是一个平台级答案：一个训练好的路由模型，以单一端点部署，按每条 prompt 在最多 18 个底层 LLM 之间做分派。</p>
+<h2 id="概念上的架构">概念上的架构</h2>
+<p>有个设计细节值得先说清楚：路由决策是由一个训练过的模型做出的，不是规则引擎。它分析的是 prompt 本身——复杂度、任务类型、推理需求——并且会随着 Microsoft 接入新的底层模型而更新。</p>
+<h2 id="哪些归平台管哪些归你管">哪些归平台管，哪些归你管</h2>
+<p>对做架构的人来说，这个职责划分才是关键的心智模型。</p>
+<h3 id="平台负责的">平台负责的</h3>
+<ul>
+<li>
+<p>实时 prompt 分析和路由决策</p>
+</li>
+<li>
+<p>子集内的自动故障转移</p>
+</li>
+<li>
+<p>数据驻留边界的强制</p>
+</li>
+<li>
+<p>向支持的模型透传 prompt 缓存</p>
+</li>
+<li>
+<p>底层模型的版本管理（通过路由器版本控制）</p>
+</li>
+</ul>
+<h3 id="你负责的">你负责的</h3>
+<ul>
+<li>
+<p>路由模式——Balanced（默认）、Quality 或 Cost</p>
+</li>
+<li>
+<p>模型子集——底层模型的白名单</p>
+</li>
+<li>
+<p>部署类型——Global Standard 或 Data Zone Standard</p>
+</li>
+<li>
+<p>区域——目前可选 East US 2 或 Sweden Central</p>
+</li>
+<li>
+<p>可观测性挂钩——记录 <code>response.model</code> 以便做每个请求的归因</p>
+</li>
+</ul>
+<h2 id="把路由模式当成设计杠杆">把路由模式当成设计杠杆</h2>
+<table>
+	<thead>
+			<tr>
+					<th>模式</th>
+					<th>质量带</th>
+					<th>什么时候用</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Balanced（默认）</td>
+					<td>顶级模型的 ~1–2% 以内</td>
+					<td>通用对话和 agent 场景</td>
+			</tr>
+			<tr>
+					<td>Quality</td>
+					<td>始终用顶级模型</td>
+					<td>受监管的输出、复杂推理、关键文档的 RAG</td>
+			</tr>
+			<tr>
+					<td>Cost</td>
+					<td>~5–6% 带宽</td>
+					<td>大批量分类、草稿生成、低风险对话</td>
+			</tr>
+	</tbody>
+</table>
+<p>我更愿意把路由模式看成一个部署级的 SLO 杠杆。不同的产品面可以指向不同的 Model Router 部署，各自配不同的模式和子集。</p>
+<h2 id="模型子集你真正的治理面">模型子集：你真正的治理面</h2>
+<p>这是我觉得最值得花心思去设计的一个特性。子集列表决定了：</p>
+<ul>
+<li>
+<p>合规——你的 prompt 能碰到哪些厂商/区域</p>
+</li>
+<li>
+<p>上下文窗口——有效上下文等于子集里最小的那个模型，所以要认真挑选</p>
+</li>
+<li>
+<p>成本上限——把最坏情况下的单次调用成本框住</p>
+</li>
+<li>
+<p>故障转移池——每个子集里至少留两个模型</p>
+</li>
+<li>
+<p>缓存命中率——更窄、更确定的子集，能提高连续重叠 prompt 落到同一个底层模型的概率</p>
+</li>
+</ul>
+<p>未来路由器版本里新引入的模型，不会自动加进你的子集。这是有意为之的护栏——要加，就得显式改部署。</p>
+<h2 id="代码用自定义子集部署">代码：用自定义子集部署</h2>
+<p>Model Router 的部署方式和 Foundry 里任何模型一样。下面是一段示意性的 ARM/Bicep 风格部署片段，设成 Balanced 模式，并把路由限制在一个精心挑选的子集里——省掉 subset 就等于接受完整的默认池。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bicep" data-lang="bicep"><span style="display:flex;"><span><span style="color:#cf222e">resource</span><span style="color:#fff"> </span><span style="color:#953800">modelRouter</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;Microsoft.CognitiveServices/accounts/deployments@2024-10-01&#39;</span><span style="color:#fff"> </span><span style="color:#1f2328">=</span><span style="color:#fff"> </span><span style="color:#1f2328">{</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#953800">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;model-router-prod&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#953800">parent</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#953800">foundryAccount</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#953800">sku</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#1f2328">{</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#953800">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;GlobalStandard&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#953800">capacity</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#953800">250</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#1f2328">}</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#953800">properties</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#1f2328">{</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#953800">model</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#1f2328">{</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span><span style="color:#953800">format</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;OpenAI&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span><span style="color:#953800">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;model-router&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span><span style="color:#953800">version</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;2025-11-18&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#1f2328">}</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#953800">routingConfiguration</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#1f2328">{</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span><span style="color:#953800">mode</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;Balanced&#39;</span><span style="color:#fff"> </span><span style="color:#57606a">// Balanced | Quality | Cost</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span><span style="color:#953800">modelSubset</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#1f2328">[</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0a3069">&#39;gpt-5-mini&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0a3069">&#39;gpt-5&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0a3069">&#39;gpt-5.2&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0a3069">&#39;claude-sonnet-4-5&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0a3069">&#39;claude-opus-4-6&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0a3069">&#39;o4-mini&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">      </span><span style="color:#1f2328">]</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#1f2328">}</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#1f2328">}</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span><span style="color:#fff">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>具体 schema 建议对着当前的 Foundry 部署 API 再核一遍——参数名在不同 API 版本之间是会变的。</p>
+<h2 id="通过-foundry-门户部署">通过 Foundry 门户部署</h2>
+<p>如果你比起 IaC 更喜欢用门户，流程也很短：</p>
+<ul>
+<li>
+<p>登录 Microsoft Foundry，确认 New Foundry 开关是开着的。</p>
+</li>
+<li>
+<p>打开模型目录，找到 model-router 并选中它。</p>
+</li>
+<li>
+<p>选 Default settings 就是对所有支持的模型走 Balanced 模式；选 Custom settings 则可以挑路由模式和模型子集。</p>
+</li>
+<li>
+<p>在 model router 这个部署层面套一个内容过滤器——它会覆盖所有底层模型。别去给单个模型单独设内容过滤器。</p>
+</li>
+<li>
+<p>TPM 速率限制也设在 model router 层面——它对进出路由器的所有活动生效。别给单个底层模型单独设速率限制。</p>
+</li>
+<li>
+<p>（仅 Claude）在把 Claude 模型加进子集之前，先单独从目录里部署它们。其它厂商的模型是透明调用的。</p>
+</li>
+</ul>
+<p>传播延迟提醒一下：路由模式或模型子集的改动，最多可能要五分钟才生效。做灰度和测试的时候要把这个算进去。</p>
+<h2 id="代码调用端点python">代码：调用端点（Python）</h2>
+<p>部署完成后，Model Router 就是一个标准的 chat-completions 端点。记得每次都抓一下 <code>response.model</code>——这是你做成本分析和路由验证时，每个请求的归因依据。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">openai</span> <span style="color:#cf222e">import</span> AzureOpenAI
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>client <span style="color:#0550ae">=</span> AzureOpenAI<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    azure_endpoint<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;https://&lt;your-resource&gt;.openai.azure.com/&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    api_key<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;&lt;your-key&gt;&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    api_version<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;2025-11-18&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>response <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>chat<span style="color:#0550ae">.</span>completions<span style="color:#0550ae">.</span>create<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    model<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;model-router-prod&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    messages<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;system&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;You are a helpful assistant.&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Summarize the trade-offs of event sourcing at scale.&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>response<span style="color:#0550ae">.</span>choices<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>message<span style="color:#0550ae">.</span>content<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Served by:&#34;</span><span style="color:#1f2328">,</span> response<span style="color:#0550ae">.</span>model<span style="color:#1f2328">)</span>  <span style="color:#57606a"># e.g. &#34;gpt-5-mini-2025-08-07&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="代码流式响应">代码：流式响应</h2>
+<p>流式和任何 Azure OpenAI chat 部署完全一样。路由决策发生在第一个 token 之前；一旦选定，底层模型就直接开始流式输出。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>stream <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>chat<span style="color:#0550ae">.</span>completions<span style="color:#0550ae">.</span>create<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    model<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;model-router-prod&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    messages<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Walk me through CAP theorem with a concrete example.&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>    stream<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">for</span> chunk <span style="color:#0550ae">in</span> stream<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> chunk<span style="color:#0550ae">.</span>choices <span style="color:#0550ae">and</span> chunk<span style="color:#0550ae">.</span>choices<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>delta<span style="color:#0550ae">.</span>content<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>chunk<span style="color:#0550ae">.</span>choices<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span><span style="color:#0550ae">.</span>delta<span style="color:#0550ae">.</span>content<span style="color:#1f2328">,</span> end<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;&#34;</span><span style="color:#1f2328">,</span> flush<span style="color:#0550ae">=</span><span style="color:#cf222e">True</span><span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="代码工具调用agentic-场景">代码：工具调用（agentic 场景）</h2>
+<p>2025-11-18 这个版本加入了工具调用支持，这样 Model Router 就能用在 Foundry Agent Service 里。路由器会按每一轮挑合适的模型——琐碎的轮次用便宜的，多步的轮次上推理级的。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>tools <span style="color:#0550ae">=</span> <span style="color:#1f2328">[{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;function&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;function&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;get_order_status&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Retrieve the current status of a customer order.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0a3069">&#34;parameters&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;object&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;properties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0a3069">&#34;order_id&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;The order ID.&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0a3069">&#34;required&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span><span style="color:#0a3069">&#34;order_id&#34;</span><span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>response <span style="color:#0550ae">=</span> client<span style="color:#0550ae">.</span>chat<span style="color:#0550ae">.</span>completions<span style="color:#0550ae">.</span>create<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    model<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;model-router-prod&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    messages<span style="color:#0550ae">=</span><span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;system&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;You help customers track orders.&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">{</span><span style="color:#0a3069">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span> <span style="color:#0a3069">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Where is order A-4571?&#34;</span><span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>    tools<span style="color:#0550ae">=</span>tools<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    tool_choice<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;auto&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>choice <span style="color:#0550ae">=</span> response<span style="color:#0550ae">.</span>choices<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">if</span> choice<span style="color:#0550ae">.</span>message<span style="color:#0550ae">.</span>tool_calls<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>    call <span style="color:#0550ae">=</span> choice<span style="color:#0550ae">.</span>message<span style="color:#0550ae">.</span>tool_calls<span style="color:#1f2328">[</span><span style="color:#0550ae">0</span><span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Tool requested:&#34;</span><span style="color:#1f2328">,</span> call<span style="color:#0550ae">.</span>function<span style="color:#0550ae">.</span>name<span style="color:#1f2328">,</span> call<span style="color:#0550ae">.</span>function<span style="color:#0550ae">.</span>arguments<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">print</span><span style="color:#1f2328">(</span><span style="color:#0a3069">&#34;Served by:&#34;</span><span style="color:#1f2328">,</span> response<span style="color:#0550ae">.</span>model<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里有个 Agent Service 的注意点：如果你的 agent 流程用到了 Foundry Agent Service 的工具，路由就只会限制在 OpenAI 模型里。当路由器坐在依赖这些工具的 agent 流程后面时，子集要照着这个规则来规划。</p>
+<h2 id="代码另一条路foundry-responses-sdk">代码：另一条路——Foundry Responses SDK</h2>
+<p>如果你打算标准化到 Microsoft Foundry SDK 而不是 OpenAI Python SDK，Responses API 提供了一条等价的路径。安装：<code>pip install azure-ai-projects&gt;=2.0.0 azure-identity</code>。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.identity</span> <span style="color:#cf222e">import</span> DefaultAzureCredential
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">azure.ai.projects</span> <span style="color:#cf222e">import</span> AIProjectClient
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">with</span> <span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>    DefaultAzureCredential<span style="color:#1f2328">()</span> <span style="color:#cf222e">as</span> credential<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    AIProjectClient<span style="color:#1f2328">(</span>endpoint<span style="color:#0550ae">=</span>project_endpoint<span style="color:#1f2328">,</span> credential<span style="color:#0550ae">=</span>credential<span style="color:#1f2328">)</span> <span style="color:#cf222e">as</span> project_client<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    project_client<span style="color:#0550ae">.</span>get_openai_client<span style="color:#1f2328">()</span> <span style="color:#cf222e">as</span> openai_client<span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    response <span style="color:#0550ae">=</span> openai_client<span style="color:#0550ae">.</span>responses<span style="color:#0550ae">.</span>create<span style="color:#1f2328">(</span>
+</span></span><span style="display:flex;"><span>        model<span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;model-router-prod&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6639ba">input</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;In one sentence, name the most popular tourist destination in Seattle.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6639ba">print</span><span style="color:#1f2328">(</span>response<span style="color:#0550ae">.</span>output_text<span style="color:#1f2328">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="选中推理模型时的参数处理">选中推理模型时的参数处理</h2>
+<p>因为 Model Router 既可能派到 chat 模型，也可能派到推理（o 系列）模型，参数的行为会随实际选中的模型而变。我的建议是，把应用围绕两种行为的并集来写。</p>
+<ul>
+<li>
+<p>Temperature、Top_P——选中 o 系列推理模型时被忽略，其它情况照常生效。</p>
+</li>
+<li>
+<p>stop、presence_penalty、frequency_penalty、logit_bias、logprobs——o 系列会丢弃，其它情况照常生效。</p>
+</li>
+<li>
+<p>reasoning_effort——从 2025-11-18 这个路由器版本开始支持。选中推理模型时，路由器会把你传的值透传给底层模型。</p>
+</li>
+</ul>
+<p>我自己遵守的一条实操规则：在路由器前置的部署里，别指望靠 temperature/top-p 来拿确定性；把 reasoning_effort 当成唯一一个在推理和非推理路径上都有一致含义的旋钮。</p>
+<h2 id="响应体长什么样">响应体长什么样</h2>
+<p>JSON 结构和标准的 chat completion 一模一样。<code>model</code> 字段是关键信号——它告诉你实际是哪个底层模型服务了这次请求。<code>usage</code> 块里还能看到 <code>cached_tokens</code>（prompt 缓存命中）和 <code>reasoning_tokens</code>（o 系列模型处理 prompt 时）。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;id&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;xxxx-yyyy-zzzz&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;object&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;chat.completion&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;model&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;gpt-5-mini-2025-08-07&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;choices&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;index&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;finish_reason&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;stop&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;message&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;assistant&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Charismatic and bold—combining brash showmanship...&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;content_filter_results&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span> <span style="color:#0550ae">&#34;hate&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span> <span style="color:#0550ae">&#34;filtered&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">&#34;severity&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;safe&#34;</span> <span style="color:#1f2328">}</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;usage&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;prompt_tokens&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">3254</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;completion_tokens&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">163</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;total_tokens&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">3417</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;prompt_tokens_details&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span> <span style="color:#0550ae">&#34;cached_tokens&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">3200</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">&#34;audio_tokens&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span> <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;completion_tokens_details&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span> <span style="color:#0550ae">&#34;reasoning_tokens&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">128</span><span style="color:#1f2328">,</span> <span style="color:#0550ae">&#34;audio_tokens&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">0</span> <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="在-azure-门户里做监控">在 Azure 门户里做监控</h2>
+<p>性能指标：</p>
+<ul>
+<li>
+<p>打开 Azure 门户，进到你的 Azure OpenAI / Foundry 资源的 Monitoring → Metrics。</p>
+</li>
+<li>
+<p>按你的 model router 部署名筛选。</p>
+</li>
+<li>
+<p>按底层模型拆分指标，就能看到流量实际是怎么在被路由的模型之间分布的。</p>
+</li>
+</ul>
+<p>成本归因：</p>
+<ul>
+<li>
+<p>打开 Azure 门户里的 Resource Management → Cost analysis。</p>
+</li>
+<li>
+<p>按 Tag 筛选，把 tag 类型设为 Deployment，选你的 model router 部署名。</p>
+</li>
+<li>
+<p>总成本 = 命中这个部署的请求所对应的底层模型费用之和。</p>
+</li>
+</ul>
+<p>我总结了三条实操建议：</p>
+<ul>
+<li>
+<p>每次调用都记 <code>response.model</code>。这是你在应用侧看路由分布和做每个请求归因的首要信号。</p>
+</li>
+<li>
+<p>别指望账单是单一模型的。Model Router 是按服务该请求的底层模型的费率计费的。拿 Azure Cost analysis 和你的应用日志对一对。</p>
+</li>
+<li>
+<p>盯着每个底层模型的缓存命中率。缓存收益只在连续重叠的 prompt 落到同一个模型时才有。子集设得太宽松，会悄悄拖垮缓存效率。</p>
+</li>
+</ul>
+<h2 id="需要提前设计防御的失败模式">需要提前设计防御的失败模式</h2>
+<ul>
+<li>
+<p>上下文窗口溢出。有效上下文是子集里最小的那个模型。一条超大 prompt 进来，除非被路由到上下文更大的模型，否则就会失败。防御办法是精挑子集，或者在上游做摘要/截断。</p>
+</li>
+<li>
+<p>Claude 模型没走路由。Claude 需要先单独从目录部署。可以暴露一个部署健康检查。</p>
+</li>
+<li>
+<p>区域/部署类型不匹配。目前只有 East US 2 和 Sweden Central，也只有 Global Standard 和 Data Zone Standard。灾备要照这个来规划。</p>
+</li>
+<li>
+<p>速率限制。Global Standard 默认 250 RPM / 250K TPM；Enterprise/MCA-E 更高。要早点把背压做进去。</p>
+</li>
+<li>
+<p>不支持音频。图片可以接受，但路由决策只看文本。</p>
+</li>
+</ul>
+<h2 id="常见问题速查">常见问题速查</h2>
+<table>
+	<thead>
+			<tr>
+					<th>问题</th>
+					<th>可能原因</th>
+					<th>处理</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>触发速率限制</td>
+					<td>对路由器部署的请求太多</td>
+					<td>提高 TPM 配额，或用指数退避重试</td>
+			</tr>
+			<tr>
+					<td>模型选择出乎意料</td>
+					<td>路由逻辑选了跟预期不同的模型</td>
+					<td>检查路由模式；用模型子集去约束</td>
+			</tr>
+			<tr>
+					<td>高延迟</td>
+					<td>路由器开销加上底层模型处理</td>
+					<td>对延迟敏感的负载用 Cost 模式；小模型响应更快</td>
+			</tr>
+			<tr>
+					<td>Claude 模型没走路由</td>
+					<td>Claude 需要单独从目录部署</td>
+					<td>加进子集前先从目录部署 Claude 模型</td>
+			</tr>
+			<tr>
+					<td>上下文超限</td>
+					<td>有效上下文 = 子集里最小的模型</td>
+					<td>把子集调整为上下文更大的模型，或在上游摘要/截断</td>
+			</tr>
+	</tbody>
+</table>
+<h2 id="什么时候-model-router-是对的架构选择">什么时候 Model Router 是对的架构选择</h2>
+<p>比较契合的场景：</p>
+<ul>
+<li>
+<p>异构流量——prompt 复杂度差异很大</p>
+</li>
+<li>
+<p>想把多厂商 LLM 策略（OpenAI + Anthropic + 开源模型）收敛到一个受治理的单一端点后面</p>
+</li>
+<li>
+<p>agent 平台，任务从琐碎一路跨到复杂推理</p>
+</li>
+</ul>
+<p>不太契合的场景：</p>
+<ul>
+<li>
+<p>均质负载，选一个合适的单模型反而更简单</p>
+</li>
+<li>
+<p>以大上下文 prompt 为主的负载（除非子集是专门为它挑的）</p>
+</li>
+<li>
+<p>需要每个请求都确定、可复现地选同一个模型的场景——路由器是有意做成自适应的</p>
+</li>
+</ul>
+<h2 id="我推荐的落地路径">我推荐的落地路径</h2>
+<ul>
+<li>
+<p>第一阶段——打基线。用 Balanced 模式加完整池部署 Model Router。在有代表性的流量上把 <code>response.model</code> 记全。</p>
+</li>
+<li>
+<p>第二阶段——治理。基于你的合规、上下文和成本需求引入模型子集。确保每个子集至少两个模型做故障转移。</p>
+</li>
+<li>
+<p>第三阶段——调优。等基线分布告诉你该往哪边偏之后，再切到 Cost 或 Quality 模式，或者把产品面拆到两个不同画像的 Model Router 部署上。</p>
+</li>
+<li>
+<p>第四阶段——集成。把路由器接进 Foundry Agent Service，服务 agentic 场景。</p>
+</li>
+</ul>
+<h2 id="一点收尾的想法">一点收尾的想法</h2>
+<p>Model Router 把多模型分派从一个应用层的操心事，变成了一个平台层的事，而且给的治理杠杆（模式、子集、区域）恰好对应架构师真正要谈判的那几个权衡：成本、质量、合规、韧性。生产 GenAI 架构里，这块本来是意外复杂的一部分，这么一简化，我觉得是真有价值。</p>
+<h2 id="示例仓库">示例仓库</h2>
+<p>Microsoft 在 foundry-samples 这个 GitHub 组织里放了几个开源示例，拿来上手评估很合适：</p>
+<ul>
+<li>
+<p>Model Router Capabilities Interactive Demo（Python）。对着你自己的 prompt 集比较 Balanced、Cost、Quality 三种路由模式；能看到成本节省、延迟和路由分布的实时基准数据。</p>
+</li>
+<li>
+<p>Routed Models Distribution Analysis（Python）。在不同路由画像和模型子集下跑 prompt 批次，检查路由器选了哪些模型、各自占比多少——在敲定路由策略之前很有用。</p>
+</li>
+<li>
+<p>Multi-team Quality &amp; Cost Benchmarking（Python workshop）。部署 Model Router，对着固定模型部署做基准，在多团队企业场景里分析成本/延迟权衡。</p>
+</li>
+<li>
+<p>On-Call Copilot Multi-Agent Demo（Python）。看 agent 流程里每一步的模型选择——分类用快而便宜的模型，根因分析上推理模型。</p>
+</li>
+</ul>
+<p>这些示例是给学习和实验用的。在把任何一部分改造进生产之前，先对照你所在组织的安全、合规和负责任 AI 政策审一遍。</p>
+<h2 id="延伸阅读">延伸阅读</h2>
+<ul>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/model-router?WT.mc_id=AI-MVP-5003172">Model router for Microsoft Foundry concepts</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/model-router?WT.mc_id=AI-MVP-5003172">How to use model router</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/models?WT.mc_id=AI-MVP-5003172">Azure OpenAI in Microsoft Foundry models</a></p>
+</li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/">https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a></li>
+        
+        <li><a href="/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/">Azure AI Foundry — 多代理编排与工作流</a></li>
+        
+        <li><a href="/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/">Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</a></li>
+        
+        <li><a href="/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/">使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</a></li>
+        
+        <li><a href="/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/" title="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载" target="_blank">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/" title="Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略" target="_blank">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/" title="Azure AI Foundry — 多代理编排与工作流" target="_blank">Azure AI Foundry — 多代理编排与工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/" title="Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析" target="_blank">Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/" title="使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/" title="使用 Microsoft Olive 和 Foundry Local 部署自定义模型" target="_blank">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/" title="使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/" title="微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型" target="_blank">微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/" title="Agent Framework (Python) 完全指南" target="_blank">Agent Framework (Python) 完全指南</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/" title="我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色" target="_blank">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (25)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

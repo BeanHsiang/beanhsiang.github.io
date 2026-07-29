@@ -107,30 +107,30 @@
 <h2 id="github-copilot-的三大自定义功能">GitHub Copilot 的三大自定义功能</h2>
 <p>GitHub Copilot 提供了三种主要的自定义方式，让你可以调整 AI 响应并根据特定的工作流程、团队指南和项目需求定制辅助功能：</p>
 <table>
-  <thead>
-      <tr>
-          <th><strong>功能</strong></th>
-          <th><strong>用途</strong></th>
-          <th><strong>优势</strong></th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td><strong>自定义指令</strong></td>
-          <td>为代码生成、审查等任务定义通用指南</td>
-          <td>• 自动包含在每个聊天请求中<br>• 仓库范围的一致性<br>• 多种实现选项</td>
-      </tr>
-      <tr>
-          <td><strong>可重用提示</strong></td>
-          <td>为特定任务创建可重用的独立提示</td>
-          <td>• 消除重复的提示编写<br>• 可在团队间共享<br>• 支持变量和依赖项</td>
-      </tr>
-      <tr>
-          <td><strong>自定义聊天模式</strong></td>
-          <td>定义聊天行为、可用工具和交互模式</td>
-          <td>• 上下文感知的辅助<br>• 工具配置<br>• 角色特定的工作流程</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th><strong>功能</strong></th>
+					<th><strong>用途</strong></th>
+					<th><strong>优势</strong></th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>自定义指令</strong></td>
+					<td>为代码生成、审查等任务定义通用指南</td>
+					<td>• 自动包含在每个聊天请求中<br>• 仓库范围的一致性<br>• 多种实现选项</td>
+			</tr>
+			<tr>
+					<td><strong>可重用提示</strong></td>
+					<td>为特定任务创建可重用的独立提示</td>
+					<td>• 消除重复的提示编写<br>• 可在团队间共享<br>• 支持变量和依赖项</td>
+			</tr>
+			<tr>
+					<td><strong>自定义聊天模式</strong></td>
+					<td>定义聊天行为、可用工具和交互模式</td>
+					<td>• 上下文感知的辅助<br>• 工具配置<br>• 角色特定的工作流程</td>
+			</tr>
+	</tbody>
 </table>
 <blockquote>
 <p>💡 <strong>专业提示：</strong> 自定义指令只影响 Copilot Chat（不影响内联代码补全）。你可以组合使用所有三种自定义类型 - 使用自定义指令作为通用指南，使用提示文件处理特定任务，使用聊天模式控制交互上下文。</p>
@@ -193,13 +193,13 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span>mode: agent
-</span></span><span style="display:flex;"><span>tools: [&#39;githubRepo&#39;, &#39;github&#39;, &#39;get_me&#39;, &#39;get_pull_request&#39;, 
-</span></span><span style="display:flex;"><span>        &#39;get_pull_request_comments&#39;, &#39;get_pull_request_diff&#39;]
-</span></span><span style="display:flex;"><span>description: &#34;列出当前仓库中我的拉取请求&#34;
-</span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#24292e">---</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">mode</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>agent<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">tools</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;githubRepo&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;github&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;get_me&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;get_pull_request&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0a3069">&#39;get_pull_request_comments&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;get_pull_request_diff&#39;</span><span style="color:#1f2328">]</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">description</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#34;列出当前仓库中我的拉取请求&#34;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#24292e">---</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>搜索当前仓库（使用 <span style="color:#6639ba">#githubRepo</span> 获取仓库信息）并列出分配给我的任何拉取请求。
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>描述每个拉取请求的目的和详细信息。
@@ -234,12 +234,12 @@
 </span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span>description: &#39;使用 PostgreSQL 扩展处理 PostgreSQL 数据库。&#39;
-</span></span><span style="display:flex;"><span>tools: [&#39;codebase&#39;, &#39;editFiles&#39;, &#39;githubRepo&#39;, &#39;runCommands&#39;, &#39;database&#39;, 
-</span></span><span style="display:flex;"><span>        &#39;pgsql_connect&#39;, &#39;pgsql_query&#39;, &#39;pgsql_listDatabases&#39;]
-</span></span><span style="display:flex;"><span>---
-</span></span><span style="display:flex;"><span>
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-markdown" data-lang="markdown"><span style="display:flex;"><span><span style="color:#24292e">---</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">description</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;使用 PostgreSQL 扩展处理 PostgreSQL 数据库。&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">tools</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#1f2328">[</span><span style="color:#0a3069">&#39;codebase&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;editFiles&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;githubRepo&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;runCommands&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;database&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">        </span><span style="color:#0a3069">&#39;pgsql_connect&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;pgsql_query&#39;</span><span style="color:#1f2328">,</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;pgsql_listDatabases&#39;</span><span style="color:#1f2328">]</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#24292e">---</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span># 数据库管理员聊天模式
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>你是一个 PostgreSQL 数据库管理员（DBA），具备管理和维护 PostgreSQL 数据库系统的专业知识。
@@ -576,6 +576,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/" title="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载" target="_blank">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/" title="Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略" target="_blank">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a>
     </li>
     
@@ -611,10 +615,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/" title="我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色" target="_blank">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/" title="如何通过 Entra ID 身份验证使用 Microsoft Foundry" target="_blank">如何通过 Entra ID 身份验证使用 Microsoft Foundry</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -634,7 +634,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

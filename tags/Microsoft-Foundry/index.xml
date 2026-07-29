@@ -1,180 +1,192 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Microsoft Foundry on Innovation with tech</title>
-    <link>https://beanhsiang.github.io/tags/Microsoft-Foundry/</link>
-    <description>Recent content in Microsoft Foundry on Innovation with tech</description>
-    <generator>Hugo</generator>
-    <language>zh-Hans</language>
-    <lastBuildDate>Thu, 09 Apr 2026 12:00:00 +0800</lastBuildDate>
-    <atom:link href="https://beanhsiang.github.io/tags/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</title>
-      <link>https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/</link>
-      <pubDate>Thu, 09 Apr 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260409144322-f7f14a3fbcbe44e68542addc98d9411b.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;封面图片&#34; src=&#34;https://beanhsiang.github.io/uploads/20260409144322-f7f14a3fbcbe44e68542addc98d9411b.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;在过去一年里，我一直在研究生产级 AI 智能体的构建。多智能体系统、RAG 流水线、一个全天候运行在 Mac mini 上的自主编程智能体……这些项目里最难搞的从来不是 AI 本身，而是基础设施。&lt;/p&gt;&#xA;&lt;p&gt;沙箱隔离、状态管理、工具执行、容器编排、凭据轮换、错误恢复——在智能体真正能做什么有用的事之前，往往需要好几个月的水管工程。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Azure AI Foundry — 多代理编排与工作流</title>
-      <link>https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/</link>
-      <pubDate>Thu, 26 Mar 2026 08:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/</guid>
-      <description>&lt;p&gt;Azure AI Foundry（前身为 Azure AI Studio）是微软提供的端到端平台，用于构建、测试、部署和监控 AI 代理及应用程序。它将模型、工具、框架和治理能力整合到一个统一的系统中。&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;多代理编排概览&#34; src=&#34;https://beanhsiang.github.io/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;现代企业自动化往往需要多个 AI 系统协同完成任务。与其让单一的大型语言模型承担所有工作，Azure AI Foundry 引入了多代理编排机制——让专业化的 AI 代理在工作流中相互协作。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</title>
-      <link>https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/</link>
-      <pubDate>Fri, 06 Mar 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/</guid>
-      <description>&lt;p&gt;这篇文章记录的是如何观察和了解 Agent 在现实中的实际运行状态。&lt;/p&gt;&#xA;&lt;p&gt;Agent 与普通 API 有根本的不同。它不是简单的请求/响应就结束，而是一套多阶段流程：LLM 推理 → 工具调用 → 结果处理 → 再推理。出错时，很难立即看出是哪个阶段因为什么原因失败了。速度慢时，也搞不清楚时间消耗在哪里。在成本方面，更难分析是哪个查询消耗了大量 Token。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</title>
-      <link>https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/</link>
-      <pubDate>Fri, 13 Feb 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/</guid>
-      <description>&lt;p&gt;Microsoft Agent Framework 现已集成 &lt;a href=&#34;https://github.com/anthropics/claude-agent-sdk-python?WT.mc_id=AI-MVP-5003172&#34;&gt;Claude Agent SDK&lt;/a&gt;，让我们能够构建由 Claude 完整代理能力驱动的 AI 代理。这个集成将 Agent Framework 的一致代理抽象与 Claude 的强大功能结合在一起，包括文件编辑、代码执行、函数调用、流式响应、多轮对话以及模型上下文协议（MCP）服务器集成——目前在 Python 中可用。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么将-agent-framework-与-claude-agent-sdk-结合使用&#34;&gt;为什么将 Agent Framework 与 Claude Agent SDK 结合使用？&lt;/h2&gt;&#xA;&lt;p&gt;我们可以单独使用 Claude Agent SDK 来构建代理。那么为什么要通过 Agent Framework 来使用它呢？以下是主要原因：&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 Microsoft Olive 和 Foundry Local 部署自定义模型</title>
-      <link>https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/</link>
-      <pubDate>Thu, 12 Feb 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/</guid>
-      <description>&lt;p&gt;在过去的几周里,我一直在探索小语言模型(SLM)的部署之旅。从最初了解 Phi-4 和小语言模型的强大之处,到实践使用 Foundry Local 在本地运行模型,再到学习函数调用,最近还构建了一个完整的多智能体测验应用,其中包含一个协调专家智能体的编排器。&lt;/p&gt;&#xA;&lt;p&gt;这个测验应用在本地运行得很好,但它依赖于 Foundry Local 目录中的模型——这些模型经过预优化且随时可用。但如果想部署一个不在目录中的模型该怎么办?也许你已经在特定领域的测验数据上微调了一个模型,或者 Hugging Face 上刚发布了一个你想使用的新模型。今天我将展示如何从 Hugging Face 获取一个模型,使用 Microsoft Olive 优化它,在 Foundry Local 中注册它,并在测验应用中运行它。同样的工作流程适用于你可能为特定用例微调的任何模型。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</title>
-      <link>https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/</link>
-      <pubDate>Mon, 02 Feb 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/</guid>
-      <description>&lt;p&gt;我发现 Microsoft Agent Framework 现在与 &lt;a href=&#34;https://github.com/github/copilot-sdk?WT.mc_id=AI-MVP-5003172&#34;&gt;GitHub Copilot SDK&lt;/a&gt; 集成,让我们能够构建由 GitHub Copilot 驱动的 AI 代理。这个集成将 Agent Framework 一致的代理抽象与 GitHub Copilot 的强大功能结合在一起,包括函数调用、流式响应、多轮对话、Shell 命令执行、文件操作、URL 获取以及 Model Context Protocol (MCP) 服务器集成 —— 所有这些功能在 .NET 和 Python 中都可用。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么将-agent-framework-与-github-copilot-sdk-结合使用&#34;&gt;为什么将 Agent Framework 与 GitHub Copilot SDK 结合使用?&lt;/h2&gt;&#xA;&lt;p&gt;你可以单独使用 GitHub Copilot SDK 来构建代理。那么为什么要通过 Agent Framework 来使用它呢?以下是几个关键原因:&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</title>
-      <link>https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/</link>
-      <pubDate>Tue, 20 Jan 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/</guid>
-      <description>&lt;p&gt;微软研究院发布了 OptiMind,这是一个基于 AI 的系统,能够将复杂决策问题的自然语言描述转换为优化求解器可执行的数学公式。它解决了运筹学中长期存在的一个瓶颈问题:将业务意图转换为混合整数线性规划通常需要专业建模人员和数天的工作。&lt;/p&gt;&#xA;&lt;h2 id=&#34;optimind-是什么以及它输出什么&#34;&gt;OptiMind 是什么以及它输出什么?&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://huggingface.co/microsoft/OptiMind-SFT?WT.mc_id=AI-MVP-5003172&#34;&gt;OptiMind-SFT&lt;/a&gt; 是 gpt-oss transformer 系列中的一个专业化 200 亿参数专家混合模型。每个 token 约激活 36 亿参数,因此推理成本更接近中型模型,同时保持较高的容量。上下文长度为 128,000 tokens,这允许在单个请求中处理长规范和多步推理轨迹。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Agent Framework (Python) 完全指南</title>
-      <link>https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/</link>
-      <pubDate>Mon, 19 Jan 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;agent_framework&lt;/strong&gt; 是微软推出的 Python 库,专门用于构建 AI 代理应用程序。我在研究这个框架时发现,它为聊天代理、工作流、工具调用和中间件提供了非常优雅的抽象。核心类包括实现 &lt;code&gt;AgentProtocol&lt;/code&gt; 协议的&lt;strong&gt;代理&lt;/strong&gt;、用于在工作流中运行代理的&lt;strong&gt;执行器&lt;/strong&gt;、用于聊天输入/输出的&lt;strong&gt;消息&lt;/strong&gt;,以及用于定义工作流拓扑的&lt;strong&gt;构建器&lt;/strong&gt;。例如,&lt;code&gt;AgentProtocol&lt;/code&gt; 是一个结构化接口,任何代理都必须遵循它(比如 ChatAgent 就实现了这个接口)。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</title>
-      <link>https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/</link>
-      <pubDate>Tue, 13 Jan 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/</guid>
-      <description>&lt;p&gt;在研究 AI Agent 的过程中,我发现了一个有趣的现象:虽然质量至关重要,但成本和执行时间(推理时间)往往成为 Agent 管道中最大的争议点。&lt;/p&gt;&#xA;&lt;p&gt;像 GPT-5.2 或 Gemini 3 Pro 这样的&amp;quot;推理&amp;quot;大语言模型确实可以提高质量。然而,我注意到它们往往存在生成时间长和 token 使用量增加的问题,从而推高了成本和延迟。当 Agent 需要在每个任务中做出大量决策时,这种权衡就会成为一个重大瓶颈。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>如何通过 Entra ID 身份验证使用 Microsoft Foundry</title>
-      <link>https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/</link>
-      <pubDate>Sat, 10 Jan 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260114150426-5e9b445b7c284d47820bd38456e71c9a.jpeg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Microsoft Foundry&#34; src=&#34;https://beanhsiang.github.io/uploads/20260114150426-5e9b445b7c284d47820bd38456e71c9a.jpeg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;Microsoft Foundry(2025 年 11 月之前称为 Azure AI Foundry)在使用服务时提供两种身份验证方式,包括 LLM 推理:基于密钥的身份验证和 Entra ID 身份验证。虽然基于密钥的身份验证更容易使用,但我想在这里分享使用 Entra ID 身份验证的优势,以及如何开始使用它的分步说明!&lt;/p&gt;&#xA;&lt;h2 id=&#34;entra-id-身份验证的优势&#34;&gt;Entra ID 身份验证的优势&lt;/h2&gt;&#xA;&lt;p&gt;基于密钥的身份验证快速简单……只需从 Foundry 门户获取 API 密钥,将其作为 header 插入 &lt;code&gt;api-key&lt;/code&gt; 名称下,就可以开始使用了!然而,由于其简单性,基于密钥的身份验证也存在一些限制。主要限制之一是安全性。虽然基于密钥的身份验证很简单,但它是&amp;quot;全有或全无&amp;quot;的访问方式——任何拥有该密钥的人都可以执行资源允许的任何操作。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>2026 年值得关注的 7 个 Agentic AI 趋势</title>
-      <link>https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/</link>
-      <pubDate>Wed, 07 Jan 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260107140920-59cc34cabe2f496e9e651d8125295014.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Agentic AI Trends Watch 2026&#34; src=&#34;https://beanhsiang.github.io/uploads/20260107140920-59cc34cabe2f496e9e651d8125295014.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;2026 年是 agentic AI（具备“规划 + 工具调用 + 迭代执行”的自主/半自主智能体）从原型走向生产的关键拐点：不再只是“把 agent 跑起来”，而是开始进入&lt;strong&gt;架构化、标准化、可治理、可算账&lt;/strong&gt;的阶段。&lt;/p&gt;&#xA;&lt;h2 id=&#34;基础概念先把造车零件补齐&#34;&gt;基础概念：先把“造车零件”补齐&lt;/h2&gt;&#xA;&lt;p&gt;在进入 7 个趋势之前，一组“底座能力”的延伸阅读：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Agent 设计模式（例如 ReAct、Reflection、Tool Use、Planning、多智能体协作、串行工作流、Human-in-the-Loop）：&lt;a href=&#34;https://machinelearningmastery.com/7-must-know-agentic-ai-design-patterns/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/7-must-know-agentic-ai-design-patterns/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;让 agent 有“长期记忆”的三种形态（episodic / semantic / procedural）：&lt;a href=&#34;https://machinelearningmastery.com/beyond-short-term-memory-the-3-types-of-long-term-memory-ai-agents-need/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/beyond-short-term-memory-the-3-types-of-long-term-memory-ai-agents-need/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;用小模型（SLM）替代超大模型，做高频/低风险任务以降低成本：&lt;a href=&#34;https://machinelearningmastery.com/small-language-models-are-the-future-of-agentic-ai/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/small-language-models-are-the-future-of-agentic-ai/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;选型与实践路线：&lt;a href=&#34;https://machinelearningmastery.com/top-5-agentic-ai-llm-models/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/top-5-agentic-ai-llm-models/&lt;/a&gt;、&lt;a href=&#34;https://machinelearningmastery.com/the-machine-learning-practitioners-guide-to-agentic-ai-systems/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/the-machine-learning-practitioners-guide-to-agentic-ai-systems/&lt;/a&gt;、&lt;a href=&#34;https://machinelearningmastery.com/the-roadmap-for-mastering-agentic-ai-in-2026/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/the-roadmap-for-mastering-agentic-ai-in-2026/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;如果团队还在“单一大模型 + 一把梭”的阶段，建议先把这些概念统一语言，再谈规模化。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>AI 时代的代码审查</title>
-      <link>https://beanhsiang.github.io/post/2026-01-06-code-review-in-the-age-of-ai/</link>
-      <pubDate>Tue, 06 Jan 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-01-06-code-review-in-the-age-of-ai/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260106115049-1a9806d1e05348ffb8741833f12a1ba7.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;封面图：Code Review in the Age of AI&#34; src=&#34;https://beanhsiang.github.io/uploads/20260106115049-1a9806d1e05348ffb8741833f12a1ba7.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;封面图来源：Addy Osmani / Substack（见原文页面）。&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;原文链接：&lt;a href=&#34;https://addyo.substack.com/p/code-review-in-the-age-of-ai?WT.mc_id=AI-MVP-5003172&#34;&gt;https://addyo.substack.com/p/code-review-in-the-age-of-ai?WT.mc_id=AI-MVP-5003172&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;AI 让写代码更快，但并没有“杀死”代码审查；相反，它把“举证责任”变得更明确了：你可以让 AI 帮你更快地产出改动，但你仍然需要用证据证明它真的能跑、真的符合预期。&lt;/p&gt;&#xA;&lt;p&gt;作者 Addy Osmani 在文中给出的核心观点很直白：如果一个 Pull Request 里没有“它能工作”的证据（手动验证步骤、日志/截图、自动化测试结果等），那并不是在更快地交付，只是在把风险和返工推给下游。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>为 Azure Voice Live 构建可用于生产的 SIP 网关</title>
-      <link>https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/</link>
-      <pubDate>Sun, 04 Jan 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/</guid>
-      <description>&lt;p&gt;原文链接：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/from-zero-to-hero-building-a-production-ready-sip-gateway-for-azure-voice-live/4473405?WT.mc_id=AI-MVP-5003172&#34;&gt;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/from-zero-to-hero-building-a-production-ready-sip-gateway-for-azure-voice-live/4473405?WT.mc_id=AI-MVP-5003172&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260105102739-236de1e20b0f4b64a8b41a799b4589a0.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260105102739-236de1e20b0f4b64a8b41a799b4589a0.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;题图来源：Microsoft Tech Community / Microsoft Foundry Blog&lt;/em&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;引言&#34;&gt;引言&lt;/h2&gt;&#xA;&lt;p&gt;语音技术正在重塑人和机器的交互方式，让与 AI 的对话比以往更自然。随着 Voice Live API 的 public beta 发布，开发者拥有了构建低延迟、多模态语音体验的工具，在应用中可以做出很多新玩法。&lt;/p&gt;&#xA;&lt;p&gt;过去，想做一个语音机器人，往往需要把多个模型“串起来”：比如用 ASR（自动语音识别）模型（像 Whisper）做转写、再用文本模型做推理、最后用 TTS（文本转语音）模型生成语音输出。这条链路通常会带来明显延迟，并且在情感表达等细节上会有损失。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>为什么 Web AI Agent 比独立 LLM 更脆弱——以及我们应该如何真正修复它</title>
-      <link>https://beanhsiang.github.io/post/2026-01-01-why-web-ai-agents-are-more-vulnerable-than-standalone-llms-and-how-we-should-actually-fix-it/</link>
-      <pubDate>Thu, 01 Jan 2026 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-01-01-why-web-ai-agents-are-more-vulnerable-than-standalone-llms-and-how-we-should-actually-fix-it/</guid>
-      <description>&lt;p&gt;Web AI Agent 代表了 AI 在真实系统落地方式的一次大转向：它不再只是“生成文本”，而是会观察实时网页、做决策、并执行真实动作（点击按钮、提交表单、在应用中导航）。能力的跃迁带来巨大价值，但也带来更本质的风险：它更暴露、更容易被利用，如果系统设计草率，后果会比纯文本聊天严重得多。&lt;/p&gt;&#xA;&lt;p&gt;下面的观点基于近期的安全分析：Web AI Agent 的关键问题不是“模型不够聪明”，而是“系统边界不够硬”。理解脆弱性从何而来、会以什么形态出现、以及应该怎样修复，对于任何在做 AI 产品/平台/研究系统的人都很关键。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 Microsoft Agent Framework 与 Azure AI Foundry 为多智能体系统构建可观测性</title>
-      <link>https://beanhsiang.github.io/post/2025-12-12-observability-for-multi-agent-systems-with-microsoft-agent-framework-and-azure-ai-foundry/</link>
-      <pubDate>Fri, 12 Dec 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-12-12-observability-for-multi-agent-systems-with-microsoft-agent-framework-and-azure-ai-foundry/</guid>
-      <description>&lt;p&gt;智能体（Agentic）应用正在重塑企业自动化，但它们动态的工具链和“隐式推理”也让线上运行与排障变得格外棘手。本文整理并改写自 Microsoft Foundry Blog 的一篇文章，内容聚焦于：如何为基于 Microsoft Agent Framework 的服务接入 &lt;strong&gt;OpenTelemetry&lt;/strong&gt;，将 trace 投递到 &lt;strong&gt;Azure AI Foundry&lt;/strong&gt; 的可观测能力中，并建立一套实用工作流，用于在生产环境中调试、评估并持续改进多智能体行为。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 Azure AI Foundry 监控生成式 AI 应用</title>
-      <link>https://beanhsiang.github.io/post/2025-12-08-monitoring-generative-ai-applications-with-azure-ai-foundry/</link>
-      <pubDate>Mon, 08 Dec 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-12-08-monitoring-generative-ai-applications-with-azure-ai-foundry/</guid>
-      <description>&lt;h2 id=&#34;-引言&#34;&gt;🧭 引言&lt;/h2&gt;&#xA;&lt;p&gt;监控 AI 应用，早就不只是盯着「是否在线」和「有没有报错」这么简单了。面对生成式 AI 的工作负载，团队还需要持续回答三个更关键的问题：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;AI 的输出到底“好不好”（质量、准确性、帮助性）&lt;/li&gt;&#xA;&lt;li&gt;运行成本是多少（尤其是 token 消耗与推理成本）&lt;/li&gt;&#xA;&lt;li&gt;是否足够安全、合规、可控（有无有害输出、策略违规等）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Microsoft 在 Azure AI Foundry 中提供了一套集成式的可观测能力，把 Application Insights、持续评估（continuous evaluation）与可自定义仪表板串起来，从而实现对 AI 应用端到端的可见性；同时也与 Azure Baseline Monitoring Alerts 的思路保持一致。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文</title>
-      <link>https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/</link>
-      <pubDate>Sat, 22 Nov 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260105115726-e614221e771e45749f7fc050ae0a4293.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260105115726-e614221e771e45749f7fc050ae0a4293.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;原文链接：https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework&amp;mdash;part-2/4471983?WT.mc_id=AI-MVP-5003172&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（上）：隐私优先的本地&#43;云端协同</title>
-      <link>https://beanhsiang.github.io/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/</link>
-      <pubDate>Fri, 21 Nov 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260105114656-3f580f262ff74ddd96bc8d6400074e74.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260105114656-3f580f262ff74ddd96bc8d6400074e74.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;原文链接：https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework&amp;mdash;part-1/4470813?WT.mc_id=AI-MVP-5003172&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 Agent Framework 构建带人工审批的多智能体顺序工作流</title>
-      <link>https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/</link>
-      <pubDate>Fri, 31 Oct 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260107112735-5f20492722ae4b239416b97e0f27ff8a.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260107112735-5f20492722ae4b239416b97e0f27ff8a.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;题图来源：Microsoft Tech Community 原文页面（见文末链接）。&lt;/em&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;摘要&#34;&gt;摘要&lt;/h2&gt;&#xA;&lt;p&gt;在需要“高自动化 + 强审计/合规”的 AI 工作流里，人类审批（human-in-the-loop）往往是绕不过去的一环：既要让多智能体协作把流程跑起来，又要在关键动作（例如停机、触发维护）前强制停下来等人确认。&lt;/p&gt;&#xA;&lt;p&gt;Microsoft 在一篇示例文章中给出了一套脚本化方案：使用 Agent Framework 编排一个&lt;strong&gt;顺序（sequential）多智能体工作流&lt;/strong&gt;，底层调用 &lt;strong&gt;Azure AI Foundry 的持久化（persistent）agents&lt;/strong&gt;，并利用 **workflow checkpointing（检查点）**实现“暂停—等待审批—从检查点恢复继续执行”。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 Microsoft Agent Framework 构建 Human-in-the-loop 的 AI 工作流</title>
-      <link>https://beanhsiang.github.io/post/2025-10-11-building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/</link>
-      <pubDate>Sat, 11 Oct 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-10-11-building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/</guid>
-      <description>&lt;p&gt;原文链接：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/4460342?WT.mc_id=AI-MVP-5003172&#34;&gt;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/4460342?WT.mc_id=AI-MVP-5003172&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260107121419-0f605ecc540d420ea89d4a7bd85c3179.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260107121419-0f605ecc540d420ea89d4a7bd85c3179.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;h2 id=&#34;一个把确定性编排与自主代理结合起来的欺诈检测示例&#34;&gt;一个把确定性编排与自主代理结合起来的欺诈检测示例&lt;/h2&gt;&#xA;&lt;p&gt;现代企业系统经常面临一个非常现实的问题：&lt;strong&gt;如何让 AI 的决策可靠、可解释，并且真正能在生产环境落地？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;原文围绕一个“欺诈检测（Fraud Detection）”示例，展示了 Microsoft Agent Framework 如何把 AI 驱动的推理步骤放进一个可控的工作流里：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;工作流图（workflow graph）负责&lt;strong&gt;确定性编排&lt;/strong&gt;：控制执行顺序、并行与合流、容错与恢复&lt;/li&gt;&#xA;&lt;li&gt;专家代理（agents）负责&lt;strong&gt;LLM 推理&lt;/strong&gt;：在结构化/半结构化数据上做领域判断&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;完整实现代码仓库在这里：&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>将 Azure AI Foundry 与 Copilot Studio 集成:战略与技术概览</title>
-      <link>https://beanhsiang.github.io/post/2025-09-30-integrating-azure-ai-foundry-with-copilot-studio/</link>
-      <pubDate>Tue, 30 Sep 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-09-30-integrating-azure-ai-foundry-with-copilot-studio/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260108114743-347696f0249c4842ba1c0a110609bd2a.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Integrating Azure AI Foundry with Copilot Studio&#34; src=&#34;https://beanhsiang.github.io/uploads/20260108114743-347696f0249c4842ba1c0a110609bd2a.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;原文链接&lt;/strong&gt;: &lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/integrating-azure-ai-foundry-with-copilot-studio-a-strategic-and-technical-overv/4457370?WT.mc_id=AI-MVP-5003172&#34;&gt;Integrating Azure AI Foundry with Copilot Studio: A Strategic and Technical Overview&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;随着组织加速 AI 采用,对灵活、可扩展和安全的平台需求变得至关重要。我之前在文章《&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/navigating-ai-solutions-microsoft-copilot-studio-vs-azure-ai-foundry/4411678?WT.mc_id=AI-MVP-5003172&#34;&gt;导航 AI 解决方案:Microsoft Copilot Studio 与 Azure AI Foundry&lt;/a&gt;》中介绍过两种强大但截然不同的 AI 代理构建方法。Copilot Studio 提供了低代码/无代码界面以便快速部署,面向各类业务用户;而 Azure AI Foundry 则提供了专业代码环境,具备深度定制和编排能力,面向开发者群体。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Azure AI Foundry Agents:构建智能的、目标驱动的自主 AI 系统</title>
-      <link>https://beanhsiang.github.io/post/2025-09-05-azure-ai-foundry-agents-build-intelligent-goal-driven-ai-that-acts-autonomously/</link>
-      <pubDate>Fri, 05 Sep 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-09-05-azure-ai-foundry-agents-build-intelligent-goal-driven-ai-that-acts-autonomously/</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://azure.microsoft.com/products/ai-foundry?WT.mc_id=AI-MVP-5003172&#34;&gt;Azure AI Foundry Agents&lt;/a&gt; 是 Azure AI Foundry 平台中的一项新功能,它让我们能够构建智能的、目标驱动的 AI 系统,这些系统可以自主行动以完成复杂的任务。&lt;/p&gt;&#xA;&lt;h2 id=&#34;什么是-ai-agent&#34;&gt;什么是 AI Agent?&lt;/h2&gt;&#xA;&lt;p&gt;在我使用 Azure AI Foundry 的过程中,我发现 AI Agent 与传统的 AI 应用有着本质的区别。传统的 AI 应用通常是响应式的——它们等待用户输入,处理请求,然后返回结果。而 AI Agent 则具有主动性,它们能够:&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>超越提示词：Agentic AI 如何重塑人机协作</title>
-      <link>https://beanhsiang.github.io/post/2025-08-21-beyond-prompts-agentic-ai-redefining-human-ai-collaboration/</link>
-      <pubDate>Thu, 21 Aug 2025 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-08-21-beyond-prompts-agentic-ai-redefining-human-ai-collaboration/</guid>
-      <description>&lt;p&gt;原文：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/beyond-prompts-how-agentic-ai-is-redefining-human-ai-collaboration/4445774?WT.mc_id=AI-MVP-5003172&#34;&gt;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/beyond-prompts-how-agentic-ai-is-redefining-human-ai-collaboration/4445774?WT.mc_id=AI-MVP-5003172&lt;/a&gt;（原文标注日期：2025-08-20）&lt;/p&gt;&#xA;&lt;p&gt;这篇来自 Microsoft Foundry Blog 的文章聚焦一个正在快速成型的趋势：从“写好提示词、等模型回答”的交互方式，转向“能够思考、规划、调用工具、并在反馈中调整”的 Agentic AI（智能体式 AI）。文章将其视为从被动助手到主动协作者的跃迁，并用一个学习助理的例子拆解了智能体系统的关键组成。&lt;/p&gt;&#xA;&lt;h2 id=&#34;从反应式到主动式&#34;&gt;从“反应式”到“主动式”&lt;/h2&gt;&#xA;&lt;p&gt;传统的 AI 使用方式高度依赖 prompt：用户提问，模型给出一次性回答。这类系统往往是&lt;strong&gt;反应式&lt;/strong&gt;的——更擅长单轮任务，缺少跨步骤的规划能力，也缺少在动态环境里自我调整的机制。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>AI 智能体 MCP 工具:使用 Azure AI Foundry SDK 快速开始 MCP 工具开发</title>
-      <link>https://beanhsiang.github.io/post/2025-08-12-ai-agent-mcp-tools-quickstart-to-mcp-tools-development-with-azure-ai-foundry-sdk/</link>
-      <pubDate>Tue, 12 Aug 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-08-12-ai-agent-mcp-tools-quickstart-to-mcp-tools-development-with-azure-ai-foundry-sdk/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260108114135-2319315ac0f04a8baaf4e00c0b02e022.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260108114135-2319315ac0f04a8baaf4e00c0b02e022.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;随着 AI 智能体变得越来越复杂,对与强大云端工具无缝集成的需求也在不断增长。我发现 Azure AI Foundry SDK 与 MCP(模型上下文协议)工具的结合,创造了一个强大的组合,让开发者能够轻松地构建、部署和管理智能代理。&lt;/p&gt;&#xA;&lt;h2 id=&#34;解决方案概述&#34;&gt;解决方案概述&lt;/h2&gt;&#xA;&lt;p&gt;我在使用 &lt;a href=&#34;https://github.com/ccoellomsft/AI-Foundry-Agent-MCP?WT.mc_id=AI-MVP-5003172&#34;&gt;AI-Foundry-Agent-MCP GitHub 仓库&lt;/a&gt;时发现,它为将 MCP 工具与 Azure AI Foundry SDK 集成提供了一个实用的解决方案。通过这个设置,我们可以:&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>Microsoft Foundry on Innovation with tech</title>
+		<link>https://beanhsiang.github.io/tags/Microsoft-Foundry/</link>
+		<description>Recent content in Microsoft Foundry on Innovation with tech</description>
+		<generator>Hugo</generator>
+		<language>zh-Hans</language>
+		
+		
+		
+		
+			<lastBuildDate>Wed, 29 Apr 2026 12:00:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://beanhsiang.github.io/tags/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</title>
+				<link>https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/</link>
+				<pubDate>Wed, 29 Apr 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/</guid>
+				<description>&lt;p&gt;最近我在梳理自家 GenAI 平台的模型调度方案时，重新研究了 Microsoft Foundry 里的 Model Router。它把&amp;quot;每个请求该用哪个模型&amp;quot;这件事从应用层的琐碎逻辑，变成了平台层可以治理的一件事。下面把我的理解和实践记录一下，原文可以参考 &lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/4514440?WT.mc_id=AI-MVP-5003172&#34;&gt;Architecting Cost-Aware LLM Workloads with Model Router in Microsoft Foundry&lt;/a&gt;。&lt;/p&gt;&#xA;&lt;p&gt;一句话概括我关注的点：把多模型路由收敛到一个受治理的部署里，自带故障转移、数据驻留边界强制，以及在 18 个底层 LLM 之间按每条 prompt 做成本/质量权衡。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</title>
+				<link>https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/</link>
+				<pubDate>Thu, 09 Apr 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260409144322-f7f14a3fbcbe44e68542addc98d9411b.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;封面图片&#34; src=&#34;https://beanhsiang.github.io/uploads/20260409144322-f7f14a3fbcbe44e68542addc98d9411b.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;在过去一年里，我一直在研究生产级 AI 智能体的构建。多智能体系统、RAG 流水线、一个全天候运行在 Mac mini 上的自主编程智能体……这些项目里最难搞的从来不是 AI 本身，而是基础设施。&lt;/p&gt;&#xA;&lt;p&gt;沙箱隔离、状态管理、工具执行、容器编排、凭据轮换、错误恢复——在智能体真正能做什么有用的事之前，往往需要好几个月的水管工程。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Azure AI Foundry — 多代理编排与工作流</title>
+				<link>https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/</link>
+				<pubDate>Thu, 26 Mar 2026 08:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/</guid>
+				<description>&lt;p&gt;Azure AI Foundry（前身为 Azure AI Studio）是微软提供的端到端平台，用于构建、测试、部署和监控 AI 代理及应用程序。它将模型、工具、框架和治理能力整合到一个统一的系统中。&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;多代理编排概览&#34; src=&#34;https://beanhsiang.github.io/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;现代企业自动化往往需要多个 AI 系统协同完成任务。与其让单一的大型语言模型承担所有工作，Azure AI Foundry 引入了多代理编排机制——让专业化的 AI 代理在工作流中相互协作。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</title>
+				<link>https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/</link>
+				<pubDate>Fri, 06 Mar 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/</guid>
+				<description>&lt;p&gt;这篇文章记录的是如何观察和了解 Agent 在现实中的实际运行状态。&lt;/p&gt;&#xA;&lt;p&gt;Agent 与普通 API 有根本的不同。它不是简单的请求/响应就结束，而是一套多阶段流程：LLM 推理 → 工具调用 → 结果处理 → 再推理。出错时，很难立即看出是哪个阶段因为什么原因失败了。速度慢时，也搞不清楚时间消耗在哪里。在成本方面，更难分析是哪个查询消耗了大量 Token。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</title>
+				<link>https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/</link>
+				<pubDate>Fri, 13 Feb 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/</guid>
+				<description>&lt;p&gt;Microsoft Agent Framework 现已集成 &lt;a href=&#34;https://github.com/anthropics/claude-agent-sdk-python?WT.mc_id=AI-MVP-5003172&#34;&gt;Claude Agent SDK&lt;/a&gt;，让我们能够构建由 Claude 完整代理能力驱动的 AI 代理。这个集成将 Agent Framework 的一致代理抽象与 Claude 的强大功能结合在一起，包括文件编辑、代码执行、函数调用、流式响应、多轮对话以及模型上下文协议（MCP）服务器集成——目前在 Python 中可用。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么将-agent-framework-与-claude-agent-sdk-结合使用&#34;&gt;为什么将 Agent Framework 与 Claude Agent SDK 结合使用？&lt;/h2&gt;&#xA;&lt;p&gt;我们可以单独使用 Claude Agent SDK 来构建代理。那么为什么要通过 Agent Framework 来使用它呢？以下是主要原因：&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>使用 Microsoft Olive 和 Foundry Local 部署自定义模型</title>
+				<link>https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/</link>
+				<pubDate>Thu, 12 Feb 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/</guid>
+				<description>&lt;p&gt;在过去的几周里,我一直在探索小语言模型(SLM)的部署之旅。从最初了解 Phi-4 和小语言模型的强大之处,到实践使用 Foundry Local 在本地运行模型,再到学习函数调用,最近还构建了一个完整的多智能体测验应用,其中包含一个协调专家智能体的编排器。&lt;/p&gt;&#xA;&lt;p&gt;这个测验应用在本地运行得很好,但它依赖于 Foundry Local 目录中的模型——这些模型经过预优化且随时可用。但如果想部署一个不在目录中的模型该怎么办?也许你已经在特定领域的测验数据上微调了一个模型,或者 Hugging Face 上刚发布了一个你想使用的新模型。今天我将展示如何从 Hugging Face 获取一个模型,使用 Microsoft Olive 优化它,在 Foundry Local 中注册它,并在测验应用中运行它。同样的工作流程适用于你可能为特定用例微调的任何模型。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</title>
+				<link>https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/</link>
+				<pubDate>Mon, 02 Feb 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/</guid>
+				<description>&lt;p&gt;我发现 Microsoft Agent Framework 现在与 &lt;a href=&#34;https://github.com/github/copilot-sdk?WT.mc_id=AI-MVP-5003172&#34;&gt;GitHub Copilot SDK&lt;/a&gt; 集成,让我们能够构建由 GitHub Copilot 驱动的 AI 代理。这个集成将 Agent Framework 一致的代理抽象与 GitHub Copilot 的强大功能结合在一起,包括函数调用、流式响应、多轮对话、Shell 命令执行、文件操作、URL 获取以及 Model Context Protocol (MCP) 服务器集成 —— 所有这些功能在 .NET 和 Python 中都可用。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么将-agent-framework-与-github-copilot-sdk-结合使用&#34;&gt;为什么将 Agent Framework 与 GitHub Copilot SDK 结合使用?&lt;/h2&gt;&#xA;&lt;p&gt;你可以单独使用 GitHub Copilot SDK 来构建代理。那么为什么要通过 Agent Framework 来使用它呢?以下是几个关键原因:&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</title>
+				<link>https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/</link>
+				<pubDate>Tue, 20 Jan 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/</guid>
+				<description>&lt;p&gt;微软研究院发布了 OptiMind,这是一个基于 AI 的系统,能够将复杂决策问题的自然语言描述转换为优化求解器可执行的数学公式。它解决了运筹学中长期存在的一个瓶颈问题:将业务意图转换为混合整数线性规划通常需要专业建模人员和数天的工作。&lt;/p&gt;&#xA;&lt;h2 id=&#34;optimind-是什么以及它输出什么&#34;&gt;OptiMind 是什么以及它输出什么?&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://huggingface.co/microsoft/OptiMind-SFT?WT.mc_id=AI-MVP-5003172&#34;&gt;OptiMind-SFT&lt;/a&gt; 是 gpt-oss transformer 系列中的一个专业化 200 亿参数专家混合模型。每个 token 约激活 36 亿参数,因此推理成本更接近中型模型,同时保持较高的容量。上下文长度为 128,000 tokens,这允许在单个请求中处理长规范和多步推理轨迹。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Agent Framework (Python) 完全指南</title>
+				<link>https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/</link>
+				<pubDate>Mon, 19 Jan 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/</guid>
+				<description>&lt;p&gt;&lt;strong&gt;agent_framework&lt;/strong&gt; 是微软推出的 Python 库,专门用于构建 AI 代理应用程序。我在研究这个框架时发现,它为聊天代理、工作流、工具调用和中间件提供了非常优雅的抽象。核心类包括实现 &lt;code&gt;AgentProtocol&lt;/code&gt; 协议的&lt;strong&gt;代理&lt;/strong&gt;、用于在工作流中运行代理的&lt;strong&gt;执行器&lt;/strong&gt;、用于聊天输入/输出的&lt;strong&gt;消息&lt;/strong&gt;,以及用于定义工作流拓扑的&lt;strong&gt;构建器&lt;/strong&gt;。例如,&lt;code&gt;AgentProtocol&lt;/code&gt; 是一个结构化接口,任何代理都必须遵循它(比如 ChatAgent 就实现了这个接口)。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</title>
+				<link>https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/</link>
+				<pubDate>Tue, 13 Jan 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/</guid>
+				<description>&lt;p&gt;在研究 AI Agent 的过程中,我发现了一个有趣的现象:虽然质量至关重要,但成本和执行时间(推理时间)往往成为 Agent 管道中最大的争议点。&lt;/p&gt;&#xA;&lt;p&gt;像 GPT-5.2 或 Gemini 3 Pro 这样的&amp;quot;推理&amp;quot;大语言模型确实可以提高质量。然而,我注意到它们往往存在生成时间长和 token 使用量增加的问题,从而推高了成本和延迟。当 Agent 需要在每个任务中做出大量决策时,这种权衡就会成为一个重大瓶颈。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>如何通过 Entra ID 身份验证使用 Microsoft Foundry</title>
+				<link>https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/</link>
+				<pubDate>Sat, 10 Jan 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260114150426-5e9b445b7c284d47820bd38456e71c9a.jpeg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Microsoft Foundry&#34; src=&#34;https://beanhsiang.github.io/uploads/20260114150426-5e9b445b7c284d47820bd38456e71c9a.jpeg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;Microsoft Foundry(2025 年 11 月之前称为 Azure AI Foundry)在使用服务时提供两种身份验证方式,包括 LLM 推理:基于密钥的身份验证和 Entra ID 身份验证。虽然基于密钥的身份验证更容易使用,但我想在这里分享使用 Entra ID 身份验证的优势,以及如何开始使用它的分步说明!&lt;/p&gt;&#xA;&lt;h2 id=&#34;entra-id-身份验证的优势&#34;&gt;Entra ID 身份验证的优势&lt;/h2&gt;&#xA;&lt;p&gt;基于密钥的身份验证快速简单……只需从 Foundry 门户获取 API 密钥,将其作为 header 插入 &lt;code&gt;api-key&lt;/code&gt; 名称下,就可以开始使用了!然而,由于其简单性,基于密钥的身份验证也存在一些限制。主要限制之一是安全性。虽然基于密钥的身份验证很简单,但它是&amp;quot;全有或全无&amp;quot;的访问方式——任何拥有该密钥的人都可以执行资源允许的任何操作。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>2026 年值得关注的 7 个 Agentic AI 趋势</title>
+				<link>https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/</link>
+				<pubDate>Wed, 07 Jan 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260107140920-59cc34cabe2f496e9e651d8125295014.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Agentic AI Trends Watch 2026&#34; src=&#34;https://beanhsiang.github.io/uploads/20260107140920-59cc34cabe2f496e9e651d8125295014.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;2026 年是 agentic AI（具备“规划 + 工具调用 + 迭代执行”的自主/半自主智能体）从原型走向生产的关键拐点：不再只是“把 agent 跑起来”，而是开始进入&lt;strong&gt;架构化、标准化、可治理、可算账&lt;/strong&gt;的阶段。&lt;/p&gt;&#xA;&lt;h2 id=&#34;基础概念先把造车零件补齐&#34;&gt;基础概念：先把“造车零件”补齐&lt;/h2&gt;&#xA;&lt;p&gt;在进入 7 个趋势之前，一组“底座能力”的延伸阅读：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Agent 设计模式（例如 ReAct、Reflection、Tool Use、Planning、多智能体协作、串行工作流、Human-in-the-Loop）：&lt;a href=&#34;https://machinelearningmastery.com/7-must-know-agentic-ai-design-patterns/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/7-must-know-agentic-ai-design-patterns/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;让 agent 有“长期记忆”的三种形态（episodic / semantic / procedural）：&lt;a href=&#34;https://machinelearningmastery.com/beyond-short-term-memory-the-3-types-of-long-term-memory-ai-agents-need/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/beyond-short-term-memory-the-3-types-of-long-term-memory-ai-agents-need/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;用小模型（SLM）替代超大模型，做高频/低风险任务以降低成本：&lt;a href=&#34;https://machinelearningmastery.com/small-language-models-are-the-future-of-agentic-ai/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/small-language-models-are-the-future-of-agentic-ai/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;选型与实践路线：&lt;a href=&#34;https://machinelearningmastery.com/top-5-agentic-ai-llm-models/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/top-5-agentic-ai-llm-models/&lt;/a&gt;、&lt;a href=&#34;https://machinelearningmastery.com/the-machine-learning-practitioners-guide-to-agentic-ai-systems/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/the-machine-learning-practitioners-guide-to-agentic-ai-systems/&lt;/a&gt;、&lt;a href=&#34;https://machinelearningmastery.com/the-roadmap-for-mastering-agentic-ai-in-2026/?WT.mc_id=AI-MVP-5003172&#34;&gt;https://machinelearningmastery.com/the-roadmap-for-mastering-agentic-ai-in-2026/&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;如果团队还在“单一大模型 + 一把梭”的阶段，建议先把这些概念统一语言，再谈规模化。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>AI 时代的代码审查</title>
+				<link>https://beanhsiang.github.io/post/2026-01-06-code-review-in-the-age-of-ai/</link>
+				<pubDate>Tue, 06 Jan 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-01-06-code-review-in-the-age-of-ai/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260106115049-1a9806d1e05348ffb8741833f12a1ba7.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;封面图：Code Review in the Age of AI&#34; src=&#34;https://beanhsiang.github.io/uploads/20260106115049-1a9806d1e05348ffb8741833f12a1ba7.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;封面图来源：Addy Osmani / Substack（见原文页面）。&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;原文链接：&lt;a href=&#34;https://addyo.substack.com/p/code-review-in-the-age-of-ai?WT.mc_id=AI-MVP-5003172&#34;&gt;https://addyo.substack.com/p/code-review-in-the-age-of-ai?WT.mc_id=AI-MVP-5003172&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;AI 让写代码更快，但并没有“杀死”代码审查；相反，它把“举证责任”变得更明确了：你可以让 AI 帮你更快地产出改动，但你仍然需要用证据证明它真的能跑、真的符合预期。&lt;/p&gt;&#xA;&lt;p&gt;作者 Addy Osmani 在文中给出的核心观点很直白：如果一个 Pull Request 里没有“它能工作”的证据（手动验证步骤、日志/截图、自动化测试结果等），那并不是在更快地交付，只是在把风险和返工推给下游。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>为 Azure Voice Live 构建可用于生产的 SIP 网关</title>
+				<link>https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/</link>
+				<pubDate>Sun, 04 Jan 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-01-04-building-a-production-ready-sip-gateway-for-azure-voice-live/</guid>
+				<description>&lt;p&gt;原文链接：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/from-zero-to-hero-building-a-production-ready-sip-gateway-for-azure-voice-live/4473405?WT.mc_id=AI-MVP-5003172&#34;&gt;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/from-zero-to-hero-building-a-production-ready-sip-gateway-for-azure-voice-live/4473405?WT.mc_id=AI-MVP-5003172&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260105102739-236de1e20b0f4b64a8b41a799b4589a0.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260105102739-236de1e20b0f4b64a8b41a799b4589a0.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;题图来源：Microsoft Tech Community / Microsoft Foundry Blog&lt;/em&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;引言&#34;&gt;引言&lt;/h2&gt;&#xA;&lt;p&gt;语音技术正在重塑人和机器的交互方式，让与 AI 的对话比以往更自然。随着 Voice Live API 的 public beta 发布，开发者拥有了构建低延迟、多模态语音体验的工具，在应用中可以做出很多新玩法。&lt;/p&gt;&#xA;&lt;p&gt;过去，想做一个语音机器人，往往需要把多个模型“串起来”：比如用 ASR（自动语音识别）模型（像 Whisper）做转写、再用文本模型做推理、最后用 TTS（文本转语音）模型生成语音输出。这条链路通常会带来明显延迟，并且在情感表达等细节上会有损失。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>为什么 Web AI Agent 比独立 LLM 更脆弱——以及我们应该如何真正修复它</title>
+				<link>https://beanhsiang.github.io/post/2026-01-01-why-web-ai-agents-are-more-vulnerable-than-standalone-llms-and-how-we-should-actually-fix-it/</link>
+				<pubDate>Thu, 01 Jan 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-01-01-why-web-ai-agents-are-more-vulnerable-than-standalone-llms-and-how-we-should-actually-fix-it/</guid>
+				<description>&lt;p&gt;Web AI Agent 代表了 AI 在真实系统落地方式的一次大转向：它不再只是“生成文本”，而是会观察实时网页、做决策、并执行真实动作（点击按钮、提交表单、在应用中导航）。能力的跃迁带来巨大价值，但也带来更本质的风险：它更暴露、更容易被利用，如果系统设计草率，后果会比纯文本聊天严重得多。&lt;/p&gt;&#xA;&lt;p&gt;下面的观点基于近期的安全分析：Web AI Agent 的关键问题不是“模型不够聪明”，而是“系统边界不够硬”。理解脆弱性从何而来、会以什么形态出现、以及应该怎样修复，对于任何在做 AI 产品/平台/研究系统的人都很关键。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>使用 Microsoft Agent Framework 与 Azure AI Foundry 为多智能体系统构建可观测性</title>
+				<link>https://beanhsiang.github.io/post/2025-12-12-observability-for-multi-agent-systems-with-microsoft-agent-framework-and-azure-ai-foundry/</link>
+				<pubDate>Fri, 12 Dec 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-12-12-observability-for-multi-agent-systems-with-microsoft-agent-framework-and-azure-ai-foundry/</guid>
+				<description>&lt;p&gt;智能体（Agentic）应用正在重塑企业自动化，但它们动态的工具链和“隐式推理”也让线上运行与排障变得格外棘手。本文整理并改写自 Microsoft Foundry Blog 的一篇文章，内容聚焦于：如何为基于 Microsoft Agent Framework 的服务接入 &lt;strong&gt;OpenTelemetry&lt;/strong&gt;，将 trace 投递到 &lt;strong&gt;Azure AI Foundry&lt;/strong&gt; 的可观测能力中，并建立一套实用工作流，用于在生产环境中调试、评估并持续改进多智能体行为。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>使用 Azure AI Foundry 监控生成式 AI 应用</title>
+				<link>https://beanhsiang.github.io/post/2025-12-08-monitoring-generative-ai-applications-with-azure-ai-foundry/</link>
+				<pubDate>Mon, 08 Dec 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-12-08-monitoring-generative-ai-applications-with-azure-ai-foundry/</guid>
+				<description>&lt;h2 id=&#34;-引言&#34;&gt;🧭 引言&lt;/h2&gt;&#xA;&lt;p&gt;监控 AI 应用，早就不只是盯着「是否在线」和「有没有报错」这么简单了。面对生成式 AI 的工作负载，团队还需要持续回答三个更关键的问题：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;AI 的输出到底“好不好”（质量、准确性、帮助性）&lt;/li&gt;&#xA;&lt;li&gt;运行成本是多少（尤其是 token 消耗与推理成本）&lt;/li&gt;&#xA;&lt;li&gt;是否足够安全、合规、可控（有无有害输出、策略违规等）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Microsoft 在 Azure AI Foundry 中提供了一套集成式的可观测能力，把 Application Insights、持续评估（continuous evaluation）与可自定义仪表板串起来，从而实现对 AI 应用端到端的可见性；同时也与 Azure Baseline Monitoring Alerts 的思路保持一致。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文</title>
+				<link>https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/</link>
+				<pubDate>Sat, 22 Nov 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260105115726-e614221e771e45749f7fc050ae0a4293.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260105115726-e614221e771e45749f7fc050ae0a4293.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;原文链接：https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework&amp;mdash;part-2/4471983?WT.mc_id=AI-MVP-5003172&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（上）：隐私优先的本地&#43;云端协同</title>
+				<link>https://beanhsiang.github.io/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/</link>
+				<pubDate>Fri, 21 Nov 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260105114656-3f580f262ff74ddd96bc8d6400074e74.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260105114656-3f580f262ff74ddd96bc8d6400074e74.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;原文链接：https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework&amp;mdash;part-1/4470813?WT.mc_id=AI-MVP-5003172&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>使用 Agent Framework 构建带人工审批的多智能体顺序工作流</title>
+				<link>https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/</link>
+				<pubDate>Fri, 31 Oct 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260107112735-5f20492722ae4b239416b97e0f27ff8a.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260107112735-5f20492722ae4b239416b97e0f27ff8a.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;题图来源：Microsoft Tech Community 原文页面（见文末链接）。&lt;/em&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;摘要&#34;&gt;摘要&lt;/h2&gt;&#xA;&lt;p&gt;在需要“高自动化 + 强审计/合规”的 AI 工作流里，人类审批（human-in-the-loop）往往是绕不过去的一环：既要让多智能体协作把流程跑起来，又要在关键动作（例如停机、触发维护）前强制停下来等人确认。&lt;/p&gt;&#xA;&lt;p&gt;Microsoft 在一篇示例文章中给出了一套脚本化方案：使用 Agent Framework 编排一个&lt;strong&gt;顺序（sequential）多智能体工作流&lt;/strong&gt;，底层调用 &lt;strong&gt;Azure AI Foundry 的持久化（persistent）agents&lt;/strong&gt;，并利用 **workflow checkpointing（检查点）**实现“暂停—等待审批—从检查点恢复继续执行”。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>使用 Microsoft Agent Framework 构建 Human-in-the-loop 的 AI 工作流</title>
+				<link>https://beanhsiang.github.io/post/2025-10-11-building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/</link>
+				<pubDate>Sat, 11 Oct 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-10-11-building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/</guid>
+				<description>&lt;p&gt;原文链接：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/4460342?WT.mc_id=AI-MVP-5003172&#34;&gt;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/4460342?WT.mc_id=AI-MVP-5003172&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260107121419-0f605ecc540d420ea89d4a7bd85c3179.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260107121419-0f605ecc540d420ea89d4a7bd85c3179.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;h2 id=&#34;一个把确定性编排与自主代理结合起来的欺诈检测示例&#34;&gt;一个把确定性编排与自主代理结合起来的欺诈检测示例&lt;/h2&gt;&#xA;&lt;p&gt;现代企业系统经常面临一个非常现实的问题：&lt;strong&gt;如何让 AI 的决策可靠、可解释，并且真正能在生产环境落地？&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;原文围绕一个“欺诈检测（Fraud Detection）”示例，展示了 Microsoft Agent Framework 如何把 AI 驱动的推理步骤放进一个可控的工作流里：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;工作流图（workflow graph）负责&lt;strong&gt;确定性编排&lt;/strong&gt;：控制执行顺序、并行与合流、容错与恢复&lt;/li&gt;&#xA;&lt;li&gt;专家代理（agents）负责&lt;strong&gt;LLM 推理&lt;/strong&gt;：在结构化/半结构化数据上做领域判断&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;完整实现代码仓库在这里：&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>将 Azure AI Foundry 与 Copilot Studio 集成:战略与技术概览</title>
+				<link>https://beanhsiang.github.io/post/2025-09-30-integrating-azure-ai-foundry-with-copilot-studio/</link>
+				<pubDate>Tue, 30 Sep 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-09-30-integrating-azure-ai-foundry-with-copilot-studio/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260108114743-347696f0249c4842ba1c0a110609bd2a.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Integrating Azure AI Foundry with Copilot Studio&#34; src=&#34;https://beanhsiang.github.io/uploads/20260108114743-347696f0249c4842ba1c0a110609bd2a.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;原文链接&lt;/strong&gt;: &lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/integrating-azure-ai-foundry-with-copilot-studio-a-strategic-and-technical-overv/4457370?WT.mc_id=AI-MVP-5003172&#34;&gt;Integrating Azure AI Foundry with Copilot Studio: A Strategic and Technical Overview&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;随着组织加速 AI 采用,对灵活、可扩展和安全的平台需求变得至关重要。我之前在文章《&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/navigating-ai-solutions-microsoft-copilot-studio-vs-azure-ai-foundry/4411678?WT.mc_id=AI-MVP-5003172&#34;&gt;导航 AI 解决方案:Microsoft Copilot Studio 与 Azure AI Foundry&lt;/a&gt;》中介绍过两种强大但截然不同的 AI 代理构建方法。Copilot Studio 提供了低代码/无代码界面以便快速部署,面向各类业务用户;而 Azure AI Foundry 则提供了专业代码环境,具备深度定制和编排能力,面向开发者群体。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Azure AI Foundry Agents:构建智能的、目标驱动的自主 AI 系统</title>
+				<link>https://beanhsiang.github.io/post/2025-09-05-azure-ai-foundry-agents-build-intelligent-goal-driven-ai-that-acts-autonomously/</link>
+				<pubDate>Fri, 05 Sep 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-09-05-azure-ai-foundry-agents-build-intelligent-goal-driven-ai-that-acts-autonomously/</guid>
+				<description>&lt;p&gt;&lt;a href=&#34;https://azure.microsoft.com/products/ai-foundry?WT.mc_id=AI-MVP-5003172&#34;&gt;Azure AI Foundry Agents&lt;/a&gt; 是 Azure AI Foundry 平台中的一项新功能,它让我们能够构建智能的、目标驱动的 AI 系统,这些系统可以自主行动以完成复杂的任务。&lt;/p&gt;&#xA;&lt;h2 id=&#34;什么是-ai-agent&#34;&gt;什么是 AI Agent?&lt;/h2&gt;&#xA;&lt;p&gt;在我使用 Azure AI Foundry 的过程中,我发现 AI Agent 与传统的 AI 应用有着本质的区别。传统的 AI 应用通常是响应式的——它们等待用户输入,处理请求,然后返回结果。而 AI Agent 则具有主动性,它们能够:&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>超越提示词：Agentic AI 如何重塑人机协作</title>
+				<link>https://beanhsiang.github.io/post/2025-08-21-beyond-prompts-agentic-ai-redefining-human-ai-collaboration/</link>
+				<pubDate>Thu, 21 Aug 2025 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-08-21-beyond-prompts-agentic-ai-redefining-human-ai-collaboration/</guid>
+				<description>&lt;p&gt;原文：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/beyond-prompts-how-agentic-ai-is-redefining-human-ai-collaboration/4445774?WT.mc_id=AI-MVP-5003172&#34;&gt;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/beyond-prompts-how-agentic-ai-is-redefining-human-ai-collaboration/4445774?WT.mc_id=AI-MVP-5003172&lt;/a&gt;（原文标注日期：2025-08-20）&lt;/p&gt;&#xA;&lt;p&gt;这篇来自 Microsoft Foundry Blog 的文章聚焦一个正在快速成型的趋势：从“写好提示词、等模型回答”的交互方式，转向“能够思考、规划、调用工具、并在反馈中调整”的 Agentic AI（智能体式 AI）。文章将其视为从被动助手到主动协作者的跃迁，并用一个学习助理的例子拆解了智能体系统的关键组成。&lt;/p&gt;&#xA;&lt;h2 id=&#34;从反应式到主动式&#34;&gt;从“反应式”到“主动式”&lt;/h2&gt;&#xA;&lt;p&gt;传统的 AI 使用方式高度依赖 prompt：用户提问，模型给出一次性回答。这类系统往往是&lt;strong&gt;反应式&lt;/strong&gt;的——更擅长单轮任务，缺少跨步骤的规划能力，也缺少在动态环境里自我调整的机制。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>AI 智能体 MCP 工具:使用 Azure AI Foundry SDK 快速开始 MCP 工具开发</title>
+				<link>https://beanhsiang.github.io/post/2025-08-12-ai-agent-mcp-tools-quickstart-to-mcp-tools-development-with-azure-ai-foundry-sdk/</link>
+				<pubDate>Tue, 12 Aug 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-08-12-ai-agent-mcp-tools-quickstart-to-mcp-tools-development-with-azure-ai-foundry-sdk/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260108114135-2319315ac0f04a8baaf4e00c0b02e022.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260108114135-2319315ac0f04a8baaf4e00c0b02e022.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;随着 AI 智能体变得越来越复杂,对与强大云端工具无缝集成的需求也在不断增长。我发现 Azure AI Foundry SDK 与 MCP(模型上下文协议)工具的结合,创造了一个强大的组合,让开发者能够轻松地构建、部署和管理智能代理。&lt;/p&gt;&#xA;&lt;h2 id=&#34;解决方案概述&#34;&gt;解决方案概述&lt;/h2&gt;&#xA;&lt;p&gt;我在使用 &lt;a href=&#34;https://github.com/ccoellomsft/AI-Foundry-Agent-MCP?WT.mc_id=AI-MVP-5003172&#34;&gt;AI-Foundry-Agent-MCP GitHub 仓库&lt;/a&gt;时发现,它为将 MCP 工具与 Azure AI Foundry SDK 集成提供了一个实用的解决方案。通过这个设置,我们可以:&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

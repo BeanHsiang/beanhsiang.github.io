@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>MCP on Innovation with tech</title>
-    <link>https://beanhsiang.github.io/tags/MCP/</link>
-    <description>Recent content in MCP on Innovation with tech</description>
-    <generator>Hugo</generator>
-    <language>zh-Hans</language>
-    <lastBuildDate>Thu, 24 Apr 2025 12:00:00 +0800</lastBuildDate>
-    <atom:link href="https://beanhsiang.github.io/tags/MCP/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>使用 PydanticAI 构建智能代理系统：从 MCP 到智能工单助手</title>
-      <link>https://beanhsiang.github.io/post/2025-04-24-using-pydanticai-for-agentic-development/</link>
-      <pubDate>Thu, 24 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-04-24-using-pydanticai-for-agentic-development/</guid>
-      <description>&lt;p&gt;在人工智能快速发展的今天，智能代理(Agentic AI) 成为了一个热门话题。本文将介绍如何使用 PydanticAI 构建智能代理系统，包括与 MCP(Model Context Protocol) 的集成以及一个实际的智能工单助手应用案例。&lt;/p&gt;&#xA;&lt;h2 id=&#34;pydanticai-与-mcp-简介&#34;&gt;PydanticAI 与 MCP 简介&lt;/h2&gt;&#xA;&lt;p&gt;PydanticAI 是一个强大的 Python 库，它允许开发者以类型安全的方式定义和使用 AI 代理。它与 Pydantic v2 完美集成，提供了清晰的数据验证和模式定义能力。而 MCP(Model Context Protocol) 则是一个标准化协议，用于定义 LLM 如何与工具交互。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>使用 TypeScript 构建 Azure AI Agent 的 MCP 服务器</title>
-      <link>https://beanhsiang.github.io/post/2025-04-14-use-typescript-to-build-an-mcp-server-for-azure-ai-agent/</link>
-      <pubDate>Mon, 14 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-04-14-use-typescript-to-build-an-mcp-server-for-azure-ai-agent/</guid>
-      <description>&lt;h2 id=&#34;简介&#34;&gt;简介&lt;/h2&gt;&#xA;&lt;p&gt;这篇文章将带你了解如何使用 TypeScript 构建一个 &lt;strong&gt;Model Context Protocol (MCP)&lt;/strong&gt; 服务器，以连接 Azure AI Agent 和 Claude Desktop 或其他支持 MCP 的客户端。通过本文，你将学习搭建服务器、配置连接以及以编程方式处理 AI Agent 的交互。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;为什么需要-mcp-服务器&#34;&gt;为什么需要 MCP 服务器？&lt;/h2&gt;&#xA;&lt;p&gt;Azure AI Agent 是 &lt;strong&gt;Azure AI Foundry&lt;/strong&gt; 生态系统的一部分，提供强大的对话式 AI 功能。然而，要将这些 Agent 集成到桌面应用程序中，往往需要定制化的解决方案。MCP 提供了一个标准化协议，可以无缝连接 &lt;strong&gt;Azure AI Agent&lt;/strong&gt; 和支持 MCP 的客户端（如 Claude Desktop）。&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>MCP on Innovation with tech</title>
+		<link>https://beanhsiang.github.io/tags/MCP/</link>
+		<description>Recent content in MCP on Innovation with tech</description>
+		<generator>Hugo</generator>
+		<language>zh-Hans</language>
+		
+		
+		
+		
+			<lastBuildDate>Thu, 24 Apr 2025 12:00:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://beanhsiang.github.io/tags/MCP/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>使用 PydanticAI 构建智能代理系统：从 MCP 到智能工单助手</title>
+				<link>https://beanhsiang.github.io/post/2025-04-24-using-pydanticai-for-agentic-development/</link>
+				<pubDate>Thu, 24 Apr 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-04-24-using-pydanticai-for-agentic-development/</guid>
+				<description>&lt;p&gt;在人工智能快速发展的今天，智能代理(Agentic AI) 成为了一个热门话题。本文将介绍如何使用 PydanticAI 构建智能代理系统，包括与 MCP(Model Context Protocol) 的集成以及一个实际的智能工单助手应用案例。&lt;/p&gt;&#xA;&lt;h2 id=&#34;pydanticai-与-mcp-简介&#34;&gt;PydanticAI 与 MCP 简介&lt;/h2&gt;&#xA;&lt;p&gt;PydanticAI 是一个强大的 Python 库，它允许开发者以类型安全的方式定义和使用 AI 代理。它与 Pydantic v2 完美集成，提供了清晰的数据验证和模式定义能力。而 MCP(Model Context Protocol) 则是一个标准化协议，用于定义 LLM 如何与工具交互。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>使用 TypeScript 构建 Azure AI Agent 的 MCP 服务器</title>
+				<link>https://beanhsiang.github.io/post/2025-04-14-use-typescript-to-build-an-mcp-server-for-azure-ai-agent/</link>
+				<pubDate>Mon, 14 Apr 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-04-14-use-typescript-to-build-an-mcp-server-for-azure-ai-agent/</guid>
+				<description>&lt;h2 id=&#34;简介&#34;&gt;简介&lt;/h2&gt;&#xA;&lt;p&gt;这篇文章将带你了解如何使用 TypeScript 构建一个 &lt;strong&gt;Model Context Protocol (MCP)&lt;/strong&gt; 服务器，以连接 Azure AI Agent 和 Claude Desktop 或其他支持 MCP 的客户端。通过本文，你将学习搭建服务器、配置连接以及以编程方式处理 AI Agent 的交互。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;为什么需要-mcp-服务器&#34;&gt;为什么需要 MCP 服务器？&lt;/h2&gt;&#xA;&lt;p&gt;Azure AI Agent 是 &lt;strong&gt;Azure AI Foundry&lt;/strong&gt; 生态系统的一部分，提供强大的对话式 AI 功能。然而，要将这些 Agent 集成到桌面应用程序中，往往需要定制化的解决方案。MCP 提供了一个标准化协议，可以无缝连接 &lt;strong&gt;Azure AI Agent&lt;/strong&gt; 和支持 MCP 的客户端（如 Claude Desktop）。&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

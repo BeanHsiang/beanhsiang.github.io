@@ -411,30 +411,30 @@
 <h2 id="生产部署audiocodes--asterisk">生产部署：Audiocodes + Asterisk</h2>
 <h3 id="为什么选择这种拓扑">为什么选择这种拓扑？</h3>
 <table>
-  <thead>
-      <tr>
-          <th>组件</th>
-          <th>角色</th>
-          <th>收益</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td><strong>Audiocodes SBC</strong></td>
-          <td>会话边界控制器</td>
-          <td>- NAT/防火墙穿透 - 安全（DOS 防护、加密） - 协议规范化 - 拓扑隐藏 - 媒体锚定（可选转码）</td>
-      </tr>
-      <tr>
-          <td><strong>Asterisk PBX</strong></td>
-          <td>SIP 服务器</td>
-          <td>- 呼叫路由与 IVR - 用户目录与鉴权 - 转接/保持/会议等高级呼叫能力 - CDR/分析 - 与企业电话系统集成</td>
-      </tr>
-      <tr>
-          <td><strong>Voice Live Gateway</strong></td>
-          <td>AI 对话端点</td>
-          <td>- 实时 AI 对话 - 自然语言理解 - 动态响应生成 - 多语言支持</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>组件</th>
+					<th>角色</th>
+					<th>收益</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Audiocodes SBC</strong></td>
+					<td>会话边界控制器</td>
+					<td>- NAT/防火墙穿透 - 安全（DOS 防护、加密） - 协议规范化 - 拓扑隐藏 - 媒体锚定（可选转码）</td>
+			</tr>
+			<tr>
+					<td><strong>Asterisk PBX</strong></td>
+					<td>SIP 服务器</td>
+					<td>- 呼叫路由与 IVR - 用户目录与鉴权 - 转接/保持/会议等高级呼叫能力 - CDR/分析 - 与企业电话系统集成</td>
+			</tr>
+			<tr>
+					<td><strong>Voice Live Gateway</strong></td>
+					<td>AI 对话端点</td>
+					<td>- 实时 AI 对话 - 自然语言理解 - 动态响应生成 - 多语言支持</td>
+			</tr>
+	</tbody>
 </table>
 <h3 id="网络架构">网络架构</h3>
 <pre tabindex="0"><code>                    Internet
@@ -645,178 +645,178 @@ WantedBy=multi-user.target
 <h2 id="配置指南">配置指南</h2>
 <h3 id="环境变量参考">环境变量参考</h3>
 <table>
-  <thead>
-      <tr>
-          <th>Variable</th>
-          <th>Description</th>
-          <th>Example</th>
-          <th>Required</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td><strong>Azure Voice Live</strong></td>
-          <td></td>
-          <td></td>
-          <td></td>
-      </tr>
-      <tr>
-          <td>AZURE_VOICELIVE_ENDPOINT</td>
-          <td>WebSocket endpoint URL</td>
-          <td>wss://myresource.cognitiveservices.azure.com/openai/realtime</td>
-          <td>✅</td>
-      </tr>
-      <tr>
-          <td>AZURE_VOICELIVE_API_KEY</td>
-          <td>API key (or use AAD)</td>
-          <td>abc123&hellip;</td>
-          <td>✅*</td>
-      </tr>
-      <tr>
-          <td>VOICE_LIVE_MODEL</td>
-          <td>Model identifier</td>
-          <td>gpt-4o</td>
-          <td>❌ (default: gpt-4o)</td>
-      </tr>
-      <tr>
-          <td>VOICE_LIVE_VOICE</td>
-          <td>TTS voice name</td>
-          <td>en-US-AvaNeural</td>
-          <td>❌</td>
-      </tr>
-      <tr>
-          <td>VOICE_LIVE_INSTRUCTIONS</td>
-          <td>System prompt</td>
-          <td>You are a helpful assistant</td>
-          <td>❌</td>
-      </tr>
-      <tr>
-          <td>VOICE_LIVE_MAX_RESPONSE_OUTPUT_TOKENS</td>
-          <td>Max tokens per response</td>
-          <td>200</td>
-          <td>❌</td>
-      </tr>
-      <tr>
-          <td>VOICE_LIVE_PROACTIVE_GREETING_ENABLED</td>
-          <td>Enable greeting on connect</td>
-          <td>true</td>
-          <td>❌</td>
-      </tr>
-      <tr>
-          <td>VOICE_LIVE_PROACTIVE_GREETING</td>
-          <td>Greeting message</td>
-          <td>Hello! How can I help?</td>
-          <td>❌</td>
-      </tr>
-      <tr>
-          <td><strong>SIP Configuration</strong></td>
-          <td></td>
-          <td></td>
-          <td></td>
-      </tr>
-      <tr>
-          <td>SIP_SERVER</td>
-          <td>Asterisk/PBX hostname</td>
-          <td>asterisk.example.com</td>
-          <td>✅**</td>
-      </tr>
-      <tr>
-          <td>SIP_PORT</td>
-          <td>SIP port</td>
-          <td>5060</td>
-          <td>❌ (default: 5060)</td>
-      </tr>
-      <tr>
-          <td>SIP_USER</td>
-          <td>SIP user URI</td>
-          <td><a href="mailto:bot@sip.example.com">bot@sip.example.com</a></td>
-          <td>✅**</td>
-      </tr>
-      <tr>
-          <td>AUTH_USER</td>
-          <td>Auth username</td>
-          <td>bot</td>
-          <td>✅**</td>
-      </tr>
-      <tr>
-          <td>AUTH_REALM</td>
-          <td>Auth realm</td>
-          <td>sip.example.com</td>
-          <td>✅**</td>
-      </tr>
-      <tr>
-          <td>AUTH_PASSWORD</td>
-          <td>Auth password</td>
-          <td>securepass</td>
-          <td>✅**</td>
-      </tr>
-      <tr>
-          <td>REGISTER_WITH_SIP_SERVER</td>
-          <td>Enable registration</td>
-          <td>true</td>
-          <td>❌ (default: false)</td>
-      </tr>
-      <tr>
-          <td>DISPLAY_NAME</td>
-          <td>Caller ID name</td>
-          <td>Voice Live Bot</td>
-          <td>❌</td>
-      </tr>
-      <tr>
-          <td><strong>Network Settings</strong></td>
-          <td></td>
-          <td></td>
-          <td></td>
-      </tr>
-      <tr>
-          <td>SIP_LOCAL_ADDRESS</td>
-          <td>Local bind address</td>
-          <td>0.0.0.0</td>
-          <td>❌ (default: 127.0.0.1)</td>
-      </tr>
-      <tr>
-          <td>SIP_VIA_ADDR</td>
-          <td>Via header IP</td>
-          <td>10.0.1.20</td>
-          <td>❌</td>
-      </tr>
-      <tr>
-          <td>MEDIA_ADDRESS</td>
-          <td>RTP bind address</td>
-          <td>10.0.1.20</td>
-          <td>❌</td>
-      </tr>
-      <tr>
-          <td>MEDIA_PORT</td>
-          <td>RTP port range start</td>
-          <td>10000</td>
-          <td>❌</td>
-      </tr>
-      <tr>
-          <td>MEDIA_PORT_COUNT</td>
-          <td>RTP port range count</td>
-          <td>1000</td>
-          <td>❌</td>
-      </tr>
-      <tr>
-          <td><strong>Logging</strong></td>
-          <td></td>
-          <td></td>
-          <td></td>
-      </tr>
-      <tr>
-          <td>LOG_LEVEL</td>
-          <td>Log verbosity</td>
-          <td>INFO</td>
-          <td>❌ (default: INFO)</td>
-      </tr>
-      <tr>
-          <td>VOICE_LIVE_LOG_FILE</td>
-          <td>Log file path</td>
-          <td>logs/gateway.log</td>
-          <td>❌</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>Variable</th>
+					<th>Description</th>
+					<th>Example</th>
+					<th>Required</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Azure Voice Live</strong></td>
+					<td></td>
+					<td></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>AZURE_VOICELIVE_ENDPOINT</td>
+					<td>WebSocket endpoint URL</td>
+					<td>wss://myresource.cognitiveservices.azure.com/openai/realtime</td>
+					<td>✅</td>
+			</tr>
+			<tr>
+					<td>AZURE_VOICELIVE_API_KEY</td>
+					<td>API key (or use AAD)</td>
+					<td>abc123&hellip;</td>
+					<td>✅*</td>
+			</tr>
+			<tr>
+					<td>VOICE_LIVE_MODEL</td>
+					<td>Model identifier</td>
+					<td>gpt-4o</td>
+					<td>❌ (default: gpt-4o)</td>
+			</tr>
+			<tr>
+					<td>VOICE_LIVE_VOICE</td>
+					<td>TTS voice name</td>
+					<td>en-US-AvaNeural</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>VOICE_LIVE_INSTRUCTIONS</td>
+					<td>System prompt</td>
+					<td>You are a helpful assistant</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>VOICE_LIVE_MAX_RESPONSE_OUTPUT_TOKENS</td>
+					<td>Max tokens per response</td>
+					<td>200</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>VOICE_LIVE_PROACTIVE_GREETING_ENABLED</td>
+					<td>Enable greeting on connect</td>
+					<td>true</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>VOICE_LIVE_PROACTIVE_GREETING</td>
+					<td>Greeting message</td>
+					<td>Hello! How can I help?</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td><strong>SIP Configuration</strong></td>
+					<td></td>
+					<td></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>SIP_SERVER</td>
+					<td>Asterisk/PBX hostname</td>
+					<td>asterisk.example.com</td>
+					<td>✅**</td>
+			</tr>
+			<tr>
+					<td>SIP_PORT</td>
+					<td>SIP port</td>
+					<td>5060</td>
+					<td>❌ (default: 5060)</td>
+			</tr>
+			<tr>
+					<td>SIP_USER</td>
+					<td>SIP user URI</td>
+					<td><a href="mailto:bot@sip.example.com">bot@sip.example.com</a></td>
+					<td>✅**</td>
+			</tr>
+			<tr>
+					<td>AUTH_USER</td>
+					<td>Auth username</td>
+					<td>bot</td>
+					<td>✅**</td>
+			</tr>
+			<tr>
+					<td>AUTH_REALM</td>
+					<td>Auth realm</td>
+					<td>sip.example.com</td>
+					<td>✅**</td>
+			</tr>
+			<tr>
+					<td>AUTH_PASSWORD</td>
+					<td>Auth password</td>
+					<td>securepass</td>
+					<td>✅**</td>
+			</tr>
+			<tr>
+					<td>REGISTER_WITH_SIP_SERVER</td>
+					<td>Enable registration</td>
+					<td>true</td>
+					<td>❌ (default: false)</td>
+			</tr>
+			<tr>
+					<td>DISPLAY_NAME</td>
+					<td>Caller ID name</td>
+					<td>Voice Live Bot</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td><strong>Network Settings</strong></td>
+					<td></td>
+					<td></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>SIP_LOCAL_ADDRESS</td>
+					<td>Local bind address</td>
+					<td>0.0.0.0</td>
+					<td>❌ (default: 127.0.0.1)</td>
+			</tr>
+			<tr>
+					<td>SIP_VIA_ADDR</td>
+					<td>Via header IP</td>
+					<td>10.0.1.20</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>MEDIA_ADDRESS</td>
+					<td>RTP bind address</td>
+					<td>10.0.1.20</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>MEDIA_PORT</td>
+					<td>RTP port range start</td>
+					<td>10000</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td>MEDIA_PORT_COUNT</td>
+					<td>RTP port range count</td>
+					<td>1000</td>
+					<td>❌</td>
+			</tr>
+			<tr>
+					<td><strong>Logging</strong></td>
+					<td></td>
+					<td></td>
+					<td></td>
+			</tr>
+			<tr>
+					<td>LOG_LEVEL</td>
+					<td>Log verbosity</td>
+					<td>INFO</td>
+					<td>❌ (default: INFO)</td>
+			</tr>
+			<tr>
+					<td>VOICE_LIVE_LOG_FILE</td>
+					<td>Log file path</td>
+					<td>logs/gateway.log</td>
+					<td>❌</td>
+			</tr>
+	</tbody>
 </table>
 <p>*Either <code>AZURE_VOICELIVE_API_KEY</code> or AAD environment variables (<code>AZURE_CLIENT_ID</code>, <code>AZURE_TENANT_ID</code>, <code>AZURE_CLIENT_SECRET</code>) are required.</p>
 <p>**Required only when <code>REGISTER_WITH_SIP_SERVER=true</code>.</p>
@@ -874,45 +874,45 @@ VOICE_LIVE_LOG_FILE=logs/gateway.log
 </ol>
 <h3 id="延迟预算latency-budget">延迟预算（Latency Budget）</h3>
 <table>
-  <thead>
-      <tr>
-          <th>Component</th>
-          <th>Typical Latency</th>
-          <th>Notes</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td><strong>Network (caller → gateway)</strong></td>
-          <td>10-50ms</td>
-          <td>Depends on ISP, distance</td>
-      </tr>
-      <tr>
-          <td><strong>SIP/RTP processing</strong></td>
-          <td>&lt;5ms</td>
-          <td>pjproject is highly optimized</td>
-      </tr>
-      <tr>
-          <td><strong>Audio resampling</strong></td>
-          <td>&lt;2ms</td>
-          <td>scipy.resample_poly is efficient</td>
-      </tr>
-      <tr>
-          <td><strong>WebSocket (gateway → Azure)</strong></td>
-          <td>20-80ms</td>
-          <td>Depends on region, network</td>
-      </tr>
-      <tr>
-          <td><strong>Voice Live processing</strong></td>
-          <td>200-500ms</td>
-          <td>STT + LLM inference + TTS</td>
-      </tr>
-      <tr>
-          <td><strong>Total round-trip</strong></td>
-          <td><strong>250-650ms</strong></td>
-          <td>Perceived as near real-time</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>Component</th>
+					<th>Typical Latency</th>
+					<th>Notes</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>Network (caller → gateway)</strong></td>
+					<td>10-50ms</td>
+					<td>Depends on ISP, distance</td>
+			</tr>
+			<tr>
+					<td><strong>SIP/RTP processing</strong></td>
+					<td>&lt;5ms</td>
+					<td>pjproject is highly optimized</td>
+			</tr>
+			<tr>
+					<td><strong>Audio resampling</strong></td>
+					<td>&lt;2ms</td>
+					<td>scipy.resample_poly is efficient</td>
+			</tr>
+			<tr>
+					<td><strong>WebSocket (gateway → Azure)</strong></td>
+					<td>20-80ms</td>
+					<td>Depends on region, network</td>
+			</tr>
+			<tr>
+					<td><strong>Voice Live processing</strong></td>
+					<td>200-500ms</td>
+					<td>STT + LLM inference + TTS</td>
+			</tr>
+			<tr>
+					<td><strong>Total round-trip</strong></td>
+					<td><strong>250-650ms</strong></td>
+					<td>Perceived as near real-time</td>
+			</tr>
+	</tbody>
 </table>
 <p><strong>优化建议</strong>：</p>
 <ol>
@@ -923,55 +923,55 @@ VOICE_LIVE_LOG_FILE=logs/gateway.log
 </ol>
 <h3 id="关键日志事件key-log-events">关键日志事件（Key Log Events）</h3>
 <table>
-  <thead>
-      <tr>
-          <th>Event</th>
-          <th>Meaning</th>
-          <th>Action</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>sip.agent_started</td>
-          <td>Gateway listening</td>
-          <td>✅ Normal</td>
-      </tr>
-      <tr>
-          <td>sip.incoming_call</td>
-          <td>New call received</td>
-          <td>✅ Normal</td>
-      </tr>
-      <tr>
-          <td>sip.media_active</td>
-          <td>Audio bridge established</td>
-          <td>✅ Normal</td>
-      </tr>
-      <tr>
-          <td>voicelive.connected</td>
-          <td>WebSocket connected</td>
-          <td>✅ Normal</td>
-      </tr>
-      <tr>
-          <td>voicelive.audio_delta</td>
-          <td>AI audio chunk received</td>
-          <td>✅ Normal</td>
-      </tr>
-      <tr>
-          <td>voicelive.event_error</td>
-          <td>Voice Live API error</td>
-          <td>⚠️ Check API key, quota</td>
-      </tr>
-      <tr>
-          <td>media.enqueue_failed</td>
-          <td>Audio queue full</td>
-          <td>⚠️ CPU overload or slow network</td>
-      </tr>
-      <tr>
-          <td>sip.thread_error</td>
-          <td>pjsua crash</td>
-          <td>🔴 Restart gateway</td>
-      </tr>
-  </tbody>
+	<thead>
+			<tr>
+					<th>Event</th>
+					<th>Meaning</th>
+					<th>Action</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>sip.agent_started</td>
+					<td>Gateway listening</td>
+					<td>✅ Normal</td>
+			</tr>
+			<tr>
+					<td>sip.incoming_call</td>
+					<td>New call received</td>
+					<td>✅ Normal</td>
+			</tr>
+			<tr>
+					<td>sip.media_active</td>
+					<td>Audio bridge established</td>
+					<td>✅ Normal</td>
+			</tr>
+			<tr>
+					<td>voicelive.connected</td>
+					<td>WebSocket connected</td>
+					<td>✅ Normal</td>
+			</tr>
+			<tr>
+					<td>voicelive.audio_delta</td>
+					<td>AI audio chunk received</td>
+					<td>✅ Normal</td>
+			</tr>
+			<tr>
+					<td>voicelive.event_error</td>
+					<td>Voice Live API error</td>
+					<td>⚠️ Check API key, quota</td>
+			</tr>
+			<tr>
+					<td>media.enqueue_failed</td>
+					<td>Audio queue full</td>
+					<td>⚠️ CPU overload or slow network</td>
+			</tr>
+			<tr>
+					<td>sip.thread_error</td>
+					<td>pjsua crash</td>
+					<td>🔴 Restart gateway</td>
+			</tr>
+	</tbody>
 </table>
 <h3 id="常见问题common-issues">常见问题（Common Issues）</h3>
 <h4 id="1-听不到来电方音频">1. <strong>听不到来电方音频</strong></h4>
@@ -1223,6 +1223,10 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/" title="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载" target="_blank">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/" title="Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略" target="_blank">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a>
     </li>
     
@@ -1258,10 +1262,6 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
         <a href="https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/" title="我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色" target="_blank">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/" title="如何通过 Entra ID 身份验证使用 Microsoft Foundry" target="_blank">如何通过 Entra ID 身份验证使用 Microsoft Foundry</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -1281,7 +1281,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (24)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (25)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

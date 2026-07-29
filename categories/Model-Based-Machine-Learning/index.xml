@@ -1,75 +1,80 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Model-Based Machine Learning on Innovation with tech</title>
-    <link>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</link>
-    <description>Recent content in Model-Based Machine Learning on Innovation with tech</description>
-    <generator>Hugo</generator>
-    <language>zh-Hans</language>
-    <lastBuildDate>Tue, 06 Jan 2026 10:00:00 +0800</lastBuildDate>
-    <atom:link href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>[译]基于模型的机器学习 - 第二章 评估人们的技能</title>
-      <link>https://beanhsiang.github.io/post/2026-01-06-mbml-learning-skills/</link>
-      <pubDate>Tue, 06 Jan 2026 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-01-06-mbml-learning-skills/</guid>
-      <description>&lt;blockquote&gt;&#xA;&lt;p&gt;在我们的一生中，我们不断评估周围人的技能和能力。我应该雇用谁？谁应该在团队中比赛？我可以向谁寻求帮助？我如何最好地教导这个人？综合我们对某人的所有了解，并弄清楚他们能做什么和不能做什么，这对我们大多数人来说都是很自然的。但是我们如何使用基于模型的机器学习来自动完成这项工作呢？&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/mbml-learning-skills-man-taking-test.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/mbml-learning-skills-man-taking-test.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;在本章中，我们将开发我们的第一个针对真实世界数据的模型。我们将解决评估需要特定技能的工作候选人的问题。其想法是候选人将参加多项选择测试，我们将使用基于模型的机器学习来确定每个候选人具有哪些技能（以及具有什么概率），这些信息基于他们在测试中的答案。然后，我们可以使用这些信息来执行诸如选择很可能具有一组必要技能的候选人的初选名单等任务。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>[译]基于模型的机器学习 - 1.4 扩展模型</title>
-      <link>https://beanhsiang.github.io/post/2026-01-05-mbml-murder-mystery_extending_the_model/</link>
-      <pubDate>Mon, 05 Jan 2026 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2026-01-05-mbml-murder-mystery_extending_the_model/</guid>
-      <description>&lt;p&gt;贝叶斯博士掏出她可靠的放大镜，继续在犯罪现场调查。她在布莱克先生尸体附近的地板上，发现了一根落在血泊上的头发。“啊哈！”贝叶斯博士惊呼，“这根头发一定属于谋杀发生时在房间里的人！”她仔细观察这根头发，发现它既不是奥本小姐那一头鲜艳红发的色泽，也不是受害者乌黑的头发，而是格雷少校那种沉稳的银灰色！&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>[译]基于模型的机器学习 - 1.3 谋杀模型</title>
-      <link>https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder/</link>
-      <pubDate>Mon, 19 May 2025 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder/</guid>
-      <description>&lt;h2 id=&#34;13-谋杀模型&#34;&gt;1.3 谋杀模型&lt;/h2&gt;&#xA;&lt;p&gt;为了侦破谋杀案，我们需要整合更多来自犯罪现场的证据。每一条新证据都将为我们的联合分布添加一个新的随机变量。为了管理这个不断增长的变量数量，我们现在将引入本书的核心概念：概率模型。概率模型包括：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;一组随机变量，&lt;/li&gt;&#xA;&lt;li&gt;这些变量上的一个联合概率分布（即一个为这些变量的每种配置分配一个概率的分布，使得所有可能配置的概率总和为1）。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;一旦我们有了概率模型，我们就可以对它包含的变量进行推理，进行预测，了解一些随机变量在给定其他变量值的情况下的值，并且通常可以回答任何可以用模型中包含的随机变量来陈述的可能问题。这使得概率模型成为进行机器学习的极其强大的工具。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>[译]基于模型的机器学习 - 1.2 更新我们的可信部分</title>
-      <link>https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs/</link>
-      <pubDate>Mon, 12 May 2025 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs/</guid>
-      <description>&lt;p&gt;贝叶斯博士仔细搜查了图书馆，在书柜里发现了一颗子弹。“嗯，有意思，”她说，“我想这可能是一条重要的线索。”&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/shutterstock_2853794_shell_cropped_print_resolution.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Image&#34; src=&#34;https://beanhsiang.github.io/uploads/shutterstock_2853794_shell_cropped_print_resolution.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;所以看起来凶器是左轮手枪，而不是匕首。我们的直觉是，这条新证据更强烈地指向格雷少校，而不是奥本小姐，因为格雷少校凭借其年龄和军事背景，比奥本小姐更有可能拥有使用左轮手枪的经验。但我们如何利用这些信息呢？&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>[译]基于模型的机器学习 - 1.1 整合证据</title>
-      <link>https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/</link>
-      <pubDate>Mon, 28 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/</guid>
-      <description>&lt;p&gt;贝叶斯博士彻底搜查了整个豪宅。她发现可用的武器只有一把装饰性匕首和一把旧军用左轮手枪。&amp;ldquo;凶器一定是其中之一&amp;rdquo;，她得出结论。&lt;/p&gt;&#xA;&lt;p&gt;到目前为止，我们只考虑了一个&lt;strong&gt;随机变量&lt;/strong&gt;：&lt;code&gt;murderer&lt;/code&gt;（凶手）。但现在我们有了关于可能凶器的新信息，我们可以引入一个新的&lt;strong&gt;随机变量&lt;/strong&gt; &lt;code&gt;weapon&lt;/code&gt;（武器）来表示凶器的选择。这个新变量可以取两个值：&lt;code&gt;revolver&lt;/code&gt;（左轮手枪）或 &lt;code&gt;dagger&lt;/code&gt;（匕首）。有了这个新变量，下一步就是使用&lt;strong&gt;概率&lt;/strong&gt;来表达它与我们现有的 &lt;code&gt;murderer&lt;/code&gt; 变量之间的关系。这将让我们能够推理这些变量如何相互影响，并在破案中取得进展。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>[译]基于模型的机器学习 - 第一章 谋杀之谜</title>
-      <link>https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery/</link>
-      <pubDate>Tue, 22 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery/</guid>
-      <description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/shutterstock_101951590_dark_and_stormy_print_resolution.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;谋杀之谜&#34; src=&#34;https://beanhsiang.github.io/uploads/shutterstock_101951590_dark_and_stormy_print_resolution.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;当老都铎王朝豪宅的午夜钟声敲响时，一场狂风暴雨嘎嘎作响地敲响了百叶窗，房子里充满了雷声。布莱克先生的尸体倒在图书馆的地板上，鲜血仍在从致命伤口中渗出。很快赶到现场的是著名的侦探贝叶斯博士，他观察到谋杀时豪宅里只有另外两个人。那么是谁犯下了这种卑鄙的罪行呢？是格雷少校那根正直的柱子吗？还是神秘而诱人的蛇蝎美人奥本小姐？&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>[译]基于模型的机器学习 - 如何用机器学习解决我的问题？</title>
-      <link>https://beanhsiang.github.io/post/2025-04-21-mbml-introduction/</link>
-      <pubDate>Mon, 21 Apr 2025 12:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-04-21-mbml-introduction/</guid>
-      <description>&lt;p&gt;作为机器学习研究人员，我们几乎每天都会被问到这样一个问题：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&amp;ldquo;机器学习如何解决我的问题？&amp;rdquo;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;在本书中，我们将通过实例来回答这个问题。我们不仅仅列举机器学习技术和概念，而是通过一系列案例研究，从问题陈述到工作解决方案的全过程来说明。在解决每个问题的过程中，我们会逐步解释所涉及的机器学习概念。我们展示的案例研究都是来自微软的真实例子，以及一个介绍核心概念的初始案例研究。我们还会探讨在每个案例研究中遇到的实际问题，以及它们是如何被发现、诊断和解决的。我们的目标不仅是解释机器学习方法是什么，还要说明如何创建、调试和改进它们来解决你的问题。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>[译]基于模型的机器学习 - 前言</title>
-      <link>https://beanhsiang.github.io/post/2025-04-20-mbml-preface/</link>
-      <pubDate>Sun, 20 Apr 2025 11:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-04-20-mbml-preface/</guid>
-      <description>&lt;p&gt;如今，机器学习正被应用于越来越多的领域，面临着各种各样的问题。在进行机器学习时，一个根本性的挑战是将某种机器学习技术的抽象数学与具体的现实问题联系起来。本书通过“基于模型的机器学习”方法来应对这一挑战。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;基于模型的机器学习&lt;/strong&gt;是一种关注于理解机器学习系统中所蕴含假设及其对系统行为影响的方法。其实践过程是将对现实世界的假设与实现机器学习所需的详细算法数学分离开来。这种方法不仅有助于理解机器学习系统的行为，也便于与他人沟通。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>[译]基于模型的机器学习 - 目录</title>
-      <link>https://beanhsiang.github.io/post/2025-04-20-mbml-table-of-contents/</link>
-      <pubDate>Sun, 20 Apr 2025 10:00:00 +0800</pubDate>
-      <guid>https://beanhsiang.github.io/post/2025-04-20-mbml-table-of-contents/</guid>
-      <description>&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-20-mbml-preface&#34;&gt;前言&lt;/a&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;本书简介、适用读者及阅读方法&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;如何用机器学习解决我的问题？&lt;/a&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;什么是基于模型的机器学习及其如何帮助解决问题&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery&#34;&gt;谋杀之谜&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;通过解决一起谋杀案介绍基于模型的机器学习的核心概念&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;关键词：概率、随机变量、概率推断、概率模型、因子图、贝叶斯定理&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;1.1 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence&#34;&gt;整合证据&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;1.2 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs&#34;&gt;更新我们的可信部分&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;1.3 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder&#34;&gt;谋杀模型&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;1.4 &lt;a href=&#34;https://beanhsiang.github.io/post/2026-01-05-mbml-murder-mystery_extending_the_model&#34;&gt;扩展模型&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;ol start=&#34;2&#34;&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2026-01-06-mbml-learning-skills&#34;&gt;评估人的技能&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;基于模型的机器学习的第一个应用：根据测试答案评估一个人具备哪些技能&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;关键词：消息传递算法、循环置信传播、可视化、评估指标、ROC曲线&lt;/p&gt;</description>
-    </item>
-  </channel>
+	<channel>
+		<title>Model-Based Machine Learning on Innovation with tech</title>
+		<link>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</link>
+		<description>Recent content in Model-Based Machine Learning on Innovation with tech</description>
+		<generator>Hugo</generator>
+		<language>zh-Hans</language>
+		
+		
+		
+		
+			<lastBuildDate>Tue, 06 Jan 2026 10:00:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>[译]基于模型的机器学习 - 第二章 评估人们的技能</title>
+				<link>https://beanhsiang.github.io/post/2026-01-06-mbml-learning-skills/</link>
+				<pubDate>Tue, 06 Jan 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-01-06-mbml-learning-skills/</guid>
+				<description>&lt;blockquote&gt;&#xA;&lt;p&gt;在我们的一生中，我们不断评估周围人的技能和能力。我应该雇用谁？谁应该在团队中比赛？我可以向谁寻求帮助？我如何最好地教导这个人？综合我们对某人的所有了解，并弄清楚他们能做什么和不能做什么，这对我们大多数人来说都是很自然的。但是我们如何使用基于模型的机器学习来自动完成这项工作呢？&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/mbml-learning-skills-man-taking-test.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/mbml-learning-skills-man-taking-test.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;在本章中，我们将开发我们的第一个针对真实世界数据的模型。我们将解决评估需要特定技能的工作候选人的问题。其想法是候选人将参加多项选择测试，我们将使用基于模型的机器学习来确定每个候选人具有哪些技能（以及具有什么概率），这些信息基于他们在测试中的答案。然后，我们可以使用这些信息来执行诸如选择很可能具有一组必要技能的候选人的初选名单等任务。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 1.4 扩展模型</title>
+				<link>https://beanhsiang.github.io/post/2026-01-05-mbml-murder-mystery_extending_the_model/</link>
+				<pubDate>Mon, 05 Jan 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-01-05-mbml-murder-mystery_extending_the_model/</guid>
+				<description>&lt;p&gt;贝叶斯博士掏出她可靠的放大镜，继续在犯罪现场调查。她在布莱克先生尸体附近的地板上，发现了一根落在血泊上的头发。“啊哈！”贝叶斯博士惊呼，“这根头发一定属于谋杀发生时在房间里的人！”她仔细观察这根头发，发现它既不是奥本小姐那一头鲜艳红发的色泽，也不是受害者乌黑的头发，而是格雷少校那种沉稳的银灰色！&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 1.3 谋杀模型</title>
+				<link>https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder/</link>
+				<pubDate>Mon, 19 May 2025 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder/</guid>
+				<description>&lt;h2 id=&#34;13-谋杀模型&#34;&gt;1.3 谋杀模型&lt;/h2&gt;&#xA;&lt;p&gt;为了侦破谋杀案，我们需要整合更多来自犯罪现场的证据。每一条新证据都将为我们的联合分布添加一个新的随机变量。为了管理这个不断增长的变量数量，我们现在将引入本书的核心概念：概率模型。概率模型包括：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;一组随机变量，&lt;/li&gt;&#xA;&lt;li&gt;这些变量上的一个联合概率分布（即一个为这些变量的每种配置分配一个概率的分布，使得所有可能配置的概率总和为1）。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;一旦我们有了概率模型，我们就可以对它包含的变量进行推理，进行预测，了解一些随机变量在给定其他变量值的情况下的值，并且通常可以回答任何可以用模型中包含的随机变量来陈述的可能问题。这使得概率模型成为进行机器学习的极其强大的工具。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 1.2 更新我们的可信部分</title>
+				<link>https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs/</link>
+				<pubDate>Mon, 12 May 2025 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs/</guid>
+				<description>&lt;p&gt;贝叶斯博士仔细搜查了图书馆，在书柜里发现了一颗子弹。“嗯，有意思，”她说，“我想这可能是一条重要的线索。”&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/shutterstock_2853794_shell_cropped_print_resolution.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Image&#34; src=&#34;https://beanhsiang.github.io/uploads/shutterstock_2853794_shell_cropped_print_resolution.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;所以看起来凶器是左轮手枪，而不是匕首。我们的直觉是，这条新证据更强烈地指向格雷少校，而不是奥本小姐，因为格雷少校凭借其年龄和军事背景，比奥本小姐更有可能拥有使用左轮手枪的经验。但我们如何利用这些信息呢？&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 1.1 整合证据</title>
+				<link>https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/</link>
+				<pubDate>Mon, 28 Apr 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence/</guid>
+				<description>&lt;p&gt;贝叶斯博士彻底搜查了整个豪宅。她发现可用的武器只有一把装饰性匕首和一把旧军用左轮手枪。&amp;ldquo;凶器一定是其中之一&amp;rdquo;，她得出结论。&lt;/p&gt;&#xA;&lt;p&gt;到目前为止，我们只考虑了一个&lt;strong&gt;随机变量&lt;/strong&gt;：&lt;code&gt;murderer&lt;/code&gt;（凶手）。但现在我们有了关于可能凶器的新信息，我们可以引入一个新的&lt;strong&gt;随机变量&lt;/strong&gt; &lt;code&gt;weapon&lt;/code&gt;（武器）来表示凶器的选择。这个新变量可以取两个值：&lt;code&gt;revolver&lt;/code&gt;（左轮手枪）或 &lt;code&gt;dagger&lt;/code&gt;（匕首）。有了这个新变量，下一步就是使用&lt;strong&gt;概率&lt;/strong&gt;来表达它与我们现有的 &lt;code&gt;murderer&lt;/code&gt; 变量之间的关系。这将让我们能够推理这些变量如何相互影响，并在破案中取得进展。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 第一章 谋杀之谜</title>
+				<link>https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery/</link>
+				<pubDate>Tue, 22 Apr 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/shutterstock_101951590_dark_and_stormy_print_resolution.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;谋杀之谜&#34; src=&#34;https://beanhsiang.github.io/uploads/shutterstock_101951590_dark_and_stormy_print_resolution.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;当老都铎王朝豪宅的午夜钟声敲响时，一场狂风暴雨嘎嘎作响地敲响了百叶窗，房子里充满了雷声。布莱克先生的尸体倒在图书馆的地板上，鲜血仍在从致命伤口中渗出。很快赶到现场的是著名的侦探贝叶斯博士，他观察到谋杀时豪宅里只有另外两个人。那么是谁犯下了这种卑鄙的罪行呢？是格雷少校那根正直的柱子吗？还是神秘而诱人的蛇蝎美人奥本小姐？&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 如何用机器学习解决我的问题？</title>
+				<link>https://beanhsiang.github.io/post/2025-04-21-mbml-introduction/</link>
+				<pubDate>Mon, 21 Apr 2025 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-04-21-mbml-introduction/</guid>
+				<description>&lt;p&gt;作为机器学习研究人员，我们几乎每天都会被问到这样一个问题：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&amp;ldquo;机器学习如何解决我的问题？&amp;rdquo;&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;在本书中，我们将通过实例来回答这个问题。我们不仅仅列举机器学习技术和概念，而是通过一系列案例研究，从问题陈述到工作解决方案的全过程来说明。在解决每个问题的过程中，我们会逐步解释所涉及的机器学习概念。我们展示的案例研究都是来自微软的真实例子，以及一个介绍核心概念的初始案例研究。我们还会探讨在每个案例研究中遇到的实际问题，以及它们是如何被发现、诊断和解决的。我们的目标不仅是解释机器学习方法是什么，还要说明如何创建、调试和改进它们来解决你的问题。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 前言</title>
+				<link>https://beanhsiang.github.io/post/2025-04-20-mbml-preface/</link>
+				<pubDate>Sun, 20 Apr 2025 11:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-04-20-mbml-preface/</guid>
+				<description>&lt;p&gt;如今，机器学习正被应用于越来越多的领域，面临着各种各样的问题。在进行机器学习时，一个根本性的挑战是将某种机器学习技术的抽象数学与具体的现实问题联系起来。本书通过“基于模型的机器学习”方法来应对这一挑战。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;基于模型的机器学习&lt;/strong&gt;是一种关注于理解机器学习系统中所蕴含假设及其对系统行为影响的方法。其实践过程是将对现实世界的假设与实现机器学习所需的详细算法数学分离开来。这种方法不仅有助于理解机器学习系统的行为，也便于与他人沟通。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 目录</title>
+				<link>https://beanhsiang.github.io/post/2025-04-20-mbml-table-of-contents/</link>
+				<pubDate>Sun, 20 Apr 2025 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2025-04-20-mbml-table-of-contents/</guid>
+				<description>&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-20-mbml-preface&#34;&gt;前言&lt;/a&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;本书简介、适用读者及阅读方法&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;如何用机器学习解决我的问题？&lt;/a&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;什么是基于模型的机器学习及其如何帮助解决问题&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery&#34;&gt;谋杀之谜&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;通过解决一起谋杀案介绍基于模型的机器学习的核心概念&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;关键词：概率、随机变量、概率推断、概率模型、因子图、贝叶斯定理&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;1.1 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-28-mbml-murder-mystery_incorporating_evidence&#34;&gt;整合证据&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;1.2 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs&#34;&gt;更新我们的可信部分&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;1.3 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder&#34;&gt;谋杀模型&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;1.4 &lt;a href=&#34;https://beanhsiang.github.io/post/2026-01-05-mbml-murder-mystery_extending_the_model&#34;&gt;扩展模型&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;ol start=&#34;2&#34;&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://beanhsiang.github.io/post/2026-01-06-mbml-learning-skills&#34;&gt;评估人的技能&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;基于模型的机器学习的第一个应用：根据测试答案评估一个人具备哪些技能&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;关键词：消息传递算法、循环置信传播、可视化、评估指标、ROC曲线&lt;/p&gt;</description>
+			</item>
+	</channel>
 </rss>

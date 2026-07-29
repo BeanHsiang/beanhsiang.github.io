@@ -101,12 +101,12 @@
         
         
         <div class="post-content">
-            <p>最近我在梳理自家 GenAI 平台的模型调度方案时，重新研究了 Microsoft Foundry 里的 Model Router。它把&quot;每个请求该用哪个模型&quot;这件事从应用层的琐碎逻辑，变成了平台层可以治理的一件事。下面把我的理解和实践记录一下，原文可以参考 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/4514440?WT.mc_id=AI-MVP-5003172">Architecting Cost-Aware LLM Workloads with Model Router in Microsoft Foundry</a>。</p>
-<p>一句话概括我关注的点：把多模型路由收敛到一个受治理的部署里，自带故障转移、数据驻留边界强制，以及在 18 个底层 LLM 之间按每条 prompt 做成本/质量权衡。</p>
+            <p>前段时间在整理自家 GenAI 平台的模型调度方案，我又把 Microsoft Foundry 的 Model Router 翻出来仔细看了一遍。以前&quot;这个请求该走哪个模型&quot;是塞在应用代码里的一堆 if-else，现在它能被挪到平台层统一管起来。这篇就把我看下来的心得和踩过的点记一记，原文在这儿：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/4514440?WT.mc_id=AI-MVP-5003172">Architecting Cost-Aware LLM Workloads with Model Router in Microsoft Foundry</a>。</p>
+<p>我最在意的其实就一件事：把多模型路由收进一个能被治理的部署里。故障转移它自己扛，数据驻留边界它帮你守住，18 个底层 LLM 之间该怎么在成本和质量之间权衡，也是按每一条 prompt 现算的。</p>
 <h2 id="架构上的真问题">架构上的真问题</h2>
-<p>只要 GenAI 平台稍微复杂一点，你最后一定会同时养一堆模型。便宜的模型跑分类和轻量对话，推理模型处理多步任务，前沿模型啃硬骨头，还有针对代码、视觉、长上下文的专用模型。</p>
-<p>真正的问题从来不是&quot;哪个模型最好&quot;，而是：怎么在规模化的前提下，为每个请求分派对的模型，同时不丢掉治理和可观测性？</p>
-<p>我把常见的几种做法列出来对比过，每一种都有自己的坑：</p>
+<p>GenAI 平台只要一复杂，你手里迟早会同时养着一堆模型。分类和闲聊用便宜的，多步任务交给推理模型，真正的硬骨头才上前沿模型，另外还有一票专门啃代码、图像、长上下文的。</p>
+<p>所以难点压根不是&quot;哪个模型最强&quot;。是怎么在上了规模之后，还能给每个请求都派对模型，同时治理和可观测性一样都不丢。</p>
+<p>常见的几种做法我大多试过，各有各的坑：</p>
 <table>
 	<thead>
 			<tr>
@@ -135,7 +135,7 @@
 </table>
 <p>Microsoft Foundry 的 Model Router 给的是一个平台级答案：一个训练好的路由模型，以单一端点部署，按每条 prompt 在最多 18 个底层 LLM 之间做分派。</p>
 <h2 id="概念上的架构">概念上的架构</h2>
-<p>有个设计细节值得先说清楚：路由决策是由一个训练过的模型做出的，不是规则引擎。它分析的是 prompt 本身——复杂度、任务类型、推理需求——并且会随着 Microsoft 接入新的底层模型而更新。</p>
+<p>有个设计细节得先讲明白：做路由决策的是一个训练出来的模型，不是写死的规则引擎。它看的是 prompt 本身，也就是复杂度、任务类型、要不要推理这些，而且 Microsoft 每接入一批新的底层模型，它也会跟着更新。</p>
 <h2 id="哪些归平台管哪些归你管">哪些归平台管，哪些归你管</h2>
 <p>对做架构的人来说，这个职责划分才是关键的心智模型。</p>
 <h3 id="平台负责的">平台负责的</h3>
@@ -159,19 +159,19 @@
 <h3 id="你负责的">你负责的</h3>
 <ul>
 <li>
-<p>路由模式——Balanced（默认）、Quality 或 Cost</p>
+<p>路由模式：Balanced（默认）、Quality 还是 Cost</p>
 </li>
 <li>
-<p>模型子集——底层模型的白名单</p>
+<p>模型子集，也就是允许路由器碰的那批底层模型</p>
 </li>
 <li>
-<p>部署类型——Global Standard 或 Data Zone Standard</p>
+<p>部署类型：Global Standard 或 Data Zone Standard</p>
 </li>
 <li>
-<p>区域——目前可选 East US 2 或 Sweden Central</p>
+<p>区域，眼下就 East US 2 和 Sweden Central 两个可选</p>
 </li>
 <li>
-<p>可观测性挂钩——记录 <code>response.model</code> 以便做每个请求的归因</p>
+<p>可观测性挂钩，把 <code>response.model</code> 记下来，方便后面按请求做归因</p>
 </li>
 </ul>
 <h2 id="把路由模式当成设计杠杆">把路由模式当成设计杠杆</h2>
@@ -203,25 +203,25 @@
 </table>
 <p>我更愿意把路由模式看成一个部署级的 SLO 杠杆。不同的产品面可以指向不同的 Model Router 部署，各自配不同的模式和子集。</p>
 <h2 id="模型子集你真正的治理面">模型子集：你真正的治理面</h2>
-<p>这是我觉得最值得花心思去设计的一个特性。子集列表决定了：</p>
+<p>这个特性我觉得最值得花心思。一份子集列表，其实一口气定死了好几件事：</p>
 <ul>
 <li>
-<p>合规——你的 prompt 能碰到哪些厂商/区域</p>
+<p>合规：你的 prompt 到底能落到哪些厂商、哪些区域</p>
 </li>
 <li>
-<p>上下文窗口——有效上下文等于子集里最小的那个模型，所以要认真挑选</p>
+<p>上下文窗口：有效上下文等于子集里最小的那个模型，所以别乱塞</p>
 </li>
 <li>
-<p>成本上限——把最坏情况下的单次调用成本框住</p>
+<p>成本上限：最坏情况下单次调用能烧多少钱，被这份名单框住了</p>
 </li>
 <li>
-<p>故障转移池——每个子集里至少留两个模型</p>
+<p>故障转移池：每个子集至少留两个模型，好歹有个备份</p>
 </li>
 <li>
-<p>缓存命中率——更窄、更确定的子集，能提高连续重叠 prompt 落到同一个底层模型的概率</p>
+<p>缓存命中率：子集越窄越确定，连续重叠的 prompt 越容易落回同一个底层模型</p>
 </li>
 </ul>
-<p>未来路由器版本里新引入的模型，不会自动加进你的子集。这是有意为之的护栏——要加，就得显式改部署。</p>
+<p>还有一点，以后路由器版本里新加的模型不会自动塞进你的子集。这是故意留的一道闸，想用就得自己动手改部署。</p>
 <h2 id="代码用自定义子集部署">代码：用自定义子集部署</h2>
 <p>Model Router 的部署方式和 Foundry 里任何模型一样。下面是一段示意性的 ARM/Bicep 风格部署片段，设成 Balanced 模式，并把路由限制在一个精心挑选的子集里——省掉 subset 就等于接受完整的默认池。</p>
 <div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
@@ -487,13 +487,13 @@
 <p>因为 Model Router 既可能派到 chat 模型，也可能派到推理（o 系列）模型，参数的行为会随实际选中的模型而变。我的建议是，把应用围绕两种行为的并集来写。</p>
 <ul>
 <li>
-<p>Temperature、Top_P——选中 o 系列推理模型时被忽略，其它情况照常生效。</p>
+<p>Temperature、Top_P：一旦派到 o 系列推理模型就被忽略，其它模型照常生效。</p>
 </li>
 <li>
-<p>stop、presence_penalty、frequency_penalty、logit_bias、logprobs——o 系列会丢弃，其它情况照常生效。</p>
+<p>stop、presence_penalty、frequency_penalty、logit_bias、logprobs：o 系列会直接丢掉，其它模型照常生效。</p>
 </li>
 <li>
-<p>reasoning_effort——从 2025-11-18 这个路由器版本开始支持。选中推理模型时，路由器会把你传的值透传给底层模型。</p>
+<p>reasoning_effort：从 2025-11-18 这个路由器版本才开始支持。派到推理模型时，你传的值会被原样透传下去。</p>
 </li>
 </ul>
 <p>我自己遵守的一条实操规则：在路由器前置的部署里，别指望靠 temperature/top-p 来拿确定性；把 reasoning_effort 当成唯一一个在推理和非推理路径上都有一致含义的旋钮。</p>
@@ -647,7 +647,7 @@
 <p>比较契合的场景：</p>
 <ul>
 <li>
-<p>异构流量——prompt 复杂度差异很大</p>
+<p>异构流量，prompt 复杂度跨度很大</p>
 </li>
 <li>
 <p>想把多厂商 LLM 策略（OpenAI + Anthropic + 开源模型）收敛到一个受治理的单一端点后面</p>
@@ -659,32 +659,32 @@
 <p>不太契合的场景：</p>
 <ul>
 <li>
-<p>均质负载，选一个合适的单模型反而更简单</p>
+<p>均质负载，选一个合适的单模型反而更省事</p>
 </li>
 <li>
 <p>以大上下文 prompt 为主的负载（除非子集是专门为它挑的）</p>
 </li>
 <li>
-<p>需要每个请求都确定、可复现地选同一个模型的场景——路由器是有意做成自适应的</p>
+<p>需要每个请求都确定、可复现地落到同一个模型的场景，因为路由器本来就是设计成自适应的</p>
 </li>
 </ul>
 <h2 id="我推荐的落地路径">我推荐的落地路径</h2>
 <ul>
 <li>
-<p>第一阶段——打基线。用 Balanced 模式加完整池部署 Model Router。在有代表性的流量上把 <code>response.model</code> 记全。</p>
+<p>先打基线。用 Balanced 模式配上完整池把 Model Router 跑起来，拿有代表性的真实流量，把 <code>response.model</code> 完整记上一段时间。</p>
 </li>
 <li>
-<p>第二阶段——治理。基于你的合规、上下文和成本需求引入模型子集。确保每个子集至少两个模型做故障转移。</p>
+<p>再上治理。等你摸清了合规、上下文、成本这几条线，再引入模型子集，记得每个子集至少留两个模型兜底。</p>
 </li>
 <li>
-<p>第三阶段——调优。等基线分布告诉你该往哪边偏之后，再切到 Cost 或 Quality 模式，或者把产品面拆到两个不同画像的 Model Router 部署上。</p>
+<p>然后调优。基线分布会告诉你该往成本还是质量偏，这时候再切 Cost 或 Quality，或者干脆按产品面拆成两个画像不同的部署。</p>
 </li>
 <li>
-<p>第四阶段——集成。把路由器接进 Foundry Agent Service，服务 agentic 场景。</p>
+<p>最后做集成。把路由器接到 Foundry Agent Service 后面，扛起 agentic 那摊事。</p>
 </li>
 </ul>
 <h2 id="一点收尾的想法">一点收尾的想法</h2>
-<p>Model Router 把多模型分派从一个应用层的操心事，变成了一个平台层的事，而且给的治理杠杆（模式、子集、区域）恰好对应架构师真正要谈判的那几个权衡：成本、质量、合规、韧性。生产 GenAI 架构里，这块本来是意外复杂的一部分，这么一简化，我觉得是真有价值。</p>
+<p>说到底，Model Router 把&quot;多模型分派&quot;这件本来堆在应用层的糟心事，挪成了平台层的事。它给你的那几个旋钮（模式、子集、区域），又刚好对上架构师平时最头疼要来回权衡的几样：成本、质量、合规，还有扛不扛得住。生产环境里这块的复杂度常常超出预期，能这么被摁下去，我觉得是实打实有价值的。</p>
 <h2 id="示例仓库">示例仓库</h2>
 <p>Microsoft 在 foundry-samples 这个 GitHub 组织里放了几个开源示例，拿来上手评估很合适：</p>
 <ul>

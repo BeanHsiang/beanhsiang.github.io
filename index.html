@@ -93,8 +93,8 @@
 
 
         <div class="post-content">
-            <p>最近我在梳理自家 GenAI 平台的模型调度方案时，重新研究了 Microsoft Foundry 里的 Model Router。它把&quot;每个请求该用哪个模型&quot;这件事从应用层的琐碎逻辑，变成了平台层可以治理的一件事。下面把我的理解和实践记录一下，原文可以参考 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/4514440?WT.mc_id=AI-MVP-5003172">Architecting Cost-Aware LLM Workloads with Model Router in Microsoft Foundry</a>。</p>
-<p>一句话概括我关注的点：把多模型路由收敛到一个受治理的部署里，自带故障转移、数据驻留边界强制，以及在 18 个底层 LLM 之间按每条 prompt 做成本/质量权衡。</p>……
+            <p>前段时间在整理自家 GenAI 平台的模型调度方案，我又把 Microsoft Foundry 的 Model Router 翻出来仔细看了一遍。以前&quot;这个请求该走哪个模型&quot;是塞在应用代码里的一堆 if-else，现在它能被挪到平台层统一管起来。这篇就把我看下来的心得和踩过的点记一记，原文在这儿：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/4514440?WT.mc_id=AI-MVP-5003172">Architecting Cost-Aware LLM Workloads with Model Router in Microsoft Foundry</a>。</p>
+<p>我最在意的其实就一件事：把多模型路由收进一个能被治理的部署里。故障转移它自己扛，数据驻留边界它帮你守住，18 个底层 LLM 之间该怎么在成本和质量之间权衡，也是按每一条 prompt 现算的。</p>……
         </div>
         <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/" target="_blank">阅读全文</a></p>
     </article>

@@ -1,0 +1,1442 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>Microsoft Foundry 智能体的 AI 可观测性入门套件 | Innovation with tech</title>
+    <meta property="og:title" content="Microsoft Foundry 智能体的 AI 可观测性入门套件 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-05-30T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-05-30T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="Microsoft Foundry 智能体的 AI 可观测性入门套件">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">Microsoft Foundry 智能体的 AI 可观测性入门套件</h1>
+        </header>
+        
+  <time datetime="2026-05-30T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年5月30日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>本文编译自 Microsoft Tech Community 上 varghesejoji 的博客文章 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/ai-observability-starter-kit-for-microsoft-foundry-agents/4522751?WT.mc_id=AI-MVP-5003172">AI Observability Starter Kit for Microsoft Foundry agents</a>，我按自己上手时的理解重新整理，并补充了一些实际跑下来的体会。</p>
+<p>先把结论放前面：一条 PowerShell 命令，就能拉起一个包含四个智能体的 Microsoft Foundry 环境，带遥测、8 个内置评估器、1 个自定义合规评估器、一次自动化红队扫描，还有两条 scheduled-query 告警。整套东西端到端验证过，再敲一条命令就能全部拆掉。Fork 下来直接跑。我觉得它最对胃口的人群是那些在 Azure 上跑 AI 智能体、又不想自己手写一堆管道代码的应用开发者、ML 工程师和 SRE。</p>
+<h2 id="1-从全绿仪表盘到真正能上生产的-ai-可观测性">1. 从&quot;全绿仪表盘&quot;到真正能上生产的 AI 可观测性</h2>
+<p>设想这样一个场景：你的 AI 智能体在生产环境跑着，负载均衡器显示零错误，Application Insights 仪表盘一片绿。但底下其实出了好几档子事：</p>
+<ul>
+<li>
+<p>有个模型部署根本不存在。某个智能体指向的模型压根没部署，每个请求都撞上 chat 级错误——可 HTTP 响应还是返回 200，因为智能体框架在内部把异常吞掉了。</p>
+</li>
+<li>
+<p>某个工具返回了脏数据。用户查客户 C999 的订单，智能体调对了工具，但工具抛了个 LookupError。智能体礼貌地道了个歉，HTTP 状态 200，除非你去追 execute_tool 这个依赖 span，否则错误根本看不见。</p>
+</li>
+<li>
+<p>模型上钩回答了一个安全诱饵提示。用户要暴力虚构内容，模型照做了。没有过滤器拦住，没有评估器给它打分，也没有告警响。</p>
+</li>
+</ul>
+<p>这些问题不会出现在常规日志或者通用的资源仪表盘里。第一次意识到 HTTP 200 背后能藏这么多事，我还挺意外的。它们需要另一种可观测性，把五件事拼到一起：</p>
+<ul>
+<li>
+<p>用 OpenTelemetry（OTel）GenAI 语义约定做插桩追踪，这样每次模型调用和工具执行都变成一个可查询的 span。</p>
+</li>
+<li>
+<p>自动化的质量评估器，在真实流量上给推理、意图识别、工具使用打分，而不是在测试夹具上。</p>
+</li>
+<li>
+<p>对抗性红队测试，用生成的攻击提示去探安全边界，赶在真实用户之前。</p>
+</li>
+<li>
+<p>Scheduled-query 告警，盯着错误率和延迟退化触发，而不是只盯可用性。</p>
+</li>
+<li>
+<p>仪表盘，把 token、模型、工具、错误集中到一处，给运维和 on-call 看。</p>
+</li>
+</ul>
+<p>这些零件没一个是新东西。难的是把它们正确地接起来。这个 starter kit（仓库在 github.com/jvargh/ai-observability-starter-kit）把接线部分打包好了：一个已插桩的智能体、绑到正确追踪字段上的评估器、一套红队分类法、一份可导入的 Grafana 仪表盘，还有部署后的检查——全都塞进一条命令里。你从一个已知可用的基线出发，而不是自己从零攒。</p>
+<p>这一节先讲清楚这套东西是怎么把这些零件接起来的。第 2 节往后覆盖部署、评估、红队、可观测性各个视图，以及拆除。</p>
+<h3 id="11-数据是怎么流动的">1.1 数据是怎么流动的</h3>
+<p>一个用户提示进入托管智能体，智能体调用模型（比如 gpt-4o-mini），可能还会执行一个或多个工具（订单查询、供应商查询、天气、掷骰子）。每次模型调用和工具执行都会发出 OpenTelemetry span，自动摄入到 Azure Application Insights。除了在智能体清单里设一个 <code>ENABLE_INSTRUMENTATION=true</code>，你不需要额外写任何 SDK 接线代码。</p>
+<p>从 Application Insights 出发，遥测数据喂给三个下游消费者：</p>
+<ul>
+<li>
+<p>Grafana 仪表盘通过 KQL（Kusto 查询语言，Azure Log Analytics 的查询语言）查底层的 Log Analytics 工作区，渲染出运营面板（token 用量、延迟、错误率、模型分布）。</p>
+</li>
+<li>
+<p>Agent evaluators 拉取最近的追踪，用 8 个内置质量检查加上你注册的任意自定义评估器给它们打分。结果出现在 Microsoft Foundry 的 Evaluations 面板里。</p>
+</li>
+<li>
+<p>Scheduled-query 告警在错误计数或 p95 延迟（95 分位响应时间）在 15 分钟窗口内超阈值时触发。</p>
+</li>
+</ul>
+<p>设计上有个关键点：智能体本身不知道仪表盘、评估器或告警的存在。它只管发 span。下游的一切都通过 Application Insights 这条遥测主干接起来。我个人挺喜欢这种解耦——智能体代码里没有任何&quot;监控逻辑&quot;污染。</p>
+<h3 id="12-智能体的定义">1.2 智能体的定义</h3>
+<p>Foundry 托管的智能体是一个容器化的 AI 智能体，由 Microsoft Foundry 负责管理、部署和扩缩：你提供 Python 代码（main.py）和一份小小的 YAML 清单（agent.yaml），Foundry 负责运行时、OTel 管道和每个智能体的独立身份。这套 kit 里的四个智能体共用完全一样的代码、工具和系统指令，唯一的区别是各自指向的模型部署：</p>
+<table>
+	<thead>
+			<tr>
+					<th>智能体</th>
+					<th>模型</th>
+					<th>用途</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>agent-framework-agent-basic-responses</td>
+					<td>gpt-4o-mini（通过 <code>${MODEL_DEPLOYMENT_NAME}</code>）</td>
+					<td>主智能体，带 6 个 @tool 函数。用于遥测、评估和填充仪表盘。</td>
+			</tr>
+			<tr>
+					<td>agent-framework-agent-gpt5-mini</td>
+					<td>gpt-5-mini（硬编码）</td>
+					<td>姊妹智能体，用于跨模型延迟和 token 对比。</td>
+			</tr>
+			<tr>
+					<td>agent-framework-agent-gpt41-mini</td>
+					<td>gpt-4.1-mini（硬编码）</td>
+					<td>姊妹智能体，用于跨模型对比。</td>
+			</tr>
+			<tr>
+					<td>agent-framework-agent-broken-model</td>
+					<td>nonexistent-model-deployment-xyz（硬编码）</td>
+					<td>故意做坏的。每个请求都触发 chat 错误，填充 Gen AI Errors 面板。</td>
+			</tr>
+	</tbody>
+</table>
+<p>智能体代码（main.py）创建一个连到模型的 FoundryChatClient，定义一个带采购助手系统提示的 Agent，然后注册六个工具函数：</p>
+<pre tabindex="0"><code>get_orders, find_suppliers_for_request, get_company_supplier_info, get_current_utc_date, get_weather, and roll_dice.
+</code></pre><p>有些工具是故意在特定输入上报错的（比如客户 C999 会抛 LookupError），这就制造出仪表盘和评估器要消费的错误遥测。</p>
+<p>一个工具函数就是一个带注解的普通 Python 函数。Foundry 从 @tool 装饰器发现它，再把它暴露给模型，像下面这样：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#cf222e">from</span> <span style="color:#24292e">agent_framework</span> <span style="color:#cf222e">import</span> tool
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#0550ae">@tool</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">get_orders</span><span style="color:#1f2328">(</span>customer_id<span style="color:#1f2328">:</span> <span style="color:#6639ba">str</span><span style="color:#1f2328">)</span> <span style="color:#0550ae">-&gt;</span> <span style="color:#6639ba">list</span><span style="color:#1f2328">[</span><span style="color:#6639ba">dict</span><span style="color:#1f2328">]:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;&#34;&#34;Return open orders for a customer. Raises LookupError on unknown IDs.&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> customer_id <span style="color:#0550ae">==</span> <span style="color:#0a3069">&#34;C999&#34;</span><span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">raise</span> LookupError<span style="color:#1f2328">(</span><span style="color:#0a3069">f</span><span style="color:#0a3069">&#34;customer </span><span style="color:#0a3069">{</span>customer_id<span style="color:#0a3069">}</span><span style="color:#0a3069"> not found&#34;</span><span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> _ORDERS_BY_CUSTOMER<span style="color:#0550ae">.</span>get<span style="color:#1f2328">(</span>customer_id<span style="color:#1f2328">,</span> <span style="color:#1f2328">[])</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这六个工具函数注册到 Agent 构造函数里，模型能看到的全部界面就这些。</p>
+<p>主智能体的 YAML 清单：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#0550ae">kind</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>hosted<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>agent-framework-agent-basic-responses<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">protocols</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span>- <span style="color:#0550ae">protocol</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>responses<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">version</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0550ae">1.0.0</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">resources</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">cpu</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;0.25&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span><span style="color:#0550ae">memory</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#39;0.5Gi&#39;</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#0550ae">environment_variables</span><span style="color:#1f2328">:</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span>- <span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>AZURE_AI_MODEL_DEPLOYMENT_NAME<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">value</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>${MODEL_DEPLOYMENT_NAME}<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span>- <span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>ENABLE_INSTRUMENTATION<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">value</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#34;true&#34;</span><span style="color:#fff">       </span><span style="color:#57606a"># activates OTel child spans for chat + tool calls</span><span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">  </span>- <span style="color:#0550ae">name</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span>ENABLE_SENSITIVE_DATA<span style="color:#fff">
+</span></span></span><span style="display:flex;"><span><span style="color:#fff">    </span><span style="color:#0550ae">value</span><span style="color:#1f2328">:</span><span style="color:#fff"> </span><span style="color:#0a3069">&#34;true&#34;</span><span style="color:#fff">       </span><span style="color:#57606a"># captures prompts/responses on spans</span><span style="color:#fff">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>两个环境变量控制遥测：</p>
+<ul>
+<li>
+<p><code>ENABLE_INSTRUMENTATION=true</code> 为每次 chat 模型调用和 execute_tool 调用激活 OpenTelemetry 子 span（每次 LLM 调用一个 span，每次工具执行一个 span）。不设它的话，就只会发出父级的 invoke_agent span，Agents 面板会一直空着。</p>
+</li>
+<li>
+<p><code>ENABLE_SENSITIVE_DATA=true</code> 在 span 上捕获完整的提示和响应文本，评估器要靠这些来给响应质量打分。</p>
+</li>
+</ul>
+<h2 id="2-部署与运行">2. 部署与运行</h2>
+<p>这套 kit 里的一切都是自动化的。一个 PowerShell 脚本负责预配基础设施、部署智能体、灌入流量、跑评估、配告警、验证结果。这一节讲清楚部署了什么、怎么跑、你最后能拿到什么。</p>
+<p>运行成本：一次端到端跑下来几美分，运行期间大约每天 $0.03（Grafana 成本面板里能看到）。拆除会把一切都删干净。</p>
+<h3 id="21-这套-starter-kit-里有什么">2.1 这套 starter kit 里有什么</h3>
+<p>下面是跑起来后会部署的东西，以及每一块能让你做什么：</p>
+<table>
+	<thead>
+			<tr>
+					<th>组件</th>
+					<th>作用</th>
+					<th>用来做什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>4 个 Foundry 托管智能体</td>
+					<td>gpt-4o-mini（主，带 6 个 @tool 函数）、gpt-5-mini、gpt-4.1-mini，以及一个触发 chat 级错误的 broken-model 智能体</td>
+					<td>在同一负载下对比不同模型的延迟、token 和错误率</td>
+			</tr>
+			<tr>
+					<td>Application Insights + Log Analytics</td>
+					<td>接收 OpenTelemetry 追踪（GenAI 语义约定）</td>
+					<td>即使 HTTP 返回 200，也能把工具失败追溯到具体调用和依赖 span</td>
+			</tr>
+			<tr>
+					<td>Grafana for Azure Monitor</td>
+					<td>token、延迟、操作和模型分布的自定义仪表盘</td>
+					<td>追踪 token 消耗趋势，找出消耗过多 token 的提示或智能体</td>
+			</tr>
+			<tr>
+					<td>Agent evaluators</td>
+					<td>8 个内置评估器（系统 + 过程），作为批处理跑在 Application Insights 的追踪上</td>
+					<td>按需验证智能体质量：意图识别、任务遵循、工具准确性等</td>
+			</tr>
+			<tr>
+					<td>自定义代码评估器</td>
+					<td>检查每条响应是否包含必需的合规免责声明短语</td>
+					<td>落实领域特定策略（合规短语、格式检查、监管规则）</td>
+			</tr>
+			<tr>
+					<td>Red-team scan</td>
+					<td>用 Flip 和 Base64 策略、3 个安全评估器做对抗性探测</td>
+					<td>在真实用户之前，通过探测安全边界自动发现不安全输出</td>
+			</tr>
+			<tr>
+					<td>2 个 scheduled-query 告警</td>
+					<td>错误计数（sev 2）和 p95 延迟（sev 3），15 分钟窗口</td>
+					<td>对真正重要的信号告警：错误尖峰和延迟退化，而不只是可用性</td>
+			</tr>
+			<tr>
+					<td>端到端自动化</td>
+					<td>单个编排脚本（run-e2e.ps1）和单个拆除脚本</td>
+					<td>用两条命令完成整个栈的部署、演练和拆除</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="22-运行这套-kit">2.2 运行这套 kit</h3>
+<p>前置条件：一个 Azure 订阅，你在上面有 Contributor（或 Owner）加 User Access Administrator 权限；装好 PowerShell 7+（pwsh）、Azure CLI（az）和 Azure Developer CLI（azd）并加入 PATH；对目标订阅完成过 <code>az login</code>；仓库根目录有一个 Python 3.13 的 venv（.venv/）。脚本在动任何 Azure 之前会先检查虚拟环境、agent/ 目录和两个 CLI，所以缺前置条件时会提早失败并给出清晰的修复提示，而不是跑到 azd up 半路才崩。</p>
+<p>从这里开始，工作流会自动预配基础设施、部署智能体、生成遥测、跑评估、配置仪表盘和告警。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>pwsh -NoProfile <span style="color:#0550ae">-File</span> scripts<span style="color:#1f2328">\</span><span style="color:#6639ba">run-e2e</span><span style="color:#1f2328">.</span>ps1 <span style="color:#1f2328">`</span>
+</span></span><span style="display:flex;"><span>    -Region <span style="color:#1f2328">&lt;</span>region<span style="color:#1f2328">&gt;</span> <span style="color:#1f2328">`</span>
+</span></span><span style="display:flex;"><span>    -EnvName <span style="color:#1f2328">&lt;</span><span style="color:#6639ba">env-name</span><span style="color:#1f2328">&gt;</span> <span style="color:#1f2328">`</span>
+</span></span><span style="display:flex;"><span>    -SubscriptionId <span style="color:#1f2328">&lt;</span><span style="color:#6639ba">subscription-id</span><span style="color:#1f2328">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">For</span> example<span style="color:#f6f8fa;background-color:#82071e">:</span>
+</span></span><span style="display:flex;"><span>pwsh -NoProfile <span style="color:#0550ae">-File</span> scripts<span style="color:#1f2328">\</span><span style="color:#6639ba">run-e2e</span><span style="color:#1f2328">.</span>ps1 <span style="color:#1f2328">`</span>
+</span></span><span style="display:flex;"><span>    -Region eastus2 <span style="color:#1f2328">`</span>
+</span></span><span style="display:flex;"><span>    -EnvName <span style="color:#6639ba">aiobs2-foundry</span> <span style="color:#1f2328">`</span>
+</span></span><span style="display:flex;"><span>    -SubscriptionId <span style="color:#1f2328">&lt;</span><span style="color:#6639ba">subscription-id</span><span style="color:#1f2328">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><table>
+	<thead>
+			<tr>
+					<th>参数</th>
+					<th>默认值</th>
+					<th>说明</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>-Region</td>
+					<td>eastus2</td>
+					<td>Foundry 账户的 Azure 区域</td>
+			</tr>
+			<tr>
+					<td>-EnvName</td>
+					<td>aiobs-foundry-&lt;yyyymmdd&gt;</td>
+					<td>azd 环境名（也是资源组后缀：rg-&lt;EnvName&gt;）</td>
+			</tr>
+			<tr>
+					<td>-SubscriptionId</td>
+					<td>当前 az 上下文</td>
+					<td>目标订阅</td>
+			</tr>
+			<tr>
+					<td>-SkipPhases</td>
+					<td>（无）</td>
+					<td>用逗号分隔要跳过的阶段编号</td>
+			</tr>
+	</tbody>
+</table>
+<p>这个编排器一共跑 13 个阶段，每个都记录到 artifacts/e2e-&lt;timestamp&gt;/phase-NN.log：</p>
+<table>
+	<thead>
+			<tr>
+					<th>阶段</th>
+					<th>做什么</th>
+					<th>时间</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>1</td>
+					<td>azd up：预配 Foundry 账户、项目、ACR、Application Insights、Log Analytics、gpt-4o-mini</td>
+					<td>~7 分钟</td>
+			</tr>
+			<tr>
+					<td>2</td>
+					<td>给项目 MI 授予 Foundry User 角色</td>
+					<td>~10 秒</td>
+			</tr>
+			<tr>
+					<td>3</td>
+					<td>部署 basic 智能体（gpt-4o-mini，带 @tool 函数）</td>
+					<td>~3 分钟</td>
+			</tr>
+			<tr>
+					<td>4</td>
+					<td>创建 gpt-5-mini + gpt-4.1-mini 模型部署</td>
+					<td>~1 分钟</td>
+			</tr>
+			<tr>
+					<td>5</td>
+					<td>部署 3 个姊妹智能体（gpt5-mini、gpt41-mini、broken-model）</td>
+					<td>~9 分钟</td>
+			</tr>
+			<tr>
+					<td>6</td>
+					<td>预热（3 次 ping）+ 种子流量（来自 clean、ambiguous、safety-bait 语料的 48 条提示）</td>
+					<td>~6 分钟</td>
+			</tr>
+			<tr>
+					<td>7</td>
+					<td>扇出：12 条工具提示 × 3 个工作智能体 + 8 次 broken-model 调用</td>
+					<td>~3 分钟</td>
+			</tr>
+			<tr>
+					<td>8</td>
+					<td>在 Foundry 目录注册自定义合规评估器</td>
+					<td>~30 秒</td>
+			</tr>
+			<tr>
+					<td>9</td>
+					<td>批量评估：8 个 agent evaluator 跑在 Application Insights 最近的追踪上</td>
+					<td>~3 分钟</td>
+			</tr>
+			<tr>
+					<td>10</td>
+					<td>红队扫描（2 种攻击策略、3 个安全评估器、临时 prompt 智能体）</td>
+					<td>~8 分钟</td>
+			</tr>
+			<tr>
+					<td>11</td>
+					<td>通过 ARM REST 创建 2 个 scheduled-query 告警</td>
+					<td>~10 秒</td>
+			</tr>
+			<tr>
+					<td>12</td>
+					<td>把遥测导出到 artifacts/telemetry.json</td>
+					<td>~10 秒</td>
+			</tr>
+			<tr>
+					<td>13</td>
+					<td>冒烟调用 + 验证评估运行完成</td>
+					<td>~2 分钟</td>
+			</tr>
+	</tbody>
+</table>
+<p>端到端总时长：大约 35 到 50 分钟。</p>
+<p>某个阶段失败时，脚本会停下来并打印日志路径。不需要的阶段可以用 <code>-SkipPhases 9,10</code> 跳过。</p>
+<p>参考运行记录：一份来自成功运行、做过脱敏的端到端日志放在 scripts/e2e-run.log。</p>
+<h3 id="221-部署后验证">2.2.1 部署后验证</h3>
+<p>跑完之后，验证一切正常：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>pwsh -NoProfile <span style="color:#0550ae">-File</span> scripts<span style="color:#1f2328">\</span><span style="color:#6639ba">validate-deployment</span><span style="color:#1f2328">.</span>ps1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>它检查 8 个类别（一共 26 项检查）：基础设施、模型部署、托管智能体、智能体调用、遥测、评估、告警和 RBAC（基于角色的访问控制）。</p>
+<p>每项检查会打印 <code>[PASS]</code>、<code>[FAIL]</code> 或 <code>[SKIP]</code>，末尾给一个汇总。想跳过智能体调用测试就加 <code>-SkipInvoke</code>。</p>
+<p>一次干净的运行会在大约 90 秒里打印 26 项通过 / 0 失败 / 0 跳过。</p>
+<p>参考验证记录：一份来自成功运行（26/26 通过）、做过脱敏的验证日志放在 scripts/e2e-validation.log。</p>
+<h3 id="222-一次成功的部署长什么样">2.2.2 一次成功的部署长什么样</h3>
+<p>跑完之后，Grafana 仪表盘和 Application Insights 面板应该显示：</p>
+<ul>
+<li>
+<p>Agent Summary：总操作数（150+）、输入 token（136K+）、输出 token（6.6K+）、平均响应时间（约 7.5 秒）</p>
+</li>
+<li>
+<p>Chat and Tool Summary：LLM 调用（196+）、chat 会话（84+）、工具调用（64+）、平均 chat 延迟（约 5.1 秒）</p>
+</li>
+<li>
+<p>Models 表：gpt-4o-mini、gpt-5-mini、gpt-4.1-mini（各带调用次数和错误率）</p>
+</li>
+<li>
+<p>Gen AI Errors：broken-model 智能体那条 chat nonexistent-model-deployment-xyz 的切片，错误率 100%</p>
+</li>
+<li>
+<p>Tool Calls：6 个工具函数，其中 3 个有非零错误计数（LookupError 和 ValueError）</p>
+</li>
+<li>
+<p>Evaluations：批量运行得到的 8 个 agent evaluator 分数（task_adherence、task_completion、intent_resolution、tool_call_accuracy、tool_selection、tool_input_accuracy、tool_output_utilization、tool_call_success）</p>
+</li>
+</ul>
+<h3 id="223-拆除">2.2.3 拆除</h3>
+<p>想拆掉一个部署、并把 Azure AI Services 账户名释放出来复用：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>pwsh -NoProfile <span style="color:#0550ae">-File</span> scripts<span style="color:#1f2328">\</span>teardown<span style="color:#1f2328">.</span>ps1 -EnvName <span style="color:#1f2328">&lt;</span><span style="color:#6639ba">env-name</span><span style="color:#1f2328">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">For</span> example<span style="color:#f6f8fa;background-color:#82071e">:</span>
+</span></span><span style="display:flex;"><span>pwsh -NoProfile <span style="color:#0550ae">-File</span> scripts<span style="color:#1f2328">\</span>teardown<span style="color:#1f2328">.</span>ps1 -EnvName <span style="color:#6639ba">aiobs2-foundry</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>它会删掉资源组，清除 Azure AI Services 的软删除（这样账户名能立刻复用），再验证所有资源都已移除。加 <code>-NoPurge</code> 可以跳过软删除清除，加 <code>-ForceDeleteRg</code> 还会删掉那些通过 ARM REST 在 azd 模板之外创建的告警和 action group。</p>
+<h3 id="224-临时流量与评估刷新">2.2.4 临时流量与评估刷新</h3>
+<p>kit 部署好之后，想刷新遥测并不需要重跑完整的 13 阶段流水线。用 scripts/run-adhoc-traffic-and-eval.ps1 就能针对一个已有环境生成一批新追踪、对新追踪跑智能体批量评估、刷新遥测导出。典型用法：截一张新的仪表盘图、模型或提示改动后重新评估一次、或者在某次 Azure 平台更新之后快速确认部署还能用。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>pwsh -NoProfile <span style="color:#0550ae">-File</span> scripts<span style="color:#1f2328">\</span><span style="color:#6639ba">run-adhoc</span>-traffic<span style="color:#0550ae">-and</span>-eval<span style="color:#1f2328">.</span>ps1 -EnvName <span style="color:#1f2328">&lt;</span><span style="color:#6639ba">env-name</span><span style="color:#1f2328">&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">For</span> example<span style="color:#f6f8fa;background-color:#82071e">:</span>
+</span></span><span style="display:flex;"><span>pwsh -NoProfile <span style="color:#0550ae">-File</span> scripts<span style="color:#1f2328">\</span><span style="color:#6639ba">run-adhoc</span>-traffic<span style="color:#0550ae">-and</span>-eval<span style="color:#1f2328">.</span>ps1 -EnvName <span style="color:#6639ba">aiobs3-foundry</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><table>
+	<thead>
+			<tr>
+					<th>参数</th>
+					<th>默认值</th>
+					<th>说明</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>-EnvName</td>
+					<td>当前选中的 azd 环境</td>
+					<td>要刷新的 azd 环境。先跑 azd env select &lt;name&gt; 或显式传入。</td>
+			</tr>
+			<tr>
+					<td>-MaxPrompts</td>
+					<td>10</td>
+					<td>预热+种子阶段的种子提示数。用 0 表示完整的约 48 条语料。</td>
+			</tr>
+			<tr>
+					<td>-RunRedTeam</td>
+					<td>（关闭）</td>
+					<td>包含红队扫描（额外约 8 分钟）。默认关闭。</td>
+			</tr>
+			<tr>
+					<td>-LogFile</td>
+					<td>scripts/e2e-adhoc-run.log</td>
+					<td>输出同时实时打到控制台并写入该文件。</td>
+			</tr>
+	</tbody>
+</table>
+<p>这个包装脚本用 <code>-SkipPhases 1,2,3,4,5,8,11</code> 去调 run-e2e.ps1（不请求红队时再加上 10），所以真正会跑的阶段是：</p>
+<table>
+	<thead>
+			<tr>
+					<th>阶段</th>
+					<th>你得到什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>6</td>
+					<td>预热（3 次 ping）+ 种子 N 条提示</td>
+			</tr>
+			<tr>
+					<td>7</td>
+					<td>扇出：12 条工具提示跨 3 个工作智能体 + 8 次 broken-model 调用</td>
+			</tr>
+			<tr>
+					<td>9</td>
+					<td>对新追踪做全新批量评估（8 个 agent evaluator，Application Insights 2 小时回看）</td>
+			</tr>
+			<tr>
+					<td>10</td>
+					<td>全新红队扫描（仅在 -RunRedTeam 时）</td>
+			</tr>
+			<tr>
+					<td>12</td>
+					<td>刷新 artifacts/telemetry.json</td>
+			</tr>
+			<tr>
+					<td>13</td>
+					<td>冒烟调用 + 验证批量评估产物</td>
+			</tr>
+	</tbody>
+</table>
+<p>端到端总时长：默认约 15 分钟（带红队约 25 分钟）。</p>
+<p>实时进度会同时流到控制台和日志文件，所以你也可以从另一个终端 tail 它：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#6639ba">Get-Content</span> -Wait scripts<span style="color:#1f2328">\</span><span style="color:#6639ba">e2e-adhoc</span>-run<span style="color:#1f2328">.</span>log
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>参考运行记录：一份来自成功临时运行、做过脱敏的日志放在 scripts/e2e-adhoc-run.log。</p>
+<h2 id="3-评估智能体评估器与自定义检查">3. 评估：智能体评估器与自定义检查</h2>
+<p>返回 200 OK 不代表智能体答对了。传统软件的输出是可预测的，AI 智能体不是。同一个提示在不同运行里可能给出不同响应，而且当模型更新、提示演化或工具变化时，质量也会跟着漂。没有评估，你就只能靠用户投诉来发现质量问题——往往是在损失已经造成好几天之后。这一点我印象很深，因为质量退化是那种&quot;悄无声息&quot;的故障。</p>
+<p>这一节讲的是这套 kit 怎么给每条响应打分：既用 Microsoft Foundry 内置的智能体评估器，也用一个自定义的代码评估器，两者都作为批处理作业跑在 Application Insights 里存的追踪上。</p>
+<h3 id="31-两条评估路径">3.1 两条评估路径</h3>
+<p>这套 starter kit 包含两种互补的做法，各自解决不同的需求：</p>
+<table>
+	<thead>
+			<tr>
+					<th>路径</th>
+					<th>何时运行</th>
+					<th>检查什么</th>
+					<th>最适合</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Agent evaluators</td>
+					<td>按需（对追踪的批量运行）</td>
+					<td>8 个内置评估器，覆盖系统结果和过程质量</td>
+					<td>衡量端到端智能体质量和工具使用</td>
+			</tr>
+			<tr>
+					<td>Custom evaluators</td>
+					<td>按需（对追踪的批量运行）</td>
+					<td>任意领域特定规则（合规短语、格式检查、策略）</td>
+					<td>超出内置评估器的企业需求</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="32-智能体评估器">3.2 智能体评估器</h3>
+<p>Microsoft Foundry 提供 9 个内置的智能体评估器，分成两类：系统评估器看端到端结果（任务遵循、任务完成、意图识别），过程评估器看工作流里的每一步（工具调用准确性、工具选择、工具输入准确性、工具输出利用、工具调用成功）。第 9 个评估器 Task Navigation Efficiency 需要 ground truth，所以不包含在默认批量运行里。</p>
+<p>这套 kit 通过 scripts/20-agent-batch-eval.py，在一次批处理里对智能体存在 Application Insights 里的追踪跑全部 8 个评估器。</p>
+<p>一次验证过的运行结果（11 条追踪、8 个评估器打分）：</p>
+<table>
+	<thead>
+			<tr>
+					<th>评估器</th>
+					<th>得分</th>
+					<th>说明</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>task_adherence</td>
+					<td>73% (8/11)</td>
+					<td>11 例中 8 例遵循了系统指令</td>
+			</tr>
+			<tr>
+					<td>task_completion</td>
+					<td>64% (7/11)</td>
+					<td>4 个失败里包含故意触发错误的提示</td>
+			</tr>
+			<tr>
+					<td>intent_resolution</td>
+					<td>73% (8/11)</td>
+					<td>正确识别并处理了用户意图</td>
+			</tr>
+			<tr>
+					<td>tool_call_accuracy</td>
+					<td>80% (8/10)</td>
+					<td>用对了工具且参数正确</td>
+			</tr>
+			<tr>
+					<td>tool_selection</td>
+					<td>73% (8/11)</td>
+					<td>没有多余的工具调用</td>
+			</tr>
+			<tr>
+					<td>tool_input_accuracy</td>
+					<td>82% (9/11)</td>
+					<td>参数格式正确且有依据</td>
+			</tr>
+			<tr>
+					<td>tool_output_utilization</td>
+					<td>55% (6/11)</td>
+					<td>最严格的过程评估器：智能体在回答里用了工具结果吗？</td>
+			</tr>
+			<tr>
+					<td>tool_call_success</td>
+					<td>82% (9/11)</td>
+					<td>2 个失败是故意触发的错误</td>
+			</tr>
+	</tbody>
+</table>
+<p>每个评估器都需要一份 data_mapping，告诉 Foundry 去读哪些追踪字段。系统评估器需要 query + response；过程评估器再加上 tool_definitions 和 tool_calls。所有评估器还都需要 deployment_name 作为初始化参数。少了任何一个，就会得到 MissingRequiredDataMapping 错误（这是 Foundry 在提示你评估契约不完整）。如果你撞上它，检查你的 data_mapping 字典是不是包含了你要跑的评估器需要的每个字段，以及那些字段是不是真的存在于这次运行读取的 App Insights 追踪记录上。</p>
+<h3 id="33-自定义评估器合规短语检查">3.3 自定义评估器：合规短语检查</h3>
+<p>内置评估器覆盖了智能体质量和工具使用，但多数团队还需要领域特定的检查。Microsoft Foundry 支持两种自定义评估器：代码型（一个返回 0.0 到 1.0 浮点数的 Python grade() 函数，确定性强，非常适合合规短语、格式检查、正则匹配这类通过/失败规则）和提示型（一段由 LLM 评判的裁判提示，适合语气、有用性这类模糊标准）。这套 kit 用一个合规免责声明检查器演示了代码型的写法。</p>
+<p>工作流有三步：（1）在 evaluators/custom_compliance_phrase.py 里写一个 grade(sample, item) 函数，检查响应是否包含必需的免责声明短语，返回 1.0 或 0.0；（2）通过 scripts/11-custom-evaluator-register.py 把它注册到 Microsoft Foundry，脚本会上传源码、定义指标、设置通过阈值；（3）在任何批量评估的 testing_criteria 里，把它和内置评估器并列放进去。</p>
+<p>一次验证过的运行结果（10 条追踪打分）：</p>
+<p>compliance_check 评估器打了 40%（10 条追踪里 4 条通过）。通过的 4 条来自明确要求带免责声明的提示；失败的 6 条是没带免责声明的正常响应。把里面的逻辑换成你自己的、重新注册，同一套模式就能用在任何策略、格式或监管检查上。</p>
+<p>交互式的替代方案：想做现场演示或一步步探索的话，notebooks/ 目录里有评估设置的 Jupyter notebook 版本：01-continuous-eval-setup.ipynb（评估组 + 规则 + 批量运行）和 02-custom-evaluator-register.ipynb（自定义评估器注册）。它们跑的是和脚本一样的 SDK 调用，但可以一格一格执行。想不打开 notebook 就把四个按顺序全跑一遍，用 notebooks/run_notebooks.ps1。</p>
+<h2 id="4-红队测试自动化安全扫描">4. 红队测试：自动化安全扫描</h2>
+<p>质量评估器看的是智能体答得好不好。红队看的是它能不能被骗着答坏——那些主动想挑出有害、跑题或违反策略响应的对抗性用户。能通过质量评估的模型，在输入被精心构造去钻边界时照样可能翻车。这套 kit 用一次 Foundry 托管的扫描把这件事自动化了：生成攻击提示、以多轮对话发过去、再拿每条响应去对安全评估器打分。完整的 SDK 参考见 Run AI red teaming in the cloud。</p>
+<h3 id="41-扫描是怎么工作的">4.1 扫描是怎么工作的</h3>
+<p>scripts/12-red-team.py 在一个脚本里搞定一切：脚本创建一个临时 prompt 智能体（redteam-prompt-agent），镜像生产智能体的模型、指令和工具定义，然后建一个带三个安全评估器（禁止行为、任务遵循、敏感数据泄露）的评估组，再加一份把 PROHIBITED_ACTIONS 风险类别映射到目标的分类法。它发起一次攻击运行，在 5 轮对话里自动生成对抗性提示，最后在 finally 块里清掉临时智能体。典型运行时长：4 到 8 分钟。</p>
+<h3 id="42-结果与解读">4.2 结果与解读</h3>
+<p>这次扫描用三个安全评估器（Prohibited Actions、Task Adherence、Sensitive Data Leakage）和两种攻击策略（Flip 和 Base64）。</p>
+<p>想加更多策略——IndirectJailbreak、Tense、Morse、Crescendo 之类——往脚本的 attack_strategies 列表里塞就行。</p>
+<p>一次验证过的运行结果（total=204，passed=139，failed=65，errored=0）：</p>
+<p>攻击成功率（ASR）31.9%（204 条里 65 条失败）意味着攻击者在大约三分之一的尝试里诱出了不良响应。按评估器拆开看：Prohibited Actions 的 ASR 最高，38%；Sensitive Data Leakage 29%；Task Adherence 最低，21%。三种攻击策略（Base64、Baseline、Flip）表现相近，都在 31–34%，说明不管用哪种编码技巧，模型的安全姿态都差不多，也说明想实质性压低整体比率，得上自定义的安全系统提示。</p>
+<p>每条提示的判定结果保存在 artifacts/redteam_eval_output_items_redteam-prompt-agent.json。</p>
+<p>交互式的替代方案：notebooks/ 目录把红队工作流拆成两个 notebook：03-red-team-taxonomy.ipynb（预置分类法）和 04-red-team-run.ipynb（发起攻击运行并收集结果）。</p>
+<h2 id="5-可观测性">5. 可观测性</h2>
+<p>智能体部署好、流量流起来之后，你得能看到到底发生了什么。这一节讲这套 kit 露出遥测的两种方式：给临时排查用的原始 KQL 查询，以及给日常监控用的三个仪表盘视图。</p>
+<h3 id="51-用-kql-查遥测">5.1 用 KQL 查遥测</h3>
+<p>scripts/13-telemetry-kql.py 对 Log Analytics 工作区跑四条查询，每条回答一个不同的运营问题。所有查询都过滤 requests 表里的 invoke_agent span。</p>
+<table>
+	<thead>
+			<tr>
+					<th>KQL 查询</th>
+					<th>回答什么</th>
+					<th>关键字段</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>调用量 + 成功率</td>
+					<td>每个智能体多少次调用，多少失败？</td>
+					<td>count()、countif(success)、dcount(operation_Id) by name</td>
+			</tr>
+			<tr>
+					<td>延迟百分位</td>
+					<td>p50/p90/p95/p99 响应时间是多少？</td>
+					<td>percentile(duration, N)、avg(duration)、max(duration)</td>
+			</tr>
+			<tr>
+					<td>会话活动</td>
+					<td>流量在时间和会话间如何分布？</td>
+					<td>customDimensions 里的 session_id、bin(timestamp, 5m)</td>
+			</tr>
+			<tr>
+					<td>Token 使用</td>
+					<td>消耗了多少输入/输出 token？</td>
+					<td>customDimensions 里的 gen_ai.usage.input_tokens、gen_ai.usage.output_tokens</td>
+			</tr>
+	</tbody>
+</table>
+<p>这些正是驱动 Grafana 仪表盘面板的同一批信号。每条查询的完整 KQL 都在 scripts/13-telemetry-kql.py 里。</p>
+<h3 id="52-可视化遥测三个查看界面">5.2 可视化遥测：三个查看界面</h3>
+<p>上面的 KQL 查询适合临时排查，但日常监控你会想要仪表盘。这套 starter kit 填充了三个互补的视图，各服务不同的受众。</p>
+<h3 id="53-app-insights-agents-面板">5.3 App Insights Agents 面板</h3>
+<p>Azure Application Insights 里的 Agents（预览）面板是看智能体健康状况最快的方式。它从这套 kit 发出的 OpenTelemetry span 里自动填充，不需要导入仪表盘或做任何配置。</p>
+<p>一次成功运行之后，这个面板会显示：</p>
+<table>
+	<thead>
+			<tr>
+					<th>面板</th>
+					<th>展示什么</th>
+					<th>为什么重要</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Agent Runs</td>
+					<td>每个智能体随时间的调用次数</td>
+					<td>basic-responses 处理了 26 次，broken 智能体 9 次：一眼看出流量不均衡</td>
+			</tr>
+			<tr>
+					<td>Gen AI Errors</td>
+					<td>按操作类型（invoke_agent、chat、execute_tool）的错误</td>
+					<td>11 个 invoke 错误、2 个工具错误、1 个 chat 错误：定位哪一层在失败</td>
+			</tr>
+			<tr>
+					<td>Tool Calls</td>
+					<td>每个工具的调用次数、错误次数、平均耗时</td>
+					<td>get_orders 显示 4 个错误、平均 18.06 秒：在用户报告前发现坏的或慢的工具</td>
+			</tr>
+			<tr>
+					<td>Models</td>
+					<td>每个模型的调用次数、错误率、平均耗时</td>
+					<td>nonexistent-model-deployment-xyz 显示 775.33 毫秒、3 次调用全错：抓出配置错误的部署</td>
+			</tr>
+			<tr>
+					<td>Token Consumption</td>
+					<td>按模型堆叠的 token 使用</td>
+					<td>gpt-4o-mini 69.9K，gpt-5-mini 36.8K，gpt-4.1-mini 34.1K：看清哪个模型驱动成本</td>
+			</tr>
+			<tr>
+					<td>Evaluations</td>
+					<td>每个评估器的得分磁贴</td>
+					<td>intent_resolution 3.96、tool_call_accuracy 4.13、coherence 3.95：确认分数守在阈值之上</td>
+			</tr>
+	</tbody>
+</table>
+<p>从 Application Insights &gt; 左侧菜单 &gt; Agents（预览）进入。把时间范围设成&quot;Last 48 hours&quot;，避开 15 到 30 分钟的汇总延迟。</p>
+<h3 id="54-预置的-grafana-仪表盘">5.4 预置的 Grafana 仪表盘</h3>
+<p>三个 Azure 托管的仪表盘开箱即用，从同一批遥测里填充：</p>
+<table>
+	<thead>
+			<tr>
+					<th>面板</th>
+					<th>展示什么</th>
+					<th>为什么重要</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Agent Framework</td>
+					<td>每个智能体的 KPI：运行次数、延迟、token 花费、工具使用</td>
+					<td>所有智能体操作的单页概览</td>
+			</tr>
+			<tr>
+					<td>Agent Framework workflow</td>
+					<td>多步工作流和编排模式</td>
+					<td>追踪多智能体或多步流水线</td>
+			</tr>
+			<tr>
+					<td>Foundry</td>
+					<td>托管智能体细节：项目、部署、版本、身份</td>
+					<td>确认哪个智能体版本在线且健康</td>
+			</tr>
+	</tbody>
+</table>
+<p>三个里 Agent Framework 仪表盘最全，在一个视图里覆盖操作、token、工具和性能：</p>
+<table>
+	<thead>
+			<tr>
+					<th>面板</th>
+					<th>展示什么</th>
+					<th>为什么重要</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Summary Statistics</td>
+					<td>68 个操作、65K 输入 token、4.68K 输出 token、9.97 秒平均响应</td>
+					<td>一眼看健康和成本</td>
+			</tr>
+			<tr>
+					<td>Token Consumption Over Time</td>
+					<td>输入/输出 token 趋势 + 每个智能体的分解</td>
+					<td>gpt-4o-mini 32.6K、gpt-4.1-mini 17.5K、gpt-5-mini 17.5K：发现成本变化</td>
+			</tr>
+			<tr>
+					<td>Daily Cost Estimation</td>
+					<td>估算的每日成本（本次运行 $0.0256）</td>
+					<td>不离开仪表盘就能做预算跟踪</td>
+			</tr>
+			<tr>
+					<td>Tool Usage Leaderboard</td>
+					<td>每个工具的调用次数、成功率、平均/p95 延迟</td>
+					<td>get_orders 成功率 77.8%，roll_dice 100%：找出不可靠的工具</td>
+			</tr>
+			<tr>
+					<td>Chat p95 Latency by Model</td>
+					<td>每个模型的 p95 chat 延迟</td>
+					<td>并排比较模型响应速度</td>
+			</tr>
+			<tr>
+					<td>Agent Response Time Trends</td>
+					<td>延迟随时间变化，带 min/mean 区间</td>
+					<td>检测与部署相关的延迟退化</td>
+			</tr>
+			<tr>
+					<td>Success Rate</td>
+					<td>总体成功百分比（本次 98.5%）</td>
+					<td>给 on-call 分诊的单一红绿信号</td>
+			</tr>
+			<tr>
+					<td>Agent Performance Summary</td>
+					<td>每个智能体的操作数、平均耗时、成功率</td>
+					<td>broken-model 88.9% 成功：确认故意报错的智能体</td>
+			</tr>
+			<tr>
+					<td>Agent Utilization Heatmap</td>
+					<td>按智能体和时间桶的活动强度</td>
+					<td>可视化流量模式和空闲时段</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="55-自定义仪表盘">5.5 自定义仪表盘</h3>
+<p>这套 kit 在 artifacts/grafana/ 里附了两份可导入的仪表盘 JSON。主仪表盘（agent-observability-dashboard.json）提供一个完整的运营概览：</p>
+<table>
+	<thead>
+			<tr>
+					<th>面板</th>
+					<th>展示什么</th>
+					<th>为什么重要</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Agent Summary Statistics</td>
+					<td>68 个操作、60.6K 输入 token、4.25K 输出 token、9.97 秒平均响应</td>
+					<td>单行确认总体健康和成本</td>
+			</tr>
+			<tr>
+					<td>Chat and Tool Summary</td>
+					<td>115 次 LLM 调用、34 个 chat 会话、63 次工具调用、5.13 秒平均 chat 延迟</td>
+					<td>理解每个请求的构成</td>
+			</tr>
+			<tr>
+					<td>Operations Over Time</td>
+					<td>随时间的调用计数（chat、execute_tool、invoke_agent）</td>
+					<td>发现流量尖峰或安静时段</td>
+			</tr>
+			<tr>
+					<td>Token Consumption by Model</td>
+					<td>gpt-4o-mini 主导约 35K，gpt-5-mini 和 gpt-4.1-mini 其次</td>
+					<td>识别哪个模型驱动成本</td>
+			</tr>
+			<tr>
+					<td>Model Usage Distribution</td>
+					<td>gpt-4o-mini 50%，gpt-5-mini 25%，gpt-4.1-mini 24%，broken-model 1%</td>
+					<td>验证跨部署的负载分布</td>
+			</tr>
+			<tr>
+					<td>Response Duration by Model</td>
+					<td>gpt-4o-mini 平均约 6 秒/p90 7 秒，gpt-5-mini 约 6 秒，broken-model 接近 0</td>
+					<td>抓每个模型的延迟退化</td>
+			</tr>
+			<tr>
+					<td>Chat Latency by Model</td>
+					<td>每个模型的 p50 和 p90 chat 级延迟</td>
+					<td>gpt-5-mini p90 最高：钻取模型级性能</td>
+			</tr>
+	</tbody>
+</table>
+<p>配套仪表盘（agent-observability-custom-dashboard.json）加了五个更聚焦的面板做深入排查（每工具 p95 延迟、错误率、会话计数）。</p>
+<p>导入方式：Application Insights &gt; Dashboards with Grafana &gt; New &gt; Import &gt; 上传 JSON。两个都用了模板化变量，所以同一份 JSON 能跨环境用。完整走查见 docs/GRAFANA_GUIDE.md。</p>
+<h2 id="6-仓库结构">6. 仓库结构</h2>
+<p>先看个概览：</p>
+<table>
+	<thead>
+			<tr>
+					<th>目录</th>
+					<th>里面有什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>agent/</td>
+					<td>azd 项目根：4 个托管智能体、Bicep 基础设施（Foundry 账户、ACR、Application Insights、Log Analytics）</td>
+			</tr>
+			<tr>
+					<td>scripts/</td>
+					<td>run-e2e.ps1 编排器、validate-deployment.ps1、teardown.ps1、run-adhoc-traffic-and-eval.ps1，以及 13 个带编号的 Python/PowerShell 助手脚本</td>
+			</tr>
+			<tr>
+					<td>evaluators/</td>
+					<td>自定义代码评估器（grade(sample, item) -&gt; float）+ YAML 元数据</td>
+			</tr>
+			<tr>
+					<td>prompts/</td>
+					<td>三个语料：clean、ambiguous、safety-bait</td>
+			</tr>
+			<tr>
+					<td>artifacts/</td>
+					<td>所有运行输出（评估结果、遥测、仪表盘）。grafana/ 存放可导入的仪表盘 JSON</td>
+			</tr>
+			<tr>
+					<td>notebooks/</td>
+					<td>用于现场演示的评估和红队流程的 Jupyter 版本</td>
+			</tr>
+			<tr>
+					<td>docs/</td>
+					<td>QuickStart、手动深入指南、Grafana 指南</td>
+			</tr>
+	</tbody>
+</table>
+<pre tabindex="0"><code>/
+  agent/                              # azd project root
+    azure.yaml                        # service definitions for 4 hosted agents
+    src/
+      agent-framework-agent-basic-responses/
+        agent.yaml                    # primary agent (gpt-4o-mini)
+        main.py                       # @tool functions + Agent() constructor
+        requirements.txt              # agent-framework + foundry-hosting deps
+        Dockerfile                    # container build
+      agent-framework-agent-gpt5-mini/
+        agent.yaml                    # sister agent (gpt-5-mini)
+        main.py                       # same code, different model
+      agent-framework-agent-gpt41-mini/
+        agent.yaml                    # sister agent (gpt-4.1-mini)
+      agent-framework-agent-broken-model/
+        agent.yaml                    # deliberately broken (populates error charts)
+    infra/                            # Bicep (Foundry account, ACR, Application Insights, Log Analytics)
+  scripts/
+    run-e2e.ps1                       # single command: provision to smoke test (13 phases)
+    validate-deployment.ps1           # post-deploy validation (8 categories)
+    teardown.ps1                      # single command: destroy everything + purge
+    run-adhoc-traffic-and-eval.ps1    # ad-hoc traffic + eval refresh (skips infra/deploys)
+    03-grant-foundry-user.ps1         # grants Foundry User role to project MI
+    04-warmup.ps1                     # 3 fast pings to defeat scale-to-zero
+    05-seed-traffic.ps1               # 48 prompts from clean, ambiguous, safety-bait corpora
+    06b-alerts-rest.py                # 2 scheduled-query alerts via ARM REST
+    10-continuous-eval.py             # evaluation rule (3 agent evaluators)
+    11-custom-evaluator-register.py   # code-based compliance evaluator (grade -&gt; float)
+    12-red-team.py                    # adversarial red-team scan (temporary prompt agent)
+    13-telemetry-kql.py               # KQL export (volume, latency, tokens)
+    14-verify-continuous-eval.py      # verify eval runs completed
+    15-list-eval-rules.py             # debug: dump eval rule definitions + runs
+    16-list-rules.py                  # debug: list all evaluation rules (GA API)
+    17-list-connections.py            # debug: list project connections
+    18-trigger-eval-runs.py           # debug: store-based eval trigger workaround
+    20-agent-batch-eval.py            # batch eval: 8 agent evaluators over Application Insights traces
+  evaluators/
+    custom_compliance_phrase.py       # grade(sample, item) -&gt; float (0.0 or 1.0)
+    custom_compliance_phrase.yaml     # evaluator metadata for Foundry catalog registration
+  prompts/
+    clean.txt                         # normal traffic prompts
+    ambiguous.txt                     # edge-case prompts
+    safety-bait.txt                   # 5 adversarial prompts for safety testing
+  artifacts/                          # all run outputs (eval results, telemetry, dashboards)
+    sample-app-request.json           # reference: OTel GenAI span shape
+    sample-chat-dependency.json       # reference: LLM chat dependency span shape
+    grafana/
+      agent-observability-dashboard.json          # full operational dashboard (7 panels)
+      agent-observability-custom-dashboard.json   # companion dashboard (5 panels)
+      DASHBOARD_IMPORT_GUIDE.md                   # import walkthrough
+      DASHBOARD_SUMMARY.md                        # panel descriptions
+  notebooks/                          # interactive Jupyter versions for live demos
+    run_notebooks.ps1                 # runs all 4 notebooks in sequence via nbconvert
+    01-continuous-eval-setup.ipynb    # eval group + rule + batch run over traces
+    02-custom-evaluator-register.ipynb # custom evaluator registration
+    03-red-team-taxonomy.ipynb        # taxonomy creation (pre-stage)
+    04-red-team-run.ipynb             # red team attack run
+  docs/
+    QUICKSTART.md                     # 6-command walkthrough
+    MANUAL_GUIDE.md                   # step-by-step deep dive
+    GRAFANA_GUIDE.md                  # Grafana dashboard setup + custom KQL panels
+</code></pre><h2 id="7-小结与下一步">7. 小结与下一步</h2>
+<p>AI 可观测性不是可选的附加项，而是你有底气运营智能体系统的前提。跑过一遍我更确信这一点。这套 starter kit 把它落到了实处：一个能用的 Foundry 托管智能体、已插桩的遥测、仪表盘、批量评估、对抗性红队测试、合规检查、告警——全都一条命令预配、另一条命令拆掉。</p>
+<h3 id="现在就试">现在就试</h3>
+<p>Fork 仓库，在你自己的订阅上端到端跑一遍：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>git clone https://github.com/jvargh/ai-observability-starter-kit
+</span></span><span style="display:flex;"><span><span style="color:#6639ba">cd</span> ai-observability-starter-kit
+</span></span><span style="display:flex;"><span>pwsh -NoProfile -File scripts<span style="color:#0a3069">\r</span>un-e2e.ps1 -Region eastus2 -EnvName aiobs-foundry -SubscriptionId &lt;your-subscription-id&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>仓库地址：github.com/jvargh/ai-observability-starter-kit</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/">https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a></li>
+        
+        <li><a href="/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a></li>
+        
+        <li><a href="/post/2026-04-05-vector-drift-in-azure-ai-search-three-hidden-reasons-your-rag-accuracy-degrades-after-deployment/">Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因</a></li>
+        
+        <li><a href="/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/">Azure AI Foundry — 多代理编排与工作流</a></li>
+        
+        <li><a href="/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/">Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 AI 可观测性入门套件" target="_blank">Microsoft Foundry 智能体的 AI 可观测性入门套件</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/" title="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载" target="_blank">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/" title="Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略" target="_blank">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-05-vector-drift-in-azure-ai-search-three-hidden-reasons-your-rag-accuracy-degrades-after-deployment/" title="Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因" target="_blank">Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/" title="Azure AI Foundry — 多代理编排与工作流" target="_blank">Azure AI Foundry — 多代理编排与工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/" title="Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析" target="_blank">Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/" title="使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/" title="使用 Microsoft Olive 和 Foundry Local 部署自定义模型" target="_blank">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/" title="使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/" title="微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型" target="_blank">微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (27)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

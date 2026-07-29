@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Wed, 29 Apr 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Sat, 30 May 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Microsoft Foundry 智能体的 AI 可观测性入门套件</title>
+				<link>https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/</link>
+				<pubDate>Sat, 30 May 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/</guid>
+				<description>&lt;p&gt;本文编译自 Microsoft Tech Community 上 varghesejoji 的博客文章 &lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/ai-observability-starter-kit-for-microsoft-foundry-agents/4522751?WT.mc_id=AI-MVP-5003172&#34;&gt;AI Observability Starter Kit for Microsoft Foundry agents&lt;/a&gt;，我按自己上手时的理解重新整理，并补充了一些实际跑下来的体会。&lt;/p&gt;&#xA;&lt;p&gt;先把结论放前面：一条 PowerShell 命令，就能拉起一个包含四个智能体的 Microsoft Foundry 环境，带遥测、8 个内置评估器、1 个自定义合规评估器、一次自动化红队扫描，还有两条 scheduled-query 告警。整套东西端到端验证过，再敲一条命令就能全部拆掉。Fork 下来直接跑。我觉得它最对胃口的人群是那些在 Azure 上跑 AI 智能体、又不想自己手写一堆管道代码的应用开发者、ML 工程师和 SRE。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</title>
 				<link>https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/</link>

@@ -28,6 +28,13 @@
 				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260409144322-f7f14a3fbcbe44e68542addc98d9411b.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;封面图片&#34; src=&#34;https://beanhsiang.github.io/uploads/20260409144322-f7f14a3fbcbe44e68542addc98d9411b.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;在过去一年里，我一直在研究生产级 AI 智能体的构建。多智能体系统、RAG 流水线、一个全天候运行在 Mac mini 上的自主编程智能体……这些项目里最难搞的从来不是 AI 本身，而是基础设施。&lt;/p&gt;&#xA;&lt;p&gt;沙箱隔离、状态管理、工具执行、容器编排、凭据轮换、错误恢复——在智能体真正能做什么有用的事之前，往往需要好几个月的水管工程。&lt;/p&gt;</description>
 			</item>
 			<item>
+				<title>Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因</title>
+				<link>https://beanhsiang.github.io/post/2026-04-05-vector-drift-in-azure-ai-search-three-hidden-reasons-your-rag-accuracy-degrades-after-deployment/</link>
+				<pubDate>Sun, 05 Apr 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-04-05-vector-drift-in-azure-ai-search-three-hidden-reasons-your-rag-accuracy-degrades-after-deployment/</guid>
+				<description>&lt;p&gt;用 Azure AI Search 加 Azure OpenAI 搭 RAG 系统时，我碰到过一个很典型的现象：上线初期检索质量挺好，跑了一阵子却慢慢变差。代码没动，基础设施没改，服务也没出故障，可检索的相关性就是在往下掉。折腾了一番我才搞清楚，背后常见的元凶叫向量漂移（vector drift）。这篇就说说向量漂移到底是什么、它为什么会在生产环境的 RAG 系统里冒出来，以及怎么用 Azure 原生的模式设计一套抗漂移的架构。&lt;/p&gt;</description>
+			</item>
+			<item>
 				<title>Azure AI Foundry — 多代理编排与工作流</title>
 				<link>https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/</link>
 				<pubDate>Thu, 26 Mar 2026 08:00:00 +0800</pubDate>

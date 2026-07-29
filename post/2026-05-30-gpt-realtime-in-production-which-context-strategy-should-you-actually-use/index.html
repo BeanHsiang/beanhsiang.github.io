@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>GPT Realtime 上生产环境：到底该选哪种上下文策略？ | Innovation with tech</title>
+    <meta property="og:title" content="GPT Realtime 上生产环境：到底该选哪种上下文策略？ - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-05-30T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-05-30T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="GPT Realtime 上生产环境：到底该选哪种上下文策略？">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">GPT Realtime 上生产环境：到底该选哪种上下文策略？</h1>
+        </header>
+        
+  <time datetime="2026-05-30T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年5月30日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>如果你已经把 gpt-realtime 跑上了生产环境，大概率撞到过同一个问题：多轮对话之间，上下文到底该怎么管？</p>
+<p>听上去像个实现细节，其实不是。这个决定直接关系到：你每通电话的成本是三毛还是九毛，你呼叫中心的延迟能不能压在两秒以内，以及你的客户会不会在同一通电话里被迫把账号报上五遍。</p>
+<p>企业客户把语音和对话式 AI 从 demo 推向规模化时，追问的其实是同一件事：怎么优化 prompt 缓存策略，让调用量从每天一百通涨到十万通时，token 账单和延迟预算不会跟着爆炸。缓存是 realtime API 上撬动成本最狠的那根杠杆：缓存过的音频输入比未缓存便宜 99%，而解锁它靠的是一个稳定的前缀（prefix）。但到底哪种缓存策略真的赢，取决于你的应用是一次性查询、一段简短对话，还是呼叫中心那种动辄三十轮的升级工单。</p>
+<p>我拿 Microsoft Foundry 部署的 gpt-realtime 做了一组对照：七种上下文管理策略，同一套负载——一段十轮的病患入院登记对话，医疗支持场景。同一个模型，同一个区域，同一段系统提示词。变的只有策略本身。</p>
+<h2 id="为什么上下文策略是那根杠杆">为什么上下文策略是那根杠杆</h2>
+<p>实时语音通话的每一轮，都会把音频 token 发给模型、再收回音频 token。第 N 轮发什么，取决于你决定从第 1 到 N-1 轮里记住什么。这个决定定了你的 token 量，token 量定了你的账单。</p>
+<p>Azure gpt-realtime 在 realtime API 上的定价是这样的：音频输入 32 美元/百万 token，缓存音频输入 0.40 美元/百万 token（差不多九九折），音频输出 64 美元/百万 token。缓存折扣大得离谱，所以前缀稳不稳定，几乎就决定了成败。下面这七种策略，说白了就是对同一个问题给出的七个不同答案：第 N 轮，什么东西该待在 prompt 前缀里？</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260729160742-c6c246389d5e4171b67303c57528e889.png">
+            <img class="mx-auto" alt="七种上下文策略的基准测试概览" src="/uploads/20260729160742-c6c246389d5e4171b67303c57528e889.png" />
+        </a>
+    </p>
+<h2 id="七种策略">七种策略</h2>
+<p><strong>A）全量历史。</strong> 单条常驻 WebSocket，服务端保留每一条对话记录。第 10 轮能看到第 1 到 9 轮的完整内容。总计 18,123 token，缓存命中率 50.5%，一个稳定增长的前缀，缓存起来特别漂亮。记忆完美，代码最简单。但尾部延迟最糟：第 6 轮花了 6.3 秒，因为前缀越涨越长。而且 WebSocket 一断，整通电话的上下文就全没了。</p>
+<p><strong>B）无状态。</strong> 每轮开一条新 WebSocket，模型只看得到系统提示词和当前问题。总计 6,557 token，这是地板价。缓存命中率很低，也没有任何对话记忆——只有当每一轮都能独立成立时才用得上。</p>
+<p><strong>C）滑动窗口。</strong> 每轮新连接，但注入最近两组问答。第 5 轮能看到第 3、4 轮。总计 8,655 token。短期连贯性有了（&ldquo;对，就那个&rdquo;），可到第 5 轮，第 1 轮的细节已经丢了。缓存率掉到 20.4%，因为移动的窗口不停地打断前缀。</p>
+<p><strong>D）每 5 轮压缩一次。</strong> 用 gpt-realtime-mini 每 5 轮生成一段约 70 词的摘要，塞进系统提示词，之前的单轮记录丢弃。总计 8,660 token，缓存率 7.1%，每次刷新摘要都会让前缀失效。语义层面的长期记忆保住了（账号、最初的诉求）。不过我这个十轮测试只触发一次压缩，这套架构本来是奔着三十轮通话去的，在这儿没机会证明自己。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260729160742-b1e513277b0241ac96713ceefab7bd64.png">
+            <img class="mx-auto" alt="各策略的 token 用量与缓存表现对比" src="/uploads/20260729160742-b1e513277b0241ac96713ceefab7bd64.png" />
+        </a>
+    </p>
+<p><strong>E）滑动 + 压缩。</strong> 混合派。系统提示词里放老对话的压缩摘要，外加最近两轮的原文。总计 7,975 token，是所有保留记忆的策略里最紧凑的一个。两个时间尺度都覆盖到了：&ldquo;你之前提到……&quot;（摘要）和&quot;等一下，你刚说什么？&quot;（窗口）。缓存率 10.4%。能容忍重连的呼叫中心，我会首选它上生产。</p>
+<p><strong>F）服务端截断。</strong> &ldquo;让 API 自己搞定&quot;派。像 A 一样单条常驻 WebSocket，但你传一个截断配置，让服务端在指令后上下文超过 8,000 token 时丢掉最老的条目，保留窗口的 80%。客户端一行历史管理代码都不用写。结果它垫底。总计 18,247 token。八千的阈值在十轮负载里根本没触发——上下文一直没超——所以 F 表现得跟全量历史一模一样，只是多背了点开销。等它在更长的通话里真触发了，缓存会在触发那一轮断掉，省下的也只是一部分。而且你没法调它丢什么，服务端只会不加区分地挑最老的丢。它适合当安全网叠在别的策略上，而不是当主力打法。</p>
+<p><strong>G）会话内删除。</strong> 这才是给生产语音用的策略。单条常驻 WebSocket 整通电话都活着，这是最关键的一点。每轮之后，客户端检查 response.done → usage.total_tokens。一超过触发阈值（我们用的 600），客户端就做三件事：把最老的几轮总结成一个要点列表，对每一条被取代的条目在服务端调 conversation.item.delete，再把摘要作为系统消息插进去——整个过程不断开 WebSocket。最近两轮永远原样保留。这和 OpenAI cookbook 里的模式一致。总计 14,721 token，缓存率 23.9%。</p>
+<h2 id="撬动成本的是-token-量但决定生产选型的不是">撬动成本的是 token 量，但决定生产选型的不是</h2>
+<p>按总 token 排个序：B (6,557) → E (7,975) → C (8,655) → D (8,660) → G (14,721) → A (18,123) → F (18,247)。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260729160742-7f0a7a5000124331a4c67a29391976bb.png">
+            <img class="mx-auto" alt="按总 token 量排出的策略排行榜" src="/uploads/20260729160742-7f0a7a5000124331a4c67a29391976bb.png" />
+        </a>
+    </p>
+<p>看看 A 和 F，缓存命中率最高的两个（50.5%、46.3%），它们偏偏也是最贵的两个。缓存率是个虚荣指标。一万八千 token 打五折，还是比七千 token 打个低折扣要贵。真正付账单的那个数字，是总 token 量。</p>
+<p>无状态之所以在 token 量上赢，是因为它压根没在干那件难事，它没有记忆。当每一轮都能独立成立时它才对：药剂师语音查药、用药依从性打卡、药房 IVR 替代，任何&quot;状态由业务流程持有、LLM 只是个语音接口&quot;的场景。</p>
+<p>我从这组基准里拿到三个结论。为总 token 量优化，别盯着缓存命中率。缓存率是虚荣指标，大上下文上的高命中率，比小上下文上的低命中率还糟。选能满足你约束的最便宜策略，而不是绝对最便宜的那个。实时语音要用 G，查询类要用 B，呼叫中心要用 E。排行榜告诉你什么最便宜，你的用例告诉你什么能接受。</p>
+<p>几条原则，在大多数企业级语音和对话式 AI 部署里都成立：</p>
+<ul>
+<li>从你的通话形态出发，别从排行榜出发。三轮查询、十轮支持、三十轮升级，各有各的正确答案，挑那个贴合你典型会话的策略。</li>
+<li>为总 token 量优化。缓存命中率看着诱人，但它只给输入里被缓存的那部分打折；总 token 量才是同时驱动账单和延迟的东西。</li>
+<li>把系统提示词当成神圣的前缀空间。任何逐轮变化的东西都会把它后面的所有缓存打断，所以稳定内容（指令、人设、长期摘要）放前面，易变内容（当前轮、滑动窗口）放后面。</li>
+<li>早点定下你的延迟姿态。如果你有严格的两秒 SLA，重连型策略就出局了，你需要一整通电话都保持单条 WebSocket 存活的模式。能接受重连的话，选择就多了，通常还能省 token。</li>
+<li>把服务端截断当安全网，不是主力。它保证上下文不会无限膨胀，但用默认阈值，恰恰在你最需要的那些通话里很少触发。</li>
+<li>先测量，再优化。上生产后，把每轮的 token 数、缓存命中率、端到端延迟都埋点跑上至少一周，再选策略。合成基准（包括这一个）也只能近似真实客户对话的样子。</li>
+</ul>
+<p>完整代码在这里：<a href="https://github.com/ganachan/gpt-realtime-context-strategies/tree/main?WT.mc_id=AI-MVP-5003172">https://github.com/ganachan/gpt-realtime-context-strategies/tree/main?WT.mc_id=AI-MVP-5003172</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/">https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/">Microsoft Foundry 智能体的 AI 可观测性入门套件</a></li>
+        
+        <li><a href="/post/2026-05-30-migrating-to-gpt-5-x-without-breaking-gpt-4-a-practical-backward-compatible-playbook/">迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册</a></li>
+        
+        <li><a href="/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a></li>
+        
+        <li><a href="/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a></li>
+        
+        <li><a href="/post/2026-04-05-vector-drift-in-azure-ai-search-three-hidden-reasons-your-rag-accuracy-degrades-after-deployment/">Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" title="GPT Realtime 上生产环境：到底该选哪种上下文策略？" target="_blank">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 AI 可观测性入门套件" target="_blank">Microsoft Foundry 智能体的 AI 可观测性入门套件</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-migrating-to-gpt-5-x-without-breaking-gpt-4-a-practical-backward-compatible-playbook/" title="迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册" target="_blank">迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/" title="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载" target="_blank">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/" title="Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略" target="_blank">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-05-vector-drift-in-azure-ai-search-three-hidden-reasons-your-rag-accuracy-degrades-after-deployment/" title="Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因" target="_blank">Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/" title="Azure AI Foundry — 多代理编排与工作流" target="_blank">Azure AI Foundry — 多代理编排与工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/" title="Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析" target="_blank">Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/" title="使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/" title="使用 Microsoft Olive 和 Foundry Local 部署自定义模型" target="_blank">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (29)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -14,6 +14,13 @@
 		
 			<atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
 			<item>
+				<title>GPT Realtime 上生产环境：到底该选哪种上下文策略？</title>
+				<link>https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/</link>
+				<pubDate>Sat, 30 May 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/</guid>
+				<description>&lt;p&gt;如果你已经把 gpt-realtime 跑上了生产环境，大概率撞到过同一个问题：多轮对话之间，上下文到底该怎么管？&lt;/p&gt;&#xA;&lt;p&gt;听上去像个实现细节，其实不是。这个决定直接关系到：你每通电话的成本是三毛还是九毛，你呼叫中心的延迟能不能压在两秒以内，以及你的客户会不会在同一通电话里被迫把账号报上五遍。&lt;/p&gt;&#xA;&lt;p&gt;企业客户把语音和对话式 AI 从 demo 推向规模化时，追问的其实是同一件事：怎么优化 prompt 缓存策略，让调用量从每天一百通涨到十万通时，token 账单和延迟预算不会跟着爆炸。缓存是 realtime API 上撬动成本最狠的那根杠杆：缓存过的音频输入比未缓存便宜 99%，而解锁它靠的是一个稳定的前缀（prefix）。但到底哪种缓存策略真的赢，取决于你的应用是一次性查询、一段简短对话，还是呼叫中心那种动辄三十轮的升级工单。&lt;/p&gt;</description>
+			</item>
+			<item>
 				<title>Microsoft Foundry 智能体的 AI 可观测性入门套件</title>
 				<link>https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/</link>
 				<pubDate>Sat, 30 May 2026 12:00:00 +0800</pubDate>

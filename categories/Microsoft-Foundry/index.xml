@@ -21,6 +21,13 @@
 				<description>&lt;p&gt;我最近一直在琢磨一件事：为什么 AI 智能体用起来总有种&amp;quot;似曾相识的挫败感&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;我们把越来越多的活儿交给它——写材料、排会议、报税，甚至直接上手构建和调试生产系统。它的能力肉眼可见地在变强，可有个毛病始终没治好：同样的坑，它会一次又一次地踩进去。&lt;/p&gt;&#xA;&lt;p&gt;举个我自己踩过的例子。智能体执行 &lt;code&gt;python main.py&lt;/code&gt;，结果项目是用 &lt;code&gt;uv&lt;/code&gt; 管理依赖的，直接甩给我一个 &lt;code&gt;ModuleNotFoundError&lt;/code&gt;。它试了好几轮，最后摸索出 &lt;code&gt;uv run python main.py&lt;/code&gt; 才是对的。但下周再来一次呢？同样的报错，同样白烧掉的 token 和时间。如果它有&amp;quot;程序性记忆&amp;quot;（Procedural Memory），学一次就够了，然后记住这条：在用 uv 管理的项目里，一律走 &lt;code&gt;uv run&lt;/code&gt;。&lt;/p&gt;</description>
 			</item>
 			<item>
+				<title>在 Microsoft Copilot Studio 里落地多智能体编排</title>
+				<link>https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/</link>
+				<pubDate>Thu, 16 Jul 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260730143430-7fb4077b336941d29c203188425e3974.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;&#34; src=&#34;https://beanhsiang.github.io/uploads/20260730143430-7fb4077b336941d29c203188425e3974.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;把 copilot 从简单问答升级成真能干活的助手，我很快撞上一堵墙：单个智能体应付不了那种要走好几步、还跨领域的任务。当你指望一个 copilot 同时做推理、读实时数据、又要遵守各领域自己的规则时，问题就冒出来了，比如排障流程、汇总多个系统的洞察，或者把好几条业务线的信息揉到一起。&lt;/p&gt;&#xA;&lt;p&gt;多智能体编排的思路，是让 copilot 把活儿分给专门的智能体，同时留一个统一的决策层。下面这套编排器—专家（orchestrator–specialist）模式来自真实的客户实践，我照着在 Microsoft Copilot Studio 里从头走了一遍，顺带用 Activity Map 这类内置工具验证了智能体之间到底有没有好好协作。&lt;/p&gt;</description>
+			</item>
+			<item>
 				<title>自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</title>
 				<link>https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/</link>
 				<pubDate>Fri, 19 Jun 2026 12:00:00 +0800</pubDate>

@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Fri, 17 Jul 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Thu, 23 Jul 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</title>
+				<link>https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/</link>
+				<pubDate>Thu, 23 Jul 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/</guid>
+				<description>&lt;p&gt;只要跟正在把 Microsoft Foundry 往生产环境搬的企业团队聊过，我几乎都会听到同一条底线：智能体不能跑在公网上。它一旦碰到专有数据、内部 API 或者受监管的负载，安全团队就要求把它塞进公司自己的虚拟网络里，藏在专用终结点、中心防火墙和受控 DNS 后面。这种拓扑，也就是一个 Foundry &lt;strong&gt;Standard&lt;/strong&gt; 智能体被注入到 &lt;strong&gt;自带（BYO）VNet&lt;/strong&gt; 里，正是大多数大型组织真正推到生产的形态。也恰恰是在这里，很多团队的首次部署悄无声息地卡住了。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</title>
 				<link>https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/</link>

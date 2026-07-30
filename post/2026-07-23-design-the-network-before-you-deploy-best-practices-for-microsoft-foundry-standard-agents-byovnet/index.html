@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验 | Innovation with tech</title>
+    <meta property="og:title" content="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-07-23T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-07-23T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</h1>
+        </header>
+        
+  <time datetime="2026-07-23T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月23日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>只要跟正在把 Microsoft Foundry 往生产环境搬的企业团队聊过，我几乎都会听到同一条底线：智能体不能跑在公网上。它一旦碰到专有数据、内部 API 或者受监管的负载，安全团队就要求把它塞进公司自己的虚拟网络里，藏在专用终结点、中心防火墙和受控 DNS 后面。这种拓扑，也就是一个 Foundry <strong>Standard</strong> 智能体被注入到 <strong>自带（BYO）VNet</strong> 里，正是大多数大型组织真正推到生产的形态。也恰恰是在这里，很多团队的首次部署悄无声息地卡住了。</p>
+<p>卡住的原因有点反直觉。部署智能体本身，说到底不过是一份 Bicep 或 Terraform 模板，是轻松的那 20%。真正难啃的 80%，是你在运行模板<strong>之前</strong>就得定下来的网络设计。而且它有两个模板不具备的特点，一点都不留情面。</p>
+<p>第一，好几个选择是不可逆的。出站网络注入和智能体子网在部署后无法更改，子网也不能原地扩容。第一天选错了，等着你的是重新部署，而不是改个参数。第二，真正拖时间的是组织流程，不是技术。防火墙变更申请、从中心 IPAM 拿 IP、NSG 审批、中心辐射（hub-and-spoke）模型里 Private DNS 的归属，每一项都要几天到几周才能走完。等你部署到一半才发现少了个东西，你被卡住的地方是一张工单，不是一段模板。</p>
+<p>我写这篇就是想帮你避开这个坑。它写给真正管地基的人：平台/着陆区架构师、网络安全团队，以及负责跑部署、作为第二读者的 AI 平台负责人。目标很朴素：让你走进第一次规划会议时，就已经清楚自己要申请哪些子网、CIDR、DNS 区域、NSG 规则和防火墙 FQDN。把子网布局、Private DNS 设计和防火墙放行清单这三件事定对了，模板就回归它本该有的样子，一道走过场的手续。</p>
+<p>我每次跟企业聊 BYO VNet 里的 Foundry 标准智能体，开场几乎都是同一批问题。这些问题问得都对，而且每一个都是一次设计决策，不是排障步骤：</p>
+<ul>
+<li>我需要几个子网，每个长什么样？</li>
+<li>智能体子网该预留多大的 CIDR？</li>
+<li>中心防火墙上必须放行哪些 FQDN？</li>
+<li>Private DNS 区域放在哪儿？</li>
+<li>第一次智能体调用之前，我怎么证明这一切都对？</li>
+</ul>
+<p>下面几节把每个问题都当成一件你提前拍板的事来回答。</p>
+<p><strong>适用范围：</strong> Microsoft Foundry <strong>Standard</strong> 部署（account + project + capability host）注入到客户 VNet，可选用 API Management 打头，可选放在中心辐射架构的 Azure Firewall 后面并配中心 Private DNS。</p>
+<p><strong>这篇写给谁看？</strong></p>
+<table>
+	<thead>
+			<tr>
+					<th>读者</th>
+					<th>他们负责什么</th>
+					<th>从本文能拿到什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>云平台/着陆区架构师</td>
+					<td>子网、IPAM、Private DNS、中心辐射拓扑</td>
+					<td>要申请和预配的确切子网、CIDR 和 DNS 设计</td>
+			</tr>
+			<tr>
+					<td>网络安全负责人</td>
+					<td>NSG、Azure Firewall 策略、UDR</td>
+					<td>一次过审的防火墙放行清单和 NSG 规则集</td>
+			</tr>
+			<tr>
+					<td>AI 平台负责人/解决方案架构师</td>
+					<td>Foundry 部署本身</td>
+					<td>第一天就能交给网络团队的一份完整、精确的需求</td>
+			</tr>
+	</tbody>
+</table>
+<p><strong>怎么用这篇文章：</strong> 第 7 节的<a href="#7-%E4%B8%80%E4%BB%BD%E9%83%A8%E7%BD%B2%E5%89%8D%E6%A3%80%E6%9F%A5%E6%B8%85%E5%8D%95">部署前检查清单</a>才是交付物。1 到 6 节是每一个勾选项背后的推理，读一遍，之后就照着清单干活。</p>
+<h2 id="1-所有组件放在同一个区域">1. 所有组件放在同一个区域</h2>
+<p>平台层面并没有一条硬性要求，逼着 Foundry 标准部署的所有组件都待在同一个 Azure 区域。但一旦你把智能体运行时注入到自己的 VNet，把资源摊到跨区域会让你付出两样你并不想付的成本。</p>
+<p>第一是跨区域数据传输费。如果 Foundry 在区域 A，而 Cosmos、Search、Storage 或你的模型终结点落在区域 B，每一次智能体调用都要穿过跨区域 VNet 对等，这部分<strong>按 GB 双向计费</strong>。把一切留在同一区域，流量就在本地兜圈，没有跨区域对等，没有按 GB 的数据传输账单，云开支也实打实地降下来。</p>
+<p>第二是延迟。智能体的一次运行很&quot;话痨&quot;：读线程、调工具、查向量、调模型。跨区域每一跳多加 40 到 100 毫秒，用户在面向自己的响应里立刻就能感觉到。</p>
+<p><strong>经验法则：</strong> Foundry account、project、capability host、模型部署、依赖存储（Cosmos、Storage、Search）、APIM（如果用）、VNet 以及跳板机，最好全部放在同一区域。配对区域只留给灾备，别拿来做第一天的架构。</p>
+<h2 id="2-子网结构动模板之前先把布局画出来">2. 子网结构：动模板之前先把布局画出来</h2>
+<blockquote>
+<p><strong>在你照抄下面这张表之前，你的 SKU 和着陆区会改变它的形状。</strong> 下面的布局是生产负载（Premium APIM 加一台跳板机）的推荐模式，但有两个选择会实质性地把子网加进来或去掉。</p>
+<ul>
+<li><strong>APIM SKU 决定你需要一个子网还是两个。</strong> Standard v2 用 <strong>VNet 集成</strong>做出站，再用一个单独的<strong>专用终结点</strong>做入站，是两个各司其职的独立子网（apim-outbound-subnet 加上落在 pe-subnet 上的入站 PE）。Premium（经典版）支持完整的 <strong>VNet 注入</strong>，一个委托子网同时承载入站和出站，你拿到更高的吞吐、多区域、可用区，还少规划一个子网，代价是更高的价格。先选 SKU，子网数量随之而定。</li>
+<li><strong>跳板机子网取决于着陆区。</strong> 如果你企业的着陆区已经让运维能直接看到 spoke，比如走 ExpressRoute 或站点到站点 VPN，那你这里根本不需要专门的 jumpbox-subnet。什么时候加？当你要接入合作方团队、远程外包，或者任何还没有到 VNet 私有路由、又需要一个受控入口做 nslookup / 门户验证的人。</li>
+</ul>
+</blockquote>
+<p>我见得最多的错误，是把 VNet 当成一个扁平的大子网。Foundry Standard 加 APIM 有一批硬约束，会把你推向至少四个各有用途的子网：</p>
+<table>
+	<thead>
+			<tr>
+					<th>子网</th>
+					<th>用途</th>
+					<th>委托</th>
+					<th>说明</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>agent-subnet</td>
+					<td>Foundry capability-host 在这里为智能体运行时注入 NIC</td>
+					<td><strong>Microsoft.App/environments</strong>（必需）</td>
+					<td>里面<strong>不能有专用终结点</strong>，委托和 PE 的 NIC 无法共存</td>
+			</tr>
+			<tr>
+					<td>pe-subnet</td>
+					<td>Cosmos、Storage、Search、Foundry account 以及 APIM 入站的专用终结点</td>
+					<td>无</td>
+					<td>PE 子网不能被委托</td>
+			</tr>
+			<tr>
+					<td>apim-outbound-subnet</td>
+					<td>APIM VNet 集成，从 APIM 到私有后端的出口路径</td>
+					<td><strong>Microsoft.Web/serverFarms</strong>（必需）</td>
+					<td>专属于单个 APIM 实例，不能共享</td>
+			</tr>
+			<tr>
+					<td>jumpbox-subnet</td>
+					<td>供 RDP/SSH 访问、nslookup 验证、私有门户浏览的 VM</td>
+					<td>无</td>
+					<td>跟 pe-subnet 分开放，NSG 姿态不同、UDR 需求不同，你也不想让 VM 频繁增删啃掉 PE 的地址空间</td>
+			</tr>
+	</tbody>
+</table>
+<p><strong>同一个 VNet 里还有别的负载怎么办？</strong> 上面这张表是 Foundry + APIM 的基线。如果你还在旁边托管别的东西，比如 MCP 服务器、自定义 API、后台 worker，给每一个单独一个子网。它<strong>不能共用 agent-subnet</strong>（专属于一个 Foundry account），也不能共用 pe-subnet（不能委托），它的委托取决于宿主：Container Apps 用 Microsoft.App/environments（跟 Foundry 的是不同的环境），Container Instances 用 Microsoft.ContainerInstance/containerGroups，带 VNet 集成的 App Service / Functions 用 Microsoft.Web/serverFarms，AKS 或纯 VM 则不委托。</p>
+<h3 id="推荐的-apim-拓扑premium-v2入站走-pe出站走集成">推荐的 APIM 拓扑：Premium v2，入站走 PE、出站走集成</h3>
+<p>APIM 支持好几种网络模式。但对一个需要同时隔离入站网关<strong>和</strong>对私有后端的出站调用的生产级 Foundry 部署，能给出最干净拓扑的模式是这样的：</p>
+<ul>
+<li><strong>SKU：API Management Premium v2。</strong> Premium v2 给你可用区、更高吞吐、工作区、专用计算，以及最高的扩展上限，都是你希望一个坐在 Foundry 前面的 AI Gateway 在生产路径上具备的能力。Standard v2 支持同样的网络模型，但当这层 API 是一等的生产依赖时，你部署的应该是 Premium v2。</li>
+<li><strong>入站 = pe-subnet 上的专用终结点。</strong> 针对 Microsoft.ApiManagement/service 的 Gateway 子资源为 APIM 建一个专用终结点。它会自动注册进 privatelink.azure-api.net，给你一个不需要任何子网委托的私有入站 IP。反正 PE 子网本来也不能委托，所以 APIM 的入站正好该落在这儿，跟你其他的 PE 挨着。</li>
+<li><strong>出站 = VNet 集成进 apim-outbound-subnet。</strong> 启用 Premium v2 <a href="https://learn.microsoft.com/en-us/azure/api-management/integrate-vnet-outbound?WT.mc_id=AI-MVP-5003172">VNet 集成</a>，让 APIM 对后端的调用从一个委托给 Microsoft.Web/serverFarms 的专用子网出去。从这里，APIM 经由各自的 PE 去够到 Foundry、Cosmos、内部 HR API 等等，流量全程不碰公网。</li>
+</ul>
+<p>委托为什么重要：</p>
+<ul>
+<li>agent-subnet 上的 <strong>Microsoft.App/environments</strong> 把子网正式交给 Foundry capability-host 所运行的 Container Apps 托管环境底座。委托授权平台代你在子网内<em>预配和管理它自己的基础设施</em>（NIC、负载均衡器、健康探针、必需的路由策略），并让这个子网<strong>专属</strong>于那个服务，PE、VM 和其他任何负载都不能共享它。没有这个委托，capabilityHosts 的 PUT 会在子网校验时失败。</li>
+<li>APIM 出站子网上的 <strong>Microsoft.Web/serverFarms</strong> 是 Premium v2（或 Standard v2）VNet 集成必需的。这个子网是专用的，一个 APIM 实例独占它，不能跟任何其他 Azure 资源共享。另外记得在订阅里注册 Microsoft.Web 资源提供程序。</li>
+<li>委托<strong>不可互换</strong>：你没法以后把 agent-subnet 改成 PE 子网，因为一个子网不能同时托管委托服务<em>和</em>专用终结点。而且按 Foundry 官方指引，<strong>出站网络注入在部署后无法更改</strong>，智能体子网要慎选，以后想挪它就意味着重新部署 Foundry。</li>
+</ul>
+<p><strong>智能体子网的容量。</strong> <a href="https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/virtual-networks?WT.mc_id=AI-MVP-5003172">Foundry 智能体服务网络文档</a>对这点写得很明确：委托智能体子网的<strong>推荐大小是 /24（256 个地址）</strong>，正是因为子网委托给了 Microsoft.App/environments，Container Apps 运行时在横向扩展时会吃掉 IP。<strong>/27 是 API 强制的硬下限，对更小的非生产部署够用</strong>，比如 PoC、开发测试，或者你清楚扩展上限的低流量内部智能体。把 <code>/27</code> 当成平台能接受的下界，而不是生产环境要部署的尺寸。</p>
+<p>除此之外，你<strong>无法原地扩容子网</strong>，一旦用满，迁移是破坏性的。第一天就预配 /24，它不会让你多花一分钱，却能消除未来一整类扩容事故。</p>
+<p><strong>APIM 出站子网的容量。</strong> Premium v2 VNet 集成要求最小 /27，推荐 <strong>/24</strong> 留横向扩展的余量，道理一样，宁可给得宽裕些。</p>
+<h2 id="3-中心辐射加-azure-firewall写规则之前先把流量建模">3. 中心辐射加 Azure Firewall：写规则之前先把流量建模</h2>
+<p>如果你坐在一个中心化的 Azure Firewall 后面，还有一条 UDR 把 0.0.0.0/0 强行导过它，那运行时碰到的每一个主机名都得在你的应用规则集合里。部署之前，把流量分成两桶来建模会很有帮助。</p>
+<p>第一桶是 VNet 内、服务到服务的流量：Foundry 运行时到 Cosmos / Storage / Search / 你的模型终结点 / APIM。因为你在每一个服务前面都部署了<strong>专用终结点</strong>，这类流量是<strong>出站到 VNet 内部的私有 IP</strong>，不是出站到公网 FQDN。它默认也<strong>不经过防火墙</strong>：Azure 为每个 PE 注入的 /32 系统路由优先级高于你的 0.0.0.0/0 UDR，所以 PE 流量直奔 PE 的 NIC。你的 NSG 规则应当反映这一点：放行 agent-subnet → pe-subnet 的 443，数据平面就搞定了，这一段不需要防火墙应用规则。</p>
+<p>第二桶是出站到微软托管的控制平面 FQDN：Entra 令牌获取、托管标识、容器镜像拉取、评估遥测等等。防火墙应用规则集合真正要管的就是这一桶。</p>
+<h3 id="防火墙上要放行的源地址">防火墙上要放行的源地址</h3>
+<ul>
+<li>agent-subnet，运行时几乎每一次控制平面调用都从这里发起。</li>
+<li>jumpbox-subnet，如果你为了 <code>nslookup</code>、门户浏览和排障预配了专门的 jumpbox-subnet。</li>
+</ul>
+<h3 id="fqdn从文档给的基线开始">FQDN：从文档给的基线开始</h3>
+<p><a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/configure-private-link?WT.mc_id=AI-MVP-5003172#firewall-allowlisting">Foundry 专用链接官方文档</a>为带虚拟网络注入的 Foundry 发布了这份最小放行清单：</p>
+<table>
+	<thead>
+			<tr>
+					<th>场景</th>
+					<th>FQDN / 服务标记</th>
+					<th>为什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Agents</td>
+					<td><code>*.identity.azure.net</code>、<code>login.microsoftonline.com</code>、<code>*.login.microsoftonline.com</code>、<code>*.login.microsoft.com</code>（或用 AzureActiveDirectory 服务标记）</td>
+					<td>承载智能体运行时的 Azure Container App 委托所必需，Entra + 托管标识</td>
+			</tr>
+			<tr>
+					<td>Evaluations &amp; Traces</td>
+					<td>AzureMachineLearning 服务标记、<code>settings.sdk.monitor.azure.com</code></td>
+					<td>评估器目录，以及把结果送往 Application Insights。优先用服务标记而不是裸的 <code>*.blob.core.windows.net</code> 通配，它把出口范围收窄到 Foundry 真正需要的那几个微软托管存储终结点，而不是打开 Azure 里的每一个 blob 账户</td>
+			</tr>
+	</tbody>
+</table>
+<p>先从这里起步。如果你的部署<em>只是</em> Foundry + PE + 一个防火墙，这份清单通常就够了。</p>
+<h3 id="fqdn实践中你多半还得补上的部分">FQDN：实践中你多半还得补上的部分</h3>
+<p>如果你还在跑 APIM（Standard v2 出站集成）、拉容器镜像，或者端到端用 Application Insights，预计还要加上：</p>
+<table>
+	<thead>
+			<tr>
+					<th>类别</th>
+					<th>FQDN</th>
+					<th>什么时候需要</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Azure Resource Manager</td>
+					<td><code>management.azure.com</code>、<code>*.management.azure.com</code></td>
+					<td>运行时的 ARM 调用（读角色分配、资源元数据）</td>
+			</tr>
+			<tr>
+					<td>Microsoft Graph</td>
+					<td><code>graph.microsoft.com</code></td>
+					<td>某些智能体场景里的目录 / 用户上下文</td>
+			</tr>
+			<tr>
+					<td>容器镜像拉取</td>
+					<td><code>mcr.microsoft.com</code>、<code>*.data.mcr.microsoft.com</code>、<code>*.azurecr.io</code></td>
+					<td>cap-host 拉它的运行时镜像</td>
+			</tr>
+			<tr>
+					<td>APIM 内部遥测</td>
+					<td><code>*.prod.warm.ingest.monitor.core.windows.net</code>、<code>*.prod.hot.ingest.monitor.core.windows.net</code>、<code>*.prod.microsoftmetrics.com</code>、<code>azureprofiler.trafficmanager.net</code></td>
+					<td>仅当防火墙 Deny 日志显示 APIM 出站子网在试图够 Geneva/监控终结点时。大多数 Premium v2 部署里这段留在微软骨干网上，根本不碰防火墙</td>
+			</tr>
+			<tr>
+					<td>Application Insights 摄取</td>
+					<td><code>*.in.applicationinsights.azure.com</code>、<code>*.monitor.azure.com</code></td>
+					<td>如果你的应用或 APIM 往 App Insights 发遥测</td>
+			</tr>
+	</tbody>
+</table>
+<p>有一点要说清楚：通配符是务实的起点，而 premium SKU 上的 PE 才是给受监管、高敏感环境的加固手段，在那种环境里防火墙上一大片 IP 池本身就是一条合规问题。所以尽量用带专用终结点的 premium SKU，别在防火墙上开大通配。清单里有几个服务只在较低层级暴露公网多租户终结点，这也是你最后不得不放行 <code>*.data.mcr.microsoft.com</code>、<code>*.monitor.azure.com</code> 或 <code>*.in.applicationinsights.azure.com</code> 这类宽通配的原因，每一条都把一大片共享的微软 IP 开给了你的出口。premium 层级给了你一条退路。</p>
+<p><strong>为什么你明明没用 blob 存储，<code>*.blob.core.windows.net</code> / AzureMachineLearning 服务标记还是冒出来了：</strong> 好几个微软托管服务（App Insights、Foundry 评估器、Container Apps 镜像缓存）会绕经它们自己的存储账户。官方放行清单已经把它列进了 Evaluations &amp; Traces。</p>
+<h3 id="为迭代而设计">为迭代而设计</h3>
+<p>第一天就打开 Azure Firewall 诊断日志，指向一个 Log Analytics 工作区。你会想按源子网加目标 FQDN 过滤 Deny 事件，去补齐放行清单里剩下的缺口。不过你迭代的是一个<strong>很短</strong>的增量，而不是从零开始搭这份清单。</p>
+<h2 id="4-private-dns最该第一个做对的高价值决策">4. Private DNS：最该第一个做对的高价值决策</h2>
+<p>BYO VNet 的 Foundry 事故里，追溯到 DNS 的比追溯到任何其他单一组件的都多，这正是它值得第一个设计的原因。两条规则能帮你挡掉大部分问题。</p>
+<p><strong>规则一：绝不出现重复的 Private DNS 区域。</strong> 如果 privatelink.blob.core.windows.net 在你的 hub 和 spoke 里<strong>同时</strong>存在，VNet 解析就变得不确定，你会时不时解析到错误的私有 IP，甚至更糟，解析到 0.0.0.0。给每个区域挑一个家，把重复的删掉。</p>
+<p><strong>规则二：在中心辐射里，PDZ 属于 hub。</strong> 每一个 privatelink.* 区域都<strong>只在 hub 里建一次</strong>。把每个 spoke VNet 的 DNS 服务器都设成防火墙的私有 IP（Azure Firewall <strong>开启 DNS 代理</strong>）。spoke 的查询流程是：spoke 查询 → 防火墙 DNS 代理 → 在 hub 上下文里由 Azure DNS（168.63.129.16）解析 → hub 关联的 PDZ → 返回 PE 的 IP。这条链路跑通并不需要在 spoke 上再关联 PDZ。</p>
+<p><strong>Foundry Standard 需要的七个区域：</strong> privatelink.services.ai.azure.com、privatelink.openai.azure.com、privatelink.cognitiveservices.azure.com、privatelink.search.windows.net、privatelink.blob.core.windows.net、privatelink.documents.azure.com、privatelink.azure-api.net。</p>
+<p><strong>把流量强制导过防火墙：</strong> 光靠 VNet 对等<strong>不会</strong>把 spoke 出口送过 hub 防火墙，Azure 的路由更偏好直接走对等。你需要在每个 spoke 子网上放一条 UDR，用 0.0.0.0/0 指向防火墙私有 IP。没有这条 UDR，你的 FQDN 放行清单是在对空气生效。</p>
+<h2 id="5-网络安全组最小规则集">5. 网络安全组：最小规则集</h2>
+<p>NSG 是这样一层：少一条出站规则，数据平面就被悄悄掐断，一切都预配得干干净净，但谁也说不上话。用第 3 节那个两桶模型来想 NSG，VNet 内部服务到服务，加上出站控制平面。</p>
+<ul>
+<li><strong>放行出站 HTTPS（TCP 443）</strong>，从 agent-subnet 和 apim-outbound-subnet 到 <strong>pe-subnet 的 CIDR</strong>（或者你愿意的话，到相应的服务标记：AzureCosmosDB、Storage.<region>、AzureCognitiveSearch、AzureAD）。这覆盖了运行时经由各自专用终结点对 Cosmos、Storage、Search 以及 Foundry / 模型终结点的调用。</li>
+<li><strong>放行 APIM 的出站依赖</strong>，从 apim-outbound-subnet 至少放行到 Storage 和 AzureKeyVault 服务标记的出站 TCP 443，具体见 <a href="https://learn.microsoft.com/en-us/azure/api-management/integrate-vnet-outbound?WT.mc_id=AI-MVP-5003172#network-security-group">APIM 出站集成 NSG 参考</a>。漏了这些，就是经典的&quot;APIM 在门户里变成 Failed&quot;的症状。</li>
+<li><strong>放行来自防火墙子网的 RDP/SSH</strong>（不是来自公网）到 jumpbox-subnet，并用防火墙 DNAT 把它暴露出去，VM 上不挂公网 IP。</li>
+<li>在 agent、PE 和 APIM 子网上<strong>默认拒绝出站到公网</strong>，只让防火墙路由经 UDR 逃出去。这样每一次 FQDN 调用都走你的放行清单，而不是绕过它。</li>
+</ul>
+<h2 id="6-在写第一行智能体代码之前先验证">6. 在写第一行智能体代码之前先验证</h2>
+<p>在你从应用里调用 <code>agents.create()</code> 之前，先证明网络是对的。从你的跳板机上：</p>
+<p><strong>1. DNS 从 spoke 私有解析</strong></p>
+<pre tabindex="0"><code>nslookup &lt;foundry-account&gt;.services.ai.azure.com
+nslookup &lt;search-name&gt;.search.windows.net
+nslookup &lt;cosmos-name&gt;.documents.azure.com
+nslookup &lt;apim-name&gt;.azure-api.net
+</code></pre><p>每一条都应当返回一个 10.x / 192.168.x 的 IP（你的 PE），而不是公网 IP。</p>
+<p>如果跳板机能私有解析、但智能体子网不能，那你的 PDZ VNet 关联或者 UDR 出了问题。智能体子网必须解析到跟跳板机一样的私有 IP，否则运行时会出到公网 IP，然后在 Cosmos 上被你那个只认 PE 的防火墙回一个 403。</p>
+<p>同样的源 IP 原则也适用于防火墙规则：你从哪些子网验证的，就得把它们作为 sourceAddresses 列进应用规则集合，连同它们要够到的每一个 FQDN。</p>
+<h2 id="7-一份部署前检查清单">7. 一份部署前检查清单</h2>
+<p>在你启动部署<strong>之前</strong>走一遍这份清单，每一项现在修都比 capabilityHosts PUT 已经在飞之后修要便宜。</p>
+<ul>
+<li>智能体子网委托给 Microsoft.App/environments，按微软官方推荐定为 /24（/27 是 API 强制的硬下限，不是目标）。</li>
+<li>已经决定智能体工具是否跑在 VNet 后面，并据此选好了对应模板（standard 还是 tools-behind-VNet）。</li>
+<li>APIM 入站经由 pe-subnet 上的专用终结点，APIM 出站经由 VNet 集成进一个委托给 Microsoft.Web/serverFarms 的专用 apim-outbound-subnet，大小 /24（最小 /27）。</li>
+<li>privatelink.* 的 PDZ（含 privatelink.azure-api.net）只存在一次（中心辐射的话就在 hub 里），并且只关联到 hub VNet，spoke 经防火墙 DNS 代理去解析它们。</li>
+<li>spoke VNet 的 DNS = 防火墙私有 IP，防火墙策略开启了 DNS 代理。</li>
+<li>每个 spoke 子网上有一条 UDR 把 0.0.0.0/0 强制导向防火墙。</li>
+<li>防火墙应用规则包含文档里的 Foundry 基线（见第 3 节），加上你额外部分的补充（容器拉取、App Insights），并把智能体子网和跳板机子网作为源地址。（只有当 Deny 日志显示来自 apim-outbound-subnet 的流量时，才把它加进去。）</li>
+<li>NSG 放行从智能体子网和 APIM 出站子网到 PE 子网 CIDR（或相应服务标记）的出站 443，以及按 APIM 文档放行 APIM 的 Storage / AzureKeyVault 出站规则。</li>
+<li>从跳板机和智能体子网做的 nslookup，对 Foundry、Cosmos、Storage、Search、APIM 都返回私有 IP。</li>
+</ul>
+<h2 id="收个尾先决策再部署">收个尾：先决策，再部署</h2>
+<p>BYO VNet 上的 Foundry Standard 并不比任何其他做了网络隔离的 Azure 负载更难。它只是五个产品面的交叉口，Foundry、APIM、Cosmos、Search、Storage，每一个都有自己那点私有网络的怪脾气。让它显得难的，是先部署、再回过头撞上约束。</p>
+<p>把这个顺序倒过来，它就顺了。在你跑任何一份模板之前：</p>
+<ul>
+<li>锁定<strong>子网布局和委托</strong>。智能体子网不可逆，第一天就定 /24。</li>
+<li>把 <strong>Private DNS 一次性设计好，放在 hub</strong>，并用 UDR 把 spoke 出口强制导过防火墙。</li>
+<li>把<strong>防火墙放行清单和 NSG 规则</strong>攒成一份变更申请，让网络团队一次过审。</li>
+<li>在任何智能体代码存在之前，就<strong>从跳板机和智能体子网两头验证 DNS</strong>。</li>
+<li>整件事照着<strong>部署前检查清单</strong>跑，那份清单才是交付物，上面的一切都是它背后的推理。</li>
+</ul>
+<p>这几件事做对了，模板就是走个手续。做错了，你就得重新部署。这就是&quot;网络优先&quot;这个思路的全部理由。</p>
+<h2 id="接下来去哪儿">接下来去哪儿</h2>
+<ul>
+<li><strong>官方微软示例模板（Bicep + Terraform）</strong>，对应这里描述的确切部署，在 microsoft-foundry/foundry-samples 仓库的 infrastructure/ 目录：<a href="https://github.com/microsoft-foundry/foundry-samples/tree/main/infrastructure?WT.mc_id=AI-MVP-5003172">https://github.com/microsoft-foundry/foundry-samples/tree/main/infrastructure</a>
+<ul>
+<li>15-private-network-standard-agent-setup，做端到端网络隔离的标准智能体（工具<strong>不</strong>在 VNet 后面）。</li>
+<li>16-private-network-standard-agent-apim-setup，APIM 打头的拓扑。</li>
+<li>19-private-network-agent-tools，当智能体<strong>工具</strong>也必须留在 VNet 内时用这个。</li>
+</ul>
+</li>
+<li><strong>Foundry 智能体服务的限制、支持的工具、区域和排障</strong>，什么允许、什么不允许、支持哪些工具和模型、如何端到端处理限额/配额错误：<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/limits-quotas-regions?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/limits-quotas-regions</a></li>
+<li><strong>为 Foundry 智能体服务设置私有网络</strong>（Bicep / Terraform / azd 演练），以及配套的《深入 Foundry 智能体服务网络》讲子网容量与 IP 分配：<a href="https://learn.microsoft.com/en-us/azure/foundry/how-to/configure-private-link?view=foundry-classic&amp;WT.mc_id=AI-MVP-5003172">如何为 Microsoft Foundry 配置网络隔离</a>、<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/virtual-networks?WT.mc_id=AI-MVP-5003172">https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/virtual-networks</a></li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/">https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a></li>
+        
+        <li><a href="/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/">在 Microsoft Copilot Studio 里落地多智能体编排</a></li>
+        
+        <li><a href="/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a></li>
+        
+        <li><a href="/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a></li>
+        
+        <li><a href="/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/">用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" title="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆" target="_blank">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/" title="在 Microsoft Copilot Studio 里落地多智能体编排" target="_blank">在 Microsoft Copilot Studio 里落地多智能体编排</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" title="自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" title="如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" target="_blank">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/" title="用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关" target="_blank">用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" title="GPT Realtime 上生产环境：到底该选哪种上下文策略？" target="_blank">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 AI 可观测性入门套件" target="_blank">Microsoft Foundry 智能体的 AI 可观测性入门套件</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-migrating-to-gpt-5-x-without-breaking-gpt-4-a-practical-backward-compatible-playbook/" title="迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册" target="_blank">迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/" title="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载" target="_blank">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (35)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

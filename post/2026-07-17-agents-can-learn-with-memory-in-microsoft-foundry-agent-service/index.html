@@ -9,19 +9,19 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
     
 
-    <title>FireUG x Global AI Bootcamp 2025 | Innovation with tech</title>
-    <meta property="og:title" content="FireUG x Global AI Bootcamp 2025 - Innovation with tech">
+    <title>让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆 | Innovation with tech</title>
+    <meta property="og:title" content="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆 - Innovation with tech">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content='2025-03-15T12:00:00&#43;08:00'>
+    <meta property="article:published_time" content='2026-07-17T12:00:00&#43;08:00'>
         
         
-    <meta property="article:modified_time" content='2025-03-15T12:00:00&#43;08:00'>
+    <meta property="article:modified_time" content='2026-07-17T12:00:00&#43;08:00'>
         
     <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
-    <meta name="description" content="FireUG x Global AI Bootcamp 2025">
+    <meta name="description" content="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆">
     <meta name="author" content="">
-    <meta property="og:url" content="https://beanhsiang.github.io/post/2025-03-22-fireug-global-ai-bootcamp-2025/">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/">
     <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
 
     <link rel="stylesheet" href='/css/normalize.css'>
@@ -76,18 +76,18 @@
     
     <article class="post">
         <header>
-            <h1 class="post-title">FireUG x Global AI Bootcamp 2025</h1>
+            <h1 class="post-title">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</h1>
         </header>
         
-  <time datetime="2025-03-15T04:00:00Z" class="post-meta meta-date dt-published">
-    2025年3月15日
+  <time datetime="2026-07-17T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月17日
   </time>
 
 
 <div class="post-meta meta-category">
   <span>&nbsp;|</span>
   
-    <a href='/categories/FireUG' target="_blank">FireUG</a>
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
   
 </div>
 
@@ -101,67 +101,96 @@
         
         
         <div class="post-content">
-            <h1 id="global-ai-bootcamp-2025">Global AI Bootcamp 2025</h1>
-<p>
-        <a data-fancybox="gallery" href="/uploads/aibootcamp2025.png">
-            <img class="mx-auto" alt="Bootcamp" src="/uploads/aibootcamp2025.png" />
-        </a>
-    </p>
-<p>DeepSeek shook the global AI community, making Hangzhou the first city to become popular by 2025 due to open-source large models. The &ldquo;Hangzhou Six Little Dragons&rdquo; has become a demonstration of the vigorous vitality of the city&rsquo;s scientific and technological innovation.</p>
-<p>On March 22nd, Global AI Bootcamp 2025 will come to Hangzhou, where a number of senior technical experts and developers in Hangzhou will focus on the practical application of the latest open source large models, and learn how to use AI to achieve x10 capabilities in their daily work.</p>
-<p>Join us to stay up-to-date on the latest AI technologies and explore a smarter AI future.</p>
-<h2 id="main-organizer">Main Organizer</h2>
-<p>Bin Xiang</p>
-<p>Microsoft Most Valuable Professional, One of the organizers of FireUG, Organizer at Global AI Bootcamp</p>
-<h2 id="agenda">Agenda</h2>
+            <p>我最近一直在琢磨一件事：为什么 AI 智能体用起来总有种&quot;似曾相识的挫败感&quot;。</p>
+<p>我们把越来越多的活儿交给它——写材料、排会议、报税，甚至直接上手构建和调试生产系统。它的能力肉眼可见地在变强，可有个毛病始终没治好：同样的坑，它会一次又一次地踩进去。</p>
+<p>举个我自己踩过的例子。智能体执行 <code>python main.py</code>，结果项目是用 <code>uv</code> 管理依赖的，直接甩给我一个 <code>ModuleNotFoundError</code>。它试了好几轮，最后摸索出 <code>uv run python main.py</code> 才是对的。但下周再来一次呢？同样的报错，同样白烧掉的 token 和时间。如果它有&quot;程序性记忆&quot;（Procedural Memory），学一次就够了，然后记住这条：在用 uv 管理的项目里，一律走 <code>uv run</code>。</p>
+<p>这可不是什么偶发的边角情况。智能体反复重新摸索同一套流程、把犯过的错再犯一遍，根源就一个：它不会从过去的经历里学东西。</p>
+<h2 id="现有的记忆系统到底缺了什么">现有的记忆系统到底缺了什么</h2>
+<p>市面上大多数记忆方案能存的是事实、用户偏好、对话历史这类信息。问题是，光有这些信息，还不足以告诉智能体&quot;这种情况下该怎么做&quot;。于是它执行工作流时不够稳，遵守那些没写明的约束时容易漏，重复的失败也躲不开。真正缺的那块拼图不是更多信息，而是&quot;怎么做&quot;的程序性知识。</p>
+<p>下面是一个购物助理智能体从过往轨迹里攒下来的一条经验。它只有两个字段：<code>Context</code> 和 <code>Action</code>。<code>Context</code> 描述这条经验在什么触发条件下适用，<code>Action</code> 则给出应该照做的动作模式。等智能体下次碰到类似场景，这条经验会被调出来，帮它把不可选的选项直接过滤掉，少走神，也少犯错。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;Context&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;when a user wants to exchange a product for a different variant&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;Action&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;check variants for availability and only present variants that are currently available&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="不是所有经历都值得学">不是所有经历都值得学</h2>
+<p>我越用越体会到一点：经历这东西，含金量差别很大。基础模型越来越强以后，很多&quot;成功案例&quot;其实只是把模型本来就会的东西又演了一遍，学了等于没学。真正有价值的反而是那些失败，还有差一点就失败的时刻。</p>
+<p>这些高信号的案例，会把决策里的软肋暴露出来：假设下错了、该做的校验没做、把隐含约束给违反了、任务还没干完就提前收工。把学习的重心压在这类经历上，智能体才会变得更靠谱，而不是一遍遍强化它早就熟练的那些动作。</p>
+<h2 id="没有标签怎么学">没有标签，怎么学</h2>
+<p>这里有个绕不开的研究难题。学术上早就证明过，智能体的技能可以从过往轨迹里蒸馏出来。可一旦要把这套东西搬进生产环境，麻烦就来了。</p>
+<p>跟那些带标注的基准数据集不一样，真实世界里的学习信号是埋在动作序列、工具输出和用户反馈里的。它们又吵、又不完整，还经常靠不住。你想从这堆噪声里捞出干净的&quot;该怎么做&quot;，难度完全是另一个量级。</p>
+<h2 id="foundry-agent-service-里的程序性记忆">Foundry Agent Service 里的程序性记忆</h2>
+<p>现在 Foundry Agent Service 的 Memory 已经支持程序性记忆了。它的做法是用 LLM-as-a-judge 去捕捉学习信号，提炼出真正能落地照做的经验，再把这些经验存进数据库。之后智能体一旦遇到和某条经验的 <code>Context</code> 相近的任务，这条经验就会被检索出来，注入到它当前的工作上下文里，引导它把这件事办得更快、更稳、也更准。</p>
+<p>我特别关注了它的评测数据。团队在两个基准上做了系统性分析：一个是 <a href="https://github.com/microsoft/STATE-Bench?WT.mc_id=AI-MVP-5003172">microsoft/STATE-Bench</a>，覆盖客服这类企业工作流任务；另一个是 <a href="https://github.com/sierra-research/tau2-bench?WT.mc_id=AI-MVP-5003172">sierra-research/tau2-bench</a>，测的是零售、航空客服等领域里工具、智能体和用户三方的交互。两个基准上的提升都挺一致。</p>
+<table>
+	<thead>
+			<tr>
+					<th>基准</th>
+					<th>指标</th>
+					<th style="text-align: center">无程序性记忆</th>
+					<th style="text-align: center">启用程序性记忆</th>
+					<th style="text-align: center">差值 Δ</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>STATE-Bench</td>
+					<td>Pass¹</td>
+					<td style="text-align: center">53.3%</td>
+					<td style="text-align: center">58.3%</td>
+					<td style="text-align: center">+5.0%</td>
+			</tr>
+			<tr>
+					<td>STATE-Bench</td>
+					<td>Pass⁵</td>
+					<td style="text-align: center">32.7%</td>
+					<td style="text-align: center">37.3%</td>
+					<td style="text-align: center">+4.6%</td>
+			</tr>
+			<tr>
+					<td>Tau-Bench</td>
+					<td>Pass¹</td>
+					<td style="text-align: center">75.1%</td>
+					<td style="text-align: center">79.8%</td>
+					<td style="text-align: center">+4.7%</td>
+			</tr>
+			<tr>
+					<td>Tau-Bench</td>
+					<td>Pass⁵</td>
+					<td style="text-align: center">49.1%</td>
+					<td style="text-align: center">55.4%</td>
+					<td style="text-align: center">+6.3%</td>
+			</tr>
+	</tbody>
+</table>
+<p>几个数字怎么读，这里说明一下：</p>
 <ul>
-<li>
-<p>[14:00-14:15] <strong>Introduction</strong></p>
-<p>Weiyu Xiao</p>
-<p>Microsoft Most Valuable Professional, One of the organizers of FireUG, NetCorePal Framework Developer</p>
-</li>
-<li>
-<p>[14:15-15:00] <strong>Deep Impact of DeepSeek</strong></p>
-<p>Hao Hu</p>
-<p>20-years Microsoft Most Valuable Professional, 18-year Microsoft Certified Trainer, Organizer and Speaker at Global AI Bootcamp / Global Azure Bootcamp / Global M365 Bootcamp / Global Power Platform Bootcamp</p>
-<p>Session Overview:</p>
-<p>DeepSeek has undoubtedly secured its place in the hottest AI discussions recently. But why does the release of this model create such a huge impact? In this session, we will explore its technical features in an easy-to-understand way and discuss how to refine model training and inference to achieve more powerful reasoning chains at a lower cost. What are the key differences between on-premises and cloud deployment? Can models on Azure AI be fine-tuned and distilled? Join us for an engaging discussion!</p>
-</li>
-<li>
-<p>[15:00-15:45] <strong>Smart Office Work, DeepSeek Leads the Way</strong></p>
-<p>QingLin Zhou</p>
-<p>23-years Microsoft Most Valuable Professional, ExcelHome.net founder, webmaster, technical author, consultant, and trainer.</p>
-<p>Session Overview:</p>
-<p>In the fast-paced workplace, efficiency is competitiveness. DeepSeek, as a powerful AI office tool, is revolutionizing workplace efficiency. How does it help us break free from tedious tasks? Through practical cases and operational demonstrations, we will delve into various efficient solutions for seamlessly using DeepSeek and share 7 practical workplace tips. How can DeepSeek be integrated with Excel, Word, WPS, or other AI tools to achieve a smarter office experience? Let’s explore together and open a new chapter in workplace efficiency!</p>
-</li>
-<li>
-<p>[14:40-14:50] <strong>Q&amp;A</strong></p>
-</li>
+<li>PM 就是程序性记忆（procedural memory）的缩写。</li>
+<li>Pass¹ 是任务的平均成功率，每个任务最多尝试 5 次，衡量的是&quot;尽力而为的能力&quot;，也就是智能体到底能不能把任务解出来。</li>
+<li>Pass⁵ 是那种 5 次尝试全都成功的任务占比，衡量的是稳定性和可靠性，也就是智能体能不能每次都稳定地把任务解出来。</li>
 </ul>
-<h2 id="photos">Photos</h2>
-<p>
-        <a data-fancybox="gallery" href="/uploads/WechatIMG28.jpg">
-            <img class="mx-auto" alt="Bootcamp1" src="/uploads/WechatIMG28.jpg" />
-        </a>
-    </p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/WechatIMG22.jpg">
-            <img class="mx-auto" alt="Bootcamp2" src="/uploads/WechatIMG22.jpg" />
-        </a>
-    </p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/WechatIMG23.jpg">
-            <img class="mx-auto" alt="Bootcamp3" src="/uploads/WechatIMG23.jpg" />
-        </a>
-    </p>
-<h2 id="link">Link</h2>
+<p>Pass⁵ 那几列的涨幅比 Pass¹ 还大，这点我觉得挺关键。它说明记忆带来的不只是&quot;偶尔能做对&quot;，而是让智能体在同一件事上的表现变得更稳。对生产系统来说，稳定往往比偶尔的高光更值钱。</p>
+<h2 id="接下来还能往哪走">接下来还能往哪走</h2>
+<p>官方给了几个方向，我读下来觉得都踩在痛点上。</p>
+<p>一个是从群体层面的模式里学。单条轨迹经常又吵又不可靠，但把大量相似轨迹聚到一起分析，就能筛出那些反复奏效的行为，也能把反复出现的失败模式挖出来，学到的东西自然更稳、也更通用。</p>
+<p>再一个是让记忆能升能降、持续接收反馈。程序性记忆不该是存进去就一成不变的死数据，环境在变，它也得跟着变。靠持续的反馈，把有用的经验往上提，把过时的往下压，记忆库才能一直跟当前的工作流和用户需求对得上。</p>
+<p>还有一个是记忆的整合。经验攒多了，冗余和碎片化就会拖垮检索质量。把相似的记忆合并成更高层的抽象，既能降噪，也能把一堆零散的经历变成可复用的行为知识。</p>
+<h2 id="想上手试试">想上手试试</h2>
+<p>如果你也想给自己的智能体装上这种能持续积累的程序性记忆，下面几个链接够你起步了：</p>
 <ul>
-<li>
-<p><a href="https://live.bilibili.com/22265589">Live: https://live.bilibili.com/22265589</a></p>
-</li>
-<li>
-<p><a href="https://globalai.community/bootcamp/china-hangzhou/">Host:https://globalai.community/bootcamp/china-hangzhou/</a></p>
-</li>
+<li><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/memory-usage?pivots=python&amp;WT.mc_id=AI-MVP-5003172">Create and Use Memory - Microsoft Foundry | Microsoft Learn</a>：Foundry Memory 的上手文档。</li>
+<li><a href="https://learn.microsoft.com/en-us/python/api/azure-ai-projects/azure.ai.projects.operations.betamemorystoresoperations?view=azure-python-preview&amp;WT.mc_id=AI-MVP-5003172">BetaMemoryStoresOperations 类 | Microsoft Learn</a>：Foundry Memory 的 API 参考。</li>
+<li><a href="https://github.com/microsoft/STATE-Bench?WT.mc_id=AI-MVP-5003172">STATE-Bench 仓库</a>：拿它来测测你自己的智能体。</li>
+<li><a href="https://opensource.microsoft.com/blog/2026/05/19/introducing-state-bench-a-benchmark-for-ai-agent-memory/?WT.mc_id=AI-MVP-5003172">Introducing STATE-Bench 博客</a>：想深入了解这个基准可以读它。</li>
 </ul>
 
         </div>
@@ -170,7 +199,7 @@
 <div class="post-archive">
     <ul class="post-copyright">
         <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
-        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2025-03-22-fireug-global-ai-bootcamp-2025/">https://beanhsiang.github.io/post/2025-03-22-fireug-global-ai-bootcamp-2025/</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/">https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/</a></li>
         <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
     </ul>
 </div>
@@ -184,13 +213,15 @@
     <h2>相关文章</h2>
     <ul class="listing">
         
-        <li><a href="/post/2024-12-30-fireug-review-2024/">FireUG 2024 年度回顾</a></li>
+        <li><a href="/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a></li>
         
-        <li><a href="/post/2024-12-14-fireug-net-conf-china-2024/">FireUG x .NET Conf China 2024</a></li>
+        <li><a href="/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a></li>
         
-        <li><a href="/post/2024-01-27-fireug-net-conf-china-2023-watch-party/">FireUG x .NET Conf China - Watch Party</a></li>
+        <li><a href="/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/">用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关</a></li>
         
-        <li><a href="/post/2023-12-30-fireug-review-2023/">FireUG 2023 年度回顾</a></li>
+        <li><a href="/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a></li>
+        
+        <li><a href="/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/">Microsoft Foundry 智能体的 AI 可观测性入门套件</a></li>
         
     </ul>
 </div>
@@ -200,7 +231,7 @@
             
             <ul class="clearfix">
                 
-                <li><a href='/tags/FireUG' target="_blank">FireUG</a></li>
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
                 
             </ul>
             

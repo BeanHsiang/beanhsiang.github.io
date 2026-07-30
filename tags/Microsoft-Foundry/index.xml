@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Fri, 19 Jun 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Fri, 17 Jul 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/tags/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</title>
+				<link>https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/</link>
+				<pubDate>Fri, 17 Jul 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/</guid>
+				<description>&lt;p&gt;我最近一直在琢磨一件事：为什么 AI 智能体用起来总有种&amp;quot;似曾相识的挫败感&amp;quot;。&lt;/p&gt;&#xA;&lt;p&gt;我们把越来越多的活儿交给它——写材料、排会议、报税，甚至直接上手构建和调试生产系统。它的能力肉眼可见地在变强，可有个毛病始终没治好：同样的坑，它会一次又一次地踩进去。&lt;/p&gt;&#xA;&lt;p&gt;举个我自己踩过的例子。智能体执行 &lt;code&gt;python main.py&lt;/code&gt;，结果项目是用 &lt;code&gt;uv&lt;/code&gt; 管理依赖的，直接甩给我一个 &lt;code&gt;ModuleNotFoundError&lt;/code&gt;。它试了好几轮，最后摸索出 &lt;code&gt;uv run python main.py&lt;/code&gt; 才是对的。但下周再来一次呢？同样的报错，同样白烧掉的 token 和时间。如果它有&amp;quot;程序性记忆&amp;quot;（Procedural Memory），学一次就够了，然后记住这条：在用 uv 管理的项目里，一律走 &lt;code&gt;uv run&lt;/code&gt;。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</title>
 				<link>https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/</link>

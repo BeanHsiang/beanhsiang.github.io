@@ -82,6 +82,34 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" target="_blank">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-17T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月17日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>我最近一直在琢磨一件事：为什么 AI 智能体用起来总有种&quot;似曾相识的挫败感&quot;。</p>
+<p>我们把越来越多的活儿交给它——写材料、排会议、报税，甚至直接上手构建和调试生产系统。它的能力肉眼可见地在变强，可有个毛病始终没治好：同样的坑，它会一次又一次地踩进去。</p>
+<p>举个我自己踩过的例子。智能体执行 <code>python main.py</code>，结果项目是用 <code>uv</code> 管理依赖的，直接甩给我一个 <code>ModuleNotFoundError</code>。它试了好几轮，最后摸索出 <code>uv run python main.py</code> 才是对的。但下周再来一次呢？同样的报错，同样白烧掉的 token 和时间。如果它有&quot;程序性记忆&quot;（Procedural Memory），学一次就够了，然后记住这条：在用 uv 管理的项目里，一律走 <code>uv run</code>。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
             </h1>
         </header>
@@ -334,38 +362,6 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/" target="_blank">Azure AI Foundry — 多代理编排与工作流</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-03-26T00:00:00Z" class="post-meta meta-date dt-published">
-    2026年3月26日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>Azure AI Foundry（前身为 Azure AI Studio）是微软提供的端到端平台，用于构建、测试、部署和监控 AI 代理及应用程序。它将模型、工具、框架和治理能力整合到一个统一的系统中。</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png">
-            <img class="mx-auto" alt="多代理编排概览" src="/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png" />
-        </a>
-    </p>
-<p>现代企业自动化往往需要多个 AI 系统协同完成任务。与其让单一的大型语言模型承担所有工作，Azure AI Foundry 引入了多代理编排机制——让专业化的 AI 代理在工作流中相互协作。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
@@ -448,6 +444,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" title="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆" target="_blank">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" title="自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
     </li>
     
@@ -483,10 +483,6 @@
         <a href="https://beanhsiang.github.io/post/2026-04-05-vector-drift-in-azure-ai-search-three-hidden-reasons-your-rag-accuracy-degrades-after-deployment/" title="Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因" target="_blank">Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/" title="Azure AI Foundry — 多代理编排与工作流" target="_blank">Azure AI Foundry — 多代理编排与工作流</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -506,7 +502,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (32)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (33)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

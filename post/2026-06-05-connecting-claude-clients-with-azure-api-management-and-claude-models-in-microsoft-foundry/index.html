@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关 | Innovation with tech</title>
+    <meta property="og:title" content="用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-06-05T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-06-05T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关</h1>
+        </header>
+        
+  <time datetime="2026-06-05T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年6月5日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>这篇是我照着 Microsoft 社区里一篇实战文章跑通之后整理的笔记，原文作者是 MuraliKumanduri，2026 年 6 月发布，<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/connecting-claude-clients-with-azure-api-management-and-claude-models-in-microso/4525212?WT.mc_id=AI-MVP-5003172">原文在这里</a>。我把它跑通并按自己的理解重讲一遍，方便以后复用。</p>
+<p>先说结论：这是一套能上生产的模式，给跑在 Microsoft Foundry 里的 Claude 模型前面套一层用 Entra 保护的 LLM 网关，做到按开发者认证、限流、配额和成本追踪，而且任何一台笔记本上都不落模型密钥。全套实现大概两小时，只想搭个最小试点的话半小时够了。</p>
+<h2 id="我想解决的问题">我想解决的问题</h2>
+<p>我想让团队里的工程师都用上 <a href="https://docs.claude.com/en/docs/claude-code/overview?WT.mc_id=AI-MVP-5003172">Claude Code</a>，但不想给每个人发 Anthropic 的 API key。直接把 Claude Code 指向 Anthropic、或者干脆指向 Foundry，对于超过几个人的团队都会带来三个麻烦：</p>
+<ol>
+<li><strong>密钥和账单会失控。</strong> 用一把共享 key，就没法按人分账，轮换起来是场灾难；一人一把 key，采购和离职回收又是没完没了的活。</li>
+<li><strong>没有节流。</strong> Claude Code 很吃 token，它读文件、做规划、在长循环里反复改代码。一个跑飞的会话，或者一个用得太猛的团队，就能刷出一张吓人的账单，而开发者和模型之间没有任何拦截。</li>
+<li><strong>看不见花销。</strong> 财务想知道每个团队花了多少钱，安全想知道谁在调什么。一把裸 key，这两样都给不了。</li>
+</ol>
+<p>我的解法是在中间架一台每个请求都必须流经的<strong>网关</strong>：它知道开发者<strong>是谁</strong>（Entra ID），管着他<strong>能用多少</strong>（APIM 的 GenAI 策略），还记着他<strong>用了什么</strong>（Azure Monitor）。Claude Code 本身就支持这种网关配置，正好对上。</p>
+<p>具体拆开来说，这套方案是这样的：</p>
+<ul>
+<li><strong>Claude 模型跑在 Microsoft Foundry 里</strong>，走你的 Azure 订阅计费，不需要 Anthropic 合同，也不需要它的 key。</li>
+<li><strong>Azure API Management（APIM）架在前面当 LLM 网关</strong>：用 Entra ID 认证每个开发者，按人限流、按人做 token 配额，再把每个人的用量指标打出来做分账回收。</li>
+<li><strong>Foundry 单独放在它自己的 Azure 订阅里</strong>，APIM 用一把 Foundry API key 去访问它，跨订阅的 RBAC 一点都不用碰。</li>
+<li><strong>开发者手上只有短时效的 Entra token</strong>，Foundry 的 key 永远不出 APIM。</li>
+</ul>
+<p>下面的每一步都是照着 <a href="https://docs.claude.com/en/docs/claude-code/llm-gateway?WT.mc_id=AI-MVP-5003172">Claude Code 的 LLM 网关要求</a>和 APIM 的 GenAI 网关策略来的。所有命令行我都用 Windows 的 PowerShell 写。</p>
+<h2 id="整体架构">整体架构</h2>
+<p>开发者笔记本上的 Claude Code 拿一个 Entra ID bearer token 去认证 APIM；APIM 校验 token，套上按人的 token 和请求限制，换成 Foundry 的 API key，再把 Anthropic Messages 请求转发给另一个订阅里的 Claude；每个人的 token 用量都打到 Application Insights。</p>
+<p>请求路径长这样：</p>
+<pre tabindex="0"><code>Developer laptop  (Claude Code CLI / VS Code)
+   |   Authorization: Bearer &lt;Entra access token for the APIM app&gt;
+   v
+Azure API Management   (the LLM gateway)              [Subscription A]
+   |  1. validate-jwt            confirm Entra identity, audience, app role
+   |  2. extract oid             per-user counter key
+   |  3. llm-token-limit         per-user tokens/min + monthly token quota
+   |  4. rate-limit-by-key       per-user requests/min
+   |  5. strip Authorization; set api-key from secret named value
+   |  6. llm-emit-token-metric   per-user usage to App Insights
+   v   (forwards Anthropic Messages format; anthropic-* headers preserved)
+Microsoft Foundry  https://{resource}.services.ai.azure.com/anthropic/v1/messages
+   v                                                    [Subscription B]
+Claude deployments   (Sonnet 4.6 / Haiku 4.5 / Opus 4.6)
+</code></pre><p>这里最关键的一点是：面向开发者的认证和面向后端的认证互不相干。开发者永远用自己的 Entra ID 在网关这层证明身份；网关拿什么去认证 Foundry 是另一件事，有两条都能走的路。</p>
+<h3 id="网关怎么认证-foundry">网关怎么认证 Foundry</h3>
+<p>下面两个选项跟开发者侧的 Entra ID 认证都没关系，而且不管 Foundry 跟 APIM 是不是同一个订阅都能用。托管标识唯一的硬约束是两个资源得在同一个 Entra 租户里。</p>
+<table>
+	<thead>
+			<tr>
+					<th></th>
+					<th><strong>选项 A — Foundry API key</strong></th>
+					<th><strong>选项 B — 托管标识</strong></th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>APIM 怎么认证</td>
+					<td>从密文命名值取 api-key 头</td>
+					<td>用 APIM 托管标识拿 Entra token，放进 Authorization 头</td>
+			</tr>
+			<tr>
+					<td>搭建</td>
+					<td>读一次 key，存进 APIM</td>
+					<td>开 APIM 的标识，在 Foundry 上授 Cognitive Services User</td>
+			</tr>
+			<tr>
+					<td>同订阅</td>
+					<td>可用</td>
+					<td>可用</td>
+			</tr>
+			<tr>
+					<td>跨订阅</td>
+					<td>可用，没有 RBAC 跨边界</td>
+					<td>可用，同租户下角色分配能跨订阅</td>
+			</tr>
+			<tr>
+					<td>跨租户</td>
+					<td>可用</td>
+					<td>不支持，得用 key</td>
+			</tr>
+			<tr>
+					<td>要轮换的共享密钥</td>
+					<td>有</td>
+					<td><strong>没有</strong></td>
+			</tr>
+			<tr>
+					<td>适合</td>
+					<td>起步最快；跨租户；只有 key 的环境</td>
+					<td>生产；彻底去掉共享密钥</td>
+			</tr>
+	</tbody>
+</table>
+<p>我这份笔记从头到尾走 key 方案，同时在第 3、4 部分把托管标识的替换点原地标出来。选一条就行，不用两条都做。</p>
+<h3 id="这套设计到底解决了什么">这套设计到底解决了什么</h3>
+<table>
+	<thead>
+			<tr>
+					<th>目标</th>
+					<th>怎么做到的</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>开发者用 Claude Code 但没有 Anthropic 账单和 key</td>
+					<td>Claude 跑在 Microsoft Foundry，走你的 Azure 订阅计费</td>
+			</tr>
+			<tr>
+					<td>Foundry 可以放在另一个订阅</td>
+					<td>APIM 只靠 URL + API key 访问 Foundry，没有跨订阅 RBAC</td>
+			</tr>
+			<tr>
+					<td>每个开发者都以自己的身份认证</td>
+					<td>Entra ID token 在 APIM 网关处校验</td>
+			</tr>
+			<tr>
+					<td>按人限流和配额</td>
+					<td>rate-limit-by-key + llm-token-limit，都以 Entra 的 oid claim 为键</td>
+			</tr>
+			<tr>
+					<td>按人追踪用量和成本</td>
+					<td>llm-emit-token-metric → Application Insights / Log Analytics</td>
+			</tr>
+			<tr>
+					<td>笔记本上不落 Foundry key</td>
+					<td>Foundry key 只活在 APIM 里，开发者只拿短时效的 Entra token</td>
+			</tr>
+	</tbody>
+</table>
+<h2 id="前置条件">前置条件</h2>
+<ul>
+<li><strong>两个 Azure 订阅</strong>，都是按量付费。<strong>订阅 A</strong> 放 APIM，<strong>订阅 B</strong> 放 Foundry。（Foundry 的 Claude 不能跑在免费、试用、赞助或 CSP 订阅上。）</li>
+<li>一个 <strong>Microsoft Foundry</strong> 资源（订阅 B），放在 Claude 可用的区域，目前是 <strong>East US 2</strong> 或 <strong>Sweden Central</strong>，并且已经创建好 Claude 部署，在 <em>Keys and Endpoint</em> 下至少有一把 API key。</li>
+<li>一个 <strong>API Management</strong> 实例（订阅 A）。试点用 <strong>Developer</strong> SKU 就够；生产和 VNet 集成用 <strong>Standard v2</strong> 或 <strong>Premium</strong>。</li>
+<li>读订阅 B 里 Foundry key 的权限、APIM 实例的 contributor 权限，以及注册 Entra 应用的能力。</li>
+<li>开发者用 <strong>Windows</strong>，装好 <strong>PowerShell</strong>（自带 5.1 或 7）、<strong>Azure CLI</strong>（<code>winget install Microsoft.AzureCLI</code>）和 <strong>Claude Code CLI</strong>。</li>
+<li>试点成本：APIM Developer SKU 每月约 50 美元，再加上按 token 消耗算的 Claude 用量。</li>
+</ul>
+<p>选项 A（key）没有跨订阅的角色分配，唯一的跨订阅动作是读一次 Foundry key（第 3 部分），这个从 Foundry 门户也能做。选项 B（托管标识）有一个跨订阅的角色分配（<strong>Cognitive Services User</strong>），只要 APIM 和 Foundry 在同一个 Entra 租户就支持。</p>
+<h2 id="第-1-部分--在-foundry-里部署-claude订阅-b">第 1 部分 — 在 Foundry 里部署 Claude（订阅 B）</h2>
+<ol>
+<li>在 Foundry 门户打开 <strong>Model catalog</strong>，搜 <strong>Claude</strong>，把 Claude Code 用到的模型部署出来。部署名要跟模型 ID 对齐，这样网关就能原样透传 model 字段：
+<table>
+	<thead>
+			<tr>
+					<th>角色</th>
+					<th>建议的部署名</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>主力（日常写代码）</td>
+					<td>claude-sonnet-4-6</td>
+			</tr>
+			<tr>
+					<td>快速（读文件、小改动、后台任务）</td>
+					<td>claude-haiku-4-5</td>
+			</tr>
+			<tr>
+					<td>扩展思考（可选）</td>
+					<td>claude-opus-4-6</td>
+			</tr>
+	</tbody>
+</table>
+</li>
+<li><strong>锁版本</strong> — 选一个具体版本，不要选 <em>auto-update to latest</em>。不锁的话，一次新模型发布就能同时把所有开发者搞崩。</li>
+<li>在资源的 <strong>Keys and Endpoint</strong> 页复制 endpoint 和两把 API key 里的一把。Anthropic 的 endpoint 基址是：</li>
+</ol>
+<pre tabindex="0"><code>https://{resource}.services.ai.azure.com/anthropic
+</code></pre><p>这里有个坑要特别提醒：Foundry 的 Claude endpoint 是 <strong>Anthropic 那套接口</strong>（<code>/anthropic/v1/messages</code>），<strong>不是</strong> OpenAI 那套（<code>/openai/deployments/.../chat/completions?api-version=...</code>）。在 APIM 里建 API 时，别套 OpenAI 的策略模板，别加 <code>api-version</code> 查询参数，也别改写成 <code>/openai/...</code> 路径。这几样里任何一样都会引出大家常撞的 &ldquo;not supported&rdquo; 或 &ldquo;resource not found&rdquo; 报错。我第一次就是手贱套了 OpenAI 模板，排查了半天。</p>
+<p><strong>检查点：</strong> 到这一步你的 Claude 已经在 Foundry 里部署好了。继续第 2 部分之前，先去 <a href="https://ai.azure.com/?WT.mc_id=AI-MVP-5003172">Foundry 门户</a>确认部署没问题。</p>
+<h2 id="第-2-部分--entra-id-应用注册面向开发者">第 2 部分 — Entra ID 应用注册（面向开发者）</h2>
+<p>这个注册在订阅 A 的租户里。它定义开发者 token 签发时对应的 <strong>audience</strong>，也就是 APIM 要校验的东西。它跟 Foundry 放在哪没关系。</p>
+<ol>
+<li><strong>App registrations → New registration</strong> → 起个名，比如 <code>Claude Code Gateway</code>。</li>
+<li><strong>Expose an API</strong> → 设 Application ID URI，比如 <code>api://claude-code-gateway</code>。加一个 scope <code>access_as_user</code>（管理员 + 用户同意）。</li>
+<li><em>（可选，做分级用）</em> <strong>App roles</strong> → 加 <code>Claude.Standard</code>、<code>Claude.Premium</code> 这类角色。在 <strong>Enterprise applications → 这个应用 → Users and groups</strong> 下把开发者或组分配进去。</li>
+<li>记下 <strong>Application (client) ID</strong>、<strong>Application ID URI</strong> 和你的 <strong>Tenant ID</strong>。</li>
+</ol>
+<p>开发者向这个应用的 audience 请求 token；APIM 校验 <code>aud = api://claude-code-gateway</code>。</p>
+<h2 id="第-3-部分--建-apim-的-api-和-foundry-后端订阅-a">第 3 部分 — 建 APIM 的 API 和 Foundry 后端（订阅 A）</h2>
+<h3 id="31-选项-a--把-foundry-api-key-存进-apim">3.1 选项 A — 把 Foundry API key 存进 APIM</h3>
+<p>先从订阅 B 的 Foundry 里读 key（用 <code>--subscription</code>，这样不用切当前上下文）：</p>
+<pre tabindex="0"><code># Read a Foundry key from Subscription B
+$FOUNDRY_KEY = az cognitiveservices account keys list `
+  --name &lt;foundry-resource&gt; `
+  --resource-group &lt;foundry-rg&gt; `
+  --subscription &lt;SUBSCRIPTION_B_ID&gt; `
+  --query key1 -o tsv
+</code></pre><p>然后把它作为 <strong>密文命名值</strong>存进 APIM（订阅 A）。策略里用 <code>{{foundry-api-key}}</code> 引用：</p>
+<pre tabindex="0"><code># Create a secret named value in APIM holding the Foundry key
+az apim nv create -g &lt;apim-rg&gt; --service-name &lt;apim-name&gt; `
+  --named-value-id foundry-api-key `
+  --display-name foundry-api-key `
+  --value &#34;$FOUNDRY_KEY&#34; `
+  --secret true
+</code></pre><p>想更稳一点的话：别把裸 key 放 APIM，放进 <strong>Key Vault</strong>，再建一个 <strong>Key Vault 支持</strong>的命名值，轮换就集中在一个地方管。APIM 需要一个对那个 vault 有 <em>Get/List</em> 密文权限的托管标识，不过 vault 跟 APIM 都在订阅 A，所以这还是不算跨订阅的角色分配。</p>
+<h3 id="32-选项-b--给-apim-一个托管标识">3.2 选项 B — 给 APIM 一个托管标识</h3>
+<p>不想管共享 key 的话，<strong>跳过 3.1</strong>，给 APIM 一个 Foundry 信任的标识。这个在<strong>同订阅</strong>和<strong>跨订阅</strong>下都能用，只要两个资源在同一个 Entra 租户。</p>
+<pre tabindex="0"><code># Enable a system-assigned managed identity on APIM (Subscription A)
+az apim update -g &lt;apim-rg&gt; --name &lt;apim-name&gt; `
+  --set identity.type=SystemAssigned
+
+# Get the identity&#39;s principal (object) ID
+$APIM_MI = az apim show -g &lt;apim-rg&gt; --name &lt;apim-name&gt; `
+  --query identity.principalId -o tsv
+
+# Get the Foundry resource ID (Subscription B)
+$FOUNDRY_ID = az cognitiveservices account show `
+  --name &lt;foundry-resource&gt; --resource-group &lt;foundry-rg&gt; `
+  --subscription &lt;SUBSCRIPTION_B_ID&gt; `
+  --query id -o tsv
+
+# Grant Cognitive Services User on the Foundry resource (works cross-subscription)
+az role assignment create `
+  --assignee-object-id $APIM_MI `
+  --assignee-principal-type ServicePrincipal `
+  --role &#34;Cognitive Services User&#34; `
+  --scope $FOUNDRY_ID
+</code></pre><p><strong>Cognitive Services User</strong> 角色（<code>a97b65f3-24c7-4388-baec-2e87135dc908</code>）给的是调模型的数据面权限，不带密钥管理权。角色分配要几分钟才生效。用<strong>用户分配</strong>的标识也行，把它挂到 APIM 上，然后在策略里引用它的 client ID（第 4 部分选项 B）。走这条路就没有 <code>foundry-api-key</code> 命名值要建、要轮换了。</p>
+<h3 id="33-建后端和-api">3.3 建后端和 API</h3>
+<pre tabindex="0"><code># Named backend pointing at the Foundry Anthropic endpoint (Subscription B URL)
+az apim backend create -g &lt;apim-rg&gt; --service-name &lt;apim-name&gt; `
+  --backend-id foundry-claude `
+  --url &#34;https://&lt;foundry-resource&gt;.services.ai.azure.com/anthropic&#34; `
+  --protocol http
+
+# API with NO path suffix so callers hit /v1/messages at the gateway root
+az apim api create -g &lt;apim-rg&gt; --service-name &lt;apim-name&gt; `
+  --api-id claude-anthropic --display-name &#34;Claude (Foundry)&#34; `
+  --path=&#34;&#34; --protocols https `
+  --service-url &#34;https://&lt;foundry-resource&gt;.services.ai.azure.com/anthropic&#34;
+</code></pre><p><strong>PowerShell 加空字符串</strong>：写 <code>--path=&quot;&quot;</code>（用 <code>=</code> 连起来），<strong>不要</strong>写成 <code>--path &quot;&quot;</code> 两个 token。PowerShell 会在 az 包装器看到之前就把裸的 <code>&quot;&quot;</code> 吃掉，于是 CLI 报 <code>argument --path: expected one argument</code>。用 <code>=</code> 的写法能保住它是单个 token（<code>--path=</code>），az 读作空字符串。你从 PowerShell 往 az 传任何空字符串值，都得用这招。</p>
+<p>把 Claude Code 会调的操作加上（一个通配符全覆盖）：</p>
+<ul>
+<li><code>POST /v1/messages</code></li>
+<li><code>POST /v1/messages/count_tokens</code></li>
+<li><code>GET /v1/models</code> <em>（只有开了网关模型发现才需要，见 5.3）</em></li>
+</ul>
+<p><code>az apim</code> 没法应用 XML 策略。第 4 部分的策略请通过门户（<strong>APIs → Claude (Foundry) → Inbound processing → policy editor</strong>）或 Bicep/ARM 来加。</p>
+<h2 id="第-4-部分--apim-策略认证--限流--计量">第 4 部分 — APIM 策略（认证 + 限流 + 计量）</h2>
+<p>在 API 层加这段策略。替换掉里面的 tenant ID 和 audience。下面这份是 <strong>key 方案（选项 A）<strong>版本，它的第 6 步</strong>删掉开发者的 Authorization 头</strong>，改用密文命名值里的 <strong>api-key</strong> 头。走**托管标识（选项 B）**的话，把第 6 步换成紧跟策略后面那段，其余步骤完全一样。</p>
+<pre tabindex="0"><code>&lt;policies&gt;
+  &lt;inbound&gt;
+    &lt;base /&gt;
+     &lt;!-- On the client, Bearer token is generated and passed as x-api-key --&gt;
+    &lt;set-header name=&#34;Authorization&#34; exists-action=&#34;skip&#34;&gt;
+            &lt;value&gt;@(&#34;Bearer &#34; + context.Request.Headers.GetValueOrDefault(&#34;x-api-key&#34;,&#34;&#34;))&lt;/value&gt;
+    &lt;/set-header&gt;
+    &lt;!-- 1. Validate the developer&#39;s Entra ID token --&gt;
+    &lt;validate-jwt header-name=&#34;Authorization&#34;
+                  failed-validation-httpcode=&#34;401&#34;
+                  failed-validation-error-message=&#34;Unauthorized: invalid or missing Entra token.&#34;&gt;
+      &lt;openid-config url=&#34;https://login.microsoftonline.com/{{tenant-id}}/v2.0/.well-known/openid-configuration&#34; /&gt;
+      &lt;audiences&gt;
+        &lt;audience&gt;{{gateway-audience}}&lt;/audience&gt;
+      &lt;/audiences&gt;
+      &lt;issuers&gt;
+        &lt;issuer&gt;https://login.microsoftonline.com/{{tenant-id}}/v2.0&lt;/issuer&gt;
+        &lt;!-- This is needed as  Claude Code&#39;s Foundry Mode is looking for scope as https://cognitiveservices.azure.com/.default and audience cannot be changed to APIM Audience (api://...) --&gt;
+        &lt;issuer&gt;https://sts.windows.net/{{tenant-id}}/&lt;/issuer&gt;
+      &lt;/issuers&gt;
+      &lt;required-claims&gt;
+        &lt;claim name=&#34;roles&#34; match=&#34;any&#34;&gt;
+          &lt;value&gt;Claude.Standard&lt;/value&gt;
+          &lt;value&gt;Claude.Premium&lt;/value&gt;
+        &lt;/claim&gt;
+      &lt;/required-claims&gt;
+    &lt;/validate-jwt&gt;
+
+        &lt;!-- 2. Per-developer key from the stable object id --&gt;
+        &lt;set-variable name=&#34;callerId&#34; value=&#34;@{
+        var jwt = context.Request.Headers
+            .GetValueOrDefault(&#34;Authorization&#34;,&#34;&#34;).Split(&#39; &#39;).Last().AsJwt();
+        return jwt.Claims.GetValueOrDefault(&#34;oid&#34;, &#34;unknown&#34;);
+    }&#34; /&gt;
+        &lt;!-- 3. Tier from app role --&gt;
+        &lt;set-variable name=&#34;tier&#34; value=&#34;@{
+        var jwt = context.Request.Headers
+            .GetValueOrDefault(&#34;Authorization&#34;,&#34;&#34;).Split(&#39; &#39;).Last().AsJwt();
+        return jwt.Claims.GetValueOrDefault(&#34;roles&#34;,&#34;&#34;).Contains(&#34;Claude.Premium&#34;) ? &#34;premium&#34; : &#34;standard&#34;;
+    }&#34; /&gt;
+        &lt;set-variable name=&#34;modelName&#34; value=&#34;@{
+      var body = context.Request.Body.As&lt;JObject&gt;(preserveContent: true);
+      return body?[&#34;model&#34;]?.ToString() ?? &#34;unknown&#34;;
+    }&#34; /&gt;
+        &lt;!-- 4. Token-based throttle per developer (controls LLM cost) --&gt;
+        &lt;choose&gt;
+            &lt;when condition=&#34;@(((string)context.Variables[&#34;tier&#34;]) == &#34;premium&#34;)&#34;&gt;
+                &lt;llm-token-limit counter-key=&#34;@((string)context.Variables[&#34;callerId&#34;])&#34; tokens-per-minute=&#34;200000&#34; estimate-prompt-tokens=&#34;true&#34; remaining-tokens-header-name=&#34;x-tokens-remaining&#34; token-quota=&#34;20000000&#34; token-quota-period=&#34;Monthly&#34; /&gt;
+                &lt;rate-limit-by-key calls=&#34;300&#34; renewal-period=&#34;60&#34; counter-key=&#34;@((string)context.Variables[&#34;callerId&#34;])&#34; retry-after-header-name=&#34;retry-after&#34; remaining-calls-header-name=&#34;x-ratelimit-remaining&#34; /&gt;
+            &lt;/when&gt;
+            &lt;otherwise&gt;
+                &lt;llm-token-limit counter-key=&#34;@((string)context.Variables[&#34;callerId&#34;])&#34; tokens-per-minute=&#34;50000&#34; estimate-prompt-tokens=&#34;true&#34; remaining-tokens-header-name=&#34;x-tokens-remaining&#34; token-quota=&#34;5000000&#34; token-quota-period=&#34;Monthly&#34; /&gt;
+                &lt;rate-limit-by-key calls=&#34;100&#34; renewal-period=&#34;60&#34; counter-key=&#34;@((string)context.Variables[&#34;callerId&#34;])&#34; retry-after-header-name=&#34;retry-after&#34; remaining-calls-header-name=&#34;x-ratelimit-remaining&#34; /&gt;
+            &lt;/otherwise&gt;
+        &lt;/choose&gt;
+         &lt;!-- 5. Request-rate throttle per developer --&gt;
+        &lt;llm-emit-token-metric namespace=&#34;claudecode&#34;&gt;
+            &lt;dimension name=&#34;UserId&#34; value=&#34;@((string)context.Variables[&#34;callerId&#34;])&#34; /&gt;
+            &lt;dimension name=&#34;Tier&#34; value=&#34;@((string)context.Variables[&#34;tier&#34;])&#34; /&gt;
+            &lt;dimension name=&#34;Model&#34; value=&#34;@((string)context.Variables[&#34;modelName&#34;])&#34; /&gt;
+        &lt;/llm-emit-token-metric&gt;
+        &lt;!-- 6. Authenticate to Foundry with its API key (secret named value) --&gt;
+        &lt;!-- Strip the developer&#39;s Entra token so Foundry never sees it --&gt;
+        &lt;set-header name=&#34;Authorization&#34; exists-action=&#34;delete&#34; /&gt;
+        &lt;set-header name=&#34;x-api-key&#34; exists-action=&#34;override&#34;&gt;
+            &lt;value&gt;{{foundry-api-key}}&lt;/value&gt;
+        &lt;/set-header&gt;
+        &lt;set-backend-service backend-id=&#34;foundry-claude&#34; /&gt;
+    &lt;/inbound&gt;
+    &lt;backend&gt;
+        &lt;base /&gt;
+    &lt;/backend&gt;
+    &lt;outbound&gt;
+        &lt;base /&gt;
+    &lt;/outbound&gt;
+    &lt;on-error&gt;
+        &lt;base /&gt;
+    &lt;/on-error&gt;
+&lt;/policies&gt;
+</code></pre><h3 id="选项-b--用托管标识认证-foundry">选项 B — 用托管标识认证 Foundry</h3>
+<p>如果你选了托管标识那条路（3.2），把上面的<strong>第 6 步</strong>换成下面这段。它不注入 api-key，而是让 APIM 给自己的标识拿一个 Entra token，当作 Authorization bearer 转发出去。token 校验、限流、计量都不变。</p>
+<pre tabindex="0"><code>  &lt;!-- 6 (Option B). Authenticate to Foundry with APIM&#39;s managed identity --&gt;
+    &lt;!-- Replace the developer&#39;s token with an MI token scoped to AI Services --&gt;
+    &lt;authentication-managed-identity
+        resource=&#34;https://cognitiveservices.azure.com&#34;
+        output-token-variable-name=&#34;msi-token&#34; /&gt;
+    &lt;set-header name=&#34;Authorization&#34; exists-action=&#34;override&#34;&gt;
+      &lt;value&gt;@(&#34;Bearer &#34; + (string)context.Variables[&#34;msi-token&#34;])&lt;/value&gt;
+    &lt;/set-header&gt;
+
+    &lt;set-backend-service backend-id=&#34;foundry-claude&#34; /&gt;
+</code></pre><p>Azure AI Services / Foundry 的 token audience 是 <code>https://cognitiveservices.azure.com</code>。用<strong>用户分配</strong>标识的话，给 <code>authentication-managed-identity</code> 元素加上 <code>client-id=&quot;&lt;uami-client-id&gt;&quot;</code>。这条路没有 api-key 命名值、没有密钥要轮换，这也正是它更适合生产的原因。</p>
+<p>关于这份策略，有几点值得单独拎出来说：</p>
+<ul>
+<li>转发前<strong>删掉开发者的 Authorization 头</strong>（第 6 步）很重要：那个 Entra token 只是给 APIM 的。Foundry 只该收到 api-key 头。</li>
+<li><code>{{tenant-id}}</code>、<code>{{gateway-audience}}</code>、<code>{{foundry-api-key}}</code> 都是 APIM 命名值。把 <code>foundry-api-key</code> 标为<strong>密文</strong>，前两个用普通命名值就行。</li>
+<li><code>llm-token-limit</code> 和 <code>llm-emit-token-metric</code> 是 APIM 的 <strong>GenAI 网关</strong>策略，它们看得懂 Anthropic/OpenAI 的消息格式，会解析 token 用量，所以你计的是 <em>token</em> 而不只是请求数。对吃 token 的 Claude Code 来说，这才是对的成本抓手。</li>
+<li>这些计数器是<strong>按区域按网关</strong>的。用多区域 APIM 时，限制是按每个区域各自算的。</li>
+</ul>
+<h2 id="第-5-部分--在开发者机器上配-claude-codeclaude-desktop-和-cowork">第 5 部分 — 在开发者机器上配 Claude Code、Claude Desktop 和 Cowork</h2>
+<p>开发者把 Claude Code、Claude Desktop、Cowork 指向 APIM（Anthropic Messages 网关模式），用自己的 Entra token 认证。后端认证的替换对客户端是透明的。</p>
+<h3 id="51-entra-token-助手脚本按人自动刷新">5.1 Entra token 助手脚本（按人、自动刷新）</h3>
+<p>建 <code>%USERPROFILE%\.claude\get-claude-gateway-token.ps1</code>：</p>
+<pre tabindex="0"><code># Returns a short-lived Entra access token for the APIM gateway audience.
+# Supports CLAUDE_HELPER_CONTEXT for Claude Desktop Cowork/Code silent refresh.
+
+$context = $env:CLAUDE_HELPER_CONTEXT
+
+# For non-interactive contexts, try silent token acquisition only.
+# If it fails, exit non-zero so Cowork prompts the user instead of blocking.
+if ($context -and $context -ne &#39;interactive&#39; -and $context -ne &#39;setup-test&#39;) {
+    try {
+        $token = az account get-access-token `
+            --resource &#34;api://claude-code-gateway&#34; `
+            --query accessToken -o tsv 2&gt;$null
+        if ($LASTEXITCODE -ne 0 -or -not $token) {
+            Write-Error &#34;Silent token refresh failed (context: $context)&#34;
+            exit 1
+        }
+        Write-Output $token
+        exit 0
+    } catch {
+        Write-Error &#34;Silent token refresh failed: $_&#34;
+        exit 1
+    }
+}
+
+# Interactive or setup-test context: allow az CLI to prompt if needed.
+$token = az account get-access-token `
+    --resource &#34;api://claude-code-gateway&#34; `
+    --query accessToken -o tsv
+
+if ($LASTEXITCODE -ne 0 -or -not $token) {
+    Write-Error &#34;Token acquisition failed. Run &#39;az login&#39; first.&#34;
+    exit 1
+}
+
+Write-Output $token
+exit 0
+</code></pre><p>PowerShell 脚本不需要 chmod。如果执行策略拦了这个助手，给你的用户放行一次本地脚本：</p>
+<pre tabindex="0"><code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+</code></pre><h3 id="52-claude-code-设置userprofileclaudesettingsjson">5.2 Claude Code 设置（<code>%USERPROFILE%\.claude\settings.json</code>）</h3>
+<p>在 <code>.claude</code> 文件夹下的 <code>settings.json</code> 里配好下面这些环境变量，就能对所有 Claude Code 会话（VS Code、终端 CLI、JetBrains 等）生效：</p>
+<pre tabindex="0"><code>{
+  &#34;env&#34;: {
+       &#34;ANTHROPIC_BASE_URL&#34;: &#34;https://&lt;apim-name&gt;azure-api.net&#34;,
+       &#34;ANTHROPIC_MODEL&#34;: &#34;claude-opus-4-8&#34;,
+       &#34;ANTHROPIC_DEFAULT_OPUS_MODEL&#34;: &#34;claude-opus-4-8&#34;,
+       &#34;CLAUDE_CODE_API_KEY_HELPER_TTL_MS&#34;: &#34;600000&#34;
+ },
+  &#34;apiKeyHelper&#34;: &#34;powershell -NoProfile -ExecutionPolicy Bypass -File C:\\Users\\&lt;you&gt;\\.claude\\get-claude-gateway-token.ps1&#34;
+}
+</code></pre><p>JSON 里反斜杠得写两个，所以是 <code>C:\\Users\\...</code>。用 PowerShell 7 的话把 <code>powershell</code> 换成 <code>pwsh</code>。</p>
+<ul>
+<li><code>apiKeyHelper</code> 的输出会作为 Authorization（和 X-Api-Key）头发出去，由 APIM 的 <code>validate-jwt</code> 校验。开发者从头到尾没碰过 Foundry key。</li>
+<li><code>CLAUDE_CODE_API_KEY_HELPER_TTL_MS=3600000</code> 会每小时刷新一次 token（Entra access token 大概活 60 到 90 分钟）。</li>
+<li>把三个 <code>ANTHROPIC_DEFAULT_*_MODEL</code> ID 钉死，能保证 Claude Code 发出去的模型名跟你的 Foundry 部署名一致，网关就原样透传 model。</li>
+<li>Sonnet、Haiku 这些别的 Anthropic 模型也能配。默认用哪个模型由 <code>ANTHROPIC_MODEL</code> 决定。</li>
+</ul>
+<p>配好之后，开发者在项目目录里跑 <code>claude</code> 就行。</p>
+<h3 id="53-可选--模型发现">5.3 可选 — 模型发现</h3>
+<p>想让网关模型出现在 <code>/model</code> 选择器里，就在 API 上暴露 <code>GET /v1/models</code>，并设 <code>CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1</code>（Claude Code v2.1.129+）。只有以 <code>claude</code> 或 <code>anthropic</code> 开头的 ID 才会显示。</p>
+<h3 id="54-vs-code-扩展">5.4 VS Code 扩展</h3>
+<p><code>.claude</code> 文件夹里的 <code>settings.json</code> 会同时管住 VS Code 扩展和 Claude Code CLI。</p>
+<h3 id="55-claude-desktop-和-cowork">5.5 Claude Desktop 和 Cowork</h3>
+<p><a href="https://claude.com/docs/cowork/3p/installation?WT.mc_id=AI-MVP-5003172">装上 Claude Desktop 和 Cowork</a>。在 Help → Troubleshooting → Enable Developer Mode 里打开开发者模式，露出 Developer 菜单。然后去 Developer → <a href="https://claude.com/docs/cowork/3p/gateway?WT.mc_id=AI-MVP-5003172">Configure third-party inference</a> 打开配置。</p>
+<p>在连接那一节，Inference Provider 选 Gateway，指向 APIM endpoint。可以填你暴露出来的模型列表。你得用凭据助手脚本，指向上面 5.1 的那个 PowerShell 脚本，用它来做 Entra ID 认证。管理员自己在机器上试通之后，可以按 <a href="https://claude.com/docs/cowork/3p/installation?WT.mc_id=AI-MVP-5003172">Export and deploy via MDM</a> 把这套配置分发出去。</p>
+<h2 id="第-6-部分--限流和用量追踪的设计">第 6 部分 — 限流和用量追踪的设计</h2>
+<p><strong>按人做键。</strong> 所有东西都以 Entra 的 <code>oid</code> claim 为键，它稳定且每人唯一，不像 email 或 upn 那样会变。服务账号或 CI 的话，改用 <code>appid</code> 做键。</p>
+<p>限流分两层。一层是 <code>llm-token-limit</code>，管 tokens/min 加一个每月 token 配额，这是真正的成本控制。另一层是 <code>rate-limit-by-key</code>，管 requests/min，防的是跑飞的循环。</p>
+<p><strong>分级</strong>靠 Entra 的 app role（<code>Claude.Standard</code> / <code>Claude.Premium</code>）驱动，从 JWT 里读，不用另外去管 APIM 的订阅。</p>
+<p><strong>用量追踪</strong>从 <code>llm-emit-token-metric</code> 流进 Application Insights，带 UserId、Tier、Model 三个维度。下面是一条按人算月度 token 花销的 Log Analytics 查询示例：</p>
+<pre tabindex="0"><code>customMetrics
+| where name == &#34;Total Tokens&#34; and customDimensions.namespace == &#34;claudecode&#34;
+| extend UserId = tostring(customDimensions.UserId), Model = tostring(customDimensions.Model)
+| summarize Tokens = sum(valueSum) by UserId, Model, bin(timestamp, 1d)
+| order by Tokens desc
+</code></pre><p>Foundry 不返回 Anthropic 那套标准的限流响应头，所以限制的管理和观测要走 APIM（上面那些头）和 Azure Monitor，别指望上游的头。</p>
+<h2 id="第-7-部分--测试和验证">第 7 部分 — 测试和验证</h2>
+<pre tabindex="0"><code># 1. Get a token as a developer
+$TOKEN = az account get-access-token --resource &#34;api://claude-code-gateway&#34; --query accessToken -o tsv
+
+# 2. Call the gateway directly in Anthropic Messages format
+$body = @{
+  model      = &#34;claude-sonnet-4-6&#34;
+  max_tokens = 64
+  messages   = @(@{ role = &#34;user&#34;; content = &#34;Say hello in one word.&#34; })
+} | ConvertTo-Json
+
+Invoke-RestMethod -Method Post `
+  -Uri &#34;https://&lt;apim-name&gt;.azure-api.net/v1/messages&#34; `
+  -Headers @{
+    &#34;Authorization&#34;     = &#34;Bearer $TOKEN&#34;
+    &#34;anthropic-version&#34; = &#34;2023-06-01&#34;
+    &#34;content-type&#34;      = &#34;application/json&#34;
+  } `
+  -Body $body
+</code></pre><p><code>Invoke-RestMethod</code> 会返回解析好的 body，但把响应头藏起来了。想看 <code>x-tokens-remaining</code> / <code>x-ratelimit-remaining</code>，用 <code>Invoke-WebRequest</code> 加 <code>-ResponseHeadersVariable resp</code>（然后读 <code>$resp</code>），或者用 <code>curl.exe -i</code>（真正的 curl，不是 PowerShell 那个 curl 别名）。</p>
+<p>验证清单：</p>
+<ul>
+<li>没 token / token 过期 → <code>validate-jwt</code> 返回 <strong>401</strong>（信任限流之前先确认这个）。</li>
+<li>有效 token → <strong>200</strong> 带一段 Claude 补全；响应里带 <code>x-tokens-remaining</code> / <code>x-ratelimit-remaining</code>。</li>
+<li>有效开发者 token 却从 Foundry 收到 401 → api-key 命名值不对，或者没注入（看<em>排错</em>那节）。</li>
+<li>超限 → <strong>429</strong> 带 <code>retry-after</code>。</li>
+<li>App Insights → <code>customMetrics</code> 里能看到按 UserId 分维度的 token 计数。</li>
+<li>然后在项目目录里把 <code>claude</code> 端到端跑一遍。</li>
+</ul>
+<h2 id="第-8-部分--运维和加固">第 8 部分 — 运维和加固</h2>
+<ul>
+<li><strong>密钥轮换（选项 A）。</strong> Foundry 给你两把 key。轮换时先把 <code>foundry-api-key</code> 命名值改成 key2，再重新生成 key1，零停机。用 Key Vault 支持的命名值能把这事变成一处改动。</li>
+<li><strong>生产上优先托管标识（选项 B）。</strong> 如果你是从 key 起步的，切到托管标识（3.2 和 4 的选项 B），把共享密钥彻底去掉。因为 <strong>Cognitive Services User</strong> 角色分配在同租户下能跨订阅，跨订阅这套拓扑不会挡住这次升级，而且开发者那边没有任何变化，因为他们那半张契约永远是&quot;以自己的身份认证网关&quot;。</li>
+<li><strong>私有网络。</strong> 把 APIM 放进 internal VNet 模式，通过 <strong>Private Endpoint</strong> 访问 Foundry；关掉 Foundry 的公网访问，让网关成为唯一入口。跨订阅的私有端点是支持的。</li>
+<li><strong>弹性。</strong> 把 Claude 部署到两个区域，用 APIM 负载均衡的后端池，遇到 429 和 5xx 时重试。</li>
+<li><strong>成本护栏。</strong> 把按人的 <code>llm-token-limit</code> 配额配上一个 <strong>Azure Budget</strong>，并对订阅 B 里的 Foundry 资源设告警。</li>
+</ul>
+<h2 id="排错">排错</h2>
+<table>
+	<thead>
+			<tr>
+					<th>现象</th>
+					<th>原因 / 修法</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Foundry 返回 <strong>404 resource not found</strong></td>
+					<td>后端 URL 或路径错了，或者套了 OpenAI 式改写。后端必须以 <code>/anthropic</code> 结尾，调用方打的是 <code>/v1/messages</code>。去掉任何 <code>/openai/...</code> 改写和 <code>api-version</code> 查询参数。</td>
+			</tr>
+			<tr>
+					<td><strong>Foundry 返回 401</strong>（开发者 token 有效）— <em>选项 A</em></td>
+					<td>api-key 头缺失或不对，或者 <code>foundry-api-key</code> 命名值没按预期存好。确认命名值，并确认策略删掉了开发者 Authorization 头、设了 api-key。</td>
+			</tr>
+			<tr>
+					<td><strong>Foundry 返回 401 / 403</strong> — <em>选项 B（托管标识）</em></td>
+					<td>角色分配缺失或还没生效，或者 token audience 错了。确认 APIM 的标识在 Foundry 资源上有 <strong>Cognitive Services User</strong>，等几分钟，并确保策略请求的是 <code>resource=&quot;https://cognitiveservices.azure.com&quot;</code>。用户分配标识的话，确认 client-id 设了。</td>
+			</tr>
+			<tr>
+					<td><strong>托管标识同订阅能用、跨订阅不行</strong></td>
+					<td>两个资源在不同的 Entra <strong>租户</strong>。跨租户托管标识不支持，改用 API key（选项 A）。</td>
+			</tr>
+			<tr>
+					<td>带了 token 却在<strong>网关处 401</strong></td>
+					<td>aud 或 issuer 不匹配。确认 token 的 <code>aud = api://claude-code-gateway</code>，并且你用的是 v2.0 的 OIDC 配置和 issuer。</td>
+			</tr>
+			<tr>
+					<td><strong>Foundry 返回 403</strong></td>
+					<td>key 属于另一个 Foundry 资源，或者该资源关了 key 认证。从 <em>Keys and Endpoint</em> 重新复制一把 key，或重新开启本地/key 认证。</td>
+			</tr>
+			<tr>
+					<td><strong>Claude Code 功能变弱</strong></td>
+					<td>网关把 <code>anthropic-beta</code> / <code>anthropic-version</code> 头剥掉了。确保这两个头都透传过去。</td>
+			</tr>
+			<tr>
+					<td><strong>模型不可用</strong></td>
+					<td>Claude Code 的模型 ID 跟 Foundry 部署名对不上。把名字对齐，或者在策略里改写 body 的 model 字段。</td>
+			</tr>
+			<tr>
+					<td>客户端 <strong>ChainedTokenCredential authentication failed</strong></td>
+					<td>开发者没登录。跑 <code>az login</code>，让助手有个能用的 Azure 凭据。</td>
+			</tr>
+	</tbody>
+</table>
+<h2 id="收尾">收尾</h2>
+<p>跑通之后回头看，一个下午的搭建换来的是一条每个 Claude Code 请求都必须流经的网关：<strong>Entra ID</strong> 证明开发者是谁，<strong>APIM 的 GenAI 策略</strong>管住每个人能花多少，<strong>Application Insights</strong> 告诉你 token 到底花在哪了。APIM 到 Foundry 这一跳你按需要选：一把只活在 APIM 里的 <strong>Foundry API key</strong>（起步最快，跨租户也行），或者一个完全没有共享密钥的<strong>托管标识</strong>（生产该有的姿势）。不管哪种，Claude 都能待在它自己的订阅里，而开发者手上最敏感的东西也就是一个短时效的 Entra token。</p>
+<p>我个人比较喜欢这套设计的一点是升级路径很干净：从 key 起步，先把它挪进 Key Vault，再升到托管标识把密钥彻底去掉，最后把整条路放进私有网络。这几步没有一步会打扰到开发者，因为他们那半张契约（以自己的身份认证网关）从头到尾都没变过。</p>
+<p>所有命令行都针对 Windows 上的 PowerShell 5.1 或 7。文中的模型 ID 和 Foundry 区域反映的是写作时的可用情况，具体以 Foundry 模型目录当前的选项为准。</p>
+<p>延伸阅读：</p>
+<ul>
+<li><a href="https://ai.azure.com/explore/models?WT.mc_id=AI-MVP-5003172">在 Microsoft Foundry 里部署 Claude 模型</a></li>
+<li><a href="https://portal.azure.com/?WT.mc_id=AI-MVP-5003172#create/Microsoft.ApiManagement">创建 API Management 实例</a></li>
+<li><a href="https://docs.claude.com/en/docs/claude-code/llm-gateway?WT.mc_id=AI-MVP-5003172">Claude Code LLM 网关要求</a></li>
+<li><a href="https://learn.microsoft.com/azure/api-management/llm-token-limit-policy?WT.mc_id=AI-MVP-5003172">APIM GenAI 网关策略参考</a></li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/">https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a></li>
+        
+        <li><a href="/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/">Microsoft Foundry 智能体的 AI 可观测性入门套件</a></li>
+        
+        <li><a href="/post/2026-05-30-migrating-to-gpt-5-x-without-breaking-gpt-4-a-practical-backward-compatible-playbook/">迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册</a></li>
+        
+        <li><a href="/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a></li>
+        
+        <li><a href="/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" title="自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" title="如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" target="_blank">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/" title="用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关" target="_blank">用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" title="GPT Realtime 上生产环境：到底该选哪种上下文策略？" target="_blank">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 AI 可观测性入门套件" target="_blank">Microsoft Foundry 智能体的 AI 可观测性入门套件</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-migrating-to-gpt-5-x-without-breaking-gpt-4-a-practical-backward-compatible-playbook/" title="迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册" target="_blank">迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/" title="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载" target="_blank">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-09-claude-managed-agents-azure-the-multi-cloud-ai-strategy-nobodys-talking-about/" title="Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略" target="_blank">Claude 托管智能体 &#43; Azure：没有人谈论的多云 AI 战略</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-04-05-vector-drift-in-azure-ai-search-three-hidden-reasons-your-rag-accuracy-degrades-after-deployment/" title="Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因" target="_blank">Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/" title="Azure AI Foundry — 多代理编排与工作流" target="_blank">Azure AI Foundry — 多代理编排与工作流</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (32)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (9)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 2.2 试验模型 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 2.2 试验模型 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-06-25T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-06-25T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 2.2 试验模型">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-06-25-mbml-learning-skills_testing_out_the_model/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 2.2 试验模型</h1>
+        </header>
+        
+  <time datetime="2026-06-25T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年6月25日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>构建好一个<a href="/post/2025-04-21-mbml-introduction">模型</a>之后，首先要做的就是用一些简单的示例数据来试验它，检查它的行为是否合理。假设有一位候选人懂 C# 但不懂 SQL——我们会预期他答对第一题，而答错另外两题。那么让我们针对这种情况试验一下<a href="/post/2025-04-21-mbml-introduction">模型</a>，看看对于这样的答题模式它会推断出哪些技能。为方便起见，我们用 <code>isCorrect</code> 来指代数组 <code>[isCorrect1, isCorrect2, isCorrect3]</code>，因此我们要考虑的是 <code>isCorrect</code> 为 <code>[true, false, false]</code> 的情形。</p>
+<p>我们想在给定这一组特定的 <code>isCorrect</code> 取值的条件下，推断候选人具备 <code>csharp</code> 和 <code>sql</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。这是一个<strong>推断查询</strong>的例子，它由我们想要推断的变量（<code>csharp</code>、<code>sql</code>）以及我们所条件化的变量（<code>isCorrect</code>）连同它们的观测值共同定义。由于这个例子相当小，我们可以用手工方式求出这个推断查询的答案。</p>
+<h3 id="手动进行推断">手动进行推断</h3>
+<p>作为开始，我们先来看看在只给定第一题答案的情况下，如何推断 <code>csharp</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。舍去其它变量后，就得到图 2.6 所示的简化<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_OneQuestion.png">
+            <img class="mx-auto" alt="图 2.6" src="/uploads/LearningSkills_OneQuestion.png" />
+        </a>
+    </p>
+<p><em>图 2.6：只针对第一题和 <code>csharp</code> 技能的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。</em></p>
+<p>这张<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>现在看起来就和<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">第 1.3 节</a>中谋杀之谜的那张一模一样，而且和谋杀之谜一样，我们可以应用<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">贝叶斯定理</a>来求解它：</p>
+$$
+P(\text{csharp} \mid \textcolor{red}{\text{isCorrect1} = \text{true}}) \propto \textcolor{green}{P(\text{isCorrect1} = \text{true} \mid \text{csharp})}\,\textcolor{blue}{P(\text{csharp})}. \quad (2.5)
+$$<p>在式 (2.5) 中，我们给其中一些项标注了颜色，以便在计算过程中跟踪它们。代入 <code>csharp</code> 为 true 和 false 时的数值，得到：</p>
+$$
+\begin{aligned}
+P(\text{csharp} = \text{true} \mid \textcolor{red}{\text{isCorrect1} = \text{true}}) &\propto \textcolor{green}{0.9} \times \textcolor{blue}{0.5} = 0.45 \\
+P(\text{csharp} = \text{false} \mid \textcolor{red}{\text{isCorrect1} = \text{true}}) &\propto \textcolor{green}{0.2} \times \textcolor{blue}{0.5} = 0.10.
+\end{aligned} \quad (2.6)
+$$<p>这两个数加起来是 0.55。为了得到<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，我们需要把两个数都缩放到加起来等于 1（即除以 0.55），这样就得到：</p>
+$$
+\begin{aligned}
+P(\text{csharp} = \text{true} \mid \textcolor{red}{\text{isCorrect1} = \text{true}}) = \frac{0.45}{0.55} &\simeq 0.818 \\
+P(\text{csharp} = \text{false} \mid \textcolor{red}{\text{isCorrect1} = \text{true}}) = \frac{0.10}{0.55} &\simeq 0.182
+\end{aligned} \quad (2.7)
+$$<p>所以，仅根据第一题的答案，具备 <code>csharp</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>为 $81.8\%$。</p>
+<p>对全部三道题手动执行<a href="/post/2025-04-21-mbml-introduction">推断</a>是一项更为复杂的计算。如果你想探究这个计算过程，请阅读下面的深入探讨小节；如果不想，可以跳过它，直接去看我们如何把这个<a href="/post/2025-04-21-mbml-introduction">推断</a>计算自动化。</p>
+<p><strong>（深入探讨）</strong> 在这个可选小节中，我们通过对<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">联合分布</a>求边缘（即在除我们关心的变量之外的所有变量上求和），在三题<a href="/post/2025-04-21-mbml-introduction">模型</a>中手动进行<a href="/post/2025-04-21-mbml-introduction">推断</a>。你可以放心跳过本节。</p>
+<p>正如我们在<a href="/post/2025-04-22-mbml-murder-mystery">第 1 章</a>中所见，我们可以通过对<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">联合分布</a>求边缘（在除我们关心的变量之外的所有变量上求和），同时固定任何观测变量的取值，来执行<a href="/post/2025-04-21-mbml-introduction">推断</a>。对于三题<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，我们在<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">第 2.1 节的式 (2.4)</a> 中写下了它的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">联合概率分布</a>。这里再写一遍：</p>
+$$
+\begin{aligned}
+P(&\text{csharp}, \text{sql}, \text{hasSkills}, \text{isCorrect}) = \\
+& \text{Bernoulli}(\text{csharp}; 0.5)\,\text{Bernoulli}(\text{sql}; 0.5) \\
+& \text{AddNoise}(\text{isCorrect1} \mid \text{csharp})\,\text{AddNoise}(\text{isCorrect2} \mid \text{sql}) \\
+& \text{And}(\text{hasSkills} \mid \text{csharp}, \text{sql})\,\text{AddNoise}(\text{isCorrect3} \mid \text{hasSkills}).
+\end{aligned} \quad (2.8)
+$$<p>在开始这个<a href="/post/2025-04-21-mbml-introduction">推断</a>计算之前，我们需要说明如何计算<strong>分布之积</strong>。假设对于某个变量 $x$，我们知道：</p>
+$$
+P(x) \propto \text{Bernoulli}(x; 0.8)\,\text{Bernoulli}(x; 0.4). \quad (2.9)
+$$<p>这看起来可能有点奇怪，因为我们通常只把一个分布与一个变量关联起来，但正如我们将看到的，在执行<a href="/post/2025-04-21-mbml-introduction">推断</a>时，分布之积会频繁出现。对 $x$ 的两个取值分别求这个表达式的值，得到：</p>
+$$
+P(x) \propto \begin{cases} 0.8 \times 0.4 = 0.32 & \text{如果 } x = \text{true} \\ 0.2 \times 0.6 = 0.12 & \text{如果 } x = \text{false}. \end{cases} \quad (2.10)
+$$<p>由于我们知道 $P(x=\text{true})$ 和 $P(x=\text{false})$ 必须加起来等于 1，我们可以把这些值都除以 $0.32+0.12=0.44$，得到：</p>
+$$
+P(x) = \begin{cases} 0.727 & \text{如果 } x = \text{true} \\ 0.273 & \text{如果 } x = \text{false} \end{cases} = \text{Bernoulli}(x; 0.727). \quad (2.11)
+$$<p>这个计算你可能会觉得很熟悉——它和我们在<a href="/post/2025-04-22-mbml-murder-mystery">第 1 章</a>中所做的<a href="/post/2025-04-21-mbml-introduction">推断</a>计算非常相似。</p>
+<p>一般来说，如果想把两个<a href="/post/2025-04-22-mbml-murder-mystery">伯努利分布</a>相乘，我们可以使用如下规则：</p>
+$$
+\text{Bernoulli}(x; a)\,\text{Bernoulli}(x; b) \propto \text{Bernoulli}\left(x;\ \frac{ab}{ab + (1-a)(1-b)}\right). \quad (2.12)
+$$<p>比如说，如果第二个分布是均匀的（$b=0.5$），那么乘积的结果就是 $\text{Bernoulli}(x; a)$。换句话说，分布 $\text{Bernoulli}(x; a)$ 乘以一个<a href="/post/2025-04-22-mbml-murder-mystery">均匀分布</a>后保持不变。一般而言，任何分布乘以<a href="/post/2025-04-22-mbml-murder-mystery">均匀分布</a>都保持不变。</p>
+<p>有了相乘分布的能力，我们现在就可以计算示例候选人具备 <code>csharp</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>了。我们想要计算的确切<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>是 $P(\text{csharp} \mid \text{isCorrect}=[\text{T}, \text{F}, \text{F}])$，其中我们把 true 简写为 T，false 简写为 F。和之前一样，我们可以通过对<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">联合分布</a>求边缘并固定观测值来计算它：</p>
+$$
+\begin{aligned}
+P(&\text{csharp} \mid \text{isCorrect}=[\text{T}, \text{F}, \text{F}]) \propto \\
+& \sum_{\text{sql}} \sum_{\text{hasSkills}} P(\text{csharp}, \text{sql}, \text{hasSkills}, \text{isCorrect}=[\text{T}, \text{F}, \text{F}]).
+\end{aligned} \quad (2.13)
+$$<p>正如我们在<a href="/post/2025-04-22-mbml-murder-mystery">第 1 章</a>中所见，我们使用正比符号 $\propto$，因为我们并不关心右端的缩放，只关心它在 <code>csharp</code> 为 true 时的值与为 false 时的值之比。</p>
+<p>现在我们代入 (2.8) 中<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">联合概率</a>的完整表达式，并固定所有观测变量的取值。我们可以忽略那些 $\text{Bernoulli}(0.5)$ 项，因为正如我们刚学到的，一个分布乘以<a href="/post/2025-04-22-mbml-murder-mystery">均匀分布</a>后保持不变。于是 (2.13) 的右端变为：</p>
+$$
+\begin{aligned}
+\propto \sum_{\text{sql}} \sum_{\text{hasSkills}} & \text{AddNoise}(\text{isCorrect1}=\text{T} \mid \text{csharp}) \\
+& \text{AddNoise}(\text{isCorrect2}=\text{F} \mid \text{sql}) \\
+& \text{And}(\text{hasSkills} \mid \text{csharp}, \text{sql})\,\text{AddNoise}(\text{isCorrect3}=\text{F} \mid \text{hasSkills}).
+\end{aligned} \quad (2.14)
+$$<p>每个求和 $\sum$ 内部那些不涉及被求和变量的项，都可以移到求和之外，因为对每个被求和的项而言它们的值都相同。你也可以把这想成是把求和号往右移：</p>
+$$
+\begin{aligned}
+\propto\ & \text{AddNoise}(\text{isCorrect1}=\text{T} \mid \text{csharp}) \\
+& \sum_{\text{sql}} \text{AddNoise}(\text{isCorrect2}=\text{F} \mid \text{sql}) \\
+& \sum_{\text{hasSkills}} \text{And}(\text{hasSkills} \mid \text{csharp}, \text{sql})\,\text{AddNoise}(\text{isCorrect3}=\text{F} \mid \text{hasSkills}).
+\end{aligned} \quad (2.15)
+$$<p>如果你看这里的第一项，会发现它只是 <code>csharp</code> 的函数，因为 <code>isCorrect1</code> 被观测为 true。当 <code>csharp</code> 为 true 时，这一项的值为 0.9；当 <code>csharp</code> 为 false 时，这一项的值为 0.2。由于我们只关心这两个数的相对大小，我们可以用一个伯努利项来替换这一项，其中 true 的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>为 $\frac{0.9}{0.9+0.2} = 0.818$，因而 false 的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>为 $1-0.818=0.182$。注意这保留了 true/false 之比 $0.818/0.182 = 0.9/0.2$。</p>
+<p>类似地，第二个 <code>AddNoise</code> 项在 <code>sql</code> 为 true 时值为 0.1，为 false 时值为 0.8，所以可以用一个伯努利项替换，其中 true 的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>为 $\frac{0.1}{0.1+0.8} = 0.111$。最后那个 <code>AddNoise</code> 项也可以同样替换，于是得到：</p>
+$$
+\begin{aligned}
+\propto\ & \text{Bernoulli}(\text{csharp}; 0.818) \\
+& \sum_{\text{sql}} \text{Bernoulli}(\text{sql}; 0.111) \\
+& \sum_{\text{hasSkills}} \text{And}(\text{hasSkills} \mid \text{csharp}, \text{sql})\,\text{Bernoulli}(\text{hasSkills}; 0.111).
+\end{aligned} \quad (2.16)
+$$<p>对于确定性的 <code>And</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>，我们需要考虑该<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>不为零的四种情形（我们在<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">专栏 2.1</a> 中见过），并在每种情形下代入 <code>sql</code> 与 <code>hasSkills</code> 的 $\text{Bernoulli}(0.111)$ 分布：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_AndFactorInference_Table.png">
+            <img class="mx-auto" alt="表 2.3" src="/uploads/LearningSkills_AndFactorInference_Table.png" />
+        </a>
+    </p>
+<p><em>表 2.3：对 (2.16) 中最后三项的求值。表中每一行对应 <code>And</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>为 1（而非 0）的四种情形之一。前三列给出 <code>csharp</code>、<code>sql</code> 和 <code>hasSkills</code> 的取值，这正是 AND 的真值表。接下来两列给出 <code>sql</code> 与 <code>hasSkills</code> 对应的伯努利分布取值，最后一列把它们相乘。</em></p>
+<p>看表 2.3，我们可以发现：当 <code>csharp</code> 为 true 时，要么 <code>sql</code> 和 <code>hasSkills</code> 都为 false（<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>为 0.790），要么两者都为 true（<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>为 0.012）。二者之和为 0.802。当 <code>csharp</code> 为 false 时，对应的和为 $0.790+0.099=0.889$。所以我们可以用一个参数为 $\frac{0.802}{0.802+0.889} = 0.474$ 的伯努利项来替换最后三项：</p>
+$$
+\propto\ \text{Bernoulli}(\text{csharp}; 0.818)\,\text{Bernoulli}(\text{csharp}; 0.474) \quad (2.17)
+$$<p>现在我们有了一个<a href="/post/2025-04-22-mbml-murder-mystery">伯努利分布</a>之积，所以可以用 (2.12) 把它们相乘。当 <code>csharp</code> 为 true 时，这个乘积的值为 $0.818\times0.474 = 0.388$；当 <code>csharp</code> 为 false 时，值为 $(1-0.818)\times(1-0.474) = 0.096$。因此，这两个分布的乘积是一个参数为 $\frac{0.388}{0.388+0.096}$ 的伯努利分布：</p>
+$$
+=\ \text{Bernoulli}(\text{csharp}; 0.802) \quad (2.18)
+$$<p>于是我们算出，候选人具备 <code>csharp</code> 技能的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验概率</a>为 80.2%。如果我们对 <code>sql</code> 技能做类似的计算，会发现其<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验概率</a>为 3.4%。综合来看，这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>表明候选人很可能懂 C# 但不太可能懂 SQL，考虑到候选人只答对了 C# 那道题，这看起来是一个非常合理的<a href="/post/2025-04-21-mbml-introduction">推断</a>。</p>
+<h3 id="通过在图上传递消息进行推断">通过在图上传递消息进行推断</h3>
+<p>手动进行<a href="/post/2025-04-21-mbml-introduction">推断</a>计算耗时很长，而且容易出错。作为替代，我们可以用一种<strong>消息传递算法</strong>机械地完成同样的计算。它的工作方式是沿着<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>的边传递消息，其中每条消息都是一个关于该边所连接变量的<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>。我们将看到，使用消息传递算法能让我们自动完成<a href="/post/2025-04-21-mbml-introduction">推断</a>计算——这正是基于模型方法的一大优势！</p>
+<p>为了理解消息传递如何工作，我们再来看看式 (2.6)：</p>
+$$
+\begin{aligned}
+P(\text{csharp} = \text{true} \mid \textcolor{red}{\text{isCorrect1} = \text{true}}) &\propto \textcolor{green}{0.9} \times \textcolor{blue}{0.5} = 0.45 \\
+P(\text{csharp} = \text{false} \mid \textcolor{red}{\text{isCorrect1} = \text{true}}) &\propto \textcolor{green}{0.2} \times \textcolor{blue}{0.5} = 0.10.
+\end{aligned} \quad (2.19)
+$$<p>图 2.7 把这些标了颜色的项表现为在图中从一个节点传递到另一个节点的消息。例如，<code>csharp</code> <a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>把这个<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>作为一条消息发送给 <code>csharp</code> 节点（蓝色）。被观测的 <code>isCorrect1</code> 节点向上发送一条消息，它是位于观测值处的<a href="/post/2025-04-22-mbml-murder-mystery">点质量</a>（红色）。<code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>使用<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">贝叶斯定理</a>对这条消息进行变换，并输出它自己的向上消息（绿色）。这些消息中的每一条，都可以根据发送它的那个节点处所掌握的信息计算得到。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_OneQuestionMessages.png">
+            <img class="mx-auto" alt="图 2.7" src="/uploads/LearningSkills_OneQuestionMessages.png" />
+        </a>
+    </p>
+<p><em>图 2.7：带有用于<a href="/post/2025-04-21-mbml-introduction">推断</a>的<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。</em></p>
+<p>此时到达 <code>csharp</code> 节点的两条消息，提供了我们计算 <code>csharp</code> 变量<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>所需的全部信息，正如我们在式 (2.6) 中所见。这种用消息传递来计算<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>的方法称为<strong>置信传播</strong>（belief propagation）[Pearl, 1982; Pearl, 1988; Lauritzen and Spiegelhalter, 1988]。</p>
+<p>如果你想了解如何用置信传播在我们的三题<a href="/post/2025-04-21-mbml-introduction">模型</a>中计算<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>，请阅读下一小节；否则，你可以直接跳到结果部分。</p>
+<p><strong>（深入探讨）</strong> 在这个可选小节中，我们展示如何用置信传播在我们的三题<a href="/post/2025-04-21-mbml-introduction">模型</a>中执行<a href="/post/2025-04-21-mbml-introduction">推断</a>。你可以放心跳过本节。</p>
+<p>让我们用消息传递来重做 <code>csharp</code> 技能的<a href="/post/2025-04-21-mbml-introduction">推断</a>计算——我们先针对这个例子描述消息传递的过程，之后再来看它的一般形式。手动计算的第一步是固定观测变量的取值。使用消息传递时，这对应于每个观测变量发出一条消息，它是位于观测值处的点质量分布。在我们的例子中，如果某个 <code>isCorrect</code> 变量被观测为 false，它就发送点质量 $\text{Bernoulli}(0)$；如果被观测为 true，就发送点质量 $\text{Bernoulli}(1)$。这意味着所发送的三条消息如图 2.8 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_ThreeQuestionsMessages0.png">
+            <img class="mx-auto" alt="图 2.8" src="/uploads/LearningSkills_ThreeQuestionsMessages0.png" />
+        </a>
+    </p>
+<p><em>图 2.8：从被观测的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>发出的消息，这些节点被画成阴影并标注了它们的观测值。任何一条边上的消息都是该边所连接变量上的一个分布。例如，左边的 $\text{Bern}(1)$ 是 $\text{Bernoulli}(\text{isCorrect1}; 1)$ 的简写。</em></p>
+<p>这些点质量消息随后到达 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>。每个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>处的输出消息可以分别按如下方式计算：</p>
+<ul>
+<li>从第一个 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>向上传给 <code>csharp</code> 的消息，可以通过把 $\text{AddNoise}(\text{isCorrect1}=\text{T} \mid \text{csharp})$ 写成关于 <code>csharp</code> 的<a href="/post/2025-04-22-mbml-murder-mystery">伯努利分布</a>来计算。正如我们在上一小节所见，这个伯努利分布的参数是 $p=\frac{0.9}{0.9+0.2}=0.818$，所以向上的消息是 $\text{Bernoulli}(0.818)$。</li>
+<li>从第二个 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>向上传给 <code>sql</code> 的消息，可以通过把 $\text{AddNoise}(\text{isCorrect2}=\text{F} \mid \text{sql})$ 写成关于 <code>sql</code> 的<a href="/post/2025-04-22-mbml-murder-mystery">伯努利分布</a>来计算。这个伯努利分布的参数是 $p=\frac{0.1}{0.1+0.8}=0.111$，所以向上的消息是 $\text{Bernoulli}(0.111)$。</li>
+<li>从第三个 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>向上传给 <code>hasSkills</code> 的消息与第二条消息相同，因为它是对同一个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>、用相同的输入消息计算得到的。因此，第三条向上的消息也是 $\text{Bernoulli}(0.111)$。</li>
+</ul>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_ThreeQuestionsMessages1_1.png">
+            <img class="mx-auto" alt="图 2.9" src="/uploads/LearningSkills_ThreeQuestionsMessages1_1.png" />
+        </a>
+    </p>
+<p><em>图 2.9：从 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>发出的输出消息。</em></p>
+<p>注意，这三条消息恰好就是我们在 (2.16) 中见到的那三个<a href="/post/2025-04-22-mbml-murder-mystery">伯努利分布</a>。我们没有在整个<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">联合分布</a>上做计算，而是把计算分解成了<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>各节点处简单、可重复的消息计算。</p>
+<p>从 $\text{Bernoulli}(0.5)$ <a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a><a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>向下传的消息，就是这些<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>本身：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_ThreeQuestionsMessages_2.png">
+            <img class="mx-auto" alt="图 2.10" src="/uploads/LearningSkills_ThreeQuestionsMessages_2.png" />
+        </a>
+    </p>
+<p><em>图 2.10：从伯努利<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a><a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>发出的消息。</em></p>
+<p>任何<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>的输出消息，都是该节点所连的其它各边上收到的输入消息之积。对于 <code>sql</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>，现在我们在两条边上都有了输入消息，这意味着我们可以计算指向 <code>And</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的输出消息。这条消息是 $\text{Bernoulli}(0.111)$，因为向上的消息乘以向下的均匀消息 $\text{Bernoulli}(0.5)$ 后保持不变。<code>hasSkills</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>则更简单：由于只有一条输入消息，其输出消息就是它的副本。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_ThreeQuestionsMessages_3.png">
+            <img class="mx-auto" alt="图 2.11" src="/uploads/LearningSkills_ThreeQuestionsMessages_3.png" />
+        </a>
+    </p>
+<p><em>图 2.11：从 <code>sql</code> 和 <code>hasSkills</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>发出的消息。</em></p>
+<p>最后，我们可以计算从 <code>And</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>传给 <code>csharp</code> 变量的输出消息。计算方式是把各输入消息与<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>函数相乘，并对除了要发送到的那个变量之外的所有变量求和（因此我们对 <code>sql</code> 和 <code>hasSkills</code> 求和）：</p>
+$$
+\begin{aligned}
+\sum_{\text{sql}} \sum_{\text{hasSkills}} & \text{And}(\text{hasSkills} \mid \text{csharp}, \text{sql}) \\
+& \text{Bernoulli}(\text{sql}; 0.111)\,\text{Bernoulli}(\text{hasSkills}; 0.111).
+\end{aligned} \quad (2.20)
+$$<p>这个求和给出消息 $\text{Bernoulli}(0.474)$，正如我们在式 (2.17) 中所见。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_ThreeQuestionsMessages_4.png">
+            <img class="mx-auto" alt="图 2.12" src="/uploads/LearningSkills_ThreeQuestionsMessages_4.png" />
+        </a>
+    </p>
+<p><em>图 2.12：传向 <code>csharp</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>的最后一条消息。</em></p>
+<p>现在我们在 <code>csharp</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>处集齐了全部三条输入消息，这意味着我们已经准备好计算它的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>边缘分布了。方法是把这三条消息相乘——这正是我们在式 (2.17) 中所做的计算，因此得到相同的结果 $\text{Bernoulli}(0.802)$，即 80.2%。</p>
+<p>要计算 <code>sql</code> 的边缘分布，我们可以复用刚才算出的大部分消息，因此只需再计算两条额外的消息（如图 2.13 所示）。第一条消息是从 <code>csharp</code> 传给 <code>And</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的，它是 $\text{Bernoulli}(0.818)$ 与<a href="/post/2025-04-22-mbml-murder-mystery">均匀分布</a> $\text{Bernoulli}(0.5)$ 之积，所以结果也是 $\text{Bernoulli}(0.818)$。</p>
+<p>第二条消息是从 <code>And</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>传给 <code>sql</code> 的。同样，我们通过把各输入消息与<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>函数相乘，并对除了要发送到的那个变量之外的所有变量求和（因此我们对 <code>csharp</code> 和 <code>hasSkills</code> 求和）来计算它：</p>
+$$
+\begin{aligned}
+\sum_{\text{csharp}} \sum_{\text{hasSkills}} & \text{And}(\text{hasSkills} \mid \text{csharp}, \text{sql}) \\
+& \text{Bernoulli}(\text{csharp}; 0.818)\,\text{Bernoulli}(\text{hasSkills}; 0.111).
+\end{aligned} \quad (2.21)
+$$<p>这个求和给出消息 $\text{Bernoulli}(0.221)$，因此我们计算出的这两条新消息就是图 2.13 所示的那两条。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_ThreeQuestionsExtraMessages_3.png">
+            <img class="mx-auto" alt="图 2.13" src="/uploads/LearningSkills_ThreeQuestionsExtraMessages_3.png" />
+        </a>
+    </p>
+<p><em>图 2.13：计算 <code>sql</code> 变量边缘分布所需的额外消息。</em></p>
+<p>把这条消息与来自 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的向上消息一起乘入 <code>sql</code>，得到 $\text{Bernoulli}(0.111)\times\text{Bernoulli}(0.221) \propto \text{Bernoulli}(0.034)$，即 3.4%，与之前的结果相同。注意，我们再次忽略了来自<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>的均匀消息 $\text{Bernoulli}(0.5)$，因为乘以一个<a href="/post/2025-04-22-mbml-murder-mystery">均匀分布</a>不会产生任何影响。</p>
+<p>我们刚刚看到的消息传递过程，源自应用一般化的置信传播<a href="/post/2025-04-21-mbml-introduction">算法</a>。在置信传播中，消息按三种方式之一计算，取决于该消息是来自<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>、被观测的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>，还是未观测的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>。该<a href="/post/2025-04-21-mbml-introduction">算法</a>总结于算法 2.1 中——这个<a href="/post/2025-04-21-mbml-introduction">算法</a>的完整推导可参见 Bishop [2006]。针对<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>的置信传播在 Kschischang et al. [2001] 中也有讨论。</p>
+<blockquote>
+<p><strong>算法 2.1：置信传播（Belief Propagation）</strong></p>
+<p><strong>输入：</strong> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，以及要为其计算边缘分布的目标变量列表。</p>
+<p><strong>输出：</strong> 各目标变量的边缘分布。</p>
+<p><strong>重复：</strong></p>
+<ul>
+<li><strong>对</strong><a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>中的每个节点：
+<ul>
+<li><strong>对</strong>该节点所连的每条边：
+<ul>
+<li>如果所需的输入消息都已就绪，则按下面的规则发送相应的输出消息：
+<ul>
+<li><a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>消息：该节点其它各边上收到的<strong>所有消息之积</strong>；</li>
+<li><a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>消息：该节点其它各边上收到的<strong>所有消息之积</strong>，再乘以<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">条件概率分布</a>，并对除了要发送到的那个变量之外的所有变量求和；</li>
+<li>观测节点消息：位于观测值处的<a href="/post/2025-04-22-mbml-murder-mystery">点质量</a>；</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>直到</strong> 各目标变量都在其所有边上收到了输入消息。</p>
+<p>在每个目标<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>处，把所有输入消息相乘，作为边缘分布计算出来。</p>
+</blockquote>
+<h3 id="用置信传播来试验模型">用置信传播来试验模型</h3>
+<p>置信传播<a href="/post/2025-04-21-mbml-introduction">算法</a>让我们能够针对给定的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，完全自动地进行<a href="/post/2025-04-21-mbml-introduction">推断</a>计算。这意味着，回答一个<strong>推断查询</strong>的整个过程可以完全自动化，无需编写任何代码，也无需做任何手工计算！</p>
+<p>利用置信传播，我们可以对每一种可能的答对/答错组合，自动推断技能的边缘分布，从而全面地试验我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>。这样做的结果如表 2.4 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_2TestingOutTheModelThreeQuestionsResults_Table.png">
+            <img class="mx-auto" alt="表 2.4" src="/uploads/LearningSkills_2TestingOutTheModelThreeQuestionsResults_Table.png" />
+        </a>
+    </p>
+<p><em>表 2.4：对 <code>isCorrect</code> 所有可能配置下 <code>csharp</code> 和 <code>sql</code> 变量的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验概率</a>。和之前一样，蓝色条形直观地表示了推断出的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</em></p>
+<p>审视这张表，我们可以看到结果看起来是合理的——当候选人答对第一题时，具备 <code>csharp</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>通常更高；类似地，当候选人答对第二题时，具备 <code>sql</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>通常更高。此外，当第三题答对而非答错时，两个<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>都更高。</p>
+<p>有意思的是，当只有第一题答对时，具备 <code>sql</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>实际上比候选人所有题都答错时还要低（表 2.4 的第一、二行）。这是说得通的，因为答对第一题意味着候选人很可能具备 <code>csharp</code> 技能，这就使得“答错第三题”的解释更有可能是他们不具备 <code>sql</code> 技能。这是<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>所能实现的那种微妙推理的一个例子，也正是它相对于更简单的方法可能具备的优势。举例来说，如果我们仅仅把某人答对的、需要某项特定技能的题目数量作为该技能的指标，我们就会忽略来自其它题目的潜在有用信息。相比之下，借助一个合适的<a href="/post/2025-04-21-mbml-introduction">模型</a>，我们利用了这样一个事实：答对一道 <code>csharp</code> 题目实际上可以降低具备 <code>sql</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</p>
+<h4 id="本页引入概念回顾">本页引入概念回顾</h4>
+<p><strong>推断查询（inference query）</strong>：定义了要在某个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>上进行的<a href="/post/2025-04-21-mbml-introduction">推断</a>计算的查询。它由两部分组成：一组我们已知其取值的变量（连同这些取值），以及另一组我们希望为其推断<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>的变量。举例来说，一个推断查询可以是：我们已知变量 weapon 取值为 revolver，并希望推断变量 murderer 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。</p>
+<p><strong>分布之积（product of distributions）</strong>：一种把两个（或更多）<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>相乘、然后将结果归一化使其总和为 1，从而得到一个新<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>的运算。这个运算不应与把两个不同的<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>相乘相混淆（后者可能通过<a href="/post/2025-04-21-mbml-introduction">模型</a>中的一个<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">确定性因子</a>来实现）。相反，分布之积涉及的是同一个<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>上的两个分布。在<a href="/post/2025-04-21-mbml-introduction">推断</a>过程中，分布之积被频繁用来把关于某个特定变量、来自不同来源的多条不确定信息组合起来。</p>
+<p><strong>消息传递算法（message passing algorithm）</strong>：一种通过在图模型（例如<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>）的边上传递消息来进行<a href="/post/2025-04-21-mbml-introduction">推断</a>计算的<a href="/post/2025-04-21-mbml-introduction">算法</a>。这些消息是关于边所连接变量的<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>。置信传播是一种常用的消息传递算法。</p>
+<p><strong>置信传播（belief propagation）</strong>：一种用于计算<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>中各变量<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>边缘分布的消息传递算法。置信传播使用两种不同的消息计算方式，一种用于从<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>到变量的消息，另一种用于从变量到<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的消息。观测变量发送<a href="/post/2025-04-22-mbml-murder-mystery">点质量</a>消息。参见算法 2.1。</p>
+<p><strong>自我评估 2.2</strong></p>
+<p>以下练习将帮助你巩固本节所学的概念。在做题时，回顾正文或上面的概念小结可能会有所帮助。</p>
+<ol>
+<li>计算下列各对<a href="/post/2025-04-22-mbml-murder-mystery">伯努利分布</a>的乘积：
+
+$$\text{Bernoulli}(x; 0.3) \times \text{Bernoulli}(x; 0.9)$$
+
+$$\text{Bernoulli}(x; 0.5) \times \text{Bernoulli}(x; 0.2)$$
+
+$$\text{Bernoulli}(x; 0.5) \times \text{Bernoulli}(x; 0.3)$$
+
+$$\text{Bernoulli}(x; 1.0) \times \text{Bernoulli}(x; 0.2)$$
+
+$$\text{Bernoulli}(x; 1.0) \times \text{Bernoulli}(x; 0.3)$$
+为什么我们无法计算 $\text{Bernoulli}(x; 1.0) \times \text{Bernoulli}(x; 0.0)$？</li>
+<li>编写一个程序（或制作一个电子表格），打印出从两个参数不同（$a$ 和 $b$）的<a href="/post/2025-04-22-mbml-murder-mystery">伯努利分布</a>中抽取的成对样本。然后过滤程序的输出，只显示那些取值相同的样本对（即两个样本都为 true 或都为 false 的情形）。打印出这些样本中为 true 的比例。这个过程对应于把两个<a href="/post/2025-04-22-mbml-murder-mystery">伯努利分布</a>相乘，因此得到的比例应当接近式 (2.12) 给出的值。用你的程序（近似地）验证你对上一题的答案。当 $a=0.0$ 且 $b=1.0$ 时，你的程序会做什么？</li>
+<li>手动计算 <code>sql</code> 技能的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验概率</a>，就像我们在第 2.2 节中对 <code>csharp</code> 技能所做的那样，并证明它等于 3.4%。</li>
+<li>在 <a href="/post/2025-04-21-mbml-introduction">Infer.NET</a> 中构建这个<a href="/post/2025-04-21-mbml-introduction">模型</a>，并重现表 2.4 中的结果。关于如何构造<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">条件概率表</a>的示例，可参考 <a href="/post/2025-04-21-mbml-introduction">Infer.NET</a> 文档中的<a href="https://dotnet.github.io/infer/userguide/Discrete%20Bayesian%20network.html">湿草地/洒水器/下雨示例</a>。你还需要使用 <a href="/post/2025-04-21-mbml-introduction">Infer.NET</a> 的 <code>&amp;</code> 运算符来表示 <code>And</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。这个练习演示了在给定<a href="/post/2025-04-21-mbml-introduction">模型</a>定义的情况下，<a href="/post/2025-04-21-mbml-introduction">推断</a>计算如何能够完全自动地执行。</li>
+</ol>
+<h4 id="参考文献">参考文献</h4>
+<p>[Pearl, 1982] Pearl, J. (1982). Reverend Bayes on Inference Engines: A Distributed Hierarchical Approach. In <em>Proceedings of the Second AAAI Conference on Artificial Intelligence</em>, AAAI'82, pages 133–136. AAAI Press.</p>
+<p>[Pearl, 1988] Pearl, J. (1988). <em>Probabilistic Reasoning in Intelligent Systems</em>. Morgan Kaufmann, San Francisco.</p>
+<p>[Lauritzen and Spiegelhalter, 1988] Lauritzen, S. L. and Spiegelhalter, D. J. (1988). Local Computations with Probabilities on Graphical Structures and Their Application to Expert Systems. <em>Journal of the Royal Statistical Society, Series B</em>, 50(2):157–224.</p>
+<p>[Bishop, 2006] Bishop, C. M. (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.</p>
+<p>[Kschischang et al., 2001] Kschischang, F. R., Frey, B. J., and Loeliger, H. (2001). Factor graphs and the sum-product algorithm. <em>IEEE Transactions on Information Theory</em>, 47(2):498–519.</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-06-25-mbml-learning-skills_testing_out_the_model/">https://beanhsiang.github.io/post/2026-06-25-mbml-learning-skills_testing_out_the_model/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions/">[译]基于模型的机器学习 - 2.1 模型即一组假设</a></li>
+        
+        <li><a href="/post/2026-01-06-mbml-learning-skills/">[译]基于模型的机器学习 - 第二章 评估人们的技能</a></li>
+        
+        <li><a href="/post/2026-01-05-mbml-murder-mystery_extending_the_model/">[译]基于模型的机器学习 - 1.4 扩展模型</a></li>
+        
+        <li><a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder/">[译]基于模型的机器学习 - 1.3 谋杀模型</a></li>
+        
+        <li><a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs/">[译]基于模型的机器学习 - 1.2 更新我们的可信部分</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" title="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆" target="_blank">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/" title="在 Microsoft Copilot Studio 里落地多智能体编排" target="_blank">在 Microsoft Copilot Studio 里落地多智能体编排</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-25-mbml-learning-skills_testing_out_the_model/" title="[译]基于模型的机器学习 - 2.2 试验模型" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" title="自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" title="如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" target="_blank">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/" title="用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关" target="_blank">用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" title="GPT Realtime 上生产环境：到底该选哪种上下文策略？" target="_blank">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 AI 可观测性入门套件" target="_blank">Microsoft Foundry 智能体的 AI 可观测性入门套件</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-05-30-migrating-to-gpt-5-x-without-breaking-gpt-4-a-practical-backward-compatible-playbook/" title="迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册" target="_blank">迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (35)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (11)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

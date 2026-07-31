@@ -82,6 +82,35 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-06-25-mbml-learning-skills_testing_out_the_model/" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-06-25T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年6月25日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>构建好一个<a href="/post/2025-04-21-mbml-introduction">模型</a>之后，首先要做的就是用一些简单的示例数据来试验它，检查它的行为是否合理。假设有一位候选人懂 C# 但不懂 SQL——我们会预期他答对第一题，而答错另外两题。那么让我们针对这种情况试验一下<a href="/post/2025-04-21-mbml-introduction">模型</a>，看看对于这样的答题模式它会推断出哪些技能。为方便起见，我们用 <code>isCorrect</code> 来指代数组 <code>[isCorrect1, isCorrect2, isCorrect3]</code>，因此我们要考虑的是 <code>isCorrect</code> 为 <code>[true, false, false]</code> 的情形。</p>
+<p>我们想在给定这一组特定的 <code>isCorrect</code> 取值的条件下，推断候选人具备 <code>csharp</code> 和 <code>sql</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。这是一个<strong>推断查询</strong>的例子，它由我们想要推断的变量（<code>csharp</code>、<code>sql</code>）以及我们所条件化的变量（<code>isCorrect</code>）连同它们的观测值共同定义。由于这个例子相当小，我们可以用手工方式求出这个推断查询的答案。</p>
+<h3 id="手动进行推断">手动进行推断</h3>
+<p>作为开始，我们先来看看在只给定第一题答案的情况下，如何推断 <code>csharp</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。舍去其它变量后，就得到图 2.6 所示的简化<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-25-mbml-learning-skills_testing_out_the_model/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions/" target="_blank">[译]基于模型的机器学习 - 2.1 模型即一组假设</a>
             </h1>
         </header>
@@ -356,74 +385,30 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2025-04-20-mbml-table-of-contents/" target="_blank">[译]基于模型的机器学习 - 目录</a>
-            </h1>
-        </header>
-        
-  <time datetime="2025-04-20T02:00:00Z" class="post-meta meta-date dt-published">
-    2025年4月20日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <ul>
-<li>
-<p><a href="/post/2025-04-20-mbml-preface">前言</a></p>
-<blockquote>
-<p>本书简介、适用读者及阅读方法</p>
-</blockquote>
-</li>
-<li>
-<p><a href="/post/2025-04-21-mbml-introduction">如何用机器学习解决我的问题？</a></p>
-<blockquote>
-<p>什么是基于模型的机器学习及其如何帮助解决问题</p>
-</blockquote>
-</li>
-<li>
-<ol>
-<li><a href="/post/2025-04-22-mbml-murder-mystery">谋杀之谜</a></li>
-</ol>
-<blockquote>
-<p>通过解决一起谋杀案介绍基于模型的机器学习的核心概念</p>
-</blockquote>
-<blockquote>
-<p>关键词：概率、随机变量、概率推断、概率模型、因子图、贝叶斯定理</p>
-</blockquote>
-<ul>
-<li>1.1 <a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">整合证据</a></li>
-<li>1.2 <a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">更新我们的可信部分</a></li>
-<li>1.3 <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">谋杀模型</a></li>
-<li>1.4 <a href="/post/2026-01-05-mbml-murder-mystery_extending_the_model">扩展模型</a></li>
-</ul>
-</li>
-<li>
-<ol start="2">
-<li><a href="/post/2026-01-06-mbml-learning-skills">评估人的技能</a></li>
-</ol>
-<blockquote>
-<p>基于模型的机器学习的第一个应用：根据测试答案评估一个人具备哪些技能</p>
-</blockquote>
-<blockquote>
-<p>关键词：消息传递算法、循环置信传播、可视化、评估指标、ROC曲线</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-04-20-mbml-table-of-contents/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
 
+
+<ol class="page-navigator">
+    
+
+    
+    <li  class="current">
+        <a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">1</a>
+    </li>
+    
+    <li >
+        <a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/page/2/">2</a>
+    </li>
+    
+
+    
+    <li class="next">
+        <a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/page/2/">下一页</a>
+    </li>
+    
+</ol>
 
 
 
@@ -486,6 +471,10 @@
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-25-mbml-learning-skills_testing_out_the_model/" title="[译]基于模型的机器学习 - 2.2 试验模型" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" title="自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
     </li>
     
@@ -507,10 +496,6 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-05-30-migrating-to-gpt-5-x-without-breaking-gpt-4-a-practical-backward-compatible-playbook/" title="迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册" target="_blank">迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions/" title="[译]基于模型的机器学习 - 2.1 模型即一组假设" target="_blank">[译]基于模型的机器学习 - 2.1 模型即一组假设</a>
     </li>
     
 </ul>
@@ -536,7 +521,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (10)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (11)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
     

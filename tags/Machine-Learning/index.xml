@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Tue, 19 May 2026 10:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Thu, 25 Jun 2026 10:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/tags/Machine-Learning/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>[译]基于模型的机器学习 - 2.2 试验模型</title>
+				<link>https://beanhsiang.github.io/post/2026-06-25-mbml-learning-skills_testing_out_the_model/</link>
+				<pubDate>Thu, 25 Jun 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-06-25-mbml-learning-skills_testing_out_the_model/</guid>
+				<description>&lt;p&gt;构建好一个&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;模型&lt;/a&gt;之后，首先要做的就是用一些简单的示例数据来试验它，检查它的行为是否合理。假设有一位候选人懂 C# 但不懂 SQL——我们会预期他答对第一题，而答错另外两题。那么让我们针对这种情况试验一下&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;模型&lt;/a&gt;，看看对于这样的答题模式它会推断出哪些技能。为方便起见，我们用 &lt;code&gt;isCorrect&lt;/code&gt; 来指代数组 &lt;code&gt;[isCorrect1, isCorrect2, isCorrect3]&lt;/code&gt;，因此我们要考虑的是 &lt;code&gt;isCorrect&lt;/code&gt; 为 &lt;code&gt;[true, false, false]&lt;/code&gt; 的情形。&lt;/p&gt;&#xA;&lt;p&gt;我们想在给定这一组特定的 &lt;code&gt;isCorrect&lt;/code&gt; 取值的条件下，推断候选人具备 &lt;code&gt;csharp&lt;/code&gt; 和 &lt;code&gt;sql&lt;/code&gt; 技能的&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery&#34;&gt;概率&lt;/a&gt;。这是一个&lt;strong&gt;推断查询&lt;/strong&gt;的例子，它由我们想要推断的变量（&lt;code&gt;csharp&lt;/code&gt;、&lt;code&gt;sql&lt;/code&gt;）以及我们所条件化的变量（&lt;code&gt;isCorrect&lt;/code&gt;）连同它们的观测值共同定义。由于这个例子相当小，我们可以用手工方式求出这个推断查询的答案。&lt;/p&gt;&#xA;&lt;h3 id=&#34;手动进行推断&#34;&gt;手动进行推断&lt;/h3&gt;&#xA;&lt;p&gt;作为开始，我们先来看看在只给定第一题答案的情况下，如何推断 &lt;code&gt;csharp&lt;/code&gt; 技能的&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery&#34;&gt;概率&lt;/a&gt;。舍去其它变量后，就得到图 2.6 所示的简化&lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder&#34;&gt;因子图&lt;/a&gt;。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>[译]基于模型的机器学习 - 2.1 模型即一组假设</title>
 				<link>https://beanhsiang.github.io/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions/</link>

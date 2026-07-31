@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 2.5 诊断问题 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 2.5 诊断问题 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-07-10T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-07-10T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 2.5 诊断问题">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 2.5 诊断问题</h1>
+        </header>
+        
+  <time datetime="2026-07-10T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月10日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>当一个机器学习系统不工作时，通常有三个可能的原因：<strong>坏数据</strong>、<strong>坏模型</strong>或<strong>坏推断</strong>。以下是这三个类别下各自一些常见的问题成因：</p>
+<ul>
+<li><strong>坏数据（Bad data）</strong>：数据项被错误地录入、存储或加载；数据项不完整或标注错误；数据值噪声太大而无用；数据有偏或不能代表系统将被使用的方式；这是任务的错误数据；数据不足以做出准确预测。</li>
+<li><strong>坏模型（Bad model）</strong>：一个或多个建模假设是错的——即与实际生成数据的过程不一致；<a href="/post/2025-04-21-mbml-introduction">模型</a>做了太多简化假设；给定可用数据量，<a href="/post/2025-04-21-mbml-introduction">模型</a>包含的假设不足以做出准确预测。</li>
+<li><strong>坏推断（Bad inference）</strong>：<a href="/post/2025-04-21-mbml-introduction">推断</a>代码含有 bug；<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>不好；<a href="/post/2025-04-21-mbml-introduction">推断</a>尚未<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>；存在数值问题（例如舍入、溢出）；<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>不够准确。</li>
+</ul>
+<p>在我们的情形中，我们可以相当有信心地认为数据是好的，因为我们已经仔细地检查和可视化过它。所以看起来问题很可能出在<a href="/post/2025-04-21-mbml-introduction">模型</a>或<a href="/post/2025-04-21-mbml-introduction">推断</a>上。我们将从检查<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>——即<a href="/post/2026-06-16-mbml-learning-skills_loopiness">循环置信传播</a>——是否正确工作开始。</p>
+<h3 id="检查推断算法">检查推断算法</h3>
+<p>为了看出<a href="/post/2025-04-21-mbml-introduction">推断</a>是否正确工作，我们需要能够把<a href="/post/2025-04-21-mbml-introduction">推断</a>问题所引起的任何毛病，与我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>不匹配数据所引起的任何毛病区分开来。为了实现这种区分，我们可以生成一个新的合成数据集，它保证与<a href="/post/2025-04-21-mbml-introduction">模型</a>完全匹配。如果我们用这个数据集也得到糟糕的结果，那就表明存在<a href="/post/2025-04-21-mbml-introduction">推断</a>问题。我们将通过从<a href="/post/2025-04-21-mbml-introduction">模型</a>所指定的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">联合分布</a>中<a href="/post/2025-04-22-mbml-murder-mystery">采样</a>来创建这个合成数据集，这保证了数据与<a href="/post/2025-04-21-mbml-introduction">模型</a>一致（关于<a href="/post/2025-04-22-mbml-murder-mystery">采样</a>是什么，可回顾<a href="/post/2025-04-22-mbml-murder-mystery">第 1 章</a>）。我们可以通过运行<a href="/post/2025-04-21-mbml-introduction">模型</a>所指定的数据生成过程来产生样本——这个过程称为<strong>祖先采样</strong>（ancestral sampling），如算法 2.3 所定义（另见 Bishop [2006]）。</p>
+<blockquote>
+<p><strong>算法 2.3：祖先采样</strong></p>
+<p><strong>输入</strong>：<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a></p>
+<p><strong>输出</strong>：图中每个变量的采样值</p>
+<p>将变量从上到下排序，使得<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">父变量</a>排在<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">子变量</a>之前。</p>
+<p><strong>for each</strong> 该顺序中的变量 $v$ <strong>do</strong></p>
+<blockquote>
+<p>如果 $v$ 有<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">父变量</a>，取回它们的采样值（由于排序的缘故，这些值必然已经存在）。</p>
+<p>从其父<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>函数中，以取回的父值为条件，为 $v$ 采样一个值。</p>
+</blockquote>
+<p><strong>end</strong></p>
+</blockquote>
+<p>看着<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">图 2.19</a> 的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，我们从上到下（从祖先到后代）沿着箭头运行祖先采样，通过在给定图中各变量父节点的条件下，为每个变量<a href="/post/2025-04-22-mbml-murder-mystery">采样</a>一个值。如果一个变量是某个<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">确定性因子</a>的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">子变量</a>，那么我们只需从它<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">父变量</a>的取值来计算它的值即可。</p>
+<p>于是，从顶端开始，我们从 Bernoulli(0.5) 分布为 <code>skill</code> 数组的每个元素<a href="/post/2025-04-22-mbml-murder-mystery">采样</a>一个值——换句话说，我们以 50% 的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>选 <code>true</code>，否则选 <code>false</code>。对于某道题的 <code>relevantSkills</code> 数组元素，我们只需抽出 <code>skill</code> 数组中与该题相关的、已采样的值。随后把这些值 <code>AND</code> 在一起，得到 <code>hasSkills</code>。图 2.21 给出了 <code>skill</code> 和 <code>hasSkills</code> 数组的一组 22 个样本示例。要得到一个多行的数据集，我们只需对每一行重复整个<a href="/post/2025-04-22-mbml-murder-mystery">采样</a>过程。注意，对每一行，凡是需要相同技能（即同一颜色）的题目，<code>hasSkills</code> 总是相同的。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsSampled-Inputs-StatedSkills.png">
+            <img class="mx-auto" alt="图 2.21a" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsSampled-Inputs-StatedSkills.png" />
+        </a>
+    </p>
+<p><em>(a) 采样得到的 skill 数组</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsSampled-Inputs-HasSkillsMaskedBySkillsQuestions.png">
+            <img class="mx-auto" alt="图 2.21b" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsSampled-Inputs-HasSkillsMaskedBySkillsQuestions.png" />
+        </a>
+    </p>
+<p><em>(b) 由采样 skill 数组计算出的 hasSkills 数组</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsSampled-Inputs-IsCorrectMaskedBySkillsQuestions.png">
+            <img class="mx-auto" alt="图 2.21c" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsSampled-Inputs-IsCorrectMaskedBySkillsQuestions.png" />
+        </a>
+    </p>
+<p><em>(c) 采样得到的 isCorrect 数组</em></p>
+<p><em>图 2.21：用祖先采样创建的合成数据集。首先采样 <code>skill</code> 数组，然后由它计算出 <code>hasSkills</code> 数组。接着在给定 <code>hasSkills</code> 数组的条件下采样 <code>isCorrect</code> 数组，其效果是使它成为 <code>hasSkills</code> 的一个带噪版本。</em></p>
+<p>我们<a href="/post/2025-04-21-mbml-introduction">模型</a>中祖先采样的最后一步，需要在给定 <code>isCorrect</code> 的父元素 <code>hasSkills</code> 的条件下，采样它的每个元素。当 <code>hasSkills</code> 为 <code>true</code> 时，我们从 Bernoulli(0.9) 采样；当 <code>hasSkills</code> 为 <code>false</code> 时，我们从 Bernoulli(0.2) 采样（依照<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">表 2.1</a>）。执行这一步的结果给出了图 2.21c 的 <code>isCorrect</code> 样本。注意，这些样本最终看起来像是 <code>hasSkills</code> 样本的带噪版本——大约每十个白色方块中就有一个被翻转为彩色，而大约每五个彩色方块中就有一个被翻转为白色。</p>
+<p>我们现在有了一整个采样得到的数据集，可以在它上面运行我们的<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>，来测试它是否正确工作。推断出的技能<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>展示在图 2.22 中，紧挨着我们所采样的实际技能。与真实数据不同，这里的结果相当令人信服：推断出的技能看起来与实际采样的技能非常相似。所以，当我们在一个完全符合我们<a href="/post/2025-04-21-mbml-introduction">模型</a>的数据集上运行<a href="/post/2025-04-21-mbml-introduction">推断</a>时，结果是好的。这表明<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>工作良好，问题必然出在我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>与真实数据不匹配上。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsSampled-Results-SkillsPosteriorMeans.png">
+            <img class="mx-auto" alt="图 2.22a" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsSampled-Results-SkillsPosteriorMeans.png" />
+        </a>
+    </p>
+<p><em>(a) 推断出的技能</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsSampled-Inputs-StatedSkills.png">
+            <img class="mx-auto" alt="图 2.22b" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsSampled-Inputs-StatedSkills.png" />
+        </a>
+    </p>
+<p><em>(b) 采样得到的技能</em></p>
+<p><em>图 2.22：从一个样本数据集推断出的技能，与该数据集实际采样的技能并列展示。推断出的技能接近实际技能，表明<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>工作良好。</em></p>
+<p>一个重要而微妙的点是：即使数据与<a href="/post/2025-04-21-mbml-introduction">模型</a>完美匹配，推断出的技能也只是接近、而非完全等同于采样得到的技能。这是因为，即便给定了测试中的所有答案，技能上仍然残留着一些不确定性。例如，在个体不具备技能 1（Core）或技能 2（OOP）的情形下，技能 7（C#）的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验概率</a>是不确定的。这说得通，因为 C# 技能只与前两项技能组合在一起被考察——如果一个人不具备它们，那么无论他是否懂 C#，都会答错相关题目。所以在这种情况下，<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>对这个人是否具备 C# 技能感到不确定是正确的。我们可以利用这个信息来改进测试，例如添加一些直接单独考察 C# 技能的题目。</p>
+<h3 id="弄清模型出了什么问题">弄清模型出了什么问题</h3>
+<p>我们已经确定我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>假设与数据不匹配——现在我们需要识别是哪个（些）假设出了错。我们可以再次使用<a href="/post/2025-04-22-mbml-murder-mystery">采样</a>来做到这一点，但这次不是采样 <code>skill</code> 数组，而是把它设为真实（自评）值。如果我们随后采样 <code>isCorrect</code> 数组，它将向我们展示：如果人们拥有这些技能，<a href="/post/2025-04-21-mbml-introduction">模型</a>预期他们会答错哪些题。通过把这与我们数据集中实际的 <code>isCorrect</code> 数组作比较，我们就能看出<a href="/post/2025-04-21-mbml-introduction">模型</a>的假设在何处与现实不符。图 2.23 表明，实际的 <code>isCorrect</code> 数据看起来与采样数据相当不同。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsObserved-Inputs-IsCorrectMaskedBySkillsQuestions.png">
+            <img class="mx-auto" alt="图 2.23a" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-SampleSkillsObserved-Inputs-IsCorrectMaskedBySkillsQuestions.png" />
+        </a>
+    </p>
+<p><em>(a) 给定真实（自评）技能所采样的 isCorrect 数组</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-IsCorrectMaskedBySkillsQuestions.png">
+            <img class="mx-auto" alt="图 2.23b" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-IsCorrectMaskedBySkillsQuestions.png" />
+        </a>
+    </p>
+<p><em>(b) 我们数据集中观测到的 isCorrect 数组</em></p>
+<p><em>图 2.23：建模问题可以通过比较来诊断：(a) 在给定自评技能的条件下从<a href="/post/2025-04-21-mbml-introduction">模型</a>采样得到的 <code>isCorrect</code> 数据，与 (b) 观测到的 <code>isCorrect</code> 数据（显示志愿者实际答错了哪些题）。</em></p>
+<p>最大的差异似乎在于：给定志愿者陈述的技能，他们答对的题目比我们<a href="/post/2025-04-21-mbml-introduction">模型</a>所预测的要多得多。这表明他们能够猜对一道题的答案，其频率远高于我们<a href="/post/2025-04-21-mbml-introduction">模型</a>所假设的五分之一。仔细想想，这说得通——即使某人不具备回答一道题的技能，他也可能凭借常识或聪明的猜测排除掉一些选项。</p>
+<p>我们可以进一步研究这一点，方法是：计算在给定自评技能的条件下，<a href="/post/2025-04-21-mbml-introduction">模型</a>预测志愿者答对每道题的比例，然后把它与他们实际答对的比例作比较（图 2.24）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Metrics-ExpectedAndTrueFractionCorrect.png">
+            <img class="mx-auto" alt="图 2.24" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Metrics-ExpectedAndTrueFractionCorrect.png" />
+        </a>
+    </p>
+<p><em>图 2.24：对于测试中的 48 道题，<a href="/post/2025-04-21-mbml-introduction">模型</a>在给定自评技能下预测答对每道题的人数比例（蓝色），与实际答对的比例（红色）的对比。</em></p>
+<p>对于少数几道题，答对的人数比例与<a href="/post/2025-04-21-mbml-introduction">模型</a>预测的一致——但对于大多数题目，实际比例都高于预测比例。这表明有些题比其他题更容易猜，而且它们被猜对的频率可以高于五分之一。所以我们需要更改我们的假设（以及我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>），以允许不同题目有不同的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。我们可以把第四条假设修改如下：</p>
+<blockquote>
+<ol start="4">
+<li>如果一位应试者不具备一道题所需的全部技能，他将 <del>随机挑选一个答案</del> <strong>猜一个答案，其中猜对的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>对大多数题目约为 20%，但对非常容易猜的题目可高达约 60%</strong>。</li>
+</ol>
+</blockquote>
+<p>这条假设意味着，我们不再对所有题目使用固定的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，而是需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>，为每道题学习一个不同的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</p>
+<h4 id="本页引入概念回顾">本页引入概念回顾</h4>
+<p><strong>祖先采样（ancestral sampling）</strong>：一种从<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>产生样本的过程：先用没有父节点的变量的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>对它们进行<a href="/post/2025-04-22-mbml-murder-mystery">采样</a>，然后在这些采样值的条件下采样它们的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">子变量</a>，再类似地采样这些子变量的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">子变量</a>，如此类推，直到图中所有变量都被赋值为止。</p>
+<p><strong>自我评估 2.5</strong></p>
+<p>以下练习将帮助你巩固本节所学的概念。在做题时，回顾正文或上面的概念小结可能会有所帮助。</p>
+<ol>
+<li>列一份机器学习系统问题成因的检查清单（数据问题、<a href="/post/2025-04-21-mbml-introduction">模型</a>问题或<a href="/post/2025-04-21-mbml-introduction">推断</a>问题）。按你认为最可能发生的顺序对成因排序。那么，如果你将来在处理一个机器学习问题，这份检查清单在诊断问题的根本原因时可能会很有用。</li>
+<li>编写一个程序来实现本节所述的技能<a href="/post/2025-04-21-mbml-introduction">模型</a>中的祖先采样，并用它制作一个合成数据集。把这个数据集可视化，例如用你在上一个自我评估中开发的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">可视化</a>。检查你的样本看起来是否与图 2.21 的样本相似。</li>
+<li>试着更改我们在<a href="/post/2025-04-21-mbml-introduction">模型</a>中选定的几个<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>值，例如具备某项技能的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验概率</a>，或猜对答案的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。再次运行你的<a href="/post/2025-04-22-mbml-murder-mystery">采样</a>程序，看看合成数据集如何变化。你可以设想重复这一过程，直到在<a href="/post/2025-04-21-mbml-introduction">模型</a>假设下合成数据尽可能像真实数据为止。这样做会相当低效，所以我们转而把这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>值作为<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>的一部分来学习，正如我们将在下一节看到的那样。</li>
+</ol>
+<h4 id="参考文献">参考文献</h4>
+<p>[Bishop, 2006] Bishop, C. M. (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.</p>
+<hr>
+<p>下一节：<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">学习猜测概率</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/">https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data/">[译]基于模型的机器学习 - 2.4 迁移到真实数据</a></li>
+        
+        <li><a href="/post/2026-06-16-mbml-learning-skills_loopiness/">[译]基于模型的机器学习 - 2.3 有环性</a></li>
+        
+        <li><a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model/">[译]基于模型的机器学习 - 2.2 试验模型</a></li>
+        
+        <li><a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions/">[译]基于模型的机器学习 - 2.1 模型即一组假设</a></li>
+        
+        <li><a href="/post/2026-01-06-mbml-learning-skills/">[译]基于模型的机器学习 - 第二章 评估人们的技能</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" title="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆" target="_blank">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/" title="在 Microsoft Copilot Studio 里落地多智能体编排" target="_blank">在 Microsoft Copilot Studio 里落地多智能体编排</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" title="[译]基于模型的机器学习 - 2.5 诊断问题" target="_blank">[译]基于模型的机器学习 - 2.5 诊断问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/" title="[译]基于模型的机器学习 - 2.4 迁移到真实数据" target="_blank">[译]基于模型的机器学习 - 2.4 迁移到真实数据</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" title="自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" title="[译]基于模型的机器学习 - 2.3 有环性" target="_blank">[译]基于模型的机器学习 - 2.3 有环性</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" title="如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" target="_blank">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/" title="[译]基于模型的机器学习 - 2.2 试验模型" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (35)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (15)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

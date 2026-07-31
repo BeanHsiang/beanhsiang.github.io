@@ -75,6 +75,123 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/" title="用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关" target="_blank">用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-06-05T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年6月5日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>这篇是我照着 Microsoft 社区里一篇实战文章跑通之后整理的笔记，原文作者是 MuraliKumanduri，2026 年 6 月发布，<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/connecting-claude-clients-with-azure-api-management-and-claude-models-in-microso/4525212?WT.mc_id=AI-MVP-5003172">原文在这里</a>。我把它跑通并按自己的理解重讲一遍，方便以后复用。</p>
+<p>先说结论：这是一套能上生产的模式，给跑在 Microsoft Foundry 里的 Claude 模型前面套一层用 Entra 保护的 LLM 网关，做到按开发者认证、限流、配额和成本追踪，而且任何一台笔记本上都不落模型密钥。全套实现大概两小时，只想搭个最小试点的话半小时够了。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-05-30-migrating-to-gpt-5-x-without-breaking-gpt-4-a-practical-backward-compatible-playbook/" title="迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册" target="_blank">迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-05-30T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年5月30日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>我第一次把生产环境里的 <code>gpt-4o</code> 换成 <code>gpt-5.1</code>，服务发出的第一个请求就吃了个 <strong>HTTP 400</strong>。不是上线两周后才暴露，而是第一次调用就报错。更糟的是，报错指向的那个参数，我在自己代码里根本没写过——它是被一个我用了两年的 LangChain 辅助函数悄悄绑上去的。</p>
+<p>所以这篇我想认真拆一下：从 GPT-4 家族迁移到 GPT-5 家族，在 Azure OpenAI（Microsoft Foundry）上到底有哪些破坏性变更，那些没人提前警告你的集成陷阱，以及要让<strong>同一处调用代码同时兼容两个模型家族</strong>、不做分支，我到底需要哪几个文件。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-05-30-migrating-to-gpt-5-x-without-breaking-gpt-4-a-practical-backward-compatible-playbook/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 AI 可观测性入门套件" target="_blank">Microsoft Foundry 智能体的 AI 可观测性入门套件</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-05-30T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年5月30日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>本文编译自 Microsoft Tech Community 上 varghesejoji 的博客文章 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/ai-observability-starter-kit-for-microsoft-foundry-agents/4522751?WT.mc_id=AI-MVP-5003172">AI Observability Starter Kit for Microsoft Foundry agents</a>，我按自己上手时的理解重新整理，并补充了一些实际跑下来的体会。</p>
+<p>先把结论放前面：一条 PowerShell 命令，就能拉起一个包含四个智能体的 Microsoft Foundry 环境，带遥测、8 个内置评估器、1 个自定义合规评估器、一次自动化红队扫描，还有两条 scheduled-query 告警。整套东西端到端验证过，再敲一条命令就能全部拆掉。Fork 下来直接跑。我觉得它最对胃口的人群是那些在 Azure 上跑 AI 智能体、又不想自己手写一堆管道代码的应用开发者、ML 工程师和 SRE。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" title="GPT Realtime 上生产环境：到底该选哪种上下文策略？" target="_blank">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-05-30T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年5月30日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>如果你已经把 gpt-realtime 跑上了生产环境，大概率撞到过同一个问题：多轮对话之间，上下文到底该怎么管？</p>
+<p>听上去像个实现细节，其实不是。这个决定直接关系到：你每通电话的成本是三毛还是九毛，你呼叫中心的延迟能不能压在两秒以内，以及你的客户会不会在同一通电话里被迫把账号报上五遍。</p>
+<p>企业客户把语音和对话式 AI 从 demo 推向规模化时，追问的其实是同一件事：怎么优化 prompt 缓存策略，让调用量从每天一百通涨到十万通时，token 账单和延迟预算不会跟着爆炸。缓存是 realtime API 上撬动成本最狠的那根杠杆：缓存过的音频输入比未缓存便宜 99%，而解锁它靠的是一个稳定的前缀（prefix）。但到底哪种缓存策略真的赢，取决于你的应用是一次性查询、一段简短对话，还是呼叫中心那种动辄三十轮的升级工单。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions/" title="[译]基于模型的机器学习 - 2.1 模型即一组假设" target="_blank">[译]基于模型的机器学习 - 2.1 模型即一组假设</a>
             </h1>
         </header>
@@ -265,125 +382,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/" title="使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 Claude Agent SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-02-13T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年2月13日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>Microsoft Agent Framework 现已集成 <a href="https://github.com/anthropics/claude-agent-sdk-python?WT.mc_id=AI-MVP-5003172">Claude Agent SDK</a>，让我们能够构建由 Claude 完整代理能力驱动的 AI 代理。这个集成将 Agent Framework 的一致代理抽象与 Claude 的强大功能结合在一起，包括文件编辑、代码执行、函数调用、流式响应、多轮对话以及模型上下文协议（MCP）服务器集成——目前在 Python 中可用。</p>
-<h2 id="为什么将-agent-framework-与-claude-agent-sdk-结合使用">为什么将 Agent Framework 与 Claude Agent SDK 结合使用？</h2>
-<p>我们可以单独使用 Claude Agent SDK 来构建代理。那么为什么要通过 Agent Framework 来使用它呢？以下是主要原因：</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-02-13-build-ai-agents-with-claude-agent-sdk-and-microsoft-agent-framework/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/" title="使用 Microsoft Olive 和 Foundry Local 部署自定义模型" target="_blank">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-02-12T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年2月12日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>在过去的几周里,我一直在探索小语言模型(SLM)的部署之旅。从最初了解 Phi-4 和小语言模型的强大之处,到实践使用 Foundry Local 在本地运行模型,再到学习函数调用,最近还构建了一个完整的多智能体测验应用,其中包含一个协调专家智能体的编排器。</p>
-<p>这个测验应用在本地运行得很好,但它依赖于 Foundry Local 目录中的模型——这些模型经过预优化且随时可用。但如果想部署一个不在目录中的模型该怎么办?也许你已经在特定领域的测验数据上微调了一个模型,或者 Hugging Face 上刚发布了一个你想使用的新模型。今天我将展示如何从 Hugging Face 获取一个模型,使用 Microsoft Olive 优化它,在 Foundry Local 中注册它,并在测验应用中运行它。同样的工作流程适用于你可能为特定用例微调的任何模型。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/" title="使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-02-02T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年2月2日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>我发现 Microsoft Agent Framework 现在与 <a href="https://github.com/github/copilot-sdk?WT.mc_id=AI-MVP-5003172">GitHub Copilot SDK</a> 集成,让我们能够构建由 GitHub Copilot 驱动的 AI 代理。这个集成将 Agent Framework 一致的代理抽象与 GitHub Copilot 的强大功能结合在一起,包括函数调用、流式响应、多轮对话、Shell 命令执行、文件操作、URL 获取以及 Model Context Protocol (MCP) 服务器集成 —— 所有这些功能在 .NET 和 Python 中都可用。</p>
-<h2 id="为什么将-agent-framework-与-github-copilot-sdk-结合使用">为什么将 Agent Framework 与 GitHub Copilot SDK 结合使用?</h2>
-<p>你可以单独使用 GitHub Copilot SDK 来构建代理。那么为什么要通过 Agent Framework 来使用它呢?以下是几个关键原因:</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/" title="微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型" target="_blank">微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-01-20T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年1月20日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>微软研究院发布了 OptiMind,这是一个基于 AI 的系统,能够将复杂决策问题的自然语言描述转换为优化求解器可执行的数学公式。它解决了运筹学中长期存在的一个瓶颈问题:将业务意图转换为混合整数线性规划通常需要专业建模人员和数天的工作。</p>
-<h2 id="optimind-是什么以及它输出什么">OptiMind 是什么以及它输出什么?</h2>
-<p><a href="https://huggingface.co/microsoft/OptiMind-SFT?WT.mc_id=AI-MVP-5003172">OptiMind-SFT</a> 是 gpt-oss transformer 系列中的一个专业化 200 亿参数专家混合模型。每个 token 约激活 36 亿参数,因此推理成本更接近中型模型,同时保持较高的容量。上下文长度为 128,000 tokens,这允许在单个请求中处理长规范和多步推理轨迹。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -503,6 +501,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
     </li>
     
@@ -515,7 +517,11 @@
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2026-06-25-mbml-learning-skills_testing_out_the_model/" title="[译]基于模型的机器学习 - 2.2 试验模型" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
+        <a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" title="[译]基于模型的机器学习 - 2.5 诊断问题" target="_blank">[译]基于模型的机器学习 - 2.5 诊断问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/" title="[译]基于模型的机器学习 - 2.4 迁移到真实数据" target="_blank">[译]基于模型的机器学习 - 2.4 迁移到真实数据</a>
     </li>
     
     <li>
@@ -523,23 +529,15 @@
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" title="[译]基于模型的机器学习 - 2.3 有环性" target="_blank">[译]基于模型的机器学习 - 2.3 有环性</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" title="如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" target="_blank">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a>
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/" title="用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关" target="_blank">用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" title="GPT Realtime 上生产环境：到底该选哪种上下文策略？" target="_blank">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 AI 可观测性入门套件" target="_blank">Microsoft Foundry 智能体的 AI 可观测性入门套件</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-05-30-migrating-to-gpt-5-x-without-breaking-gpt-4-a-practical-backward-compatible-playbook/" title="迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册" target="_blank">迁移到 GPT-5.x 而不搞坏 GPT-4：一套实用的向后兼容迁移手册</a>
+        <a href="https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/" title="[译]基于模型的机器学习 - 2.2 试验模型" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
     </li>
     
 </ul>
@@ -565,7 +563,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (11)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (15)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
     

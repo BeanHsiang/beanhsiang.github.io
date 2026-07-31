@@ -2,22 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/</loc>
+    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-07-23T12:00:00+08:00</lastmod>
+    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2026-07-23T12:00:00+08:00</lastmod>
+    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
+    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Model-Based/</loc>
+    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
+    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
     <lastmod>2026-07-23T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
-    <lastmod>2026-07-23T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-07-23T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
     <lastmod>2026-07-23T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/</loc>
@@ -29,23 +41,23 @@
     <loc>https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/</loc>
     <lastmod>2026-07-16T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/post/2026-06-25-mbml-learning-skills_testing_out_the_model/</loc>
-    <lastmod>2026-06-25T10:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/</loc>
+    <lastmod>2026-07-10T10:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
-    <lastmod>2026-06-25T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Model-Based/</loc>
-    <lastmod>2026-06-25T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
-    <lastmod>2026-06-25T10:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/</loc>
+    <lastmod>2026-06-26T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/</loc>
     <lastmod>2026-06-19T12:00:00+08:00</lastmod>
   </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/</loc>
+    <lastmod>2026-06-16T10:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/</loc>
     <lastmod>2026-06-13T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/</loc>
+    <lastmod>2026-06-06T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/</loc>
     <lastmod>2026-06-05T12:00:00+08:00</lastmod>

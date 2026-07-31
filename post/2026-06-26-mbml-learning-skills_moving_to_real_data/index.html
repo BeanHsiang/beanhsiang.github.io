@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 2.4 迁移到真实数据 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 2.4 迁移到真实数据 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-06-26T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-06-26T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 2.4 迁移到真实数据">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 2.4 迁移到真实数据</h1>
+        </header>
+        
+  <time datetime="2026-06-26T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年6月26日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>既然我们已经在示例数据上充分试验过<a href="/post/2025-04-21-mbml-introduction">模型</a>，现在就可以用一些真实数据来工作了。我们请了 22 位志愿者完成一份由 48 道题组成的测评测试，用以评估七种不同的开发技能。许多题目需要两项技能，因为它们既需要某个软件开发概念的知识（例如面向对象编程），又需要该题所用编程语言的知识（例如 C#）。</p>
+<p>除了完成测试之外，我们还请每位志愿者说明他们认为自己具备哪些开发技能。这些自评技能将作为技能变量的<a href="/post/2025-04-21-mbml-introduction">真实标注</a>（ground truth）——也就是说，我们把它们当作变量的真实取值。这类真实标注数据将用于评估我们的系统从志愿者答案中自动推断技能的准确性。真实标注数据应当相当可靠，因为志愿者没有夸大自己技能的动机：结果是匿名的，所报告的技能和答案无法与任何特定志愿者关联。然而，某些志愿者也有可能高估或低估自己的技能，我们在用这些数据评估准确性时需要牢记这一点。</p>
+<p>我们收集到的原始数据如表 2.6 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-RawResponsesAsDictionary.png">
+            <img class="mx-auto" alt="表 2.6" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-RawResponsesAsDictionary.png" />
+        </a>
+    </p>
+<p><em>表 2.6：从志愿者完成一份真实测评测试所收集的原始数据。该数据包含自评技能（S1–S7）以及对每道题的答案（Q1–Q48）。数据的第一行给出每道题的正确答案。随后每一行给出其中一位参与者的数据。</em></p>
+<p>在这个机器学习应用中，我们需要系统能够处理提供给它的任何测试，而不必为每份新测试收集新的真实标注数据。这意味着我们在<a href="/post/2025-04-21-mbml-introduction">模型</a>中做<a href="/post/2025-04-21-mbml-introduction">推断</a>时不能使用真实标注数据，因为在实践中我们不会有这类数据。不使用真实标注数据的学习称为<strong>无监督学习</strong>。不过，在开发系统时我们仍然需要真实标注数据，因为我们需要评估系统工作得如何。我们将在这份特定的测试上评估它，并假设它随后在新的、未见过的测试上会以相似的准确度工作。</p>
+<h3 id="可视化数据">可视化数据</h3>
+<p>在处理一份新数据集时，花时间通过各种方式对数据进行可视化观察是至关重要的（关于为什么这如此重要，见专栏 2.3）。那么，现在让我们来为测试答案制作一个可视化。</p>
+<blockquote>
+<p><strong>专栏 2.3：可视化的重要性</strong></p>
+<p>机器学习<a href="/post/2025-04-21-mbml-introduction">算法</a>在代码出错时往往不会失败，而是悄无声息地继续运行、给出不准确的结果。对数据、<a href="/post/2025-04-21-mbml-introduction">推断</a>过程以及结果进行可视化，提供了一种检测和理解这类错误的非常有效的方法。</p>
+<p>可视化之所以重要，还因为：</p>
+<ul>
+<li>它让你发现数据中的问题，例如数据录入错误、缺失数据、错误标注的数据、以错误格式保存的数据，或被错误加载的数据。</li>
+<li>它让你看到数据中的模式，甚至在创建任何<a href="/post/2025-04-21-mbml-introduction">模型</a>或进行任何<a href="/post/2025-04-21-mbml-introduction">推断</a>计算之前。精心设计的可视化能够揭示有用的模式，就像精心设计的<a href="/post/2025-04-21-mbml-introduction">模型</a>能揭示模式一样。</li>
+<li>它让你把工作成果传达给他人，帮助说服他们相信你的系统运行良好，或者证明它正在从数据中提取有用的信息。</li>
+</ul>
+<p>与其问“我需要可视化这些数据吗？”，不如换个更好的问题：“我承担得起<strong>不</strong>可视化这些数据的后果吗？”。任何时候，只要你选择不去可视化某些数据、<a href="/post/2025-04-21-mbml-introduction">推断</a>过程的某个部分或某些结果，你就有（很高的）几率会遗漏某个重要的东西。一条好的经验法则是：至少值得花 20% 的时间来制作可视化。</p>
+</blockquote>
+<p>
+        <a data-fancybox="gallery" href="/uploads/cookies_srsupp_13Dec2018.jpg">
+            <img class="mx-auto" alt="饼干照片" src="/uploads/cookies_srsupp_13Dec2018.jpg" />
+        </a>
+    </p>
+<p><em>照片（和饼干）由 Sarah Supp 提供，2018 年 12 月。在可视化数据时富有创意是件好事。</em></p>
+<p>一个好的可视化的关键要素是：(i) 它忠实地表示了底层数据，(ii) 它把数据的至少一个方面表现得非常清楚，(iii) 它能独立成立（不需要任何解释性文字），以及 (iv) 在此之外它尽可能简单。关于这个主题有整本整本的书（例如 Tufte [1986]），也有一些有用的网站（它们一直在变——请用你的搜索引擎！）和商业可视化软件（例如 <a href="http://www.tableau.com/">Tableau</a>）。此外，大多数编程语言都有可用的可视化和图表库，尤其是那些专注于数据科学的语言，如 R、Python 和 Matlab。在本书中，我们希望通过示例——即阐释每个案例研究的各幅图——来说明什么样的可视化才是好的。例如，在<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">表 2.4</a> 中，除了数字之外还用条形来表示<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，这使得更容易看出哪些题答对了与推断出的技能<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>之间的关系。</p>
+<p>我们想要可视化的是：每个人对每道题答对还是答错，以及该题所需的技能（由出题人提供）。对于所需技能，我们可以用一个网格，其中白色方块表示需要该技能，黑色方块表示不需要（图 2.16a）。类似地，对于答案，我们可以用另一个网格，其中白色表示答对、黑色表示答错（图 2.16b）。为了更容易发现技能与答案之间的关系，我们可以把两个网格对齐，得到图 2.16 的可视化。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-Quiz-SkillsQuestionsMask.png">
+            <img class="mx-auto" alt="图 2.16a" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-Quiz-SkillsQuestionsMask.png" />
+        </a>
+    </p>
+<p><em>(a) 各题所需技能</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-IsCorrect.png">
+            <img class="mx-auto" alt="图 2.16b" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-IsCorrect.png" />
+        </a>
+    </p>
+<p><em>(b) 答题情况</em></p>
+<p><em>图 2.16：答题数据以及每道题所需技能的可视化。(a) 每一行对应一项技能，每一列对应一道题。白色方块显示每道题需要哪些技能。(b) 每一行对应一个人，每一列同样对应一道题。这里白色方块显示每个人答对了哪些题。</em></p>
+<p>这个可视化已经告诉了我们许多关于数据的信息：它让我们看出哪些题容易（列几乎全白）、哪些题难（列几乎全黑）。类似地，它让我们识别出表现好或差的个体，并让我们对人与人之间的差异有一个直观感受。最有用的是，它向我们展示了人们常常<strong>成串</strong>地答错题。在我们的测试中，连续的题目通常需要相似的技能，因此一串答错的题可以用缺乏相应技能来解释。这些成串的错题令人安心，因为如果数据遵循我们<a href="/post/2025-04-21-mbml-introduction">模型</a>的假设，这正是我们所期望看到的那种模式。</p>
+<p>这个可视化的一个困难在于，我们必须在两个网格之间来回查看，才能发现某道题的答案与该题所需技能之间的关系。例如，要识别某个特定的人答错的那些题所需的技能集合，并不特别容易。为了解决这个问题，我们可以尝试创建一个同时包含两个网格信息的可视化。一种做法是为每项技能关联一种颜色，并相应地给答错的题着色，如图 2.17 所示：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-IsCorrectMaskedBySkillsQuestions.png">
+            <img class="mx-auto" alt="图 2.17" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-IsCorrectMaskedBySkillsQuestions.png" />
+        </a>
+    </p>
+<p><em>图 2.17：与图 2.16 相同数据的可视化，但只用一个着色网格，以便更容易看出答错的题与技能之间的关联。</em></p>
+<p>这个可视化使得更容易发现与同一技能相关的错题模式，而无需在两个网格之间不断切换视线。我们本也可以选择高亮答对的题，但在这个情形下聚焦于答错的题更有用，因为它们更罕见，因而更有意思。例如，我们可以看到，那些答错了一些橙色（面向对象编程）题目的人，往往也答错了许多其它橙色题目，因为橙色网格单元常常成块出现。这强烈暗示了缺乏某种底层技能，从而影响了所有这些题目的答案。相反，对于青色（桌面应用）题目，块状结构似乎较少，这表明在这种情况下，“存在一项技能影响所有这些题目”的假设更弱。</p>
+<h3 id="面向整份测试的因子图">面向整份测试的因子图</h3>
+<p>在确信数据看起来合理之后，我们现在想在这份测评测试的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>上运行<a href="/post/2025-04-21-mbml-introduction">推断</a>。我们已经见过三题（图 2.5）和四题（图 2.14）的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，那时只建模了两项技能。但如果我们试图为全部 48 道题画一张<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，它会非常庞大，也并不特别有用。为了避免这种过大的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，我们可以用一个<strong>板</strong>（plate）来表示图中重复的结构。下面是一个用板来表示五个技能变量<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>的例子：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_SkillPriorsWithPlate.png">
+            <img class="mx-auto" alt="图 2.18 左" src="/uploads/LearningSkills_SkillPriorsWithPlate.png" />
+        </a>
+    
+
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_SkillPriorsNoPlate.png">
+            <img class="mx-auto" alt="图 2.18 右" src="/uploads/LearningSkills_SkillPriorsNoPlate.png" />
+        </a>
+    </p>
+<p><em>图 2.18：用板来表示<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>中的重复结构。</em></p>
+<p>左边带板的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>等价于右边不带板的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。板画成一个矩形，其重复次数标在右下角——在这个例子中是 5。包含在板内的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>和<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>被视为被复制了 5 次。当一个变量在板内被复制时，它就变成一个长度为 5 的<strong>变量数组</strong>——所以在这个例子中，<code>skill</code> 是一个数组，其元素为 $skill[0]$、$skill[1]$、$skill[2]$、$skill[3]$ 和 $skill[4]$。注意，我们用下标 0 来指代数组的第一个元素。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_SkillsWithPlates.png">
+            <img class="mx-auto" alt="图 2.19" src="/uploads/LearningSkills_SkillsWithPlates.png" />
+        </a>
+    </p>
+<p><em>图 2.19：面向整份测试的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，使用板和 <code>Subarray</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>构建。</em></p>
+<p>图 2.19 展示了我们如何用板为整份测试画出一张紧凑的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。图中有两个板，一个横跨技能，一个横跨题目。我们没有为重复次数填入实际数字，而是用了名为 <code>skills</code> 和 <code>questions</code> 的变量。这给了我们一张可针对任意数量技能和任意数量题目进行配置的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，因此可用于任何测试。对于我们这份特定的测试，我们将把 <code>skills</code> 设为 7，把 <code>questions</code> 设为 48。</p>
+<p>图 2.19 还引入了 <code>Subarray</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>，它连接了两个新变量 <code>skillsNeeded</code> 和 <code>relevantSkills</code>，二者都是 <code>questions</code> 板内的数组。<code>skillsNeeded</code> 数组必须被提供（由灰色阴影表示），它包含每道题需要哪些技能的信息。<code>skillsNeeded</code> 的每个元素本身是一个小的整数数组，指定了该题所需技能的下标——因此，对于一道需要第一项和第三项技能的题，它将是 $[0, 2]$。<code>Subarray</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>利用这个信息，从 <code>skill</code> 数组中抽出相关的子数组，放入 <code>relevantSkills</code> 数组的对应元素中。继续我们的例子，这就意味着 <code>relevantSkills</code> 的那个元素将包含子数组 $[skill[0], skill[2]]$。从这一点往后，<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>就和之前一样了：<code>hasSkills</code> 是 <code>relevantSkills</code> 各元素的 <code>AND</code>，而 <code>isCorrect</code> 则是 <code>hasSkills</code> 的带噪版本。</p>
+<h3 id="我们的第一批结果">我们的第一批结果</h3>
+<p>我们现在准备好在真实数据集上得到第一批结果了。走到这一步花了不少时间，因为我们花时间在小例子上试验了<a href="/post/2025-04-21-mbml-introduction">模型</a>、并对数据做了可视化。但正是通过做这些工作，我们才能有信心，从一开始我们的<a href="/post/2025-04-21-mbml-introduction">推断</a>结果就是有意义的。</p>
+<p>我们可以对每个人分别把<a href="/post/2026-06-16-mbml-learning-skills_loopiness">循环置信传播</a>应用到图 2.19 的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>上，把 <code>isCorrect</code> 设为该人的答案。对每项技能，这将给出这个人具备该技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。对每个人重复这一过程，得到一个结果矩阵，展示在图 2.20 左侧的可视化中，其中行对应不同的人，列对应不同的技能。为便于比较，我们在图右侧包含了这些人的自评技能。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Results-SkillsPosteriorMeans.png">
+            <img class="mx-auto" alt="图 2.20a" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Results-SkillsPosteriorMeans.png" />
+        </a>
+    </p>
+<p><em>(a) 推断出的技能</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-StatedSkills.png">
+            <img class="mx-auto" alt="图 2.20b" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-StatedSkills.png" />
+        </a>
+    </p>
+<p><em>(b) 自评技能</em></p>
+<p><em>图 2.20：把我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>应用到真实测评数据的初步结果。(a) 计算出的每个人具备每项技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，其中白色对应<a href="/post/2025-04-22-mbml-murder-mystery">概率</a> 1.0，黑色对应<a href="/post/2025-04-22-mbml-murder-mystery">概率</a> 0.0，灰色深浅表示介于中间的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>值。(b) 作为真实标注的自评技能，白色表示此人评估自己具备该技能，黑色表示不具备。不幸的是，推断出的技能与自评技能几乎没有相似之处。</em></p>
+<p>这些<a href="/post/2025-04-21-mbml-introduction">推断</a>结果显然有很大问题！推断出的技能与自评技能几乎没有相似之处。有少数几个人的推断技能看起来还算合理——比如第 3 行和第 6 行的人。然而，对于大多数人，系统推断出他们几乎具备所有技能，无论他们实际是否具备。在我们做了这么多细致的测试和准备之后，怎么会出现这种情况？</p>
+<p>事实上，机器学习系统第一次被应用到真实数据上时，结果不如预期是非常常见的。真正的挑战在于找出哪里出了问题并把它修好。</p>
+<h4 id="本页引入概念回顾">本页引入概念回顾</h4>
+<p><strong>真实标注（ground truth）</strong>：一个数据集，其中包含我们想要预测或推断的变量的取值，用于评估<a href="/post/2025-04-21-mbml-introduction">模型</a>的预测准确性，和/或用于训练<a href="/post/2025-04-21-mbml-introduction">模型</a>。真实标注数据通常收集起来昂贵或困难，因此在大多数机器学习项目中是一种宝贵而稀缺的资源。</p>
+<p><strong>无监督学习（unsupervised learning）</strong>：一种不使用带标注（真实标注）数据、而是旨在自动地、无需人工指导地从无标注数据中发现模式的学习。</p>
+<p><strong>可视化（visualisation）</strong>：对某些数据或<a href="/post/2025-04-21-mbml-introduction">推断</a>结果的图形化表示，它让模式或问题得以被检测、理解、传达和据以行动。可视化是机器学习中非常重要的一部分，正如专栏 2.3 所讨论的。</p>
+<p><strong>板（plate）</strong>：<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>中的一个容器，它紧凑地表示所含节点和边的若干次重复。板画成一个矩形，在右下角标注重复次数。例如，见图 2.18。</p>
+<p><strong>变量数组（variable array）</strong>：变量的有序集合，其中每个变量由其在该顺序中的位置（从零开始）来标识。例如，一个名为 <code>skill</code>、长度为 5 的变量数组将包含五个变量：$skill[0]$、$skill[1]$、$skill[2]$、$skill[3]$ 和 $skill[4]$。</p>
+<p><strong>自我评估 2.4</strong></p>
+<p>以下练习将帮助你巩固本节所学的概念。在做题时，回顾正文或上面的概念小结可能会有所帮助。</p>
+<ol>
+<li>为表 2.6 的数据集创建一个替代的可视化，展示哪些人答对的题最多、哪些题被最多人答对。例如，你可以对图 2.16 或图 2.17 的行和列进行排序。你的新可视化展示了本节所用可视化中未能明显呈现的什么信息？注：可以用在线版本表格旁的按钮，以 Excel 或 CSV 形式下载该数据集。</li>
+<li>用 <a href="/post/2025-04-21-mbml-introduction">Infer.NET</a> [Minka et al., 2014] 实现图 2.19 中带板的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。你需要用到<a href="https://dotnet.github.io/infer/userguide/Arrays%20and%20ranges.html">变量数组</a>、<a href="https://dotnet.github.io/infer/userguide/ForEach%20blocks.html">ForEach 循环</a>以及 <a href="https://dotnet.github.io/infer/userguide/Array%20and%20list%20factors.html">Subarray 因子</a>。把你的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>应用到该数据集，并验证你得到图 2.20a 中所示的结果。</li>
+</ol>
+<h4 id="参考文献">参考文献</h4>
+<p>[Tufte, 1986] Tufte, E. R. (1986). <em>The Visual Display of Quantitative Information</em>. Graphics Press, Cheshire, CT, USA.</p>
+<p>[Minka et al., 2014] Minka, T., Winn, J., Guiver, J., Webster, S., Zaykov, Y., Yangel, B., Spengler, A., and Bronskill, J. (2014). Infer.NET 2.6. Microsoft Research Cambridge. <a href="http://research.microsoft.com/infernet">http://research.microsoft.com/infernet</a>.</p>
+<hr>
+<p>下一节：<a href="/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem">诊断问题</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/">https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-06-16-mbml-learning-skills_loopiness/">[译]基于模型的机器学习 - 2.3 有环性</a></li>
+        
+        <li><a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model/">[译]基于模型的机器学习 - 2.2 试验模型</a></li>
+        
+        <li><a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions/">[译]基于模型的机器学习 - 2.1 模型即一组假设</a></li>
+        
+        <li><a href="/post/2026-01-06-mbml-learning-skills/">[译]基于模型的机器学习 - 第二章 评估人们的技能</a></li>
+        
+        <li><a href="/post/2026-01-05-mbml-murder-mystery_extending_the_model/">[译]基于模型的机器学习 - 1.4 扩展模型</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" title="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆" target="_blank">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/" title="在 Microsoft Copilot Studio 里落地多智能体编排" target="_blank">在 Microsoft Copilot Studio 里落地多智能体编排</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" title="[译]基于模型的机器学习 - 2.5 诊断问题" target="_blank">[译]基于模型的机器学习 - 2.5 诊断问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/" title="[译]基于模型的机器学习 - 2.4 迁移到真实数据" target="_blank">[译]基于模型的机器学习 - 2.4 迁移到真实数据</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" title="自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" title="[译]基于模型的机器学习 - 2.3 有环性" target="_blank">[译]基于模型的机器学习 - 2.3 有环性</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" title="如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" target="_blank">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/" title="[译]基于模型的机器学习 - 2.2 试验模型" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (35)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (15)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

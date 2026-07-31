@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 2.6 学习猜测概率 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 2.6 学习猜测概率 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-07-24T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-07-24T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 2.6 学习猜测概率">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 2.6 学习猜测概率</h1>
+        </header>
+        
+  <time datetime="2026-07-24T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月24日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>你可能以为，推断猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>需要用到与我们目前所用完全不同的技术。事实上，我们的做法将完全相同：我们把想要学习的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>值作为新的连续<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>加入<a href="/post/2025-04-21-mbml-introduction">模型</a>，并用<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">概率推断</a>来计算它们的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。这展示了基于模型方法的威力——每当我们想知道某个东西时，我们就把它作为一个<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>引入<a href="/post/2025-04-21-mbml-introduction">模型</a>，然后用<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">概率推断</a>去求出它。</p>
+<p>让我们看看如何修改<a href="/post/2025-04-21-mbml-introduction">模型</a>，把猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>作为<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>纳入进来。为了保持一致，我们也会为犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>（实际上是<strong>不犯错</strong><a href="/post/2025-04-22-mbml-murder-mystery">概率</a>）添加一个变量，但我们会把它固定在 10% 的犯错几率上。首先，我们要改变书写 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的方式。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_AddNoise.png">
+            <img class="mx-auto" alt="图 2.25a" src="/uploads/LearningSkills_AddNoise.png" />
+        </a>
+    </p>
+<p><em>(a) 内置概率的自定义因子</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_AddNoiseAsTable2.png">
+            <img class="mx-auto" alt="图 2.25b" src="/uploads/LearningSkills_AddNoiseAsTable2.png" />
+        </a>
+    </p>
+<p><em>(b) 通用的 Table 因子</em></p>
+<p><em>图 2.25：书写 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的两种方式：(a) 作为一个把猜测和犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>“内置”其中的自定义<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。(b) 使用一个通用的 <code>Table</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>，它带有两个参数：给定父节点为 <code>false</code> 时子节点为 <code>true</code> 的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>（左参数），以及给定父节点为 <code>true</code> 时子节点为 <code>true</code> 的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>（右参数）。这种书写<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的方式让我们可以把这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>作为变量提供给<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。</em></p>
+<p>图 2.25 展示了如何把现有的 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>（其中猜测和不犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>被硬编码为 0.2 和 0.9）替换为一个通用的 <code>Table</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>，后者把这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>作为额外的参数。然后我们可以用两个新的<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>来设置这些参数，我们把它们命名为 <code>probGuess</code> 和 <code>probNoMistake</code>。推断这些变量的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>，就会给出我们所需的猜测和不犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的学习值——但为此，我们首先需要一种能表示这类变量不确定性的分布。</p>
+<h3 id="表示连续值中的不确定性">表示连续值中的不确定性</h3>
+<p>这两个新变量 <code>probGuess</code> 和 <code>probNoMistake</code> 与我们目前遇到的变量类型不同：此前我们所有的变量都是二值的（取两个值），而这些新变量是<strong>连续的</strong>（取实数值），落在 0.0 到 1.0（含端点）的区间内。这意味着我们不能用<a href="/post/2025-04-22-mbml-murder-mystery">伯努利分布</a>来表示它们的不确定性。事实上，由于我们的变量是连续的，我们需要使用一种基于<strong>概率密度函数</strong>的分布——如果你不熟悉这个术语，请阅读专栏 2.4。</p>
+<blockquote>
+<p><strong>专栏 2.4：概率密度函数</strong></p>
+<p>当我们想表示一个<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">连续变量</a>（例如一个人的身高）的不确定性时，像“他的身高有 80% 的几率是 1.84 米”这样看似合理的陈述，其实并没有意义。要明白为什么，可以考虑数学上等价的陈述“他的身高有 80% 的几率是 1.840000000… 米”。这个陈述显得非常不合理，因为它暗示：无论我们把身高多测量几位小数，我们总会得到零。事实上，我们测量的小数位越多，就越有可能发现一个非零数字。如果我们能一直以无限精度测量下去，那么恰好得到 1.84000…（或任何特定值）的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>实际上会消失为零。</p>
+<p>所以，我们不去谈一个<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">连续变量</a>取某个特定值的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，而是谈它的值落在某个特定范围内的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，例如落在 1.835 米到 1.845 米这个范围内。在日常语言中，我们通过表达一个数字时所用的精度来传达这一点，所以当我们说“1.84 米”时，我们往往是指“精确到厘米的 1.84 米”，即介于 1.835 米和 1.845 米之间的某处。我们可以通过给出一组这样的范围，连同值落在每个范围内的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>（使得这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>加起来为一），来表示一个连续值上的分布。例如：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesPDFDemoHeightDiscrete_.png">
+            <img class="mx-auto" alt="离散身高分布" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesPDFDemoHeightDiscrete_.png" />
+        </a>
+    </p>
+<p>这种做法有时有用，但也常常带来问题：它引入了许多需要学习的参数（每个范围一个）；很难选出一组合理的范围；从一个范围过渡到另一个范围时存在不连续性；而且难以施加平滑性，即相邻范围所对应的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>应当相似。一个更好的解决办法是定义一个函数，使得该函数在任意两个值之间的曲线下面积给出值落在该范围内的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。这样的函数称为<strong>概率密度函数</strong>（pdf）。例如，下图展示了一个高斯 pdf（我们将在<a href="https://www.mbmlbook.com/TrueSkill.html">第 3 章</a>中学到更多关于高斯分布的内容）：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesPDFDemoHeight_.png">
+            <img class="mx-auto" alt="高斯概率密度函数" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesPDFDemoHeight_.png" />
+        </a>
+    </p>
+<p>注意，现在 y 轴的取值远高于 1，因为概率密度不必限制在 0 到 1 之间。相反，函数下方的总面积被要求为 1.0。1.835 米到 1.845 米之间阴影区域的面积为 0.383，这就给出了身高落在这两个值之间的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。类似地，计算 pdf 在任意两点之间的曲线下面积，就给出身高落在这两点之间的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</p>
+</blockquote>
+<p>我们需要一种分布，其密度函数既能表示我们的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>假设“猜对的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>对大多数题目约为 20%，但对非常容易猜的题目可高达约 60%”，又能表示从数据中学习之后猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>上的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>。这个分布还应被限制在 0.0 到 1.0（含端点）的范围内。一个合适的函数应当能够建模一个落在此范围内的单个“隆起”，因为这个隆起对<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>来说可以从 20%–60% 宽泛地展开，然后对学到的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>来说又能变窄、集中在某个特定值附近。一种名为 <strong>beta 分布</strong>的分布满足这些要求。它有如下密度函数：</p>
+$$Beta(x; \alpha, \beta) = \frac{x^{\alpha-1}(1-x)^{\beta-1}}{B(\alpha, \beta)} \quad (2.22)$$<p>其中 $B()$ 是这个分布得名的 beta 函数，用于确保函数下方的面积为 1.0。beta 密度函数有两个参数 $\alpha$ 和 $\beta$，它们共同控制隆起的位置和宽度——图 2.26a 展示了这些参数取不同值时的一组 beta pdf。参数 $\alpha$ 和 $\beta$ 必须为正，即大于零。均值 $\frac{\alpha}{\alpha+\beta}$ 决定了隆起的质心位于何处，而和 $\alpha+\beta$ 控制隆起有多宽——$\alpha+\beta$ 越大，隆起越窄。我们可以通过选择 $\alpha=2.5$ 和 $\beta=7.5$ 来配置一个 beta 分布，使之编码我们的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>假设，这给出图 2.26b 所示的密度函数。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesBetas_.png">
+            <img class="mx-auto" alt="图 2.26a" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesBetas_.png" />
+        </a>
+    </p>
+<p><em>(a)</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesPriors_.png">
+            <img class="mx-auto" alt="图 2.26b" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesPriors_.png" />
+        </a>
+    </p>
+<p><em>(b)</em></p>
+<p><em>图 2.26：(a) 参数 $\alpha$ 和 $\beta$ 取不同值时的示例 beta 分布。(b) Beta(2.5, 7.5) 分布，我们可以用它作为猜对一道题<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。该分布的峰值在 0.2 附近，但向右延伸到约 0.6，以容纳那些更容易猜的题目。</em></p>
+<p>我们想要扩展<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，使得每个 <code>probGuess</code> 变量的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验概率</a>为：</p>
+$$p(probGuess) = Beta(probGuess; 2.5, 7.5) \quad (2.23)$$<p>注意这里的记号：我们用小写的 $p$ 表示<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">连续变量</a>的概率密度，而此前我们用大写的 $P$ 表示<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">离散变量</a>的<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>。这个记号提醒我们，究竟是在处理连续密度还是离散分布。</p>
+<p>以<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">图 2.19</a> 的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>为基础，我们可以扩展它，把猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>作为图中的变量纳入，并以这个分布作为<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。还需要另一处改动：为了推断猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，我们需要查看尽可能多的人的数据（仅凭一个人的答案来估计猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>会非常不准确！）。所以我们现在必须扩展<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，以便一次性建模所有人的结果，即整个数据集。为此，我们向<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>添加一个新的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>，它复制所有特定于每个人的变量（即 <code>skill</code>、<code>relevantSkills</code>、<code>hasSkills</code> 和 <code>isCorrect</code>）。由于我们假设一道题的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>对每个人都相同，<code>probGuess</code> 被放在新板之外、但在 <code>questions</code> 板之内。由于不犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>被假设对每个人、每道题都相同，<code>probNoMistake</code> 被放在两个板之外。得到的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>如图 2.27 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_SkillsWithPlatesAndProbs.png">
+            <img class="mx-auto" alt="图 2.27" src="/uploads/LearningSkills_SkillsWithPlatesAndProbs.png" />
+        </a>
+    </p>
+<p><em>图 2.27：面向整个数据集、涵盖所有参加测试者的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。每道题的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>以一个<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">变量数组</a>的形式出现，并带有合适的 beta <a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。</em></p>
+<p>我们可以在这张图上运行<a href="/post/2025-04-21-mbml-introduction">推断</a>来学习猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。即使现在有了<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">连续变量</a>，我们本质上仍可以在图上运行<a href="/post/2026-06-16-mbml-learning-skills_loopiness">循环置信传播</a>。我们唯一需要做的修改，是确保猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>上的不确定性始终以 beta 分布来表示（这种修改后的形式称为<strong>期望传播</strong>，将在下一章中完整描述）。运行<a href="/post/2025-04-21-mbml-introduction">推断</a>之后，我们为每道题得到一个 beta 分布，表示该题猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的不确定值。其中一些题目的 beta 分布展示在图 2.28 中（我们只展示每隔五道的题目，以免图中曲线太多而杂乱）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesSelectedGuessPosteriors_.png">
+            <img class="mx-auto" alt="图 2.28" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesSelectedGuessPosteriors_.png" />
+        </a>
+    </p>
+<p><em>图 2.28：每隔五道题的 <code>probGuess</code> <a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a> beta 分布。</em></p>
+<p>首先要注意的是，这些分布全都仍然相当宽，表明猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>中仍存在相当大的不确定性。这并不太令人意外，因为数据集包含的人相对较少，而且我们只能从那些被推断为不具备某题所需技能的那部分人身上，学到关于该题猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的信息。对于第 1 题——我们假设几乎人人都具备其所需的（Core）技能——<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>非常接近<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>（把曲线与图 2.26b 比较），因为几乎没有人在猜这道题，也就几乎没有数据可供学习其猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。有几道题（如 11、16 和 26）的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>相较<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>略向右移，表明这些题比五分之一稍微容易猜一点。最有意思的是，有些题目的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>被推断为要么相当低（第 6、31 题），要么相当高（第 21、36、41 题）。</p>
+<p>我们可以通过绘制每道题猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的均值（质心），连同表示不确定性的误差棒，来画出所有题目上的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>（图 2.29）。这表明有相当数量的题目其猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>高于 0.2。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Learned-Results-GuessPosteriorMeansAndQuartiles.png">
+            <img class="mx-auto" alt="图 2.29" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Learned-Results-GuessPosteriorMeansAndQuartiles.png" />
+        </a>
+    </p>
+<p><em>图 2.29：推断出的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。蓝色条显示每道题猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a><a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>的均值。黑线称为误差棒，表示推断猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>中的不确定性。误差棒的上下两端显示<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>的上、下四分位数，即分别有 25% 几率猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>高于或低于该值的取值。正如我们所猜想的，均值上的变化表明有些题目比其他题目容易猜得多。</em></p>
+<p>顺便提醒一下——我们是在不知道哪些人具备哪些技能的情况下学到这些猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的，也就是说没有使用任何<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注数据</a>。由于没有<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>，<a href="/post/2025-04-21-mbml-introduction">模型</a>不得不动用我们内建于其中的所有假设，才能推断出猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</p>
+<p>我们现在可以研究一下，学习猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>是否提升了我们为每个人推断技能的准确性。图 2.30 展示了旧<a href="/post/2025-04-21-mbml-introduction">模型</a>以及带学到的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的新<a href="/post/2025-04-21-mbml-introduction">模型</a>所推断的技能<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>。从视觉上看，很清楚新的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>更接近<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>技能，这是个好消息！</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Results-SkillsPosteriorMeans.png">
+            <img class="mx-auto" alt="图 2.30a" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Results-SkillsPosteriorMeans.png" />
+        </a>
+    </p>
+<p><em>(a) 旧推断技能</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Learned-Results-SkillsPosteriorMeans.png">
+            <img class="mx-auto" alt="图 2.30b" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Learned-Results-SkillsPosteriorMeans.png" />
+        </a>
+    </p>
+<p><em>(b) 新推断技能</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-StatedSkills.png">
+            <img class="mx-auto" alt="图 2.30c" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_Experiments-Original-Inputs-StatedSkills.png" />
+        </a>
+    </p>
+<p><em>(c) 自评技能</em></p>
+<p><em>图 2.30：技能<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>：(a) 原始<a href="/post/2025-04-21-mbml-introduction">模型</a>与 (b) 带学到的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的新<a href="/post/2025-04-21-mbml-introduction">模型</a>，与 (c) <a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>技能作对比。从定性上看，新<a href="/post/2025-04-21-mbml-introduction">模型</a>推断出的技能更接近自评技能。</em></p>
+<h3 id="衡量进展">衡量进展</h3>
+<p>
+        <a data-fancybox="gallery" href="/uploads/shutterstock_68294782.jpg">
+            <img class="mx-auto" alt="衡量进展" src="/uploads/shutterstock_68294782.jpg" />
+        </a>
+    </p>
+<p>除了从视觉上检查改进之外，从数值上衡量改进也很重要。为此，我们必须选择一个<strong>评估指标</strong>，用它来衡量我们做得有多好。对于推断应聘者技能这一任务，我们的评估指标应当衡量推断出的技能<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>与<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>技能有多接近。</p>
+<p>一个常用的指标是<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>值在推断分布下的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，因为当正确值具有高<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>时（这是我们想要的）它会高，而当正确值具有低<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>时（这是我们不想要的）它会低。这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>常常会变得非常小，使它们难以处理。于是我们可以取<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的对数，因为对数让小<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>更容易比较——这个指标称为<strong>对数概率</strong>（log probability）。</p>
+<p>如果推断出一个人具备某项特定技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>为 $p$，那么当此人确实具备该技能时，对数概率指标等于 $\log p$；当他不具备时，等于 $\log(1-p)$。如果此人确实具备该技能，那么最好的预测是 $p=1.0$，它给出对数概率 $\log 1.0 = 0$（一的对数为零）。一个信心较弱的预测，例如 $p=0.8$，会给出一个负的对数概率值，在此例中为 $\log 0.8 = -0.223$。最差的预测 $p=0.0$ 给出负无穷的对数概率。这告诉了我们关于这个指标的两件事：</p>
+<ol>
+<li>由于完美的对数概率为零，而真实系统达不到完美，对数概率在实践中会是一个负值。因此，常常使用<strong>负对数概率</strong>，并认为更低的值（更接近 0 的值）更好。</li>
+<li>这个指标对“自信却错误”的预测惩罚极重，因为当<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>非常接近零时，对数会给出非常大的负值。在<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>本身可能存在错误的场合，尤其应当把这一点考虑在内。</li>
+</ol>
+<p>把各个对数概率值合并成一个整体指标是有用的。为此，可以把每项技能、每个人的对数概率取平均或相加，得到一个整体对数概率——我们将采用取平均，因为这让数值更易于管理。注意，最好的整体分数（零）是通过在此人具备技能处取 $p=1$、在其不具备处取 $p=0$ 来实现的——换句话说，就是让推断出的技能<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>矩阵与<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>技能矩阵完全一致。</p>
+<p>图 2.31a 展示了在技能和人之间取平均后的负对数概率，分别针对原始<a href="/post/2025-04-21-mbml-introduction">模型</a>和改进后的<a href="/post/2025-04-21-mbml-introduction">模型</a>。改进<a href="/post/2025-04-21-mbml-introduction">模型</a>的分数低得多，表明它对技能<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>做出了在数量上好得多的预测。我们可以进一步研究，把整体负对数概率分解为不同技能的贡献（图 2.31b）。这表明，学习猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>改善了除 Core 技能之外所有技能的对数概率指标，而 Core 技能大致持平。这是因为几乎人人都具备 Core 技能，所以原始<a href="/post/2025-04-21-mbml-introduction">模型</a>（它预测人人都具备每项技能）在这项技能上表现其实不错。但总体而言，就对数概率而言，我们的新结果相较原始推断技能是一个实质性的改进。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_NegativeLogProbabilityOfTruth.png">
+            <img class="mx-auto" alt="图 2.31a" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_NegativeLogProbabilityOfTruth.png" />
+        </a>
+    </p>
+<p><em>(a)</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_NegativeLogProbabilityOfTruthPerSkill.png">
+            <img class="mx-auto" alt="图 2.31b" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_NegativeLogProbabilityOfTruthPerSkill.png" />
+        </a>
+    </p>
+<p><em>(b)</em></p>
+<p><em>图 2.31：(a) 原始<a href="/post/2025-04-21-mbml-introduction">模型</a>与带学到的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的<a href="/post/2025-04-21-mbml-introduction">模型</a>的整体负对数概率。较低的红色条表明，按这个指标，学习猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>给出了明显更好的<a href="/post/2025-04-21-mbml-introduction">模型</a>。(b) 各项技能的负对数概率，表明改进因技能而异。</em></p>
+<h3 id="另一种衡量进展的方式">另一种衡量进展的方式</h3>
+<p>在评估机器学习系统的准确性时，使用不止一个评估指标是一种好做法。这是因为每个指标会提供关于系统表现的不同信息，也能减少对提升任何某一特定指标的过度侧重。没有指标是完美的——过度专注于提升某一个指标是个坏主意，因为这可能最终暴露的是该指标的缺陷，而非真正改进了系统。这一点被<strong>古德哈特定律</strong>（Goodhart&rsquo;s law）简洁地表达了出来，它可以这样陈述：</p>
+<blockquote>
+<p>“当一个度量成为目标时，它就不再是一个好的度量。”</p>
+</blockquote>
+<p>使用多个评估指标将帮助我们避免成为古德哈特定律的受害者。</p>
+<p>在决定采用第二个评估指标时，我们需要思考我们的系统将如何被使用。一种场景是用这个系统来挑选一份很可能具备某项特定技能的候选人<strong>短名单</strong>。另一种是筛掉那些极不可能具备该技能的候选人，从而得到一份<strong>长名单</strong>。在这两种场景下，我们可能只关心人们按技能<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>排序的次序，而不关心这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的实际值。在每种情形下，我们都会选取排名前 $N$ 的人，但对短名单，$N$ 会很小，而对长名单，$N$ 会很大。对任意数量的入选候选人，我们可以计算：</p>
+<ul>
+<li>具备该技能且被正确选中的候选人所占的比例——这就是<strong>真阳性率</strong>（true positive rate，TPR）；</li>
+<li>不具备该技能却被错误选中的候选人所占的比例——这就是<strong>假阳性率</strong>（false positive rate，FPR）。</li>
+</ul>
+<p>真、假阳性预测及其对应比率的术语汇总于表 2.7。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueAndFalsePositives.png">
+            <img class="mx-auto" alt="表 2.7" src="/uploads/TrueAndFalsePositives.png" />
+        </a>
+    </p>
+<p><em>表 2.7：术语 positive（阳性）和 negative（阴性）用于预测值和<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>值，以避免与用来表示预测是否正确的 true（真）和 false（假）相混淆。真、假阳性率是针对某一组特定预测计算的（# 表示“……的数量”）。</em></p>
+<p>一般来说，在“高 TPR”与“低 FPR”之间存在权衡。对于短名单，如果我们希望名单上每个人都具备该技能（FPR=0），我们就不得不容忍漏掉少数确实具备该技能的人（TPR 小于 1）。对于长名单，如果我们希望纳入所有具备该技能的人（TPR=1），我们就不得不容忍纳入一些不具备该技能的人（FPR 高于 0）。<strong>受试者工作特征曲线</strong>（receiver operating characteristic curve），即 <strong>ROC 曲线</strong> [Fawcett, 2006]，通过对所有可能的名单长度 $N$ 绘制 TPR 对 FPR 的图，让我们能够可视化这种权衡。原始<a href="/post/2025-04-21-mbml-introduction">模型</a>和改进<a href="/post/2025-04-21-mbml-introduction">模型</a>的 ROC 曲线展示在图 2.32 中，其中 TPR 和 FPR 是把所有技能合并在一起计算的。我们本也可以为单项技能分别绘制 ROC 曲线，但由于我们的数据集相对较小，那些曲线会相当颠簸，使得难以解读和比较。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_RocCurves.png">
+            <img class="mx-auto" alt="图 2.32" src="/uploads/LearningSkills_6LearningTheGuessProbabilitiesComparison_RocCurves.png" />
+        </a>
+    </p>
+<p><em>图 2.32：把所有技能合并后，原始<a href="/post/2025-04-21-mbml-introduction">模型</a>与带学到的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的<a href="/post/2025-04-21-mbml-introduction">模型</a>的受试者工作特征曲线。出乎意料的是，原始<a href="/post/2025-04-21-mbml-introduction">模型</a>的 ROC 曲线只比改进后的略差一点。为便于比较，图中还给出了最优可能结果（Perfect）以及随机预测（Random）的曲线。</em></p>
+<p>图 2.32 立即揭示了一件对数概率指标没有揭示的、令人意外的事：原始<a href="/post/2025-04-21-mbml-introduction">模型</a>表现非常好，我们的新<a href="/post/2025-04-21-mbml-introduction">模型</a>只有略高的 ROC 曲线。看起来，虽然第一个<a href="/post/2025-04-21-mbml-introduction">模型</a>计算出的技能<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>普遍偏高，但它们仍然给出了对候选人的良好排序。也就是说，具备某项特定技能的人，其推断技能<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>高于不具备该技能的人，即便这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>本身并不十分准确。一个给出不准确<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的系统被称为具有糟糕的<strong>校准</strong>（calibration）。对数概率指标对糟糕的校准敏感，而 ROC 曲线则不然。同时使用这两个指标，让我们看到：学习猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>大幅改善了<a href="/post/2025-04-21-mbml-introduction">模型</a>的校准，但只是略微改善了预测的排序。我们将在<a href="https://www.mbmlbook.com/EmailClassifier.html">第 4 章</a>、尤其是 Panel 4.3 中更详细地讨论校准。</p>
+<p>ROC 曲线可以通过计算<strong>曲线下面积</strong>（area under the curve，AUC）来用作评估指标，因为一般来说面积越大意味着排序越好。完美的排序其 AUC 为 1.0（见图 2.32 的“Perfect”线）。除了计算 AUC 之外，通常也最好看一看 ROC 曲线，因为它给出了系统在不同场景下（例如制作短名单或长名单）表现如何的更多细节。</p>
+<p>我们改进后的系统有一个相当可观的 AUC 0.86，在所有技能上都有明显改善的对数概率分数，并已通过视觉检查确认给出了合理的结果。它现在已经可以拿去真正试用了。</p>
+<h3 id="收尾">收尾</h3>
+<p>在本章中，我们完整走过了从零开始构建一个<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>系统的过程。我们看到了如何从一组假设构建<a href="/post/2025-04-21-mbml-introduction">模型</a>、如何运行<a href="/post/2025-04-21-mbml-introduction">推断</a>、如何诊断并修复问题，以及如何评估结果。碰巧的是，我们在本章中开发的<a href="/post/2025-04-21-mbml-introduction">模型</a>此前已在<strong>心理测量学</strong>（psychometrics，衡量心智能力和过程的科学）领域被使用过。例如，Junker 和 Sijtsma [2001] 考虑了两个<a href="/post/2025-04-21-mbml-introduction">模型</a>：DINA（Deterministic Inputs, Noisy And，确定性输入、带噪 And），它本质上与我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>相同；以及 NIDA（Noisy Inputs, Deterministic And，带噪输入、确定性 And），它是一个类似的<a href="/post/2025-04-21-mbml-introduction">模型</a>，但 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>被施加在 <code>And</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的输入而非输出上。使用后一个<a href="/post/2025-04-21-mbml-introduction">模型</a>的效果是：如果一个人具备一道题所需技能中的一部分（但不是全部），会增加他答对该题的机会。</p>
+<p>当然，我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>总有改进的空间。例如，我们可以为每道题学习犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，就像学习猜测答案的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>那样。我们可以研究关于“当一个人具备一道题所需技能中的部分而非全部时会发生什么”的不同假设（就像上面提到的 NIDA <a href="/post/2025-04-21-mbml-introduction">模型</a>）。我们可以考虑建模“具备某些技能是否使得更可能具备其他技能”。或者，我们可以重新审视“技能是二值的”这一简化假设，转而把它们建模为表示一个人技能程度的<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">连续变量</a>。在下一个案例研究中，我们将恰恰这样做，用<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">连续变量</a>来表示技能，以解决一个非常不同的问题——但首先，我们将有一段简短的插曲，来看看解决机器学习问题的过程。</p>
+<h4 id="本页引入概念回顾">本页引入概念回顾</h4>
+<p><strong>概率密度函数（probability density function）</strong>：一个用于定义连续<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>上<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>的函数。变量取值落在某给定范围内的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，由概率密度函数在该范围内的曲线下面积给出。更多细节见专栏 2.4。</p>
+<p><strong>beta 分布（beta distribution）</strong>：一种在 0 到 1（含端点）之间的连续<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>上的<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>，其概率密度函数为 $Beta(x; \alpha, \beta) = \frac{x^{\alpha-1}(1-x)^{\beta-1}}{B(\alpha,\beta)}$。beta 分布有两个参数 $\alpha$ 和 $\beta$，它们控制分布峰值的位置和宽度。均值 $\frac{\alpha}{\alpha+\beta}$ 给出分布质心的位置，和 $\alpha+\beta$ 控制分布展开的程度（$\alpha+\beta$ 越大意味着分布越窄）。</p>
+<p><strong>评估指标（evaluation metric）</strong>：对机器学习系统准确性的一种度量，用于评估机器学习系统表现如何。评估指标可用于比较两个不同的系统、比较同一系统的不同版本，或评估一个系统是否达到某个期望的目标准确度。</p>
+<p><strong>对数概率（log probability）</strong>（或 log-prob）：<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>值在该变量推断分布下的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的对数。用作评估机器学习系统所做的不确定预测的评估指标。较大的 log-prob 值意味着预测更好，因为它给正确值赋予了更高的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。由于 log-prob 是一个负数（或零），常常使用负 log-prob，此时较小的值表示更好的准确度。例如，见图 2.31。</p>
+<p><strong>古德哈特定律（Goodhart&rsquo;s law）</strong>：一条关于不要过度专注于任何某个特定评估指标的告诫，可以陈述为“当一个度量成为目标时，它就不再是一个好的度量”。</p>
+<p><strong>真阳性率（true positive rate）</strong>：被正确预测为阳性的阳性项所占的比例。真阳性率越高表示预测准确度越好。另见表 2.7。</p>
+<p><strong>假阳性率（false positive rate）</strong>：被错误预测为阳性的阴性项所占的比例。假阳性率越高表示预测准确度越差。另见表 2.7。</p>
+<p><strong>ROC 曲线（ROC curve）</strong>：受试者工作特征（ROC）曲线是真阳性率对假阳性率的图，用于表示预测一个二值变量的准确度。完美的预测器其 ROC 曲线沿图的左侧垂直上升、再沿顶部水平横过（见图 2.32 的图），而随机预测器的 ROC 曲线是一条对角线（同样见图）。一般来说，ROC 曲线下面积越大，预测器越好。</p>
+<p><strong>校准（calibration）</strong>：机器学习系统所预测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的准确性。例如，在一个良好校准的系统中，以 90% <a href="/post/2025-04-22-mbml-murder-mystery">概率</a>做出的预测应当大约有 90% 的时间是正确的。校准可以通过考察同一系统的重复预测来评估。在一个校准糟糕的系统中，预测的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>不会与实际预测正确的比例紧密对应。校准糟糕通常是<a href="/post/2025-04-21-mbml-introduction">模型</a>中某个假设有误的信号，因此总是值得研究——即使系统的使用方式对校准并不敏感（例如，如果我们是按预测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>排序，而非使用<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的实际值）。更多细节见 Panel 4.3。</p>
+<p><strong>自我评估 2.6</strong></p>
+<p>以下练习将帮助你巩固本节所学的概念。在做题时，回顾正文或上面的概念小结可能会有所帮助。</p>
+<ol>
+<li>【这个练习揭示了 beta 分布的形状从何而来，非常值得一做！】假设我们有一道题，其实际猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>为 30%，但我们并不知道这一点。为了试着弄清它，我们取 $N=10$ 个不具备该题所需技能的人，看看他们中有多少人靠猜测答对了。
+<ul>
+<li>a. 编写一个程序来采样答对该题的人数（$T$）。你应当从 Bernoulli(0.3) 采样 10 次，并统计 <code>true</code> 样本的数量。在你运行采样器之前，你预期会从它得到什么样的样本？</li>
+<li>b. 在现实中，如果我们只有 10 个人的答案，那么我们只有一个样本计数可用来推断猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。例如，我们可能知道有三个人答对了这道题，于是 $T=3$。这能告诉我们多少关于实际猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的信息？我们可以再写一个<a href="/post/2025-04-22-mbml-murder-mystery">采样</a>程序来算出它。首先，采样一个 0.0 到 1.0 之间的可能猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。然后，在给定这个采样猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的条件下，计算——假如这就是真实猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>——会有多少人答对该题的一个样本。如果你采样的计数与真实计数 $T$ 相符（换句话说等于 3），那么你就“接受它”并保存这个采样的猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。否则你就“拒绝它”并把它丢掉。重复这一过程，直到你有 10,000 个被接受的样本。</li>
+<li>c. 用 0.0 到 1.0 之间的 50 个分箱，为被接受的样本画一个直方图。你应当会看到，这个直方图具有 beta 分布的形状！事实上，你的程序正是在从一个 $Beta(T+1, (N-T)+1)$ 分布中<a href="/post/2025-04-22-mbml-murder-mystery">采样</a>。</li>
+<li>d. 利用这个信息，在你的程序中改变 $N$ 和 $T$，以重现图 2.26a 的 beta 分布。探索一下：在保持 $T/N$ 不变的同时增大 $N$ 会发生什么（你的 beta 分布应当会变窄）。这应当符合这样的直觉：你拥有数据的人越多，就能越准确地评估猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</li>
+</ul>
+</li>
+<li>为你在上一个自我评估中对原始<a href="/post/2025-04-21-mbml-introduction">模型</a>得到的结果绘制一条受试者工作特征曲线。你需要对预测的技能<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>排序，同时记录每个预测对应的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>。然后沿排序后的列表向下扫描，在每一点计算真阳性率和假阳性率。验证它看起来像图 2.32 的 Original（原始）ROC 曲线。现在制作一个完美的预测器（通过作弊、使用<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标注</a>）。为这个完美预测器绘制 ROC 曲线，并检查它看起来像图 2.32 的 Perfect 线。如果你愿意，可以对一个随机预测器重复这一过程（结果应当近似图 2.32 的对角线）。</li>
+</ol>
+<h4 id="参考文献">参考文献</h4>
+<p>[Fawcett, 2006] Fawcett, T. (2006). An introduction to ROC analysis. <em>Pattern Recognition Letters</em>, 27(8):861–874.</p>
+<p>[Junker and Sijtsma, 2001] Junker, B. W. and Sijtsma, K. (2001). Cognitive assessment models with few assumptions, and connections with nonparametric item response theory. <em>Applied Psychological Measurement</em>, 25:258–272.</p>
+<hr>
+<p>下一章：<a href="https://www.mbmlbook.com/LifeCycle.html">插曲：机器学习生命周期</a>（英文原文，尚未翻译）</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/">https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/">[译]基于模型的机器学习 - 2.5 诊断问题</a></li>
+        
+        <li><a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data/">[译]基于模型的机器学习 - 2.4 迁移到真实数据</a></li>
+        
+        <li><a href="/post/2026-06-16-mbml-learning-skills_loopiness/">[译]基于模型的机器学习 - 2.3 有环性</a></li>
+        
+        <li><a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model/">[译]基于模型的机器学习 - 2.2 试验模型</a></li>
+        
+        <li><a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions/">[译]基于模型的机器学习 - 2.1 模型即一组假设</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" title="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆" target="_blank">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/" title="在 Microsoft Copilot Studio 里落地多智能体编排" target="_blank">在 Microsoft Copilot Studio 里落地多智能体编排</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" title="[译]基于模型的机器学习 - 2.5 诊断问题" target="_blank">[译]基于模型的机器学习 - 2.5 诊断问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/" title="[译]基于模型的机器学习 - 2.4 迁移到真实数据" target="_blank">[译]基于模型的机器学习 - 2.4 迁移到真实数据</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" title="自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" title="[译]基于模型的机器学习 - 2.3 有环性" target="_blank">[译]基于模型的机器学习 - 2.3 有环性</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" title="如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" target="_blank">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/" title="[译]基于模型的机器学习 - 2.2 试验模型" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (35)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (15)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

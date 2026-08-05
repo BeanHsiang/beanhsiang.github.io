@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 3.5 允许技能变化 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 3.5 允许技能变化 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-07-31T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-07-31T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 3.5 允许技能变化">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 3.5 允许技能变化</h1>
+        </header>
+        
+  <time datetime="2026-07-31T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月31日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>至此，我们似乎已经为本章开头提出的问题找到了一个全面的解决方案。我们有了一个关于多支玩家队伍之间游戏（含平局）的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>，其中更简单的情形（两名玩家、个人而非队伍、无平局的游戏）作为特例出现。然而，当这个系统面向真实的 beta 测试者部署时，人们发现它的配对并不总是令人满意。特别是，某些玩家的技能值似乎“卡”在了较低的取值上，即使这些玩家已经打了很多游戏并有了很大进步，从而导致糟糕的配对。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/tennis_779423224.jpg">
+            <img class="mx-auto" alt="网球" src="/uploads/tennis_779423224.jpg" />
+        </a>
+    </p>
+<p><em>技能随练习而提高。</em></p>
+<p>为理解其中的原因，我们注意到，我们<a href="/post/2025-04-21-mbml-introduction">模型</a>中编码的假设并不允许玩家技能随时间变化。特别是，<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">假设 3.1</a> 说“每名玩家有一个技能值”——换句话说，每名玩家有单个技能值，完全没有提到这个技能值可以变化。既然玩家的技能确实会随时间变化，这个假设在真实数据中就会被违背。例如，随着玩家在某一特定类型游戏中积累经验，我们可能预期他的技能会提高。反过来，一名有经验的玩家若很少玩、荒疏了，其技能也可能退化。</p>
+<p>你也许会认为，我们的<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>过程会随时间更新玩家的技能分布，因而会允许技能变化。这是关于<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>的一个常见误解，但它并不成立。我们当前的<a href="/post/2025-04-21-mbml-introduction">模型</a>假设玩家的技能是一个<strong>固定</strong>但未知的量。<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>所表示的并不是对一个演变技能值的建模，而是对这个未知的、跨时间固定的技能的不确定性的更新。如果一名玩家在某个技能水平上打了很长时间，那么我们关于其技能的分布就会变得非常窄。如果这名玩家随后突然进步了——也许是因为得到某种指导——当前的<a href="/post/2025-04-21-mbml-introduction">模型</a>将很难追踪该玩家新的技能水平，因为在那个很窄的技能分布下它会显得极不可能。</p>
+<h3 id="复现该问题">复现该问题</h3>
+<p>为处理玩家技能会变化的情形，我们需要修改<a href="/post/2025-04-21-mbml-introduction">模型</a>。但首先，我们需要复现这个问题，以便稍后检查我们是否已修复它。为此我们可以创建一个合成数据集。在这个数据集中，我们合成涉及一个百人玩家池的游戏结果。第一名玩家 Elliot 的初始技能固定为 110，且这个技能值按图 3.38 中红线所示的方式分阶段提高。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_5AllowingTheSkillsToVaryDynamicsDemo_Trajectories[0].png">
+            <img class="mx-auto" alt="图 3.38" src="/uploads/TrueSkill_5AllowingTheSkillsToVaryDynamicsDemo_Trajectories[0].png" />
+        </a>
+    </p>
+<p><em>图 3.38：红色曲线展示了从一个百人玩家池中抽取的合成数据集里某玩家 Elliot 的技能值。所有其他玩家有固定技能（未展示）。蓝线展示了在我们（假设 Elliot 技能固定的）<a href="/post/2025-04-21-mbml-introduction">模型</a>下 Elliot 推断出的高斯技能分布的均值。蓝色阴影区域展示了该分布均值上下一个<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>的范围。</em></p>
+<p>其余 99 名玩家有固定的技能值，从一个均值为 125、<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>为 10 的高斯中抽取。对每一局游戏，随机选出两名玩家，通过向他们的技能值加入<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>为 5 的高斯噪声来评估他们在这局游戏中的表现。这正好对应于在<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">图 3.6</a> 的<a href="/post/2025-04-21-mbml-introduction">模型</a>上运行<a href="/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem">祖先采样</a>（就像我们在<a href="/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem">第 2.5 节</a>中创建合成数据集时所做的那样）。</p>
+<p>给定这个合成数据集，我们随后可以用<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.10</a> 的<a href="/post/2025-04-21-mbml-introduction">模型</a>运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>，其中游戏结果已知而技能未知。图 3.38 展示了在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>下 Elliot 推断出的技能分布。我们看到，我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>无法解释 Elliot 技能的变化：估计的技能均值与真实技能的轨迹不匹配，而且估计的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>太窄，容纳不下不断提升的技能值。由于<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>很小，对技能均值的更新也很小，因此技能均值的演变太慢。这并不奇怪，因为<a href="/post/2025-04-21-mbml-introduction">模型</a>的一个关键假设——即每名玩家的技能恒定不变——是不正确的。</p>
+<p>为解决这个问题，我们需要改变<a href="/post/2025-04-21-mbml-introduction">模型</a>中那个不正确的假设。我们不再假设固定的技能，而是要允许技能在每局游戏之间发生通常较小的变化。因此我们可以把<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">假设 3.1</a> 替换为：</p>
+<ul>
+<li>每名玩家有一个技能值，由一个<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">连续变量</a>表示，其值由该玩家上一局游戏中的技能值加上某个服从零均值钟形分布的技能变化量给出。</li>
+</ul>
+<p>之前一名玩家只有单个技能变量，现在则为每一局游戏各有一个单独的技能变量。我们假设某名玩家在某一具体游戏中的技能值，由其上一局游戏的技能值加上某个从零均值分布中抽取的变化量给出。同样，我们通过把这个分布选为零均值高斯来使该假设在数学上精确。如果我们用 $\text{skill}^{\rm (old)}$ 表示玩家在其上一局游戏中的技能、用 $\text{skill}^{\rm (new)}$ 表示其在当前游戏中的技能，那么我们假设</p>
+$$\text{skill}^{\rm (new)} = \text{skill}^{\rm (old)} + \text{skillChange}$$<p>其中</p>
+$$p(\text{skillChange}) = \text{Gaussian}(0, \text{ChangeVariance}).$$<p>由这两个方程可以推出 [Bishop, 2006]</p>
+$$p\left( \text{skill}^{\rm (new)} \right) = \text{Gaussian}\left( \text{skill}^{\rm (old)}, \text{ChangeVariance} \right).$$<p>这使我们能够以<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>的形式表达我们新的假设。例如，在两名玩家彼此连续打两局游戏的情形中，<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>如图 3.39 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_Dynamics.png">
+            <img class="mx-auto" alt="图 3.39" src="/uploads/TrueSkill_Dynamics.png" />
+        </a>
+    </p>
+<p><em>图 3.39：两名玩家连续两局游戏的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，其中技能值被允许从一局到下一局发生变化。</em></p>
+<p>玩家 1 在第二局游戏中技能的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>（记为 $\text{skill1}_{(2)}$）由一个<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>给出，其均值不再是固定的，而是由该玩家上一局游戏中的技能（记为 $\text{skill1}_{(1)}$）给出。图中所示的 <code>ChangeVariance</code> 为 0.16，它编码了我们的信念：技能从一局到下一局的变化应当很小。</p>
+<p>在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中进行在线<a href="/post/2025-04-21-mbml-introduction">推断</a>可以如下进行。我们用<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.10</a> 所示形式的图对第一局游戏运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>，得到每名玩家的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>高斯技能分布。然后我们让消息穿过连接两局游戏的高斯<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>传递，如图 3.39 中蓝色所示。进入这些<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的入向消息就是来自第一局游戏的技能分布。由于对高斯<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>所计算的<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">卷积</a>，随后发往新技能变量的输出消息是这些技能分布被展宽后的版本。这些展宽后的分布随后被用作这局新游戏的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>技能分布。因为我们在新游戏中展宽了<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>，我们本质上是在说，我们对该玩家技能的不确定性稍高了一些。这反过来意味着新的游戏结果将导致更大的技能变化，因此我们会更擅长追踪技能的变化。看起来也许很奇怪：我们竟然能通过增加技能变量中的不确定性来改善系统的行为，但这之所以成立，是因为我们已经把<a href="/post/2025-04-21-mbml-introduction">模型</a>修改得更贴近现实。在距上一局游戏以来的这段时间里，玩家的技能可能确实已经变了，而我们现在正确地建模了这种可能性。</p>
+<p>我们现在可以在合成数据集上测试这个修改后的<a href="/post/2025-04-21-mbml-introduction">模型</a>。结果由图 3.40 中的绿色曲线展示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_5AllowingTheSkillsToVaryDynamicsDemo_Trajectories[2].png">
+            <img class="mx-auto" alt="图 3.40" src="/uploads/TrueSkill_5AllowingTheSkillsToVaryDynamicsDemo_Trajectories[2].png" />
+        </a>
+    </p>
+<p><em>图 3.40：这展示了与图 3.38 相同的信息，另外以绿色加入了在一个允许技能值随时间演变的<a href="/post/2025-04-21-mbml-introduction">模型</a>下 Elliot 推断技能的分布。</em></p>
+<p>我们看到，当我们在<a href="/post/2025-04-21-mbml-introduction">模型</a>中允许技能变化时，Elliot 变化的技能被追踪得好多了——我们解决了追踪时变技能的问题！这个<a href="/post/2025-04-21-mbml-introduction">模型</a>已被应用于国际象棋的历史，以推算不同历史象棋棋手之间的相对强弱，尽管他们相隔数十年之久！你可以在 Dangauthier 等人 [2007] 中读到关于这项工作的全部内容。</p>
+<h3 id="最终模型">最终模型</h3>
+<p>既然我们已经让<a href="/post/2025-04-21-mbml-introduction">模型</a>能够应对变化的技能，它就满足了 Xbox Live 团队的所有需求。把所有扩展组合起来，下面是构建进我们<a href="/post/2025-04-21-mbml-introduction">模型</a>的完整假设集：</p>
+<ul>
+<li>每名玩家有一个技能值，由一个<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">连续变量</a>表示，其值由该玩家上一局游戏中的技能值加上某个服从零均值钟形分布的技能变化量给出。</li>
+<li>每名玩家在每一局游戏中有一个表现值，它在各局游戏之间相互<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">独立</a>，其平均值等于该玩家的技能。表现的变动（对所有玩家都相同）围绕均值对称分布，且更可能接近均值而非远离均值。</li>
+<li>一支队伍的表现由该队伍内各玩家表现之和给出。</li>
+<li>游戏结果中队伍的顺序与他们在该局游戏中表现值的排序相同，除非两支队伍之间表现差异的大小低于某个阈值，此时这些队伍打成平局。</li>
+</ul>
+<p><em>图 3.41：编码进我们最终<a href="/post/2025-04-21-mbml-introduction">模型</a>的四个假设。</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/xbox-controller-192236891.jpg">
+            <img class="mx-auto" alt="Xbox 手柄" src="/uploads/xbox-controller-192236891.jpg" />
+        </a>
+    </p>
+<p>这个<a href="/post/2025-04-21-mbml-introduction">模型</a>涵盖了出现的各种不同游戏类型，包括队伍与多名玩家，它允许平局，并且追踪玩家技能随时间的演变。因此，当 Xbox 360 于 2005 年 11 月发布时，它采用了这个 TrueSkill <a href="/post/2025-04-21-mbml-introduction">模型</a>作为其在线技能评分系统。自那以后，TrueSkill 推断出的技能分布已被用于在数百款不同的 Xbox 游戏中执行实时配对。</p>
+<p><a href="/post/2025-04-21-mbml-introduction">模型</a>的作用是推断技能，而如何用这些技能来执行配对的决策则是一个单独的问题。通常，这通过挑选那些游戏结果最不确定的玩家来完成。注意，这也往往会产生那些在学习玩家技能方面结果最具信息量的对局。配对过程还必须考虑到在相当短的时间内为玩家提供对手的需要，因此在玩家等待一局游戏组建所需的时间与其对手匹配程度之间存在一种天然的权衡。把配对问题分解为技能<a href="/post/2025-04-21-mbml-introduction">推断</a>与配对决策这两个阶段，其强大之处之一在于：对配对准则的更改易于实现，且不需要对更复杂的建模与<a href="/post/2025-04-21-mbml-introduction">推断</a>代码做任何改动。正如引言中所讨论的，能够把玩家与能力相近的其他玩家匹配起来、并且快速准确地做到这一点，是这个非常成功的服务的一个关键特性。</p>
+<p>TrueSkill 产生的推断技能还被用于第二个不同的目的，即构建排行榜，展示玩家在某一特定类型游戏中的排名。为此，我们需要基于推断出的高斯技能分布为每名玩家定义一个单一的技能值。一种可能是使用分布的均值，但这没有考虑不确定性，可能导致某名玩家在排行榜上人为地偏高（或偏低）。相反，为某名玩家显示的技能值取为其分布的均值减去三倍其分布的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>。这是一个保守的选择，意味着他的实际技能以很高的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>不低于其显示技能。因此，一名玩家既可以通过提高其分布的均值（靠战胜其他玩家）、也可以通过降低其技能中的不确定性（靠打大量游戏）来在排行榜上取得进步。</p>
+<p>TrueSkill <a href="/post/2025-04-21-mbml-introduction">模型</a>有许多可以扩展的方式，以提升其对游戏过程特定方面建模的能力。2018 年，若干这样的改进被纳入 TrueSkill 2 <a href="/post/2025-04-21-mbml-introduction">模型</a> [Minka et al., 2018]，其做法是引入特别适合《战争机器》和《光环》等在线射击游戏的额外假设。例如，增强的<a href="/post/2025-04-21-mbml-introduction">模型</a>利用了每名玩家的击杀数，而不仅仅是他们的最终排名。它还建模了一个人在不同游戏模式下技能的相关性。其他改进则用于处理诸如玩家中途退出游戏之类的情形，这类情形先前会导致不准确的技能估计。</p>
+<p>我们已经看到 TrueSkill 如何持续地自适应，以追踪各个玩家的技能水平。在下一章中，我们将看到另一个自适应于个体用户的<a href="/post/2025-04-21-mbml-introduction">模型</a>的例子，但是在一个非常不同的应用背景下：帮助整理你杂乱的电子邮件收件箱。</p>
+<h4 id="参考文献">参考文献</h4>
+<p>[Bishop, 2006] Bishop, C. M. (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.</p>
+<p>[Dangauthier et al., 2007] Dangauthier, P., Herbrich, R., Minka, T., and Graepel, T. (2007). Trueskill through time: Revisiting the history of chess. In Platt, J. C., Koller, D., Singer, Y., and Roweis, S. T., editors, <em>NIPS</em>. Curran Associates, Inc.</p>
+<p>[Minka et al., 2018] Minka, T., Cleven, R., and Zaykov, Y. (2018). TrueSkill 2: An improved Bayesian skill rating system. Technical Report MSR-TR-2018-8, Microsoft.</p>
+<hr>
+<p>下一章：<a href="/post/2026-08-01-mbml-emailclassifier">清理你的收件箱</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/">https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a></li>
+        
+        <li><a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a></li>
+        
+        <li><a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/">[译]基于模型的机器学习 - 3.2 推断玩家的技能</a></li>
+        
+        <li><a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/">[译]基于模型的机器学习 - 3.1 建模游戏的结果</a></li>
+        
+        <li><a href="/post/2026-07-26-mbml-trueskill/">[译]基于模型的机器学习 - 3 匹配你的对手</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" title="[译]基于模型的机器学习 - 3.5 允许技能变化" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" title="[译]基于模型的机器学习 - 3.3 一个解法：期望传播" target="_blank">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/" title="[译]基于模型的机器学习 - 3.2 推断玩家的技能" target="_blank">[译]基于模型的机器学习 - 3.2 推断玩家的技能</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/" title="[译]基于模型的机器学习 - 3.1 建模游戏的结果" target="_blank">[译]基于模型的机器学习 - 3.1 建模游戏的结果</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/" title="[译]基于模型的机器学习 - 3 匹配你的对手" target="_blank">[译]基于模型的机器学习 - 3 匹配你的对手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" title="[译]基于模型的机器学习 - 插曲：机器学习生命周期" target="_blank">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (35)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (23)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

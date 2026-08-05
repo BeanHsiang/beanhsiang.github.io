@@ -75,6 +75,277 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-01T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月1日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>收发电子邮件的庞大数量意味着，一名典型的办公室职员每天要花好几个小时来处理自己的收件箱。源源不断涌入的新邮件很容易让人应接不暇。同时，一封重要邮件淹没在杂乱信息中的可能性也比以往任何时候都大。<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>能否帮助减轻这种信息过载呢？</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/PileOfMail_80130295.jpg">
+            <img class="mx-auto" alt="一堆邮件" src="/uploads/PileOfMail_80130295.jpg" />
+        </a>
+    </p>
+<p>普通办公室职员每天花在处理电子邮件上的时间将近三个小时。这些时间中约 90% 花在阅读收到的邮件或管理已有的邮件上——只有剩下的 10% 用于撰写或回复邮件 [Outlook team, 2008]。一个能加快阅读和管理邮件速度的自动工具，将为人们腾出大量时间，让他们能够专注于重要任务，避免信息过载带来的压力。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" title="[译]基于模型的机器学习 - 3.5 允许技能变化" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-31T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月31日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>至此，我们似乎已经为本章开头提出的问题找到了一个全面的解决方案。我们有了一个关于多支玩家队伍之间游戏（含平局）的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>，其中更简单的情形（两名玩家、个人而非队伍、无平局的游戏）作为特例出现。然而，当这个系统面向真实的 beta 测试者部署时，人们发现它的配对并不总是令人满意。特别是，某些玩家的技能值似乎“卡”在了较低的取值上，即使这些玩家已经打了很多游戏并有了很大进步，从而导致糟糕的配对。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/tennis_779423224.jpg">
+            <img class="mx-auto" alt="网球" src="/uploads/tennis_779423224.jpg" />
+        </a>
+    </p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-30T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月30日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>到目前为止，我们已经为两名玩家之间、以其中一方获胜告终的一局游戏构建了一个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>。为处理 Xbox Live 所需的各种各样的游戏，我们需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>以应对若干额外的复杂性。具体而言，真实游戏可能以平局结束、可能涉及超过两名玩家、并且可能在多支队伍之间进行。现在我们将展示如何扩展最初的<a href="/post/2025-04-21-mbml-introduction">模型</a>以考虑这些复杂性。这种灵活性很好地说明了<a href="/post/2025-04-21-mbml-introduction">基于模型</a>的机器学习方法的强大之处。</p>
+<p>具体来说，我们需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>，使它能够：</p>
+<ul>
+<li>在结果为平局时更新技能；</li>
+<li>对团队游戏，更新各个团队成员的技能；</li>
+<li>适用于超过两名玩家的游戏。</li>
+</ul>
+<p><a href="/post/2025-04-21-mbml-introduction">基于模型</a>的方法允许以透明的方式并入这些扩展，从而产生一个能够处理上述所有复杂性、同时仍保持可理解、可维护的解决方案。</p>
+<h3 id="如果一局游戏可能以平局结束怎么办">如果一局游戏可能以平局结束怎么办？</h3>
+<p>在我们当前的<a href="/post/2025-04-21-mbml-introduction">模型</a>中，在某一局游戏中表现值较高的玩家就是那局的赢家。对于也可能以平局结束的游戏，我们可以引入<strong>平局边界</strong>（draw margin）这一概念来修改这个假设：只有当一名玩家的表现超过另一名玩家至少一个平局边界的值时，他才是赢家。数学上这可以表达为</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" title="[译]基于模型的机器学习 - 3.3 一个解法：期望传播" target="_blank">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-29T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月29日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>我们已经看到，<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>使我们能够在<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.10</a> 的<a href="/post/2025-04-21-mbml-introduction">模型</a>中计算变量 <code>Jskill</code> 的精确边缘<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。虽然 <code>Jskill</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>是一个由两个参数描述的高斯，但<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>分布不是高斯，而是一个需要四个参数的更复杂分布。为阻止参数数量在每局游戏后不断增加，我们需要一种方法用具有固定数量参数的分布来近似这个真实的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>，为此我们选择高斯。这样<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>就会与<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>具有相同的函数形式，模仿<a href="https://www.mbmlbook.com/TrueSkill_Inferring_the_players_skills.html#conjugate">共轭</a><a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>的行为。如果我们能做到这一点，就能把所得的近似<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>当作下一局游戏的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>。这样，每个玩家的技能将始终由一个仅受两个参数支配的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>表示。</p>
+<p>第一个问题是如何用一个高斯来近似一个非<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>。一个简单的解法是求出该非<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>，然后选一个具有相同均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>的高斯作为我们的近似。事实证明这是一个合理的近似，它可以通过优化两个<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>不相似性的某种度量来形式化地推导出来 [Bishop, 2006; Minka, 2005]。</p>
+<p>我们也许会因此想干脆直接用一个高斯来近似 <code>Jskill</code> 的精确<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。虽然这对<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.10</a> 的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>会令人满意地奏效，但当我们转向更复杂的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>（例如本章后面将遇到的那些）时，它又会失效。具有简单函数形式的消息在穿过<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>后往往会变得更复杂。当我们把<a href="/post/2025-04-21-mbml-introduction">模型</a>扩展到更大、更精巧的图时，很快就会遇到消息无法被精确计算的情形。这类问题可以通过在每个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>处局部地做近似来避免，从而使所有消息都具有所需的分布类型。这确保了只要每个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>都能使用适当的分布类型向所有相邻的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>发送近似消息，<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>就可以被组合成任意的图。</p>
+<p>下面这一小节会深入这类<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>的数学细节。如果你想跳过这些细节，尽可直接看下一节。</p>
+<blockquote>
+<p><strong>推断深入探讨</strong></p>
+<p>在这个可选小节中，我们引入期望传播这一<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a>技术，我们将在本书中广泛使用它。如果你想专注于建模，尽可跳过本小节。</p>
+<p>回到<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.12</a>（为方便起见在图 3.21 中重现），我们看到消息 (6) 是我们遇到的第一个非高斯消息。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/" title="[译]基于模型的机器学习 - 3.2 推断玩家的技能" target="_blank">[译]基于模型的机器学习 - 3.2 推断玩家的技能</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-28T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月28日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>到目前为止，我们假设已经知道 Jill 和 Fred 的技能，并用这些技能计算了每个玩家成为胜者的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。在实践中，我们必须反向推理：我们观察到谁赢得了游戏，并需要用这个信息来了解玩家的技能值。因此，我们转向学习玩家技能这一问题。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/chess-153260162.jpg">
+            <img class="mx-auto" alt="下棋" src="/uploads/chess-153260162.jpg" />
+        </a>
+    </p>
+<p><em>在任何游戏中，看到谁胜谁负都会告诉我们关于玩家技能的信息。</em></p>
+<p>给定一局游戏的结果，提高胜者的技能值、降低败者的技能值似乎是合理的。然而，不太清楚的是我们应当做多大的调整。直觉上我们可以这样推理。假设 Jill 是这局游戏的胜者。如果 Jill 的技能显著高于 Fred，那么 Jill 获胜并不令人意外，因此技能值的变化应当相对较小。如果技能相近，那么较大的变化就有道理。然而，如果 Jill 的技能显著低于 Fred，那么这个游戏结果就非常令人意外。这个结果表明我们当前对技能值的评估不太准确，因此我们应当对技能值做大得多的调整。简而言之，意外的程度指示了应当对技能值做多大的改变。我们将看到，在一个合适的<a href="/post/2025-04-21-mbml-introduction">模型</a>中执行<a href="/post/2025-04-21-mbml-introduction">推断</a>会自动给出这种行为。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/" title="[译]基于模型的机器学习 - 3.1 建模游戏的结果" target="_blank">[译]基于模型的机器学习 - 3.1 建模游戏的结果</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-27T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月27日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>我们的目标是构建一个能够评估在线游戏玩家技能的系统。作为迈向这一目标的第一步，我们需要先考察一个更简单的问题：在已经知道相关玩家技能的情况下，预测一局游戏的结果。这将使我们发展出解决“确定技能”这一更复杂问题所需的许多概念。</p>
+<p>假设 Jill 将在 Xbox Live 上与 Fred 玩一局《光环》。在<a href="/post/2026-01-06-mbml-learning-skills">第 2 章</a>中，我们用一个二值变量来表示一个人的软件开发技能，指示此人是否具备某项特定技能。当我们考虑一个人在《光环》这类典型 Xbox 游戏中的技能时，这种做法就不够用了，因为可能的技能水平存在很宽的谱系。相反，用一个连续值来表示一个人的技能更为合适。因此，我们的第一条建模假设是：</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/" title="[译]基于模型的机器学习 - 3 匹配你的对手" target="_blank">[译]基于模型的机器学习 - 3 匹配你的对手</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-26T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月26日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>每一天，全世界数以百万计的玩家登录 Xbox Live®，在数百款不同的游戏里彼此对战。他们的乐趣取决于是否能被匹配到实力相当的其他玩家，从而获得良好的游戏体验。那么，我们如何用<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>来自动匹配实力相近的玩家呢？</p>
+<p>对于游戏而言，在线世界的一大优势在于随时随地都能找到对手，无论白天黑夜。Xbox Live 的一项重要需求，是能够找到技能水平相当的对手，以便让玩家获得愉快的游戏体验。这一需求意味着系统必须有办法估计玩家的技能。然而，要做到这一点会面临一些重大挑战——尤其是，实力更强的玩家并不总能赢得一局游戏。许多游戏都带有运气成分，在某一局中运气可能会偏向较弱的玩家。更普遍地说，一名玩家的表现会因疲劳或热情起伏等<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>而在不同对局之间发生变化。因此，我们不能假设某一局的胜者一定比败者技能更高。另一方面，我们确实预期实力更强的玩家在与较弱玩家的对局中，赢的次数会多于输的次数，所以对局结果确实能提供关于玩家相对技能的有用信息。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" title="[译]基于模型的机器学习 - 插曲：机器学习生命周期" target="_blank">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-25T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月25日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>回到<a href="/post/2025-04-22-mbml-murder-mystery">第 1 章</a>处理谋杀之谜时，我们首先从犯罪现场收集证据，然后运用我们自己的知识来构建这起谋杀的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>。我们以观测变量的形式，把犯罪现场的证据整合进<a href="/post/2025-04-21-mbml-introduction">模型</a>，并执行<a href="/post/2025-04-21-mbml-introduction">推断</a>来回答我们关心的查询：每个嫌疑人是凶手的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>是多少？随后我们评估<a href="/post/2025-04-21-mbml-introduction">推断</a>的结果是否足够好——也就是说，<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>是否高到足以认定谋杀已被侦破？当结果不够好时，我们便收集更多数据、扩展<a href="/post/2025-04-21-mbml-introduction">模型</a>、重新运行<a href="/post/2025-04-21-mbml-introduction">推断</a>，最终达到了我们的目标<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</p>
+<p>在<a href="/post/2026-01-06-mbml-learning-skills">第 2 章</a>评估求职者技能时，我们从参加真实测试的人那里收集数据并对这些数据进行了可视化。然后我们基于对人们如何做测试的知识建立了一个<a href="/post/2025-04-21-mbml-introduction">模型</a>。我们运行了<a href="/post/2025-04-21-mbml-introduction">推断</a>，并评估出结果不够好。我们诊断了问题、扩展了<a href="/post/2025-04-21-mbml-introduction">模型</a>，然后对原始<a href="/post/2025-04-21-mbml-introduction">模型</a>和扩展后的<a href="/post/2025-04-21-mbml-introduction">模型</a>都进行了评估，以量化改进程度，并检查改进后的<a href="/post/2025-04-21-mbml-introduction">模型</a>是否达到了我们的成功标准。</p>
+<p>我们可以从这两个例子出发进行归纳，定义出任何<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>应用所需的步骤：</p>
+<ol>
+<li>收集用于训练和评估<a href="/post/2025-04-21-mbml-introduction">模型</a>的数据。</li>
+<li>收集知识，以帮助做出恰当的建模假设。</li>
+<li>可视化数据，以更好地理解它、检查数据问题，并获得对有用建模假设的洞见。</li>
+<li>构建一个<a href="/post/2025-04-21-mbml-introduction">模型</a>，使其捕捉关于问题领域的知识，并与你对数据的理解相一致。</li>
+<li>执行<a href="/post/2025-04-21-mbml-introduction">推断</a>，利用数据来固定其他变量的取值，从而对我们关心的变量做出预测。</li>
+<li>使用某种<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">评估指标</a>来评估结果，看它们是否满足目标应用的成功标准。</li>
+</ol>
+<p>在（通常的）系统第一次未能满足成功标准的情况下，还需要额外的两个步骤：</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
             </h1>
         </header>
@@ -143,264 +414,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" title="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆" target="_blank">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-17T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月17日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>我最近一直在琢磨一件事：为什么 AI 智能体用起来总有种&quot;似曾相识的挫败感&quot;。</p>
-<p>我们把越来越多的活儿交给它——写材料、排会议、报税，甚至直接上手构建和调试生产系统。它的能力肉眼可见地在变强，可有个毛病始终没治好：同样的坑，它会一次又一次地踩进去。</p>
-<p>举个我自己踩过的例子。智能体执行 <code>python main.py</code>，结果项目是用 <code>uv</code> 管理依赖的，直接甩给我一个 <code>ModuleNotFoundError</code>。它试了好几轮，最后摸索出 <code>uv run python main.py</code> 才是对的。但下周再来一次呢？同样的报错，同样白烧掉的 token 和时间。如果它有&quot;程序性记忆&quot;（Procedural Memory），学一次就够了，然后记住这条：在用 uv 管理的项目里，一律走 <code>uv run</code>。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/" title="在 Microsoft Copilot Studio 里落地多智能体编排" target="_blank">在 Microsoft Copilot Studio 里落地多智能体编排</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-16T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月16日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>
-        <a data-fancybox="gallery" href="/uploads/20260730143430-7fb4077b336941d29c203188425e3974.png">
-            <img class="mx-auto" alt="" src="/uploads/20260730143430-7fb4077b336941d29c203188425e3974.png" />
-        </a>
-    </p>
-<p>把 copilot 从简单问答升级成真能干活的助手，我很快撞上一堵墙：单个智能体应付不了那种要走好几步、还跨领域的任务。当你指望一个 copilot 同时做推理、读实时数据、又要遵守各领域自己的规则时，问题就冒出来了，比如排障流程、汇总多个系统的洞察，或者把好几条业务线的信息揉到一起。</p>
-<p>多智能体编排的思路，是让 copilot 把活儿分给专门的智能体，同时留一个统一的决策层。下面这套编排器—专家（orchestrator–specialist）模式来自真实的客户实践，我照着在 Microsoft Copilot Studio 里从头走了一遍，顺带用 Activity Map 这类内置工具验证了智能体之间到底有没有好好协作。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" title="[译]基于模型的机器学习 - 2.5 诊断问题" target="_blank">[译]基于模型的机器学习 - 2.5 诊断问题</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-10T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月10日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>当一个机器学习系统不工作时，通常有三个可能的原因：<strong>坏数据</strong>、<strong>坏模型</strong>或<strong>坏推断</strong>。以下是这三个类别下各自一些常见的问题成因：</p>
-<ul>
-<li><strong>坏数据（Bad data）</strong>：数据项被错误地录入、存储或加载；数据项不完整或标注错误；数据值噪声太大而无用；数据有偏或不能代表系统将被使用的方式；这是任务的错误数据；数据不足以做出准确预测。</li>
-<li><strong>坏模型（Bad model）</strong>：一个或多个建模假设是错的——即与实际生成数据的过程不一致；<a href="/post/2025-04-21-mbml-introduction">模型</a>做了太多简化假设；给定可用数据量，<a href="/post/2025-04-21-mbml-introduction">模型</a>包含的假设不足以做出准确预测。</li>
-<li><strong>坏推断（Bad inference）</strong>：<a href="/post/2025-04-21-mbml-introduction">推断</a>代码含有 bug；<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>不好；<a href="/post/2025-04-21-mbml-introduction">推断</a>尚未<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>；存在数值问题（例如舍入、溢出）；<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>不够准确。</li>
-</ul>
-<p>在我们的情形中，我们可以相当有信心地认为数据是好的，因为我们已经仔细地检查和可视化过它。所以看起来问题很可能出在<a href="/post/2025-04-21-mbml-introduction">模型</a>或<a href="/post/2025-04-21-mbml-introduction">推断</a>上。我们将从检查<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>——即<a href="/post/2026-06-16-mbml-learning-skills_loopiness">循环置信传播</a>——是否正确工作开始。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/" title="[译]基于模型的机器学习 - 2.4 迁移到真实数据" target="_blank">[译]基于模型的机器学习 - 2.4 迁移到真实数据</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-06-26T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年6月26日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>既然我们已经在示例数据上充分试验过<a href="/post/2025-04-21-mbml-introduction">模型</a>，现在就可以用一些真实数据来工作了。我们请了 22 位志愿者完成一份由 48 道题组成的测评测试，用以评估七种不同的开发技能。许多题目需要两项技能，因为它们既需要某个软件开发概念的知识（例如面向对象编程），又需要该题所用编程语言的知识（例如 C#）。</p>
-<p>除了完成测试之外，我们还请每位志愿者说明他们认为自己具备哪些开发技能。这些自评技能将作为技能变量的<a href="/post/2025-04-21-mbml-introduction">真实标注</a>（ground truth）——也就是说，我们把它们当作变量的真实取值。这类真实标注数据将用于评估我们的系统从志愿者答案中自动推断技能的准确性。真实标注数据应当相当可靠，因为志愿者没有夸大自己技能的动机：结果是匿名的，所报告的技能和答案无法与任何特定志愿者关联。然而，某些志愿者也有可能高估或低估自己的技能，我们在用这些数据评估准确性时需要牢记这一点。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" title="自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-06-19T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年6月19日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <blockquote>
-<p>本文编译自 Microsoft Community Hub 的文章 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/4524095?WT.mc_id=AI-MVP-5003172">Auto-Generated Rubric Evaluators: Building Context-Aware Evaluators for AI Agents</a>，原作者 Shuo Qiu 等人。我读完之后觉得这套验证方法挺扎实，就顺手整理成中文，把里面的数据和结论都留了下来。</p>
-</blockquote>
-<p>预置评估器有个老毛病：它们太通用了，一旦碰到真实业务里的智能体，往往不够贴身。Microsoft Foundry 里的自动生成 Rubric 评估器就是冲着这个问题去的——你手头已经有的上下文，它拿来生成一个针对具体任务的 Rubric 评估器。团队从四个方面做了验证，结论是：在测试条件下，用推荐配置跑出来的评估器，有效性和可靠性都站得住。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" title="[译]基于模型的机器学习 - 2.3 有环性" target="_blank">[译]基于模型的机器学习 - 2.3 有环性</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-06-16T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年6月16日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>现在让我们把<a href="/post/2025-04-21-mbml-introduction">模型</a>稍微扩展一下，添加第四道需要两项技能的题目。这张新的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>如图 2.14 所示，我们为这道新题添加了新的 <code>isCorrect4</code> 和 <code>hasSkills4</code> 变量。在这张仅仅略微变大的图上，我们当然也可以用<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>来做<a href="/post/2025-04-21-mbml-introduction">推断</a>吧？其实，我们不能。</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/PlaneLoop_86879950.jpg">
-            <img class="mx-auto" alt="飞机航迹环" src="/uploads/PlaneLoop_86879950.jpg" />
-        </a>
-    </p>
-<p><em>环可能很棘手。</em></p>
-<p>问题在于，<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>只有在某个（未观测）节点的所有其它边上都收到了消息之后，才能从该节点发出一条消息（算法 2.1）。在这个约束下，只有当图中没有环时，我们才能把图中的所有消息都发送出去；这里的<strong>环</strong>是指一条穿过图、从同一个节点出发又回到该节点的路径（且不重复经过同一条边）。如果图中有一个环，那么我们无法沿着环上的任何一条边发送消息，因为这总是要求先计算出环上的另一条消息。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" title="如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" target="_blank">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-06-13T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年6月13日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>
-        <a data-fancybox="gallery" href="/uploads/20260730135212-3f34437049b94d55a74d2a39cd5f3520.png">
-            <img class="mx-auto" alt="封面：在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" src="/uploads/20260730135212-3f34437049b94d55a74d2a39cd5f3520.png" />
-        </a>
-    </p>
-<p>我第一次盯着一个启用了 MCP 的智能体的 token 账单时，脑子是懵的。API 告诉我这次跑了 773 个 token。可门户里的 trace 显示的是 581/141。切到 trajectory 视图，数字又变成了另一个样子。三个地方，三套数据，哪个才是对的？</p>
-<p>在你急着去提 bug 之前，我想先说清楚这背后到底发生了什么，以及怎么建立一套站得住脚的证据方法，让企业级的 token 核算不再靠猜。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/" title="[译]基于模型的机器学习 - 2.2 试验模型" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-06-06T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年6月6日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>构建好一个<a href="/post/2025-04-21-mbml-introduction">模型</a>之后，首先要做的就是用一些简单的示例数据来试验它，检查它的行为是否合理。假设有一位候选人懂 C# 但不懂 SQL——我们会预期他答对第一题，而答错另外两题。那么让我们针对这种情况试验一下<a href="/post/2025-04-21-mbml-introduction">模型</a>，看看对于这样的答题模式它会推断出哪些技能。为方便起见，我们用 <code>isCorrect</code> 来指代数组 <code>[isCorrect1, isCorrect2, isCorrect3]</code>，因此我们要考虑的是 <code>isCorrect</code> 为 <code>[true, false, false]</code> 的情形。</p>
-<p>我们想在给定这一组特定的 <code>isCorrect</code> 取值的条件下，推断候选人具备 <code>csharp</code> 和 <code>sql</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。这是一个<strong>推断查询</strong>的例子，它由我们想要推断的变量（<code>csharp</code>、<code>sql</code>）以及我们所条件化的变量（<code>isCorrect</code>）连同它们的观测值共同定义。由于这个例子相当小，我们可以用手工方式求出这个推断查询的答案。</p>
-<h3 id="手动进行推断">手动进行推断</h3>
-<p>作为开始，我们先来看看在只给定第一题答案的情况下，如何推断 <code>csharp</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。舍去其它变量后，就得到图 2.6 所示的简化<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -445,7 +458,7 @@
         
         
         <li >
-            <a href="https://beanhsiang.github.io/page/12/">12</a>
+            <a href="https://beanhsiang.github.io/page/13/">13</a>
         </li>
         
     
@@ -509,43 +522,43 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" title="[译]基于模型的机器学习 - 3.5 允许技能变化" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" title="[译]基于模型的机器学习 - 3.3 一个解法：期望传播" target="_blank">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/" title="[译]基于模型的机器学习 - 3.2 推断玩家的技能" target="_blank">[译]基于模型的机器学习 - 3.2 推断玩家的技能</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/" title="[译]基于模型的机器学习 - 3.1 建模游戏的结果" target="_blank">[译]基于模型的机器学习 - 3.1 建模游戏的结果</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/" title="[译]基于模型的机器学习 - 3 匹配你的对手" target="_blank">[译]基于模型的机器学习 - 3 匹配你的对手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" title="[译]基于模型的机器学习 - 插曲：机器学习生命周期" target="_blank">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
     </li>
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" title="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆" target="_blank">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/" title="在 Microsoft Copilot Studio 里落地多智能体编排" target="_blank">在 Microsoft Copilot Studio 里落地多智能体编排</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" title="[译]基于模型的机器学习 - 2.5 诊断问题" target="_blank">[译]基于模型的机器学习 - 2.5 诊断问题</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/" title="[译]基于模型的机器学习 - 2.4 迁移到真实数据" target="_blank">[译]基于模型的机器学习 - 2.4 迁移到真实数据</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" title="自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" title="[译]基于模型的机器学习 - 2.3 有环性" target="_blank">[译]基于模型的机器学习 - 2.3 有环性</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" title="如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" target="_blank">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/" title="[译]基于模型的机器学习 - 2.2 试验模型" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
     </li>
     
 </ul>
@@ -571,7 +584,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (15)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (23)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
     

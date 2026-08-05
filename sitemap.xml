@@ -2,28 +2,52 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/</loc>
-    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/</loc>
+    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
-    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Model-Based/</loc>
-    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
-    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-07-24T10:00:00+08:00</lastmod>
+    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/</loc>
+    <lastmod>2026-07-31T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/</loc>
+    <lastmod>2026-07-30T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/</loc>
+    <lastmod>2026-07-29T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/</loc>
+    <lastmod>2026-07-28T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/</loc>
+    <lastmod>2026-07-27T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/</loc>
+    <lastmod>2026-07-26T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/</loc>
+    <lastmod>2026-07-25T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/</loc>
     <lastmod>2026-07-24T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>

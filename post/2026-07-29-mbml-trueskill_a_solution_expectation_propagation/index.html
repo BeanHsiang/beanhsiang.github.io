@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 3.3 一个解法：期望传播 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 3.3 一个解法：期望传播 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-07-29T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-07-29T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 3.3 一个解法：期望传播">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</h1>
+        </header>
+        
+  <time datetime="2026-07-29T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月29日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>我们已经看到，<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>使我们能够在<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.10</a> 的<a href="/post/2025-04-21-mbml-introduction">模型</a>中计算变量 <code>Jskill</code> 的精确边缘<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。虽然 <code>Jskill</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>是一个由两个参数描述的高斯，但<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>分布不是高斯，而是一个需要四个参数的更复杂分布。为阻止参数数量在每局游戏后不断增加，我们需要一种方法用具有固定数量参数的分布来近似这个真实的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>，为此我们选择高斯。这样<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>就会与<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>具有相同的函数形式，模仿<a href="https://www.mbmlbook.com/TrueSkill_Inferring_the_players_skills.html#conjugate">共轭</a><a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>的行为。如果我们能做到这一点，就能把所得的近似<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>当作下一局游戏的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>。这样，每个玩家的技能将始终由一个仅受两个参数支配的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>表示。</p>
+<p>第一个问题是如何用一个高斯来近似一个非<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>。一个简单的解法是求出该非<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>，然后选一个具有相同均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>的高斯作为我们的近似。事实证明这是一个合理的近似，它可以通过优化两个<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>不相似性的某种度量来形式化地推导出来 [Bishop, 2006; Minka, 2005]。</p>
+<p>我们也许会因此想干脆直接用一个高斯来近似 <code>Jskill</code> 的精确<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。虽然这对<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.10</a> 的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>会令人满意地奏效，但当我们转向更复杂的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>（例如本章后面将遇到的那些）时，它又会失效。具有简单函数形式的消息在穿过<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>后往往会变得更复杂。当我们把<a href="/post/2025-04-21-mbml-introduction">模型</a>扩展到更大、更精巧的图时，很快就会遇到消息无法被精确计算的情形。这类问题可以通过在每个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>处局部地做近似来避免，从而使所有消息都具有所需的分布类型。这确保了只要每个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>都能使用适当的分布类型向所有相邻的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>发送近似消息，<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>就可以被组合成任意的图。</p>
+<p>下面这一小节会深入这类<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>的数学细节。如果你想跳过这些细节，尽可直接看下一节。</p>
+<blockquote>
+<p><strong>推断深入探讨</strong></p>
+<p>在这个可选小节中，我们引入期望传播这一<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a>技术，我们将在本书中广泛使用它。如果你想专注于建模，尽可跳过本小节。</p>
+<p>回到<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.12</a>（为方便起见在图 3.21 中重现），我们看到消息 (6) 是我们遇到的第一个非高斯消息。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessages.png">
+            <img class="mx-auto" alt="图 3.21" src="/uploads/TrueSkill_TwoPlayersMessages.png" />
+        </a>
+    </p>
+<p><em>图 3.21：在应用<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>计算 <code>Jskill</code> 更新分布时出现的消息。（重现自<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.12</a>。）</em></p>
+<p>因此我们的目标是用一个高斯来近似消息 (6)，从而确保所有后续消息也都是<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>。</p>
+<p>尽管这似乎是一个可取的目标，但也似乎存在一个重大障碍——如<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.17</a> 所示，消息 (6) 的精确形式看起来一点也不像高斯！事实上，它的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>甚至都没有良好定义（两者都是无穷）。找到一个合理高斯近似的关键在于注意到：消息 (6) 的近似版本随后会作为消息 (7) 和 (8) 的修改形式在图中传递，然后会被向下的消息 (9) 相乘，以确定 <code>Jskill</code> 的（近似）<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>分布。因此我们的目标将是：让消息 (6)（关于 <code>Jperf</code>）的高斯近似在那些被图中其他部分传来的信息认为更可能的区域上最为精确。然而，正如我们刚刚讨论的，我们需要把近似保持在图中生成该消息的局部区域内。消息 (6) 被发送到节点 <code>Jperf</code>，因此我们可以选择我们的近似，使 <code>Jperf</code> 边缘分布的精度最大化。这通过把消息 (6) 乘以图中同一条边上向下的消息得到，后者可如图 3.22 所示计算。注意，求 <code>Fskill</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>边缘时也需要这些相同的消息，因此计算它们并不引入额外开销。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessagesContext.png">
+            <img class="mx-auto" alt="图 3.22" src="/uploads/TrueSkill_TwoPlayersMessagesContext.png" />
+        </a>
+    </p>
+<p><em>图 3.22：计算将用于为消息 (6) 找高斯近似的“上下文”消息。</em></p>
+<p>让我们更详细地考虑<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>中靠近 <code>Jperf</code> 节点的部分，如图 3.23 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessagesContextZoom.png">
+            <img class="mx-auto" alt="图 3.23a" src="/uploads/TrueSkill_TwoPlayersMessagesContextZoom.png" />
+        </a>
+    </p>
+<p><em>(a)</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessagesContextZoom2.png">
+            <img class="mx-auto" alt="图 3.23b" src="/uploads/TrueSkill_TwoPlayersMessagesContextZoom2.png" />
+        </a>
+    </p>
+<p><em>(b)</em></p>
+<p><em>图 3.23：<code>Jperf</code> 节点周围<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>的细节，展示所涉及的消息：(a) 运行<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>时；(b) 对来自 <code>GreaterThan</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的向上消息做局部高斯近似时。</em></p>
+<p>这里 $e$ 表示此前在<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.20</a> 中所见的精确消息 (6)，$c$ 表示向下的“上下文”消息，$g$ 表示我们所需的对消息 $e$ 的高斯近似。这些消息都只是变量 <code>Jperf</code> 的函数。我们已经看到，我们不能简单地用高斯来近似消息 $e$，因为消息 $e$ 具有无穷的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>。相反，我们对 <code>Jperf</code> 的边缘分布做高斯近似。精确的边缘由入向消息之积 $ce$ 给出。因此我们把近似消息 $g$ 定义为：使消息 $c$ 与 $g$ 之积给出的 <code>Jperf</code> 边缘分布是对真实边缘的最佳高斯近似，从而</p>
+$$cg = \text{Proj}\left( ce \right). \tag{3.14}$$<p>这里 Proj() 表示“投影”，代表用一个具有相同均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>的高斯替换一个非<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>的过程。这可以看作把精确消息投影到<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>族中“最近”的消息上。两边同除以 $c$，我们于是得到</p>
+$$g = \frac{\text{Proj}\left( ce \right)}{c}. \tag{3.15}$$<p>如何做到这一点的数学细节在 Herbrich 等人 [2007] 中讨论。</p>
+<p>因此我们如下为精确消息 (6) 找到一个高斯近似。首先我们像之前一样计算精确的输出消息 (6)。它在图 3.24 中以蓝色显示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[2].png">
+            <img class="mx-auto" alt="图 3.24" src="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[2].png" />
+        </a>
+    </p>
+<p><em>图 3.24：蓝色为精确的输出消息 (6)，红色为入向的上下文消息 $c$，绿色为这两条消息之积。</em></p>
+<p>然后我们把它乘以入向的上下文消息 $c$（在图 3.24 中以红色显示）。这给出一个分布（在图 3.24 中以绿色显示），它是非高斯的，但是局部化的，因此具有有限的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>，从而可以用一个高斯来近似。这条曲线在图 3.25 中重复出现，图 3.25 还展示了具有相同均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[3].png">
+            <img class="mx-auto" alt="图 3.25" src="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[3].png" />
+        </a>
+    </p>
+<p><em>图 3.25：绿色为从图 3.24 复制来的、真实<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>消息与入向上下文消息之积。橙色为对此积的高斯近似，即 Gaussian(140.4, 28.5²)。</em></p>
+<p>最后，我们把这个<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>除以入向的高斯上下文消息 $c$，以生成我们的近似输出消息。因为两个高斯之比本身也是一个高斯 [Bishop, 2006]，所得的输出消息也将是高斯的，这正是我们最初的目标。对于我们这个具体例子，这条消息是一个均值为 160.8、<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>为 40.2 的高斯。近似消息的计算过程总结于图 3.26。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[4].png">
+            <img class="mx-auto" alt="图 3.26" src="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[4].png" />
+        </a>
+    </p>
+<p><em>图 3.26：计算消息 (6) 高斯近似所涉及的步骤。蓝色曲线为精确消息 (6)，红色曲线为入向上下文消息 $c$，橙色曲线为真实消息与上下文消息之积的高斯近似，即 Gaussian(140.4, 28.5²)。最后，紫色曲线为橙色曲线除以红色上下文消息的结果，给出 Gaussian(160.8, 40.2²)。这个高斯随后被用作消息 (6)。</em></p>
+<p>我们看到，总体上我们先乘以入向上下文消息，然后做高斯近似，最后再把上下文消息除掉。因此入向消息所提供的证据仅用于确定高斯近似应当在哪个区域上精确，而不会被直接并入近似消息本身。如果我们恰好有一个<a href="https://www.mbmlbook.com/TrueSkill_Inferring_the_players_skills.html#conjugate">共轭分布</a>，那么投影运算就没有必要，上下文消息也不会产生任何影响。</p>
+<p>既然我们已经为输出消息 (6) 找到了合适的高斯近似，我们就可以继续沿图传递消息，给出相应的近似消息 (7)，如图 3.27 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessagesApprox.png">
+            <img class="mx-auto" alt="图 3.27" src="/uploads/TrueSkill_TwoPlayersMessagesApprox.png" />
+        </a>
+    </p>
+<p><em>图 3.27：计算 <code>Jskill</code> 更新分布时的消息 (5)、(6) 和 (7)。注意以橙色高亮的消息 (6) 和 (7) 不同于<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.18</a> 中的精确消息，它们均为 Gaussian(160.8, 40.2²)。</em></p>
+<p>对新的（近似）版本消息 (8) 的计算同样涉及一个高斯与一个高斯的<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">卷积</a>，结果如图 3.28 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessagesApprox__1.png">
+            <img class="mx-auto" alt="图 3.28" src="/uploads/TrueSkill_TwoPlayersMessagesApprox__1.png" />
+        </a>
+    </p>
+<p><em>图 3.28：计算 <code>Jskill</code> 更新分布时的消息 (8) 和 (9)。注意除了消息 (6) 和 (7)，消息 (8)（橙色，Gaussian(160.8, 40.5²)）也不同于<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.19</a> 中的精确消息。</em></p>
+<p>向下的消息 (9) 保持不变，因此我们最终可以把 <code>Jskill</code> <a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>的高斯近似计算为两个高斯之积，给出最终结果：一个均值为 140.1、<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>为 28.5 的高斯。</p>
+<p>这种在消息传递过程中局部近似消息的方法被称为<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#expectation_propagation">期望传播</a>（expectation propagation，简称 EP），由 Minka [2001] 提出。近似是在<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>处局部做出的，而且其方式<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">独立</a>于图其余部分的结构。因此，只要每个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>都一致地用所需的分布类型（此处为高斯）发送和接收消息，该技术就可以应用于任意结构的图。<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#expectation_propagation">期望传播</a><a href="/post/2025-04-21-mbml-introduction">算法</a>总结于算法 3.1，其中与<a href="/post/2026-06-16-mbml-learning-skills_loopiness">循环置信传播</a>的差异以红色高亮。</p>
+<blockquote>
+<p><strong>算法 3.1：期望传播</strong></p>
+<p><strong>输入</strong>：<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>、要计算边缘的目标变量列表、<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>、初始消息值（可选）、每条边的近似分布选择。</p>
+<p><strong>输出</strong>：目标变量的边缘分布。</p>
+<ol>
+<li>把所有消息初始化为均匀（或初始值，若已提供）。</li>
+<li>对消息传递调度中的每一条边：发送下面适当的消息——
+<ul>
+<li><a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>消息：在其他边上收到的<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">所有消息之积</a>；</li>
+<li><a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>消息：计算<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>消息（见算法 2.1）。乘以上下文消息（在这条边上朝该因子传来的消息）。用矩匹配把它投影到这条边所需的分布类型。把上下文消息除掉。</li>
+<li>观测节点消息：在观测值处的一个<a href="/post/2025-04-22-mbml-murder-mystery">点质量</a>；</li>
+</ul>
+</li>
+<li>直到所有消息收敛。</li>
+<li>在每个目标<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>处，把所有入向消息之积计算为边缘分布。</li>
+</ol>
+</blockquote>
+</blockquote>
+<h3 id="应用期望传播">应用期望传播</h3>
+<p>让我们看看当把<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#expectation_propagation">期望传播</a>应用于 Jill 与 Fred 之间那局《光环》时，技能分布会发生什么。首先我们假设 Jill 是这局的胜者。在图 3.29 中，我们看到 Jill 和 Fred 技能的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>（虚线）与<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>（实线）分布。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_3ASolutionExpectationPropagationTheComparisonOfTheTrueSkillAndTheEloExperiments_TrueSkillDifferentVarianceJillWins-Summary.png">
+            <img class="mx-auto" alt="图 3.29" src="/uploads/TrueSkill_3ASolutionExpectationPropagationTheComparisonOfTheTrueSkillAndTheEloExperiments_TrueSkillDifferentVarianceJillWins-Summary.png" />
+        </a>
+    </p>
+<p><em>图 3.29：对 Jill（蓝色）与 Fred（红色）之间一局游戏应用 TrueSkill <a href="/post/2025-04-21-mbml-introduction">模型</a>、且 Jill 为胜者情形的结果。<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>以虚线曲线表示，相应的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>以实线曲线表示。Jill 初始的宽泛技能分布表明，在这局之前我们并不知道 Jill 的技能比 Fred 高还是低。在看到她赢得这局之后，她的技能分布发生偏移，使大部分面积位于 Fred 曲线的右侧，意味着我们现在认为 Jill 很可能比 Fred 更有技能。因为我们本来就对 Fred 的技能水平相对有信心，所以他的分布几乎没有变化。</em></p>
+<p>因为 Jill 是胜者，Jill 技能分布的均值增大，而 Fred 技能分布的均值减小。均值的增大对 Jill 相当大，而 Fred 的均值几乎没有减小。这个差异源于 <code>Fskill</code> 相比 <code>Jskill</code> 有更大的确定性。直觉上，我们是在用 Fred 更确定的技能来估计 Jill 的技能。我们还从图 3.29 中看到，Jill 技能分布的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>因这局游戏而减小。这是因为我们已经了解了一些关于她技能的信息，因此不确定性的程度降低了。</p>
+<p>或者，如果是 Fred 赢得游戏，我们就得到图 3.30 所示的结果，</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_3ASolutionExpectationPropagationTheComparisonOfTheTrueSkillAndTheEloExperiments_TrueSkillDifferentVarianceFredWins-Summary.png">
+            <img class="mx-auto" alt="图 3.30" src="/uploads/TrueSkill_3ASolutionExpectationPropagationTheComparisonOfTheTrueSkillAndTheEloExperiments_TrueSkillDifferentVarianceFredWins-Summary.png" />
+        </a>
+    </p>
+<p><em>图 3.30：与图 3.29 相同，但为 Fred 是胜者的情形。<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>（虚线）与之前相同。我们关于 Fred 技能的可信部分同样几乎没有变化。但现在 Jill 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>技能分布发生偏移，使大部分面积位于 Fred 曲线的左侧，意味着我们现在认为 Jill 的技能不如 Fred。</em></p>
+<p>这个结果稍微更令人意外一些，因为我们本来相信 Jill 是更强的玩家，尽管我们对此并不确信。直觉上我们会因此预期技能分布的调整会稍大一些，事实确实如此。我们看到分布均值的偏移比图 3.29 中更大。事实上，<code>Jskill</code> 分布均值的变化如此之大，以至于它现在小于 <code>Fskill</code> 的均值。同样，Jill 技能的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>减小了，反映出由于并入新证据而带来的不确定性降低。因为 TrueSkill <a href="/post/2025-04-21-mbml-introduction">模型</a>中的技能更新依赖于技能分布的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>，所以 TrueSkill 能够对新玩家的分布做出相对较大的改变。此外，这作为在我们<a href="/post/2025-04-21-mbml-introduction">模型</a>中运行<a href="/post/2025-04-21-mbml-introduction">推断</a>的结果而自动发生。</p>
+<h3 id="多局游戏">多局游戏</h3>
+<p>到目前为止，在本节中我们为 Jill 与 Fred 之间的单局《光环》游戏开发了一个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>。在实践中，我们会有一大批玩家，而各局游戏在该批玩家中的两两之间进行。当我们试图评估某个玩家的技能时，我们潜在地拥有该玩家对阵一系列不同对手所打过的所有游戏的结果。我们可能还拥有那些对手所打过的所有游戏的结果，其中许多可能涉及另外的玩家，依此类推。原则上，所有这些信息都是相关的，都可能帮助我们评估最初那个玩家的技能。此外，每当有一个新的游戏结果时，我们就可以纳入这个额外信息并更新该玩家的技能，即使他们本人没有打任何新的游戏。这个新信息可能是相关的，即使它涉及其他玩家之间的一局游戏，因为它可能影响对那些玩家技能的评估，从而影响我们这个玩家的相对技能。</p>
+<p>原则上，我们可以通过构建一个非常大的、表达迄今为止所打过的所有游戏的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>来处理这一点。每个玩家会有单个变量表示其技能值，但有多个变量（他们打过的每一局各一个）表示他们在每局游戏中的表现。这将是一个带有多个<a href="/post/2026-06-16-mbml-learning-skills_loopiness">环</a>的复杂图，我们可以运行（循环）<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#expectation_propagation">期望传播</a>，以把消息保持在高斯分布族内，直到满足某个合适的<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>准则。这将给出每个玩家的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>技能分布，同时考虑所打过的所有游戏。如果随后打了一局新游戏，我们就要用一个新的、更大的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>重新开始，并重新运行<a href="/post/2025-04-21-mbml-introduction">推断</a>，以获得每个玩家新的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。这种方法实现起来会很复杂，而且每增加一局新游戏就会变得越来越慢。每天有数以百万计的游戏在进行，这完全不可行。</p>
+<p>相反，我们可以使用一种称为<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#online_learning">在线学习</a>（有时称为<strong>滤波</strong>，filtering）的<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a>方法，其中每个玩家的技能分布只在获得涉及该玩家的游戏结果时才更新。因此我们只需为每个玩家存储高斯技能分布的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>。当某玩家打一局新游戏时，我们用这个当前的高斯技能分布作为<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>来运行<a href="/post/2025-04-21-mbml-introduction">推断</a>，所得的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>随后被存储，并构成下一局游戏的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。因此每一局游戏都由<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.10</a> 所示形式的一个图来描述。</p>
+<p>这种特定形式的在线<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>——基于向<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>的局部投影、其中每个数据点（即游戏结果）只被使用一次——也被称为高斯密度滤波（Gaussian Density Filtering）[Maybeck, 1982; Opper, 1998]。它可以看作<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#expectation_propagation">期望传播</a>的一个特例，其中对<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>做了一个特定选择：即消息只在时间上从较旧的游戏向较新的游戏向前传递，而绝不反向传递。</p>
+<p>值得注意的是，如果我们考虑描述迄今为止所打过所有游戏的完整<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，那么那些游戏被打的顺序本来是无关紧要的。然而，在做<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#online_learning">在线学习</a>时，顺序变得重要，并且可以影响所评估的技能。不过我们只能接受这一点，因为在实际系统中只有<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#online_learning">在线学习</a>才是可行的。</p>
+<p>我们可以用取自 Xbox Live 上《光环 2》游戏的数据来说明<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#online_learning">在线学习</a>在我们<a href="/post/2025-04-21-mbml-introduction">模型</a>中的行为。我们使用一个涉及 1,650 名玩家的数据集，其中包含 5,915 局游戏的结果。每一局都是一对玩家彼此对战的一对一较量。图 3.31 展示了两位顶尖玩家的技能分布如何随两位玩家各自所打游戏局数变化。为拟合我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>，这些结果忽略了以平局结束的游戏——我们将在本章后面看到如何处理平局游戏。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_4ExtensionsToTheCoreModelHalo2HeadToHeadHeadToHeadWithDraws_TopPlayerTrajectoriesWithSigma[0_to_1].png">
+            <img class="mx-auto" alt="图 3.31" src="/uploads/TrueSkill_4ExtensionsToTheCoreModelHalo2HeadToHeadHeadToHeadWithDraws_TopPlayerTrajectoriesWithSigma[0_to_1].png" />
+        </a>
+    </p>
+<p><em>图 3.31：《光环 2》一对一数据集中两位顶尖玩家技能分布的轨迹，展示了均值和正负一个标准差的包络。横轴表示相应玩家所打的游戏局数。</em></p>
+<p>我们看到，初始的技能分布是相同的，因为在打任何游戏之前，所有玩家技能都有相同的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>。随着所打游戏局数不断增加，我们看到技能分布的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>减小。这种因观测游戏结果而带来的不确定性降低，正是我们前面在图 3.29 和图 3.30 中看到的效应。</p>
+<p>我们在本节中构建的<a href="/post/2025-04-21-mbml-introduction">模型</a>表示两名玩家之间的单局游戏。然而，Xbox Live 上的许多游戏具有更精细的结构，因此接下来我们转向若干<a href="/post/2025-04-21-mbml-introduction">模型</a>扩展，以容纳这些额外的复杂性。</p>
+<h4 id="本页引入概念回顾">本页引入概念回顾</h4>
+<p><strong>期望传播（expectation propagation）</strong>：一种近似消息传递<a href="/post/2025-04-21-mbml-introduction">算法</a>，它扩展了<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>，允许把消息近似为某个特定族（例如<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>）中最接近的分布。做这种近似要么是为了确保<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>保持可处理，要么是为了加快<a href="/post/2025-04-21-mbml-introduction">推断</a>过程。见算法 3.1。</p>
+<p><strong>在线学习（online learning）</strong>：一种机器学习方法，其中每次考虑一个数据点，并在每个数据点之后更新<a href="/post/2025-04-21-mbml-introduction">模型</a>参数分布。</p>
+<p><strong>自我评估 3.3</strong></p>
+<p>以下练习将帮助你巩固本节所学的概念。做题时，回顾正文或下面的概念小结可能会有所帮助。</p>
+<ol>
+<li>复现图 3.24，方法是在 <code>Jperf</code> 取值为 -50, -49 … 0, 1, 2 … 299, 300 处计算（红色）高斯上下文消息与（蓝色）精确 CumGauss 消息。以 <code>Jperf</code> 为 x 轴、所计算的消息为 y 轴，画出你得到的两条线。你需要对 CumGauss 消息重新缩放以使其适配（记住这条消息的尺度无关紧要，因为它是一个<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">非正常分布</a>）。要得到对应 <code>Jperf</code> 精确边缘的（绿色）乘积消息，先在每个 <code>Jperf</code> 值处把你的两条消息相乘。然后重新缩放结果，使线下面积为 1（你可以大致地通过重新缩放使每个点的值之和等于 1 来实现）。把这个结果作为第三条线画在你的坐标轴上。</li>
+<li>计算你刚刚算出的精确边缘乘积消息的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>。均值可以很好地近似为：在每个点处把消息乘以该点的 <code>Jperf</code> 值再求和。<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>（即标准差的平方）可以用助记口诀“平方的均值减去均值的平方”类似地近似。首先，你需要计算“平方的均值”，它可以近似为：在每个点处把消息乘以该点 <code>Jperf</code> 值的平方再求和。然后减去“均值的平方”，也就是你刚算出的那个均值。这给出<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>，你可以对它取平方根得到标准差。你现在已经计算出对 <code>Jperf</code> 边缘的高斯近似的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>。你可以对照图 3.25 中的高斯来检查你的结果。</li>
+<li>最后，我们需要把这个<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>（其均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>你刚在上一题中求出）除以高斯上下文消息。关于如何做到这一点，你可以参考 Bishop [2006]。你可以对照图 3.27 中的消息 (6) 来检查你的结果。恭喜！你现在已经成功计算出了一条<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#expectation_propagation">期望传播</a>消息！</li>
+<li>现在我们可以用 Infer.NET 来替我们做<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#expectation_propagation">期望传播</a>计算。在 Infer.NET 中实现 TrueSkill <a href="/post/2025-04-21-mbml-introduction">模型</a>，把 Jill 和 Fred 的技能分布设为本节所用的那些。参考 Infer.NET 文档中关于<a href="https://dotnet.github.io/infer/userguide/How%20to%20represent%20large%20irregular%20graphs.html">如何表示大型不规则图</a>的指南。计算 Jill 和 Fred 在“Jill 获胜”与“Fred 获胜”这两种结果下的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>边缘分布。画出你的结果，并对照图 3.29 和图 3.30 检查它们。</li>
+</ol>
+<h4 id="参考文献">参考文献</h4>
+<p>[Bishop, 2006] Bishop, C. M. (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.</p>
+<p>[Minka, 2005] Minka, T. (2005). Divergence Measures and Message Passing. Technical Report MSR-TR-2005-173, Microsoft Research.</p>
+<p>[Herbrich et al., 2007] Herbrich, R., Minka, T., and Graepel, T. (2007). TrueSkill(TM): A Bayesian Skill Rating System. In <em>Advances in Neural Information Processing Systems 20</em>, pages 569–576. MIT Press.</p>
+<p>[Minka, 2001] Minka, T. P. (2001). Expectation propagation for approximate Bayesian inference. In <em>Uncertainty in Artificial Intelligence</em>, volume 17, pages 362–369.</p>
+<p>[Maybeck, 1982] Maybeck, P. S. (1982). Stochastic models, estimation, and control. In <em>Volume 2</em>, volume 141, Part 2 of <em>Mathematics in Science and Engineering</em>, chapter 12 Nonlinear estimation, pages 212–271. Elsevier.</p>
+<p>[Opper, 1998] Opper, M. (1998). A Bayesian approach to on-line learning. In Saad, D., editor, <em>On-line Learning in Neural Networks</em>, pages 363–378. Cambridge University Press, New York, NY, USA.</p>
+<hr>
+<p>下一节：<a href="/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model">核心模型的扩展</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/">https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/">[译]基于模型的机器学习 - 3.2 推断玩家的技能</a></li>
+        
+        <li><a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/">[译]基于模型的机器学习 - 3.1 建模游戏的结果</a></li>
+        
+        <li><a href="/post/2026-07-26-mbml-trueskill/">[译]基于模型的机器学习 - 3 匹配你的对手</a></li>
+        
+        <li><a href="/post/2026-07-25-mbml-life-cycle/">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a></li>
+        
+        <li><a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/">[译]基于模型的机器学习 - 2.6 学习猜测概率</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" title="[译]基于模型的机器学习 - 3.5 允许技能变化" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" title="[译]基于模型的机器学习 - 3.3 一个解法：期望传播" target="_blank">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/" title="[译]基于模型的机器学习 - 3.2 推断玩家的技能" target="_blank">[译]基于模型的机器学习 - 3.2 推断玩家的技能</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/" title="[译]基于模型的机器学习 - 3.1 建模游戏的结果" target="_blank">[译]基于模型的机器学习 - 3.1 建模游戏的结果</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/" title="[译]基于模型的机器学习 - 3 匹配你的对手" target="_blank">[译]基于模型的机器学习 - 3 匹配你的对手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" title="[译]基于模型的机器学习 - 插曲：机器学习生命周期" target="_blank">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (35)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (23)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

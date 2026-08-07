@@ -75,6 +75,40 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota tiers" target="_blank">Microsoft Foundry 的 Quota tiers</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-06T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月6日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>有一次收到 Azure 的通知邮件，大体内容如下：</p>
+<blockquote>
+<p>Important update: Eligibility for Quota Tier upgrade</p>
+<p>We are pleased to inform you that, based on your recent usage and account standing, your subscription is now eligible for an upgrade from your current Tier (Free Tier) to the next Tier (Tier 1) within our AI Services platform.</p>
+</blockquote>
+<p>我就去翻了翻 Microsoft Foundry 关于配额等级（Quota tiers）的文档，把这次邮件里真正发生的变化记下来，也顺便把几组常用模型的数字放在一起。</p>
+<p>本文整理自 <a href="https://learn.microsoft.com/en-us/azure/foundry/openai/quotas-limits">Microsoft Learn 的 Quotas and limits 文档</a>。该页面显示的更新时间是 2026 年 7 月 29 日；配额表还会调整，部署前最好再看一眼 Foundry 门户里的实时值。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
             </h1>
         </header>
@@ -386,34 +420,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-23T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月23日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>只要跟正在把 Microsoft Foundry 往生产环境搬的企业团队聊过，我几乎都会听到同一条底线：智能体不能跑在公网上。它一旦碰到专有数据、内部 API 或者受监管的负载，安全团队就要求把它塞进公司自己的虚拟网络里，藏在专用终结点、中心防火墙和受控 DNS 后面。这种拓扑，也就是一个 Foundry <strong>Standard</strong> 智能体被注入到 <strong>自带（BYO）VNet</strong> 里，正是大多数大型组织真正推到生产的形态。也恰恰是在这里，很多团队的首次部署悄无声息地卡住了。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -522,6 +528,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota tiers" target="_blank">Microsoft Foundry 的 Quota tiers</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
     </li>
     
@@ -557,10 +567,6 @@
         <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -580,7 +586,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (35)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (36)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

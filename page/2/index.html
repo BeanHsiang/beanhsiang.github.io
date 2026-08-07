@@ -75,6 +75,34 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-23T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月23日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>只要跟正在把 Microsoft Foundry 往生产环境搬的企业团队聊过，我几乎都会听到同一条底线：智能体不能跑在公网上。它一旦碰到专有数据、内部 API 或者受监管的负载，安全团队就要求把它塞进公司自己的虚拟网络里，藏在专用终结点、中心防火墙和受控 DNS 后面。这种拓扑，也就是一个 Foundry <strong>Standard</strong> 智能体被注入到 <strong>自带（BYO）VNet</strong> 里，正是大多数大型组织真正推到生产的形态。也恰恰是在这里，很多团队的首次部署悄无声息地卡住了。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" title="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆" target="_blank">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a>
             </h1>
         </header>
@@ -359,36 +387,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" title="GPT Realtime 上生产环境：到底该选哪种上下文策略？" target="_blank">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-05-30T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年5月30日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>如果你已经把 gpt-realtime 跑上了生产环境，大概率撞到过同一个问题：多轮对话之间，上下文到底该怎么管？</p>
-<p>听上去像个实现细节，其实不是。这个决定直接关系到：你每通电话的成本是三毛还是九毛，你呼叫中心的延迟能不能压在两秒以内，以及你的客户会不会在同一通电话里被迫把账号报上五遍。</p>
-<p>企业客户把语音和对话式 AI 从 demo 推向规模化时，追问的其实是同一件事：怎么优化 prompt 缓存策略，让调用量从每天一百通涨到十万通时，token 账单和延迟预算不会跟着爆炸。缓存是 realtime API 上撬动成本最狠的那根杠杆：缓存过的音频输入比未缓存便宜 99%，而解锁它靠的是一个稳定的前缀（prefix）。但到底哪种缓存策略真的赢，取决于你的应用是一次性查询、一段简短对话，还是呼叫中心那种动辄三十轮的升级工单。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -508,6 +506,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota tiers" target="_blank">Microsoft Foundry 的 Quota tiers</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
     </li>
     
@@ -543,10 +545,6 @@
         <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/" title="先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验" target="_blank">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -566,7 +564,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (35)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (36)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

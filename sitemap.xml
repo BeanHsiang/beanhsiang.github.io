@@ -2,13 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/</loc>
-    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
+    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
+    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
+    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
+    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/</loc>
+    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/</loc>
     <lastmod>2026-08-01T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
@@ -18,12 +33,6 @@
     <lastmod>2026-08-01T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
-    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-08-01T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
     <lastmod>2026-08-01T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/</loc>
@@ -49,12 +58,6 @@
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/</loc>
     <lastmod>2026-07-24T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
-    <lastmod>2026-07-23T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
-    <lastmod>2026-07-23T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/</loc>
     <lastmod>2026-07-23T12:00:00+08:00</lastmod>

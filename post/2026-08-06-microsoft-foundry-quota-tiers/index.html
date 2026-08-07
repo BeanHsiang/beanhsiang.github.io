@@ -1,0 +1,1053 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>Microsoft Foundry 的 Quota tiers | Innovation with tech</title>
+    <meta property="og:title" content="Microsoft Foundry 的 Quota tiers - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-08-06T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-08-06T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="Microsoft Foundry 的 Quota tiers">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">Microsoft Foundry 的 Quota tiers</h1>
+        </header>
+        
+  <time datetime="2026-08-06T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月6日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>有一次收到 Azure 的通知邮件，大体内容如下：</p>
+<blockquote>
+<p>Important update: Eligibility for Quota Tier upgrade</p>
+<p>We are pleased to inform you that, based on your recent usage and account standing, your subscription is now eligible for an upgrade from your current Tier (Free Tier) to the next Tier (Tier 1) within our AI Services platform.</p>
+</blockquote>
+<p>我就去翻了翻 Microsoft Foundry 关于配额等级（Quota tiers）的文档，把这次邮件里真正发生的变化记下来，也顺便把几组常用模型的数字放在一起。</p>
+<p>本文整理自 <a href="https://learn.microsoft.com/en-us/azure/foundry/openai/quotas-limits">Microsoft Learn 的 Quotas and limits 文档</a>。该页面显示的更新时间是 2026 年 7 月 29 日；配额表还会调整，部署前最好再看一眼 Foundry 门户里的实时值。</p>
+<h2 id="这封邮件到底在说什么">这封邮件到底在说什么</h2>
+<p>我一开始把邮件里的 Tier upgrade 理解成“Azure 给订阅加了一笔额度”。查完文档后，意思更准确：当前订阅在 Microsoft Foundry Models 中的默认 <strong>Quota tier</strong> 从 Free Tier（文档配额表中标为 Tier 0）变成了 Tier 1。它影响模型部署能承受的吞吐上限，最直接的两个指标是：</p>
+<ul>
+<li><strong>RPM（Requests Per Minute）</strong>：每分钟请求数。</li>
+<li><strong>TPM（Tokens Per Minute）</strong>：每分钟 token 数。</li>
+</ul>
+<p>模型价格仍按原来的计费规则走。Tier 变高只会改变符合条件的订阅可以承载的请求和 token 吞吐，不会自动产生免费 token。</p>
+<h2 id="quota-tiers-是什么">Quota tiers 是什么</h2>
+<p>Microsoft 现在为 Foundry Models 提供七个配额等级：</p>
+<table>
+	<thead>
+			<tr>
+					<th>等级</th>
+					<th>文档中的名称</th>
+					<th>配额表中的用法</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>0</td>
+					<td>Free Tier</td>
+					<td>配额表中写作 <code>Tier 0</code></td>
+			</tr>
+			<tr>
+					<td>1</td>
+					<td>Tier 1</td>
+					<td>配额随模型和部署类型单独列出</td>
+			</tr>
+			<tr>
+					<td>2</td>
+					<td>Tier 2</td>
+					<td>配额随模型和部署类型单独列出</td>
+			</tr>
+			<tr>
+					<td>3</td>
+					<td>Tier 3</td>
+					<td>配额随模型和部署类型单独列出</td>
+			</tr>
+			<tr>
+					<td>4</td>
+					<td>Tier 4</td>
+					<td>配额随模型和部署类型单独列出</td>
+			</tr>
+			<tr>
+					<td>5</td>
+					<td>Tier 5</td>
+					<td>配额随模型和部署类型单独列出</td>
+			</tr>
+			<tr>
+					<td>6</td>
+					<td>Tier 6</td>
+					<td>文档当前列出的最高等级</td>
+			</tr>
+	</tbody>
+</table>
+<p>读这张表时有一个容易踩的坑：等级是订阅层面的，但具体数值还要看 <strong>模型、模型版本和部署类型</strong>。Tier 1 并不是 Tier 0 的统一倍数，有些模型甚至只从 Tier 1 开始出现在配额表中。</p>
+<h2 id="为什么会自动升级">为什么会自动升级</h2>
+<p>文档没有公布“消费达到某个数字就升级”的固定公式。它提到的参考因素包括一段时间内对 Foundry Models 的消费趋势、当前 tier 是否已经卡住了工作负载、与 Microsoft 的商业关系（例如 EA 或 MCA-E），以及付款记录和订阅状态。</p>
+<p>这也解释了为什么不同订阅收到通知的时间可能不同。邮件里的 account standing，指的就是这类综合判断。</p>
+<p>此前批准的额外配额不会因为引入 Quota tiers 而被收回。需要更多配额时，仍然可以通过 <a href="https://aka.ms/oai/stuquotarequest">quota request form</a> 申请；申请获批后，当前 tier 可以保持不变，只增加分配给订阅的配额。</p>
+<h2 id="配额到底作用在哪一层">配额到底作用在哪一层</h2>
+<p>文档明确说明，配额和限制不会在 tenant 层统一执行，最高级别的配额范围是 <strong>Azure subscription</strong>。所以，即使创建了多个 Foundry 或 Azure OpenAI <code>resource</code>，也不能假定每个 <code>resource</code> 都有一份完全独立的额度。</p>
+<p>从 2026 年 5 月 7 日之后，Microsoft Foundry 开始引入订阅级配额管理。文档说明，这一机制从 Realtime Translate 和 Realtime Whisper 开始，并逐步扩展到更多模型。对于已经采用该机制的模型，配额池大致可以这样理解：</p>
+<table>
+	<thead>
+			<tr>
+					<th>部署类型</th>
+					<th>共享范围</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Global Standard</td>
+					<td>同一订阅中，同一模型和版本的所有区域共享一个 Global Standard 配额池</td>
+			</tr>
+			<tr>
+					<td>Data Zone Standard</td>
+					<td>同一订阅中，同一模型和版本在每个数据区内共享一个配额池，例如 US 或 EU 各自独立</td>
+			</tr>
+			<tr>
+					<td>Standard</td>
+					<td>在配额表中作为独立部署类型列出，不能直接套用 Global Standard 或 Data Zone Standard 的数值</td>
+			</tr>
+	</tbody>
+</table>
+<p>所以，把 Global Standard 的部署从 Region A 扩到 Region B，不等于拿到了两份额度；Data Zone Standard 还要按数据区分别计算。做容量规划时，我会先把同一订阅下同一模型版本的部署放在一起看。</p>
+<p>用一张图表示：</p>
+<pre tabindex="0"><code class="language-flowchart" data-lang="flowchart">st=&gt;start: 请求进入 Microsoft Foundry
+model=&gt;operation: 匹配模型、版本和部署类型
+global=&gt;operation: Global Standard：订阅内共享同一模型版本的配额池
+zone=&gt;operation: Data Zone Standard：按数据区共享同一模型版本的配额池
+standard=&gt;operation: Standard：使用该部署类型对应的配额记录
+limit=&gt;end: RPM / TPM 限制生效
+
+st-&gt;model-&gt;global
+model-&gt;zone
+model-&gt;standard
+global-&gt;limit
+zone-&gt;limit
+standard-&gt;limit
+</code></pre><h2 id="tier-0-和-tier-1-的常用模型对比">Tier 0 和 Tier 1 的常用模型对比</h2>
+<p>先看文档 Tier 0 和 Tier 1 都列出的四个常用模型。为了让数字可以直接比较，表格只取 <strong>Global Standard</strong>，格式统一为 <code>RPM / TPM</code>。</p>
+<table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th style="text-align: right">Tier 0（Free Tier）</th>
+					<th style="text-align: right">Tier 1</th>
+					<th style="text-align: right">TPM 变化</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>gpt-4.1-mini</code></td>
+					<td style="text-align: right">200 / 200,000</td>
+					<td style="text-align: right">5,000 / 5,000,000</td>
+					<td style="text-align: right">25 倍</td>
+			</tr>
+			<tr>
+					<td><code>gpt-5-mini</code></td>
+					<td style="text-align: right">500 / 500,000</td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">2 倍</td>
+			</tr>
+			<tr>
+					<td><code>o4-mini</code></td>
+					<td style="text-align: right">100 / 100,000</td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">10 倍</td>
+			</tr>
+			<tr>
+					<td><code>text-embedding-3-small</code></td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">不变</td>
+			</tr>
+	</tbody>
+</table>
+<p>
+        <a data-fancybox="gallery" href="/uploads/quota-tier-tpm-comparison.svg">
+            <img class="mx-auto" alt="Tier 0 与 Tier 1 的 Global Standard TPM 对比" src="/uploads/quota-tier-tpm-comparison.svg" />
+        </a>
+    </p>
+<p>这里最直观的是两件事：</p>
+<ul>
+<li>Tier 的提升并不意味着所有模型按同一比例增加。<code>gpt-4.1-mini</code> 的 TPM 从 200,000 增加到 5,000,000，而 <code>text-embedding-3-small</code> 在这两档的 TPM 相同。</li>
+<li>RPM 和 TPM 要同时看。比如 embedding 模型的 RPM 写成 <code>1,000 / 10s</code>，表示文档采用 10 秒窗口展示限制，不能在不看时间窗口的情况下与普通的每分钟 RPM 直接横向比较。</li>
+</ul>
+<h2 id="七个等级放在一张表里">七个等级放在一张表里</h2>
+<p>如果只看 Tier 0 和 Tier 1，很容易低估后面几档的差距。下面把文档中的几个常用模型放在同一张表里，统一取 <strong>Global Standard</strong>，单元格格式为 <code>RPM / TPM</code>。这里的数字是官方配额表的上限，不是吞吐保证。</p>
+<table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th style="text-align: right">Tier 0</th>
+					<th style="text-align: right">Tier 1</th>
+					<th style="text-align: right">Tier 2</th>
+					<th style="text-align: right">Tier 3</th>
+					<th style="text-align: right">Tier 4</th>
+					<th style="text-align: right">Tier 5</th>
+					<th style="text-align: right">Tier 6</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>gpt-4.1</code></td>
+					<td style="text-align: right">-</td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">3,000 / 3,000,000</td>
+					<td style="text-align: right">9,000 / 9,000,000</td>
+					<td style="text-align: right">18,000 / 18,000,000</td>
+					<td style="text-align: right">30,000 / 30,000,000</td>
+					<td style="text-align: right">45,000 / 45,000,000</td>
+			</tr>
+			<tr>
+					<td><code>gpt-4.1-mini</code></td>
+					<td style="text-align: right">200 / 200,000</td>
+					<td style="text-align: right">5,000 / 5,000,000</td>
+					<td style="text-align: right">16,000 / 16,000,000</td>
+					<td style="text-align: right">46,000 / 46,000,000</td>
+					<td style="text-align: right">90,000 / 90,000,000</td>
+					<td style="text-align: right">150,000 / 150,000,000</td>
+					<td style="text-align: right">225,000 / 225,000,000</td>
+			</tr>
+			<tr>
+					<td><code>gpt-4o-mini</code></td>
+					<td style="text-align: right">-</td>
+					<td style="text-align: right">20,000 / 2,000,000</td>
+					<td style="text-align: right">90,000 / 9,000,000</td>
+					<td style="text-align: right">330,000 / 33,000,000</td>
+					<td style="text-align: right">780,000 / 78,000,000</td>
+					<td style="text-align: right">1,500,000 / 150,000,000</td>
+					<td style="text-align: right">2,250,000 / 225,000,000</td>
+			</tr>
+			<tr>
+					<td><code>gpt-5-mini</code></td>
+					<td style="text-align: right">500 / 500,000</td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">2,000 / 2,000,000</td>
+					<td style="text-align: right">4,000 / 4,000,000</td>
+					<td style="text-align: right">7,000 / 7,000,000</td>
+					<td style="text-align: right">10,000 / 10,000,000</td>
+					<td style="text-align: right">15,000 / 15,000,000</td>
+			</tr>
+			<tr>
+					<td><code>gpt-5</code></td>
+					<td style="text-align: right">-</td>
+					<td style="text-align: right">10,000 / 1,000,000</td>
+					<td style="text-align: right">30,000 / 3,000,000</td>
+					<td style="text-align: right">90,000 / 9,000,000</td>
+					<td style="text-align: right">180,000 / 18,000,000</td>
+					<td style="text-align: right">300,000 / 30,000,000</td>
+					<td style="text-align: right">450,000 / 45,000,000</td>
+			</tr>
+			<tr>
+					<td><code>gpt-5.4</code></td>
+					<td style="text-align: right">-</td>
+					<td style="text-align: right">10,000 / 1,000,000</td>
+					<td style="text-align: right">20,000 / 2,000,000</td>
+					<td style="text-align: right">40,000 / 4,000,000</td>
+					<td style="text-align: right">70,000 / 7,000,000</td>
+					<td style="text-align: right">100,000 / 10,000,000</td>
+					<td style="text-align: right">150,000 / 15,000,000</td>
+			</tr>
+			<tr>
+					<td><code>gpt-5.6 (luna/sol/terra)</code></td>
+					<td style="text-align: right">-</td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">2,000 / 2,000,000</td>
+					<td style="text-align: right">4,000 / 4,000,000</td>
+					<td style="text-align: right">7,000 / 7,000,000</td>
+					<td style="text-align: right">10,000 / 10,000,000</td>
+					<td style="text-align: right">15,000 / 15,000,000</td>
+			</tr>
+			<tr>
+					<td><code>o1</code></td>
+					<td style="text-align: right">-</td>
+					<td style="text-align: right">500 / 3,000,000</td>
+					<td style="text-align: right">1,000 / 6,000,000</td>
+					<td style="text-align: right">2,000 / 12,000,000</td>
+					<td style="text-align: right">4,000 / 24,000,000</td>
+					<td style="text-align: right">5,000 / 30,000,000</td>
+					<td style="text-align: right">8,000 / 48,000,000</td>
+			</tr>
+			<tr>
+					<td><code>o3</code></td>
+					<td style="text-align: right">-</td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">2,000 / 2,000,000</td>
+					<td style="text-align: right">4,000 / 4,000,000</td>
+					<td style="text-align: right">7,000 / 7,000,000</td>
+					<td style="text-align: right">10,000 / 10,000,000</td>
+					<td style="text-align: right">15,000 / 15,000,000</td>
+			</tr>
+			<tr>
+					<td><code>o4-mini</code></td>
+					<td style="text-align: right">100 / 100,000</td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">2,000 / 2,000,000</td>
+					<td style="text-align: right">4,000 / 4,000,000</td>
+					<td style="text-align: right">7,000 / 7,000,000</td>
+					<td style="text-align: right">10,000 / 10,000,000</td>
+					<td style="text-align: right">15,000 / 15,000,000</td>
+			</tr>
+			<tr>
+					<td><code>text-embedding-3-small</code></td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">2,000 / 2,000,000</td>
+					<td style="text-align: right">4,000 / 4,000,000</td>
+					<td style="text-align: right">7,000 / 7,000,000</td>
+					<td style="text-align: right">10,000 / 10,000,000</td>
+					<td style="text-align: right">15,000 / 15,000,000</td>
+			</tr>
+			<tr>
+					<td><code>text-embedding-3-large</code></td>
+					<td style="text-align: right">-</td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">2,000 / 2,000,000</td>
+					<td style="text-align: right">4,000 / 4,000,000</td>
+					<td style="text-align: right">7,000 / 7,000,000</td>
+					<td style="text-align: right">10,000 / 10,000,000</td>
+					<td style="text-align: right">15,000 / 15,000,000</td>
+			</tr>
+	</tbody>
+</table>
+<p>下面把每个模型的 TPM 在不同 tier 中的变化画成点线图。纵轴采用对数刻度，单位是百万 token/min，这样既能看清 Tier 0 的小配额，也能看清 Tier 6 的大配额；没有 Tier 0 数据的模型从 Tier 1 开始绘制。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/quota-tier-tpm-line-comparison.svg">
+            <img class="mx-auto" alt="不同 Quota tier 下 Global Standard TPM 的点线对比" src="/uploads/quota-tier-tpm-line-comparison.svg" />
+        </a>
+    </p>
+<p>图表只比较 TPM，因此没有 TPM 配额的图像模型（例如 <code>gpt-image-1</code> 和 <code>gpt-image-1.5</code>）不在点线图中；它们的 RPM 已在后面的图像模型表列出。数值完全重合的模型会在图例中合并标注，但模型本身没有省略。</p>
+<p>表格里的 <code>-</code> 表示该模型没有出现在 Tier 0 的这张配额表中，不等同于该模型在所有场景都不可用。</p>
+<h2 id="tier-1-的几组参考值">Tier 1 的几组参考值</h2>
+<p>下面只摘出文本生成、推理、嵌入和图像模型的几行。数值仍然是 <code>RPM / TPM</code>；<code>-</code> 表示该行没有列出 TPM，不代表可以无限请求。</p>
+<h3 id="文本和推理模型">文本和推理模型</h3>
+<table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th style="text-align: right">Global Standard</th>
+					<th style="text-align: right">Data Zone Standard</th>
+					<th style="text-align: right">Standard</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>gpt-5</code></td>
+					<td style="text-align: right">10,000 / 1,000,000</td>
+					<td style="text-align: right">3,000 / 300,000</td>
+					<td style="text-align: right">-</td>
+			</tr>
+			<tr>
+					<td><code>gpt-5.4</code></td>
+					<td style="text-align: right">10,000 / 1,000,000</td>
+					<td style="text-align: right">300 / 300,000</td>
+					<td style="text-align: right">-</td>
+			</tr>
+			<tr>
+					<td><code>gpt-5-mini</code></td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">300 / 300,000</td>
+					<td style="text-align: right">-</td>
+			</tr>
+			<tr>
+					<td><code>gpt-4.1</code></td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">300 / 300,000</td>
+					<td style="text-align: right">-</td>
+			</tr>
+			<tr>
+					<td><code>gpt-4.1-mini</code></td>
+					<td style="text-align: right">5,000 / 5,000,000</td>
+					<td style="text-align: right">2,000 / 2,000,000</td>
+					<td style="text-align: right">6,000 / 6,000,000</td>
+			</tr>
+			<tr>
+					<td><code>gpt-4o-mini</code></td>
+					<td style="text-align: right">20,000 / 2,000,000</td>
+					<td style="text-align: right">10,000 / 1,000,000</td>
+					<td style="text-align: right">-</td>
+			</tr>
+			<tr>
+					<td><code>o3</code></td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">300 / 300,000</td>
+					<td style="text-align: right">-</td>
+			</tr>
+			<tr>
+					<td><code>o4-mini</code></td>
+					<td style="text-align: right">1,000 / 1,000,000</td>
+					<td style="text-align: right">300 / 300,000（RPM 按 10 秒窗口）</td>
+					<td style="text-align: right">-</td>
+			</tr>
+			<tr>
+					<td><code>o1</code></td>
+					<td style="text-align: right">500 / 3,000,000</td>
+					<td style="text-align: right">100 / 600,000</td>
+					<td style="text-align: right">-</td>
+			</tr>
+	</tbody>
+</table>
+<p>Tier 1 里，<code>gpt-5</code> 的 Global Standard 是 10,000 RPM 和 1,000,000 TPM，Data Zone Standard 则是 3,000 RPM 和 300,000 TPM。部署类型会直接改变可用配额，所以选模型时不能只看模型名称，还要把数据驻留和延迟要求一起放进来。</p>
+<h3 id="embedding-和图像模型">Embedding 和图像模型</h3>
+<table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th>部署类型</th>
+					<th style="text-align: right">RPM</th>
+					<th style="text-align: right">TPM</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>text-embedding-3-small</code></td>
+					<td>Global Standard</td>
+					<td style="text-align: right">1,000 / 10s</td>
+					<td style="text-align: right">1,000,000</td>
+			</tr>
+			<tr>
+					<td><code>text-embedding-3-small</code></td>
+					<td>Data Zone Standard</td>
+					<td style="text-align: right">1,000</td>
+					<td style="text-align: right">1,000,000</td>
+			</tr>
+			<tr>
+					<td><code>text-embedding-3-large</code></td>
+					<td>Global Standard</td>
+					<td style="text-align: right">1,000 / 10s</td>
+					<td style="text-align: right">1,000,000</td>
+			</tr>
+			<tr>
+					<td><code>text-embedding-3-large</code></td>
+					<td>Data Zone Standard</td>
+					<td style="text-align: right">1,000</td>
+					<td style="text-align: right">1,000,000</td>
+			</tr>
+			<tr>
+					<td><code>gpt-image-1</code></td>
+					<td>Global Standard</td>
+					<td style="text-align: right">9</td>
+					<td style="text-align: right">-</td>
+			</tr>
+			<tr>
+					<td><code>gpt-image-1.5</code></td>
+					<td>Global Standard</td>
+					<td style="text-align: right">9</td>
+					<td style="text-align: right">-</td>
+			</tr>
+			<tr>
+					<td><code>gpt-image-1.5</code></td>
+					<td>Data Zone Standard</td>
+					<td style="text-align: right">3</td>
+					<td style="text-align: right">-</td>
+			</tr>
+	</tbody>
+</table>
+<p>图像模型主要按请求数限制，和文本模型的 TPM 不是一类数字。实际部署还要查看目标区域是否有容量、版本是否仍在支持期，以及是否有单独的服务限制。</p>
+<h2 id="不要把-quota-tier-和-usage-tier-混为一谈">不要把 Quota tier 和 Usage tier 混为一谈</h2>
+<p>文档还列出了 <strong>Usage tiers</strong>。它和本文讨论的 Quota tiers 说的是两件事：</p>
+<table>
+	<thead>
+			<tr>
+					<th>项目</th>
+					<th>Quota tier</th>
+					<th>Usage tier</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>主要含义</td>
+					<td>订阅分配到的配额等级</td>
+					<td>在一定使用量下保持较稳定延迟的使用层级</td>
+			</tr>
+			<tr>
+					<td>典型指标</td>
+					<td>模型对应的 RPM、TPM</td>
+					<td>按模型统计的月度 token 使用量</td>
+			</tr>
+			<tr>
+					<td>关注重点</td>
+					<td>能否承载更多请求和 token 吞吐</td>
+					<td>超过持续使用量后延迟是否出现更大波动</td>
+			</tr>
+			<tr>
+					<td>适用范围</td>
+					<td>由配额表和部署类型决定</td>
+					<td>Standard、Data Zone Standard、Global Standard；不适用于 Global Batch 和 PTU</td>
+			</tr>
+	</tbody>
+</table>
+<p>所以，提升 Quota tier 不会自动带来固定延迟。文档提醒，高需求、持续高流量或突发流量下，超过 Usage tier 后延迟可能明显增加；即使监控里的 token 指标低于某个配额，也可能收到 <code>429 Too Many Requests</code>。</p>
+<h2 id="如何查看当前订阅的-tier">如何查看当前订阅的 tier</h2>
+<p>查看订阅 tier，可以调用 Microsoft Learn 给出的 control plane API。下面使用的 API 版本是 <code>2025-10-01-preview</code>，管理平面 token 由 Azure CLI 获取：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#953800">SUBSCRIPTION_ID</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;&lt;your-subscription-id&gt;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>curl -X GET <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	<span style="color:#0a3069">&#34;https://management.azure.com/subscriptions/</span><span style="color:#0a3069">${</span><span style="color:#953800">SUBSCRIPTION_ID</span><span style="color:#0a3069">}</span><span style="color:#0a3069">/providers/Microsoft.CognitiveServices/quotaTiers?api-version=2025-10-01-preview&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	-H <span style="color:#0a3069">&#34;Authorization: Bearer </span><span style="color:#cf222e">$(</span>az account get-access-token --resource https://management.azure.com --query accessToken -o tsv<span style="color:#cf222e">)</span><span style="color:#0a3069">&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	-H <span style="color:#0a3069">&#34;Content-Type: application/json&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>返回结果中的 <code>currentTierName</code> 是当前等级，<code>assignmentDate</code> 是分配时间，<code>tierUpgradePolicy</code> 则表示自动升级策略。示例结果可能类似：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#0550ae">&#34;properties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#0550ae">&#34;currentTierName&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Tier 1&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#0550ae">&#34;assignmentDate&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;2025-10-18T05:09:05.6334222Z&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#0550ae">&#34;tierUpgradePolicy&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;OnceUpgradeIsAvailable&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="是否可以关闭自动升级">是否可以关闭自动升级</h2>
+<p>可以。文档提供了 <code>NoAutoUpgrade</code> 策略，用于让订阅保持在当前 tier。这个选项目前仍是预览功能，可能发生变化或被移除：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -X PATCH <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	<span style="color:#0a3069">&#34;https://management.azure.com/subscriptions/</span><span style="color:#0a3069">${</span><span style="color:#953800">SUBSCRIPTION_ID</span><span style="color:#0a3069">}</span><span style="color:#0a3069">/providers/Microsoft.CognitiveServices/quotaTiers/default?api-version=2025-10-01-preview&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	-H <span style="color:#0a3069">&#34;Authorization: Bearer </span><span style="color:#cf222e">$(</span>az account get-access-token --resource https://management.azure.com --query accessToken -o tsv<span style="color:#cf222e">)</span><span style="color:#0a3069">&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	-H <span style="color:#0a3069">&#34;Content-Type: application/json&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	-d <span style="color:#0a3069">&#39;{
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">		&#34;properties&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">			&#34;tierUpgradePolicy&#34;: &#34;NoAutoUpgrade&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">		}
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">	}&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>关闭自动升级适合需要严格控制配额边界的场景，但 Quota tier 不适合拿来管账单。费用交给 Azure Cost Management；如果业务需要稳定的高吞吐和延迟，再评估 PTU。</p>
+<h2 id="实际使用时的建议">实际使用时的建议</h2>
+<ol>
+<li>按模型和部署类型监控，不要只盯着订阅总量。Global Standard、Data Zone Standard 和 Standard 最好分开看。</li>
+<li>给突发流量留缓冲。客户端实现指数退避和重试，429 后不要立刻把请求全部打回来。</li>
+<li>逐步增加负载，观察 RPM、TPM、延迟和 429，再决定是否继续扩容。</li>
+<li>如果某个部署长期闲置，可以把配额移给真正承载流量的部署。</li>
+<li>现有配额已经被持续使用时，再通过 quota request form 申请额外配额更合适。</li>
+<li>对高流量、低延迟业务评估 PTU。Quota tier 管的是上限，不能替代专用吞吐。</li>
+</ol>
+<p>回到开头那封邮件，我会把它理解成“订阅的默认吞吐档位变高了”。真正上线前，还要确认当前 tier、模型和版本、部署类型、数据区或区域、RPM/TPM 的时间窗口，以及目标区域的实时容量。邮件本身不会替我们完成这部分容量规划。</p>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/foundry/openai/quotas-limits?tabs=bash%2Ctier0">Azure OpenAI in Microsoft Foundry Models quotas and limits：Tier 0</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/foundry/openai/quotas-limits?tabs=bash%2Ctier1#subscription-level-quota-management">Azure OpenAI in Microsoft Foundry Models quotas and limits：Tier 1 与 subscription-level quota management</a></li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/">https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a></li>
+        
+        <li><a href="/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a></li>
+        
+        <li><a href="/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/">在 Microsoft Copilot Studio 里落地多智能体编排</a></li>
+        
+        <li><a href="/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a></li>
+        
+        <li><a href="/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota tiers" target="_blank">Microsoft Foundry 的 Quota tiers</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" title="[译]基于模型的机器学习 - 3.5 允许技能变化" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" title="[译]基于模型的机器学习 - 3.3 一个解法：期望传播" target="_blank">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/" title="[译]基于模型的机器学习 - 3.2 推断玩家的技能" target="_blank">[译]基于模型的机器学习 - 3.2 推断玩家的技能</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/" title="[译]基于模型的机器学习 - 3.1 建模游戏的结果" target="_blank">[译]基于模型的机器学习 - 3.1 建模游戏的结果</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/" title="[译]基于模型的机器学习 - 3 匹配你的对手" target="_blank">[译]基于模型的机器学习 - 3 匹配你的对手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" title="[译]基于模型的机器学习 - 插曲：机器学习生命周期" target="_blank">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (36)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (23)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

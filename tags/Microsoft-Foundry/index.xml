@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Thu, 23 Jul 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Thu, 06 Aug 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/tags/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Microsoft Foundry 的 Quota tiers</title>
+				<link>https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/</link>
+				<pubDate>Thu, 06 Aug 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/</guid>
+				<description>&lt;p&gt;有一次收到 Azure 的通知邮件，大体内容如下：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;Important update: Eligibility for Quota Tier upgrade&lt;/p&gt;&#xA;&lt;p&gt;We are pleased to inform you that, based on your recent usage and account standing, your subscription is now eligible for an upgrade from your current Tier (Free Tier) to the next Tier (Tier 1) within our AI Services platform.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;我就去翻了翻 Microsoft Foundry 关于配额等级（Quota tiers）的文档，把这次邮件里真正发生的变化记下来，也顺便把几组常用模型的数字放在一起。&lt;/p&gt;&#xA;&lt;p&gt;本文整理自 &lt;a href=&#34;https://learn.microsoft.com/en-us/azure/foundry/openai/quotas-limits&#34;&gt;Microsoft Learn 的 Quotas and limits 文档&lt;/a&gt;。该页面显示的更新时间是 2026 年 7 月 29 日；配额表还会调整，部署前最好再看一眼 Foundry 门户里的实时值。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</title>
 				<link>https://beanhsiang.github.io/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/</link>

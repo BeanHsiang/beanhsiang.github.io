@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 780" role="img" aria-labelledby="title desc">
+  <title id="title">Global Standard TPM across quota tiers</title>
+  <desc id="desc">A line chart on a logarithmic scale comparing Global Standard tokens per minute for twelve model entries from Tier 0 through Tier 6. Models that share an identical Tier 1 through Tier 6 curve are drawn as a single line; their differing Tier 0 starting points, where published, are marked separately with distinct shapes.</desc>
+  <style>
+    .title { font: 700 25px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #202124; }
+    .subtitle { font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #5f6368; }
+    .axis { font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #5f6368; }
+    .axis-title { font: 600 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #3c4043; }
+    .legend { font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #3c4043; }
+    .value { font: 600 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #3c4043; }
+    .grid { stroke: #dadce0; stroke-width: 1; }
+    .grid-major { stroke: #bdc1c6; stroke-width: 1; }
+    .series { fill: none; stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+    .lead-in { fill: none; stroke-width: 2; stroke-dasharray: 5 5; }
+    .point { stroke: #ffffff; stroke-width: 2; }
+    .marker { stroke: #ffffff; stroke-width: 1.5; }
+  </style>
+  <rect width="1120" height="780" fill="#ffffff"/>
+  <text x="45" y="42" class="title">Global Standard TPM across quota tiers</text>
+  <text x="45" y="68" class="subtitle">TPM in millions; logarithmic vertical scale. Each point is the quota-table upper bound.</text>
+
+  <line x1="150" y1="120" x2="930" y2="120" class="grid-major"/>
+  <line x1="150" y1="182" x2="930" y2="182" class="grid"/>
+  <line x1="150" y1="311" x2="930" y2="311" class="grid-major"/>
+  <line x1="150" y1="441" x2="930" y2="441" class="grid-major"/>
+  <line x1="150" y1="570" x2="930" y2="570" class="grid-major"/>
+
+  <text x="137" y="125" text-anchor="end" class="axis">300M</text>
+  <text x="137" y="187" text-anchor="end" class="axis">100M</text>
+  <text x="137" y="316" text-anchor="end" class="axis">10M</text>
+  <text x="137" y="446" text-anchor="end" class="axis">1M</text>
+  <text x="137" y="575" text-anchor="end" class="axis">0.1M</text>
+
+  <line x1="170" y1="120" x2="170" y2="570" class="grid"/>
+  <line x1="297" y1="120" x2="297" y2="570" class="grid"/>
+  <line x1="423" y1="120" x2="423" y2="570" class="grid"/>
+  <line x1="550" y1="120" x2="550" y2="570" class="grid"/>
+  <line x1="677" y1="120" x2="677" y2="570" class="grid"/>
+  <line x1="803" y1="120" x2="803" y2="570" class="grid"/>
+  <line x1="930" y1="120" x2="930" y2="570" class="grid"/>
+
+  <text x="170" y="596" text-anchor="middle" class="axis">Tier 0</text>
+  <text x="297" y="596" text-anchor="middle" class="axis">Tier 1</text>
+  <text x="423" y="596" text-anchor="middle" class="axis">Tier 2</text>
+  <text x="550" y="596" text-anchor="middle" class="axis">Tier 3</text>
+  <text x="677" y="596" text-anchor="middle" class="axis">Tier 4</text>
+  <text x="803" y="596" text-anchor="middle" class="axis">Tier 5</text>
+  <text x="930" y="596" text-anchor="middle" class="axis">Tier 6</text>
+  <text x="540" y="622" text-anchor="middle" class="axis-title">Quota tier</text>
+  <text x="35" y="350" text-anchor="middle" transform="rotate(-90 35 350)" class="axis-title">Tokens per minute (TPM)</text>
+
+  <path d="M170 531 L297 350 L423 285 L550 225 L677 188 L803 159 L930 136" class="series" stroke="#1f77b4"/>
+  <circle cx="170" cy="531" r="5" class="point" fill="#1f77b4"/>
+  <circle cx="297" cy="350" r="5" class="point" fill="#1f77b4"/>
+  <circle cx="423" cy="285" r="5" class="point" fill="#1f77b4"/>
+  <circle cx="550" cy="225" r="5" class="point" fill="#1f77b4"/>
+  <circle cx="677" cy="188" r="5" class="point" fill="#1f77b4"/>
+  <circle cx="803" cy="159" r="5" class="point" fill="#1f77b4"/>
+  <circle cx="930" cy="136" r="5" class="point" fill="#1f77b4"/>
+
+  <path d="M297 441 L423 379 L550 317 L677 278 L803 250 L930 227" class="series" stroke="#2ca02c"/>
+  <circle cx="297" cy="441" r="5" class="point" fill="#2ca02c"/>
+  <circle cx="423" cy="379" r="5" class="point" fill="#2ca02c"/>
+  <circle cx="550" cy="317" r="5" class="point" fill="#2ca02c"/>
+  <circle cx="677" cy="278" r="5" class="point" fill="#2ca02c"/>
+  <circle cx="803" cy="250" r="5" class="point" fill="#2ca02c"/>
+  <circle cx="930" cy="227" r="5" class="point" fill="#2ca02c"/>
+
+  <path d="M297 402 L423 317 L550 244 L677 196 L803 159 L930 136" class="series" stroke="#9467bd"/>
+  <circle cx="297" cy="402" r="5" class="point" fill="#9467bd"/>
+  <circle cx="423" cy="317" r="5" class="point" fill="#9467bd"/>
+  <circle cx="550" cy="244" r="5" class="point" fill="#9467bd"/>
+  <circle cx="677" cy="196" r="5" class="point" fill="#9467bd"/>
+  <circle cx="803" cy="159" r="5" class="point" fill="#9467bd"/>
+  <circle cx="930" cy="136" r="5" class="point" fill="#9467bd"/>
+
+  <path d="M297 379 L423 340 L550 301 L677 262 L803 250 L930 223" class="series" stroke="#17becf"/>
+  <circle cx="297" cy="379" r="5" class="point" fill="#17becf"/>
+  <circle cx="423" cy="340" r="5" class="point" fill="#17becf"/>
+  <circle cx="550" cy="301" r="5" class="point" fill="#17becf"/>
+  <circle cx="677" cy="262" r="5" class="point" fill="#17becf"/>
+  <circle cx="803" cy="250" r="5" class="point" fill="#17becf"/>
+  <circle cx="930" cy="223" r="5" class="point" fill="#17becf"/>
+
+  <path d="M297 441 L423 402 L550 363 L677 331 L803 311 L930 288" class="series" stroke="#d62728"/>
+  <circle cx="297" cy="441" r="5" class="point" fill="#d62728"/>
+  <circle cx="423" cy="402" r="5" class="point" fill="#d62728"/>
+  <circle cx="550" cy="363" r="5" class="point" fill="#d62728"/>
+  <circle cx="677" cy="331" r="5" class="point" fill="#d62728"/>
+  <circle cx="803" cy="311" r="5" class="point" fill="#d62728"/>
+  <circle cx="930" cy="288" r="5" class="point" fill="#d62728"/>
+
+  <line x1="170" y1="480" x2="297" y2="441" class="lead-in" stroke="#ff7f0e"/>
+  <path d="M170 474 L176 480 L170 486 L164 480 Z" class="marker" fill="#ff7f0e"/>
+  <line x1="170" y1="570" x2="297" y2="441" class="lead-in" stroke="#7f7f7f"/>
+  <rect x="165" y="565" width="10" height="10" class="marker" fill="#7f7f7f"/>
+  <line x1="170" y1="441" x2="297" y2="441" class="lead-in" stroke="#bcbd22"/>
+  <polygon points="170,435 176,446 164,446" class="marker" fill="#bcbd22"/>
+
+  <line x1="55" y1="640" x2="82" y2="640" stroke="#1f77b4" stroke-width="3"/>
+  <circle cx="68" cy="640" r="5" class="point" fill="#1f77b4"/>
+  <text x="91" y="645" class="legend">gpt-4.1-mini</text>
+  <line x1="555" y1="640" x2="582" y2="640" stroke="#2ca02c" stroke-width="3"/>
+  <circle cx="568" cy="640" r="5" class="point" fill="#2ca02c"/>
+  <text x="591" y="645" class="legend">gpt-4.1 / gpt-5</text>
+
+  <line x1="55" y1="670" x2="82" y2="670" stroke="#9467bd" stroke-width="3"/>
+  <circle cx="68" cy="670" r="5" class="point" fill="#9467bd"/>
+  <text x="91" y="675" class="legend">gpt-4o-mini</text>
+  <line x1="555" y1="670" x2="582" y2="670" stroke="#17becf" stroke-width="3"/>
+  <circle cx="568" cy="670" r="5" class="point" fill="#17becf"/>
+  <text x="591" y="675" class="legend">o1</text>
+
+  <line x1="55" y1="700" x2="82" y2="700" stroke="#d62728" stroke-width="3"/>
+  <circle cx="68" cy="700" r="5" class="point" fill="#d62728"/>
+  <text x="91" y="705" class="legend">gpt-5-mini / gpt-5.4 / gpt-5.6 (luna/sol/terra) / o3 / o4-mini / text-embedding-3-small / text-embedding-3-large (Tier 1-6)</text>
+
+  <path d="M55,724 L61,730 L55,736 L49,730 Z" class="marker" fill="#ff7f0e"/>
+  <text x="70" y="734" class="legend">gpt-5-mini Tier 0</text>
+  <rect x="228" y="725" width="10" height="10" class="marker" fill="#7f7f7f"/>
+  <text x="248" y="734" class="legend">o4-mini Tier 0</text>
+  <polygon points="410,724 416,735 404,735" class="marker" fill="#bcbd22"/>
+  <text x="425" y="734" class="legend">text-embedding-3-small Tier 0</text>
+
+  <text x="55" y="765" class="subtitle">Dashed lead-ins mark Tier 0 values that differ from the shared Tier 1-6 curve; image models are excluded (no TPM value).</text>
+</svg>
+

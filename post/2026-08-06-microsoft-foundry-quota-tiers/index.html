@@ -9,8 +9,8 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
     
 
-    <title>Microsoft Foundry 的 Quota tiers | Innovation with tech</title>
-    <meta property="og:title" content="Microsoft Foundry 的 Quota tiers - Innovation with tech">
+    <title>Microsoft Foundry 的 Quota Tiers | Innovation with tech</title>
+    <meta property="og:title" content="Microsoft Foundry 的 Quota Tiers - Innovation with tech">
     <meta property="og:type" content="article">
         
     <meta property="article:published_time" content='2026-08-06T12:00:00&#43;08:00'>
@@ -19,7 +19,7 @@
     <meta property="article:modified_time" content='2026-08-06T12:00:00&#43;08:00'>
         
     <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
-    <meta name="description" content="Microsoft Foundry 的 Quota tiers">
+    <meta name="description" content="Microsoft Foundry 的 Quota Tiers">
     <meta name="author" content="">
     <meta property="og:url" content="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/">
     <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
@@ -76,7 +76,7 @@
     
     <article class="post">
         <header>
-            <h1 class="post-title">Microsoft Foundry 的 Quota tiers</h1>
+            <h1 class="post-title">Microsoft Foundry 的 Quota Tiers</h1>
         </header>
         
   <time datetime="2026-08-06T04:00:00Z" class="post-meta meta-date dt-published">
@@ -109,7 +109,8 @@
 <p>我就去翻了翻 Microsoft Foundry 关于配额等级（Quota tiers）的文档，把这次邮件里真正发生的变化记下来，也顺便把几组常用模型的数字放在一起。</p>
 <p>本文整理自 <a href="https://learn.microsoft.com/en-us/azure/foundry/openai/quotas-limits">Microsoft Learn 的 Quotas and limits 文档</a>。该页面显示的更新时间是 2026 年 7 月 29 日；配额表还会调整，部署前最好再看一眼 Foundry 门户里的实时值。</p>
 <h2 id="这封邮件到底在说什么">这封邮件到底在说什么</h2>
-<p>我一开始把邮件里的 Tier upgrade 理解成“Azure 给订阅加了一笔额度”。查完文档后，意思更准确：当前订阅在 Microsoft Foundry Models 中的默认 <strong>Quota tier</strong> 从 Free Tier（文档配额表中标为 Tier 0）变成了 Tier 1。它影响模型部署能承受的吞吐上限，最直接的两个指标是：</p>
+<p>我一开始把邮件里的 Tier upgrade 理解成“Azure 给订阅加了一笔额度”。查完文档后，意思更准确：当前订阅在 Microsoft Foundry Models 中的默认 <strong>Quota tier</strong> 从 Free Tier（文档配额表中标为 Tier 0）变成了 Tier 1。
+它影响模型部署能承受的吞吐上限，最直接的两个指标是：</p>
 <ul>
 <li><strong>RPM（Requests Per Minute）</strong>：每分钟请求数。</li>
 <li><strong>TPM（Tokens Per Minute）</strong>：每分钟 token 数。</li>
@@ -566,19 +567,27 @@ standard-&gt;limit
 <p>查看订阅 tier，可以调用 Microsoft Learn 给出的 control plane API。下面使用的 API 版本是 <code>2025-10-01-preview</code>，管理平面 token 由 Azure CLI 获取：</p>
 <div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#953800">SUBSCRIPTION_ID</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;&lt;your-subscription-id&gt;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#953800">TOKEN</span><span style="color:#0550ae">=</span><span style="color:#cf222e">$(</span>az account get-access-token <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	--resource https://management.azure.com <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	--query accessToken -o tsv<span style="color:#cf222e">)</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>curl -X GET <span style="color:#0a3069">\
-</span></span></span><span style="display:flex;"><span>	<span style="color:#0a3069">&#34;https://management.azure.com/subscriptions/</span><span style="color:#0a3069">${</span><span style="color:#953800">SUBSCRIPTION_ID</span><span style="color:#0a3069">}</span><span style="color:#0a3069">/providers/Microsoft.CognitiveServices/quotaTiers?api-version=2025-10-01-preview&#34;</span> <span style="color:#0a3069">\
-</span></span></span><span style="display:flex;"><span>	-H <span style="color:#0a3069">&#34;Authorization: Bearer </span><span style="color:#cf222e">$(</span>az account get-access-token --resource https://management.azure.com --query accessToken -o tsv<span style="color:#cf222e">)</span><span style="color:#0a3069">&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	<span style="color:#0a3069">&#34;https://management.azure.com/subscriptions/</span><span style="color:#0a3069">${</span><span style="color:#953800">SUBSCRIPTION_ID</span><span style="color:#0a3069">}</span><span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">/providers/Microsoft.CognitiveServices/quotaTiers?api-version=2025-10-01-preview&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	-H <span style="color:#0a3069">&#34;Authorization: Bearer </span><span style="color:#0a3069">${</span><span style="color:#953800">TOKEN</span><span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span> <span style="color:#0a3069">\
 </span></span></span><span style="display:flex;"><span>	-H <span style="color:#0a3069">&#34;Content-Type: application/json&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -607,20 +616,30 @@ standard-&gt;limit
 <p>可以。文档提供了 <code>NoAutoUpgrade</code> 策略，用于让订阅保持在当前 tier。这个选项目前仍是预览功能，可能发生变化或被移除：</p>
 <div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -X PATCH <span style="color:#0a3069">\
-</span></span></span><span style="display:flex;"><span>	<span style="color:#0a3069">&#34;https://management.azure.com/subscriptions/</span><span style="color:#0a3069">${</span><span style="color:#953800">SUBSCRIPTION_ID</span><span style="color:#0a3069">}</span><span style="color:#0a3069">/providers/Microsoft.CognitiveServices/quotaTiers/default?api-version=2025-10-01-preview&#34;</span> <span style="color:#0a3069">\
-</span></span></span><span style="display:flex;"><span>	-H <span style="color:#0a3069">&#34;Authorization: Bearer </span><span style="color:#cf222e">$(</span>az account get-access-token --resource https://management.azure.com --query accessToken -o tsv<span style="color:#cf222e">)</span><span style="color:#0a3069">&#34;</span> <span style="color:#0a3069">\
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#953800">TOKEN</span><span style="color:#0550ae">=</span><span style="color:#cf222e">$(</span>az account get-access-token <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	--resource https://management.azure.com <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	--query accessToken -o tsv<span style="color:#cf222e">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>curl -X PATCH <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	<span style="color:#0a3069">&#34;https://management.azure.com/subscriptions/</span><span style="color:#0a3069">${</span><span style="color:#953800">SUBSCRIPTION_ID</span><span style="color:#0a3069">}</span><span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">/providers/Microsoft.CognitiveServices/quotaTiers/default?api-version=2025-10-01-preview&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>	-H <span style="color:#0a3069">&#34;Authorization: Bearer </span><span style="color:#0a3069">${</span><span style="color:#953800">TOKEN</span><span style="color:#0a3069">}</span><span style="color:#0a3069">&#34;</span> <span style="color:#0a3069">\
 </span></span></span><span style="display:flex;"><span>	-H <span style="color:#0a3069">&#34;Content-Type: application/json&#34;</span> <span style="color:#0a3069">\
 </span></span></span><span style="display:flex;"><span>	-d <span style="color:#0a3069">&#39;{
 </span></span></span><span style="display:flex;"><span><span style="color:#0a3069">		&#34;properties&#34;: {
@@ -843,7 +862,7 @@ div.highlight:hover .copy-code,pre:hover .copy-code {
 <ul class="widget-list">
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota tiers" target="_blank">Microsoft Foundry 的 Quota tiers</a>
+        <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota Tiers" target="_blank">Microsoft Foundry 的 Quota Tiers</a>
     </li>
     
     <li>

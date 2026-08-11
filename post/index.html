@@ -75,6 +75,40 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/" title="用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构" target="_blank">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-11T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月11日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260811114911-174cf0155116462dae1b430ccd25ebae.png">
+            <img class="mx-auto" alt="Secure Azure OpenAI Zero Trust Architecture Lab" src="/uploads/20260811114911-174cf0155116462dae1b430ccd25ebae.png" />
+        </a>
+    </p>
+<p>企业里用 Azure OpenAI 的场景越来越多——内部知识库、自动化流程、客服助手、安全运营，几乎每个团队都想接进去用。但真正让AmalUBasnayake 停下来想一想的是这个问题：怎么让应用安全地访问 AI 服务，同时把不必要的网络暴露降到最低，还能保护好身份、凭据和敏感数据？</p>
+<p>如果 AI 处理的是公司内部数据、敏感系统或者受保护的资源，这个问题就不只是&quot;锦上添花&quot;了。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota Tiers" target="_blank">Microsoft Foundry 的 Quota Tiers</a>
             </h1>
         </header>
@@ -377,49 +411,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-24T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月24日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>你可能以为，推断猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>需要用到与我们目前所用完全不同的技术。事实上，我们的做法将完全相同：我们把想要学习的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>值作为新的连续<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>加入<a href="/post/2025-04-21-mbml-introduction">模型</a>，并用<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">概率推断</a>来计算它们的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。这展示了基于模型方法的威力——每当我们想知道某个东西时，我们就把它作为一个<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>引入<a href="/post/2025-04-21-mbml-introduction">模型</a>，然后用<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">概率推断</a>去求出它。</p>
-<p>让我们看看如何修改<a href="/post/2025-04-21-mbml-introduction">模型</a>，把猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>作为<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>纳入进来。为了保持一致，我们也会为犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>（实际上是<strong>不犯错</strong><a href="/post/2025-04-22-mbml-murder-mystery">概率</a>）添加一个变量，但我们会把它固定在 10% 的犯错几率上。首先，我们要改变书写 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的方式。</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/LearningSkills_AddNoise.png">
-            <img class="mx-auto" alt="图 2.25a" src="/uploads/LearningSkills_AddNoise.png" />
-        </a>
-    </p>
-<p><em>(a) 内置概率的自定义因子</em></p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/LearningSkills_AddNoiseAsTable2.png">
-            <img class="mx-auto" alt="图 2.25b" src="/uploads/LearningSkills_AddNoiseAsTable2.png" />
-        </a>
-    </p>
-<p><em>(b) 通用的 Table 因子</em></p>
-<p><em>图 2.25：书写 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的两种方式：(a) 作为一个把猜测和犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>“内置”其中的自定义<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。(b) 使用一个通用的 <code>Table</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>，它带有两个参数：给定父节点为 <code>false</code> 时子节点为 <code>true</code> 的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>（左参数），以及给定父节点为 <code>true</code> 时子节点为 <code>true</code> 的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>（右参数）。这种书写<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的方式让我们可以把这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>作为变量提供给<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。</em></p>
-<p>图 2.25 展示了如何把现有的 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>（其中猜测和不犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>被硬编码为 0.2 和 0.9）替换为一个通用的 <code>Table</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>，后者把这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>作为额外的参数。然后我们可以用两个新的<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>来设置这些参数，我们把它们命名为 <code>probGuess</code> 和 <code>probNoMistake</code>。推断这些变量的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>，就会给出我们所需的猜测和不犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的学习值——但为此，我们首先需要一种能表示这类变量不确定性的分布。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -528,6 +519,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/" title="用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构" target="_blank">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota Tiers" target="_blank">Microsoft Foundry 的 Quota Tiers</a>
     </li>
     
@@ -563,10 +558,6 @@
         <a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" title="[译]基于模型的机器学习 - 插曲：机器学习生命周期" target="_blank">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" title="[译]基于模型的机器学习 - 2.6 学习猜测概率" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -586,7 +577,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (36)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (37)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

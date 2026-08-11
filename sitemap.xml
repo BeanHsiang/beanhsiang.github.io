@@ -3,24 +3,27 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
+    <lastmod>2026-08-11T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
+    <lastmod>2026-08-11T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
-    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
+    <lastmod>2026-08-11T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
-    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/</loc>
-    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
+    <lastmod>2026-08-11T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-08-06T12:00:00+08:00</lastmod>
+    <lastmod>2026-08-11T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-08-11T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/</loc>
+    <lastmod>2026-08-11T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/</loc>
     <lastmod>2026-08-06T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/</loc>

@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构 | Innovation with tech</title>
+    <meta property="og:title" content="用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-08-11T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-08-11T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</h1>
+        </header>
+        
+  <time datetime="2026-08-11T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月11日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260811114911-174cf0155116462dae1b430ccd25ebae.png">
+            <img class="mx-auto" alt="Secure Azure OpenAI Zero Trust Architecture Lab" src="/uploads/20260811114911-174cf0155116462dae1b430ccd25ebae.png" />
+        </a>
+    </p>
+<p>企业里用 Azure OpenAI 的场景越来越多——内部知识库、自动化流程、客服助手、安全运营，几乎每个团队都想接进去用。但真正让AmalUBasnayake 停下来想一想的是这个问题：怎么让应用安全地访问 AI 服务，同时把不必要的网络暴露降到最低，还能保护好身份、凭据和敏感数据？</p>
+<p>如果 AI 处理的是公司内部数据、敏感系统或者受保护的资源，这个问题就不只是&quot;锦上添花&quot;了。</p>
+<p>一个基础的 Azure OpenAI 部署，不做任何私有网络设计也能跑起来。但站在云安全工程的角度，能跑起来和真正安全是两回事。一套说得过去的架构，至少要照顾到这几件事：网络隔离、私有连接、基于身份的认证、最小权限授权、密钥保护、公网暴露面、内部名称解析，以及零信任的整体思路。</p>
+<p>为了把这些概念落地，AmalUBasnayake 搭了一个 <strong>Azure OpenAI 零信任安全实验室</strong>，用的都是 Azure 原生的安全能力，目标是给一个 Azure OpenAI 工作负载打好安全基础设施的底子。</p>
+<h2 id="-项目目标">🎯 项目目标</h2>
+<p>这个项目的目标从来不是&quot;把 Azure OpenAI 部署起来&quot;这么简单。AmalUBasnayake 更想搞清楚的是：一个 AI 工作负载,怎么在网络、身份、授权、密钥管理这几个层面同时被保护起来。</p>
+<p>最终这套架构落了这些点：Azure 虚拟网络、网络分段、私有终结点、私有 DNS、禁用公网访问、系统分配的托管标识、Azure Key Vault、Azure RBAC、Key Vault Secrets User 角色，以及安全的密钥存储。</p>
+<p>这些控制项构成了项目 <strong>1.0 版本</strong>里零信任架构的基础（详见 <a href="https://github.com/AmalUBasnayake/Azure-OpenAI-Private-Endpoint-Zero-Trust-Lab?WT.mc_id=AI-MVP-5003172">GitHub 仓库</a>）。</p>
+<h2 id="-为什么-ai-工作负载需要零信任">🧠 为什么 AI 工作负载需要零信任</h2>
+<p>云安全里一个很常见的误区,是把&quot;在 Azure 网络内部&quot;直接当成信任的理由。比如有人会说:&ldquo;这个应用在 Azure 里面,所以是可信的。&quot;——这不是零信任。</p>
+<p>零信任的前提是,访问必须被显式验证,而不是因为网络位置对了就自动放行。放到 AI 工作负载上,这意味着安全要在好几个层面同时生效。</p>
+<p>网络层面,Azure OpenAI 服务应该只能通过受控的私有连接路径访问。身份层面,应用和工作负载应该用强身份,而不是把长期有效的凭据硬编码在代码里。授权层面,哪怕身份认证通过了,也只应该拿到这个角色真正需要的权限。密钥层面,敏感凭据要集中保护,不能直接写在应用代码或配置文件里。暴露面上,只要私有连接已经能用,多余的公网访问就该拿掉。</p>
+<p>这几层叠在一起,才是一个真正分层的安全模型,而不是指望单靠一个控制项扛住所有风险。</p>
+<h2 id="-架构总览">🏗️ 架构总览</h2>
+<p>整套架构从一个 Azure 虚拟网络开始,它提供私有网络边界。接着建一个专用子网,用来承载私有终结点连接。Azure OpenAI 通过 Azure 私有终结点接入这个虚拟网络,私有 DNS 负责这条私有连接路径的内部名称解析,同时 Azure OpenAI 资源上的公网访问被关掉。</p>
+<p>身份这一侧,启用了系统分配的托管标识。密钥管理用 Azure Key Vault 来做,Azure RBAC 通过 <strong>Key Vault Secrets User</strong> 角色提供最小权限访问。</p>
+<p>仓库里同时放了详细架构图和架构概要图（<a href="https://github.com/AmalUBasnayake/Azure-OpenAI-Private-Endpoint-Zero-Trust-Lab/tree/main/images?WT.mc_id=AI-MVP-5003172">GitHub</a>）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811114912-5f596d7dbb89494eb1540c74cbe4d256.png">
+            <img class="mx-auto" alt="Secure Azure OpenAI architecture using Private Endpoint, Private DNS, Managed Identity, Key Vault, and RBAC" src="/uploads/20260811114912-5f596d7dbb89494eb1540c74cbe4d256.png" />
+        </a>
+    </p>
+<h2 id="-安全架构纵深防御">🔐 安全架构:纵深防御</h2>
+<p>这个项目背后一个核心的设计原则是<strong>纵深防御</strong>。不指望靠单一控制项扛住整个工作负载,而是叠加多层安全边界。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811114912-9b2503719ca8491ab7e722e3fe02db51.png">
+            <img class="mx-auto" alt="Defense in depth security layers" src="/uploads/20260811114912-9b2503719ca8491ab7e722e3fe02db51.png" />
+        </a>
+    </p>
+<p>哪怕某一层配置出了问题,其他安全控制还能把潜在的暴露面压下去。这比单纯靠一个 API Key 或者一个公网终结点要靠谱得多。</p>
+<h2 id="-第一步创建-azure-虚拟网络">🌐 第一步——创建 Azure 虚拟网络</h2>
+<p>第一步是建一个专用的 Azure 虚拟网络。VNet 给这个 AI 工作负载划定了网络边界,也是后面私有通信的基础。</p>
+<p>在这套架构里,VNet 要负责:网络隔离、私有连接、分段、可控的通信路径,以及给私有终结点集成打地基。</p>
+<p>AmalUBasnayake 没有把 Azure OpenAI 当成一个孤立的 PaaS 服务扔在公网上,而是先给它围了一圈可控的私有网络边界。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811114912-052c1072bcc84a2dabaf73c952b5f8da.png">
+            <img class="mx-auto" alt="Dedicated Azure Virtual Network created for the secure AI workload" src="/uploads/20260811114912-052c1072bcc84a2dabaf73c952b5f8da.png" />
+        </a>
+    </p>
+<h2 id="-第二步创建独立的私有终结点子网">🧱 第二步——创建独立的私有终结点子网</h2>
+<p>下一步是给私有终结点连接单独建一个子网。网络分段之所以重要,是因为它能把基础设施组件在逻辑上分开管理。</p>
+<p>最终的结构大概长这样:</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811114912-724909f5c71a45e78ba411c1a3dab9ac.png">
+            <img class="mx-auto" alt="Network segmentation structure" src="/uploads/20260811114912-724909f5c71a45e78ba411c1a3dab9ac.png" />
+        </a>
+    </p>
+<p>仓库里专门记录了用独立子网承载私有终结点这一点,把它作为网络分段设计的一部分（<a href="https://github.com/AmalUBasnayake/Azure-OpenAI-Private-Endpoint-Zero-Trust-Lab?WT.mc_id=AI-MVP-5003172">GitHub</a>）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811114912-79d1c18fdf62449f846cc784f5cff240.png">
+            <img class="mx-auto" alt="Dedicated subnet created for Private Endpoint connectivity" src="/uploads/20260811114912-79d1c18fdf62449f846cc784f5cff240.png" />
+        </a>
+    </p>
+<h2 id="-第三步部署-azure-openai">🤖 第三步——部署 Azure OpenAI</h2>
+<p>网络基础打好之后,才轮到部署 Azure OpenAI。到这一步,目标不是把服务暴露出去、指望靠身份认证兜底,而是让它成为整套安全架构真正要保护的核心资源。</p>
+<p>接下来要回答的问题变成:谁能访问这个服务?从哪里能访问到?怎么连接过去?凭据怎么保护?访问权限怎么授权?</p>
+<p>后面所有的实现都是围绕这几个问题展开的。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811114954-ca954d7068af402e8dd8c8dde8ff292e.png">
+            <img class="mx-auto" alt="Azure OpenAI service deployed as the protected AI workload" src="/uploads/20260811114954-ca954d7068af402e8dd8c8dde8ff292e.png" />
+        </a>
+    </p>
+<h2 id="-第四步配置私有终结点">🔒 第四步——配置私有终结点</h2>
+<p>接下来是用 Azure 私有终结点把 Azure OpenAI 接入这个虚拟网络。私有终结点在 VNet 和受支持的 Azure 服务之间建立私有连接。</p>
+<p>架构从常见的公网连接模型,变成了私有连接模型:</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811114955-b41182ea946a4946868536e110a5c802.png">
+            <img class="mx-auto" alt="Conventional public connectivity model" src="/uploads/20260811114955-b41182ea946a4946868536e110a5c802.png" />
+        </a>
+    </p>
+<p>这个实验室里最终落地的是这样:</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811114957-65485f180cc34cd4b90a6b02a0493d65.png">
+            <img class="mx-auto" alt="Private connectivity model" src="/uploads/20260811114957-65485f180cc34cd4b90a6b02a0493d65.png" />
+        </a>
+    </p>
+<p>关键的安全收益在于,应用到 Azure OpenAI 资源之间有了一条私有连接路径。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811114958-3664797ee29a4757b5c8084dd386c385.png">
+            <img class="mx-auto" alt="Azure OpenAI integrated with the Virtual Network through a Private Endpoint" src="/uploads/20260811114958-3664797ee29a4757b5c8084dd386c385.png" />
+        </a>
+    </p>
+<h2 id="-第五步验证私有终结点连接">🔐 第五步——验证私有终结点连接</h2>
+<p>建好私有终结点还不算完,这个连接本身得验证过才行。项目在切换到&quot;只走私有连接&quot;之前,先确认了私有终结点连接已经被批准。</p>
+<p>这里有个操作上的原则 AmalUBasnayake 觉得挺重要:先把想要的安全路径立起来,再去拆掉备用路径。</p>
+<p>仓库把私有终结点连接的批准记录为第五步（<a href="https://github.com/AmalUBasnayake/Azure-OpenAI-Private-Endpoint-Zero-Trust-Lab?WT.mc_id=AI-MVP-5003172">GitHub</a>）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115000-3c302bd85685454fa9a17611f02c7969.png">
+            <img class="mx-auto" alt="Approved Azure OpenAI Private Endpoint connection" src="/uploads/20260811115000-3c302bd85685454fa9a17611f02c7969.png" />
+        </a>
+    </p>
+<h2 id="-第六步禁用公共网络访问">🚫 第六步——禁用公共网络访问</h2>
+<p>这一步是整个项目里最关键的安全控制之一。私有连接路径搭好之后,Azure OpenAI 的公网访问被彻底关掉。</p>
+<p>最终的安全模型是这样:</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115002-5d9b9142a8c44d9982ae1d1aec301255.png">
+            <img class="mx-auto" alt="Public network access disabled" src="/uploads/20260811115002-5d9b9142a8c44d9982ae1d1aec301255.png" />
+        </a>
+    </p>
+<p>这一步大幅压缩了不必要的网络暴露面。仓库里明确把&quot;公网访问已禁用&quot;列为 1.0 版本已实现的安全控制之一（<a href="https://github.com/AmalUBasnayake/Azure-OpenAI-Private-Endpoint-Zero-Trust-Lab?WT.mc_id=AI-MVP-5003172">GitHub</a>）。</p>
+<p>光有私有终结点还不够,得让私有连接真正成为唯一的访问路径才算数。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115003-0ab51823af3f4d45bcfcaf210a6571a9.png">
+            <img class="mx-auto" alt="Azure OpenAI configured to prevent public network access" src="/uploads/20260811115003-0ab51823af3f4d45bcfcaf210a6571a9.png" />
+        </a>
+    </p>
+<h2 id="-为什么私有-dns-很重要">🌐 为什么私有 DNS 很重要</h2>
+<p>私有连接要真正有用,前提是工作负载能把服务的主机名正确解析到私有终结点上。这就是私有 DNS 在这套架构里的作用。</p>
+<p>应用可以继续用 Azure OpenAI 原本的主机名,DNS 配置会在背后把解析结果指向私有连接路径。概念上是这样:</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115014-86e071f3192f4055b9b2fd87db55bc34.png">
+            <img class="mx-auto" alt="Private DNS resolution concept" src="/uploads/20260811115014-86e071f3192f4055b9b2fd87db55bc34.png" />
+        </a>
+    </p>
+<p>这样一来,应用不用硬编码私有 IP 地址就能用上这个服务。仓库明确把私有 DNS 配置列为已实现的控制项,也是核心架构的一部分（<a href="https://github.com/AmalUBasnayake/Azure-OpenAI-Private-Endpoint-Zero-Trust-Lab?WT.mc_id=AI-MVP-5003172">GitHub</a>）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115024-be3849fc57654d0ebfe5be97fb50b494.png">
+            <img class="mx-auto" alt="Private DNS integrated into the private Azure OpenAI connectivity architecture" src="/uploads/20260811115024-be3849fc57654d0ebfe5be97fb50b494.png" />
+        </a>
+    </p>
+<h2 id="-网络安全层的阶段性成果">🛡️ 网络安全层的阶段性成果</h2>
+<p>走到这一步,网络安全层算是搭起来了,包含:</p>
+<pre tabindex="0"><code>✓ Azure 虚拟网络
+✓ 独立的私有终结点子网
+✓ Azure OpenAI
+✓ 私有终结点
+✓ 已批准的私有终结点连接
+✓ 私有 DNS
+✓ 公网访问已禁用
+</code></pre><p>这构成了第一道主要的零信任边界。但还有个问题绕不过去:如果一个工作负载在私有网络内部,是不是就该自动被信任?</p>
+<p>答案是不。光靠网络隔离还不够,下一层要解决的是身份问题。</p>
+<h2 id="-第七步启用系统分配的托管标识">🧑‍💻 第七步——启用系统分配的托管标识</h2>
+<p>下一个重要的安全控制是<strong>托管标识</strong>。传统应用经常把 API Key、密码、连接字符串、客户端密钥这类凭据直接塞进应用配置里,这本身就是额外的风险。</p>
+<p>一旦这些凭据通过源代码、配置文件、日志,或者一条没配置好的部署流水线泄露出去,攻击者就有可能拿去复用。托管标识提供了一种 Azure 原生的身份机制,让应用在和受支持的 Azure 资源交互时,不再需要把长期有效的凭据硬编码进代码里。</p>
+<p>在这个项目里,AmalUBasnayake 启用了<strong>系统分配的托管标识</strong>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115035-f9cc33eda4f7448b917140294f40f4cb.png">
+            <img class="mx-auto" alt="System-assigned Managed Identity enabled for identity-based authentication" src="/uploads/20260811115035-f9cc33eda4f7448b917140294f40f4cb.png" />
+        </a>
+    </p>
+<h2 id="-为什么托管标识很重要">🧠 为什么托管标识很重要</h2>
+<p>安全模型现在变成了这样:</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115040-c633a0907e2740f2a89080a53c2553fc.png">
+            <img class="mx-auto" alt="Managed identity security model" src="/uploads/20260811115040-c633a0907e2740f2a89080a53c2553fc.png" />
+        </a>
+    </p>
+<p>问题不再是&quot;API Key 存在哪里&rdquo;,而是变成了&quot;这次请求是哪个身份发起的,这个身份被授予了什么权限&quot;。这对企业级云安全来说是一个更扎实的基础,也更符合零信任的思路——认证和授权被显式评估,而不是单靠网络位置来判断。</p>
+<p>仓库把托管标识列为核心的已实现安全控制之一（<a href="https://github.com/AmalUBasnayake/Azure-OpenAI-Private-Endpoint-Zero-Trust-Lab?WT.mc_id=AI-MVP-5003172">GitHub</a>）。</p>
+<h2 id="-第八步配置-azure-key-vault">🔑 第八步——配置 Azure Key Vault</h2>
+<p>下一层是密钥管理。哪怕已经用上了基于身份的访问,应用有时候还是需要用到一些特定工作负载或集成所需的密钥。</p>
+<p>与其把这些密钥直接写进应用配置,Azure Key Vault 提供了一个集中的密钥管理边界。这个项目里创建了一个 Azure Key Vault,专门给密钥提供集中保护。</p>
+<p>架构变成了这样:</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115045-61475979badd4a1a8907ee5a09d7004f.png">
+            <img class="mx-auto" alt="Azure Key Vault architecture" src="/uploads/20260811115045-61475979badd4a1a8907ee5a09d7004f.png" />
+        </a>
+    </p>
+<p>密钥存储和应用逻辑被分开了。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115050-0df32f98ec814e0d84280ad56f526fc9.png">
+            <img class="mx-auto" alt="Azure Key Vault deployed for centralized secret management" src="/uploads/20260811115050-0df32f98ec814e0d84280ad56f526fc9.png" />
+        </a>
+    </p>
+<h2 id="-第九步配置-rbac-权限">🔐 第九步——配置 RBAC 权限</h2>
+<p>光创建 Key Vault 还不够,这个身份还需要一个明确定义的授权边界,这就是 <strong>Azure 基于角色的访问控制(RBAC)</strong> 要解决的问题。</p>
+<p>项目里用的是 <strong>Key Vault Secrets User</strong> 角色,目的是遵循最小权限原则——不给身份整个 Key Vault 的管理权限,只给它处理密钥所必需的那部分权限。</p>
+<p>授权流程变成:</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115055-686ab7f75bf5473cb202613d2c9393d8.png">
+            <img class="mx-auto" alt="RBAC authorization flow" src="/uploads/20260811115055-686ab7f75bf5473cb202613d2c9393d8.png" />
+        </a>
+    </p>
+<p>这里有个关键的区别:认证回答的是&quot;你是谁&quot;,授权回答的是&quot;你被允许做什么&quot;。</p>
+<p>项目明确用 Key Vault Secrets User 角色实现了基于 RBAC 的 Key Vault 访问（<a href="https://github.com/AmalUBasnayake/Azure-OpenAI-Private-Endpoint-Zero-Trust-Lab?WT.mc_id=AI-MVP-5003172">GitHub</a>）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115105-3e481fe9d65a49f1bb7da930aaee5935.png">
+            <img class="mx-auto" alt="Key Vault Secrets User role assigned using Azure RBAC" src="/uploads/20260811115105-3e481fe9d65a49f1bb7da930aaee5935.png" />
+        </a>
+    </p>
+<h2 id="-第十步安全存储密钥">🧩 第十步——安全存储密钥</h2>
+<p>1.0 版本里最后一步实现,是把需要用到的密钥安全地存进 Azure Key Vault。这里的核心原则是分离。</p>
+<p>原本的做法是这样:</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115107-d017df8c1b5f486ab6a6f9ea432037e0.png">
+            <img class="mx-auto" alt="Before secret separation" src="/uploads/20260811115107-d017df8c1b5f486ab6a6f9ea432037e0.png" />
+        </a>
+    </p>
+<p>改造之后变成:</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115118-f65d454683784bd69dcafeeae0a76326.png">
+            <img class="mx-auto" alt="After secret separation" src="/uploads/20260811115118-f65d454683784bd69dcafeeae0a76326.png" />
+        </a>
+    </p>
+<p>这样就给密钥管理建了一个专属的控制面。密钥不再被当成普通的应用配置,而是变成受身份和授权策略管辖的、受保护的云资源。</p>
+<p>仓库把安全创建密钥记录为第十步（<a href="https://github.com/AmalUBasnayake/Azure-OpenAI-Private-Endpoint-Zero-Trust-Lab?WT.mc_id=AI-MVP-5003172">GitHub</a>）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115119-7412a571c7a7469ca744b99dc90aa134.png">
+            <img class="mx-auto" alt="Secret securely stored inside Azure Key Vault" src="/uploads/20260811115119-7412a571c7a7469ca744b99dc90aa134.png" />
+        </a>
+    </p>
+<h2 id="-把整套安全模型拼在一起">🔄 把整套安全模型拼在一起</h2>
+<p>走到这一步,前面这些单独的控制项可以合并起来看成一套完整的安全架构。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115130-a324c7c48c534c7a9e6168388b53bc72.png">
+            <img class="mx-auto" alt="Integrated security architecture" src="/uploads/20260811115130-a324c7c48c534c7a9e6168388b53bc72.png" />
+        </a>
+    </p>
+<p>每个组件都对应一个不同的安全需求:私有终结点提供私有连接,私有 DNS 支撑内部名称解析,禁用公网访问拿掉了原本不必要的公开路径,托管标识提供基于身份的认证,Azure RBAC 控制授权,Key Vault 提供集中的密钥保护。</p>
+<p>这些控制项叠在一起,才构成一套分层的零信任架构。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115131-03754105ef4841a18ad41757d7d27ef5.png">
+            <img class="mx-auto" alt="Final Azure OpenAI Zero Trust security architecture" src="/uploads/20260811115131-03754105ef4841a18ad41757d7d27ef5.png" />
+        </a>
+    </p>
+<h2 id="-从安全工程角度复盘">🔍 从安全工程角度复盘</h2>
+<p>做完这个项目,AmalUBasnayake 最大的体会是:云安全从来不是一个开关就能搞定的事。一个安全的 AI 工作负载,需要好几层控制同时生效。</p>
+<p>网络层回答的是工作负载怎么连到服务;身份层回答的是谁在发起请求;授权层回答的是这个身份被允许访问什么;密钥层回答的是敏感凭据存在哪里;暴露面这一层回答的是,这个服务是不是还能通过一条不必要的公网路径被访问到。</p>
+<p>零信任模型把这几个问题串了起来。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115142-e2a5f2da4d4c47d0af311d469a7b4edf.png">
+            <img class="mx-auto" alt="Zero Trust model connecting all layers" src="/uploads/20260811115142-e2a5f2da4d4c47d0af311d469a7b4edf.png" />
+        </a>
+    </p>
+<p>比起单纯部署一个 AI 服务、打开身份认证就算完事,这套分层模型更贴近真实世界里云安全工程的样子。</p>
+<h2 id="-学到的关键经验">🧠 学到的关键经验</h2>
+<p>搭这套环境的过程,让 AmalUBasnayake 在 Azure 安全的几个方向上都摸了一遍实操。</p>
+<p>零信任架构这块,AmalUBasnayake 更深地体会到安全边界应该被显式定义出来,而不是想当然地认为内部资源就是可信的。私有连接方面,私有终结点确实能给 Azure PaaS 服务提供受控的私有访问路径。网络分段能帮着把基础设施组件在逻辑上组织和隔离开。托管标识这块最直观的收获是,基于身份的认证能明显减少对硬编码长期凭据的依赖。RBAC 提醒 AmalUBasnayake 授权要遵循最小权限。密钥管理上,敏感密钥应该放进专门的安全服务,而不是直接写进应用代码里。</p>
+<p>说到底,AI 基础设施安全和其他企业级云工作负载没什么本质区别。身份、网络隔离、授权、密钥管理这几件事,一个都少不了。</p>
+<h2 id="-这个实验室没做到的事">⚠️ 这个实验室没做到的事</h2>
+<p>这里有必要说清楚,1.0 版本里实际做了什么,和后续计划做什么是两回事。</p>
+<p>这个项目目前聚焦在<strong>安全基础设施</strong>这一层,并不能算是一套完整的企业级 SOC 监控实现。仓库里把这些能力列为 2.0 版本的未来增强项:Azure OpenAI 诊断设置、Azure Key Vault 诊断日志、Log Analytics 工作区、Microsoft Sentinel、KQL 威胁狩猎、Key Vault 活动监控、Azure OpenAI 活动监控、Defender for Cloud 建议、安全告警,以及事件响应流程。</p>
+<p>这些内容被特意和当前实现区分开,为的是让项目如实反映出哪些已经做了、哪些还在计划里（<a href="https://github.com/AmalUBasnayake/Azure-OpenAI-Private-Endpoint-Zero-Trust-Lab?WT.mc_id=AI-MVP-5003172">GitHub</a>）。</p>
+<h2 id="-未来增强计划20-版本">🚀 未来增强计划——2.0 版本</h2>
+<p>下一阶段,AmalUBasnayake 打算把重心放在安全监控和检测工程上。可以把 Azure OpenAI 和 Azure Key Vault 的诊断遥测接进 Log Analytics 来扩展这套架构,再引入 Microsoft Sentinel 作为 SIEM 层。</p>
+<p>未来的架构大概会演变成这样:</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260811115147-f09768d73f8b4ae29290f5f6f5ebab1d.png">
+            <img class="mx-auto" alt="Future architecture with Sentinel and monitoring" src="/uploads/20260811115147-f09768d73f8b4ae29290f5f6f5ebab1d.png" />
+        </a>
+    </p>
+<p>Defender for Cloud 也能提供额外的安全态势可见性和建议。这样一来,项目就会从一套&quot;安全的 AI 基础设施&quot;升级成一套更完整的&quot;AI 安全监控与检测工程平台&quot;。</p>
+<h2 id="-最后的思考">💡 最后的思考</h2>
+<p>保护好 AI 工作负载,正在变成云和安全工程师越来越绕不开的责任。企业在采用 Azure OpenAI 之类的 AI 服务时,安全团队得跳出模型本身去想问题,周边的基础设施同样重要。</p>
+<p>一套安全的 AI 架构,得考虑清楚服务能从哪里被访问到、应用怎么做身份认证、身份被允许做什么、密钥存在哪里、暴露了哪些网络路径,以及安全监控要怎么落地。</p>
+<p>这个项目让 AmalUBasnayake 有机会通过一次实打实的 Azure 实践,把这些概念过一遍,而不是只停留在纸面上的理解。最终的结果,是一套用 Azure 原生安全能力搭出来的、面向 Azure OpenAI 的基础零信任架构。</p>
+<h2 id="-这个项目验证了哪些能力">🎓 这个项目验证了哪些能力</h2>
+<p>做完这一趟,AmalUBasnayake 在这些方向上都有了实打实的动手经验:Azure OpenAI、Azure 虚拟网络、网络分段、Azure 私有终结点、Azure Private Link、私有 DNS、Azure Key Vault、托管标识、Microsoft Entra ID 相关概念、Azure RBAC、最小权限原则、密钥管理、零信任架构、云安全,以及 AI 基础设施安全。</p>
+<h2 id="-一点总结">⭐ 一点总结</h2>
+<p>一个安全的 AI 工作负载,从来不是靠某一个安全功能做出来的,而是把网络隔离、强身份、最小权限授权和安全的密钥管理拧成一套连贯的架构。Azure OpenAI 提供 AI 能力,私有终结点提供私有连接,私有 DNS 负责内部解析,托管标识提供工作负载身份,RBAC 控制授权,Azure Key Vault 保护密钥。零信任,则是把这一整套控制串起来的安全思路。</p>
+<p>网络要锁死,身份要验证,权限要收紧,密钥要护好。信任这件事,从来都不该想当然。</p>
+<h2 id="-参考资料">📚 参考资料</h2>
+<ul>
+<li>完整项目代码:<a href="https://github.com/AmalUBasnayake/Azure-OpenAI-Private-Endpoint-Zero-Trust-Lab?WT.mc_id=AI-MVP-5003172">Azure OpenAI Private Endpoint Zero Trust Lab — GitHub</a></li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/">https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-08-06-microsoft-foundry-quota-tiers/">Microsoft Foundry 的 Quota Tiers</a></li>
+        
+        <li><a href="/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a></li>
+        
+        <li><a href="/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a></li>
+        
+        <li><a href="/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/">在 Microsoft Copilot Studio 里落地多智能体编排</a></li>
+        
+        <li><a href="/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/" title="用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构" target="_blank">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota Tiers" target="_blank">Microsoft Foundry 的 Quota Tiers</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" title="[译]基于模型的机器学习 - 3.5 允许技能变化" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" title="[译]基于模型的机器学习 - 3.3 一个解法：期望传播" target="_blank">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/" title="[译]基于模型的机器学习 - 3.2 推断玩家的技能" target="_blank">[译]基于模型的机器学习 - 3.2 推断玩家的技能</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/" title="[译]基于模型的机器学习 - 3.1 建模游戏的结果" target="_blank">[译]基于模型的机器学习 - 3.1 建模游戏的结果</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/" title="[译]基于模型的机器学习 - 3 匹配你的对手" target="_blank">[译]基于模型的机器学习 - 3 匹配你的对手</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" title="[译]基于模型的机器学习 - 插曲：机器学习生命周期" target="_blank">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (37)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (23)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

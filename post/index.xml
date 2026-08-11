@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Thu, 06 Aug 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Tue, 11 Aug 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</title>
+				<link>https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/</link>
+				<pubDate>Tue, 11 Aug 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20260811114911-174cf0155116462dae1b430ccd25ebae.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Secure Azure OpenAI Zero Trust Architecture Lab&#34; src=&#34;https://beanhsiang.github.io/uploads/20260811114911-174cf0155116462dae1b430ccd25ebae.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;企业里用 Azure OpenAI 的场景越来越多——内部知识库、自动化流程、客服助手、安全运营，几乎每个团队都想接进去用。但真正让AmalUBasnayake 停下来想一想的是这个问题：怎么让应用安全地访问 AI 服务，同时把不必要的网络暴露降到最低，还能保护好身份、凭据和敏感数据？&lt;/p&gt;&#xA;&lt;p&gt;如果 AI 处理的是公司内部数据、敏感系统或者受保护的资源，这个问题就不只是&amp;quot;锦上添花&amp;quot;了。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>Microsoft Foundry 的 Quota Tiers</title>
 				<link>https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/</link>

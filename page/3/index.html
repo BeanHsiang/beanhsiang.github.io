@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-Hans">
 <head>
-	<meta name="generator" content="Hugo 0.164.0">
+	<meta name="generator" content="Hugo 0.165.0">
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -70,6 +70,106 @@
                 <div class="col-8" id="main">
                     
 <div class="res-cons">
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" title="[译]基于模型的机器学习 - 2.3 有环性" target="_blank">[译]基于模型的机器学习 - 2.3 有环性</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-06-16T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年6月16日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>现在让我们把<a href="/post/2025-04-21-mbml-introduction">模型</a>稍微扩展一下，添加第四道需要两项技能的题目。这张新的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>如图 2.14 所示，我们为这道新题添加了新的 <code>isCorrect4</code> 和 <code>hasSkills4</code> 变量。在这张仅仅略微变大的图上，我们当然也可以用<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>来做<a href="/post/2025-04-21-mbml-introduction">推断</a>吧？其实，我们不能。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/PlaneLoop_86879950.jpg">
+            <img class="mx-auto" alt="飞机航迹环" src="/uploads/PlaneLoop_86879950.jpg" />
+        </a>
+    </p>
+<p><em>环可能很棘手。</em></p>
+<p>问题在于，<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>只有在某个（未观测）节点的所有其它边上都收到了消息之后，才能从该节点发出一条消息（算法 2.1）。在这个约束下，只有当图中没有环时，我们才能把图中的所有消息都发送出去；这里的<strong>环</strong>是指一条穿过图、从同一个节点出发又回到该节点的路径（且不重复经过同一条边）。如果图中有一个环，那么我们无法沿着环上的任何一条边发送消息，因为这总是要求先计算出环上的另一条消息。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" title="如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" target="_blank">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-06-13T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年6月13日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260730135212-3f34437049b94d55a74d2a39cd5f3520.png">
+            <img class="mx-auto" alt="封面：在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响" src="/uploads/20260730135212-3f34437049b94d55a74d2a39cd5f3520.png" />
+        </a>
+    </p>
+<p>我第一次盯着一个启用了 MCP 的智能体的 token 账单时，脑子是懵的。API 告诉我这次跑了 773 个 token。可门户里的 trace 显示的是 581/141。切到 trajectory 视图，数字又变成了另一个样子。三个地方，三套数据，哪个才是对的？</p>
+<p>在你急着去提 bug 之前，我想先说清楚这背后到底发生了什么，以及怎么建立一套站得住脚的证据方法，让企业级的 token 核算不再靠猜。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/" title="[译]基于模型的机器学习 - 2.2 试验模型" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-06-06T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年6月6日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>构建好一个<a href="/post/2025-04-21-mbml-introduction">模型</a>之后，首先要做的就是用一些简单的示例数据来试验它，检查它的行为是否合理。假设有一位候选人懂 C# 但不懂 SQL——我们会预期他答对第一题，而答错另外两题。那么让我们针对这种情况试验一下<a href="/post/2025-04-21-mbml-introduction">模型</a>，看看对于这样的答题模式它会推断出哪些技能。为方便起见，我们用 <code>isCorrect</code> 来指代数组 <code>[isCorrect1, isCorrect2, isCorrect3]</code>，因此我们要考虑的是 <code>isCorrect</code> 为 <code>[true, false, false]</code> 的情形。</p>
+<p>我们想在给定这一组特定的 <code>isCorrect</code> 取值的条件下，推断候选人具备 <code>csharp</code> 和 <code>sql</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。这是一个<strong>推断查询</strong>的例子，它由我们想要推断的变量（<code>csharp</code>、<code>sql</code>）以及我们所条件化的变量（<code>isCorrect</code>）连同它们的观测值共同定义。由于这个例子相当小，我们可以用手工方式求出这个推断查询的答案。</p>
+<h3 id="手动进行推断">手动进行推断</h3>
+<p>作为开始，我们先来看看在只给定第一题答案的情况下，如何推断 <code>csharp</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。舍去其它变量后，就得到图 2.6 所示的简化<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/" target="_blank">阅读全文</a></p>
+    </article>
+    
     
     
     <article class="post">
@@ -291,97 +391,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-04-05-vector-drift-in-azure-ai-search-three-hidden-reasons-your-rag-accuracy-degrades-after-deployment/" title="Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因" target="_blank">Azure AI Search 中的向量漂移：RAG 部署后准确率下降的三个隐藏原因</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-04-05T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年4月5日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>用 Azure AI Search 加 Azure OpenAI 搭 RAG 系统时，我碰到过一个很典型的现象：上线初期检索质量挺好，跑了一阵子却慢慢变差。代码没动，基础设施没改，服务也没出故障，可检索的相关性就是在往下掉。折腾了一番我才搞清楚，背后常见的元凶叫向量漂移（vector drift）。这篇就说说向量漂移到底是什么、它为什么会在生产环境的 RAG 系统里冒出来，以及怎么用 Azure 原生的模式设计一套抗漂移的架构。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-04-05-vector-drift-in-azure-ai-search-three-hidden-reasons-your-rag-accuracy-degrades-after-deployment/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/" title="Azure AI Foundry — 多代理编排与工作流" target="_blank">Azure AI Foundry — 多代理编排与工作流</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-03-26T00:00:00Z" class="post-meta meta-date dt-published">
-    2026年3月26日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>Azure AI Foundry（前身为 Azure AI Studio）是微软提供的端到端平台，用于构建、测试、部署和监控 AI 代理及应用程序。它将模型、工具、框架和治理能力整合到一个统一的系统中。</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png">
-            <img class="mx-auto" alt="多代理编排概览" src="/uploads/20260326103414-7cedc801204945dc9f0c4c2ca1afeed7.png" />
-        </a>
-    </p>
-<p>现代企业自动化往往需要多个 AI 系统协同完成任务。与其让单一的大型语言模型承担所有工作，Azure AI Foundry 引入了多代理编排机制——让专业化的 AI 代理在工作流中相互协作。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-03-26-azure-ai-foundry-multi-agent-orchestration-and-workflows/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/" title="Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析" target="_blank">Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-03-06T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年3月6日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>这篇文章记录的是如何观察和了解 Agent 在现实中的实际运行状态。</p>
-<p>Agent 与普通 API 有根本的不同。它不是简单的请求/响应就结束，而是一套多阶段流程：LLM 推理 → 工具调用 → 结果处理 → 再推理。出错时，很难立即看出是哪个阶段因为什么原因失败了。速度慢时，也搞不清楚时间消耗在哪里。在成本方面，更难分析是哪个查询消耗了大量 Token。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -508,11 +517,23 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/" title="[译]基于模型的机器学习 - 4.3 建模多个特征" target="_blank">[译]基于模型的机器学习 - 4.3 建模多个特征</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/" title="用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构" target="_blank">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a>
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-11-mbml-emailclassifier_a_model_for_classification/" title="[译]基于模型的机器学习 - 4.2 一个用于分类的模型" target="_blank">[译]基于模型的机器学习 - 4.2 一个用于分类的模型</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota Tiers" target="_blank">Microsoft Foundry 的 Quota Tiers</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" title="[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据" target="_blank">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a>
     </li>
     
     <li>
@@ -533,18 +554,6 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/" title="[译]基于模型的机器学习 - 3.2 推断玩家的技能" target="_blank">[译]基于模型的机器学习 - 3.2 推断玩家的技能</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/" title="[译]基于模型的机器学习 - 3.1 建模游戏的结果" target="_blank">[译]基于模型的机器学习 - 3.1 建模游戏的结果</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/" title="[译]基于模型的机器学习 - 3 匹配你的对手" target="_blank">[译]基于模型的机器学习 - 3 匹配你的对手</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" title="[译]基于模型的机器学习 - 插曲：机器学习生命周期" target="_blank">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a>
     </li>
     
 </ul>
@@ -570,7 +579,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (23)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (26)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
     

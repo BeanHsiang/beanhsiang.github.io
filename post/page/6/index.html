@@ -75,6 +75,116 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/" title="使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（上）：隐私优先的本地&#43;云端协同" target="_blank">使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（上）：隐私优先的本地&#43;云端协同</a>
+            </h1>
+        </header>
+        
+  <time datetime="2025-11-21T04:00:00Z" class="post-meta meta-date dt-published">
+    2025年11月21日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260105114656-3f580f262ff74ddd96bc8d6400074e74.png">
+            <img class="mx-auto" alt="" src="/uploads/20260105114656-3f580f262ff74ddd96bc8d6400074e74.png" />
+        </a>
+    </p>
+<p>原文链接：https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework&mdash;part-1/4470813?WT.mc_id=AI-MVP-5003172</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-11-21-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-1/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/" title="使用 Agent Framework 构建带人工审批的多智能体顺序工作流" target="_blank">使用 Agent Framework 构建带人工审批的多智能体顺序工作流</a>
+            </h1>
+        </header>
+        
+  <time datetime="2025-10-31T04:00:00Z" class="post-meta meta-date dt-published">
+    2025年10月31日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260107112735-5f20492722ae4b239416b97e0f27ff8a.png">
+            <img class="mx-auto" alt="" src="/uploads/20260107112735-5f20492722ae4b239416b97e0f27ff8a.png" />
+        </a>
+    </p>
+<p><em>题图来源：Microsoft Tech Community 原文页面（见文末链接）。</em></p>
+<h2 id="摘要">摘要</h2>
+<p>在需要“高自动化 + 强审计/合规”的 AI 工作流里，人类审批（human-in-the-loop）往往是绕不过去的一环：既要让多智能体协作把流程跑起来，又要在关键动作（例如停机、触发维护）前强制停下来等人确认。</p>
+<p>Microsoft 在一篇示例文章中给出了一套脚本化方案：使用 Agent Framework 编排一个<strong>顺序（sequential）多智能体工作流</strong>，底层调用 <strong>Azure AI Foundry 的持久化（persistent）agents</strong>，并利用 **workflow checkpointing（检查点）**实现“暂停—等待审批—从检查点恢复继续执行”。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-10-31-multi-agent-workflow-with-human-approval-using-agent-framework/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2025-10-11-building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/" title="使用 Microsoft Agent Framework 构建 Human-in-the-loop 的 AI 工作流" target="_blank">使用 Microsoft Agent Framework 构建 Human-in-the-loop 的 AI 工作流</a>
+            </h1>
+        </header>
+        
+  <time datetime="2025-10-11T04:00:00Z" class="post-meta meta-date dt-published">
+    2025年10月11日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>原文链接：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/4460342?WT.mc_id=AI-MVP-5003172">https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/4460342?WT.mc_id=AI-MVP-5003172</a></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20260107121419-0f605ecc540d420ea89d4a7bd85c3179.png">
+            <img class="mx-auto" alt="" src="/uploads/20260107121419-0f605ecc540d420ea89d4a7bd85c3179.png" />
+        </a>
+    </p>
+<h2 id="一个把确定性编排与自主代理结合起来的欺诈检测示例">一个把确定性编排与自主代理结合起来的欺诈检测示例</h2>
+<p>现代企业系统经常面临一个非常现实的问题：<strong>如何让 AI 的决策可靠、可解释，并且真正能在生产环境落地？</strong></p>
+<p>原文围绕一个“欺诈检测（Fraud Detection）”示例，展示了 Microsoft Agent Framework 如何把 AI 驱动的推理步骤放进一个可控的工作流里：</p>
+<ul>
+<li>工作流图（workflow graph）负责<strong>确定性编排</strong>：控制执行顺序、并行与合流、容错与恢复</li>
+<li>专家代理（agents）负责<strong>LLM 推理</strong>：在结构化/半结构化数据上做领域判断</li>
+</ul>
+<p>完整实现代码仓库在这里：</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-10-11-building-human-in-the-loop-ai-workflows-with-microsoft-agent-framework/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2025-09-30-integrating-azure-ai-foundry-with-copilot-studio/" title="将 Azure AI Foundry 与 Copilot Studio 集成:战略与技术概览" target="_blank">将 Azure AI Foundry 与 Copilot Studio 集成:战略与技术概览</a>
             </h1>
         </header>
@@ -293,92 +403,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2025-06-17-interpretation-of-the-microsoft-azure-openai-api-version-lifecycle/" title="微软 Azure OpenAI API 版本生命周期解读" target="_blank">微软 Azure OpenAI API 版本生命周期解读</a>
-            </h1>
-        </header>
-        
-  <time datetime="2025-06-17T04:00:00Z" class="post-meta meta-date dt-published">
-    2025年6月17日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>在当前人工智能技术飞速发展的浪潮中，微软的 Azure OpenAI 服务成为众多企业与开发者构建智能应用的首选平台。要高效、可持续地利用这些服务，理解 API 版本的生命周期（API Version Lifecycle）至关重要。本文将深入解读 Azure OpenAI API 的版本生命周期策略，帮助您更好地应对服务更新和迭代带来的挑战。</p>
-<p>一、什么是 API 版本生命周期？</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-06-17-interpretation-of-the-microsoft-azure-openai-api-version-lifecycle/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2025-06-12-agents-will-ultimately-be-personalized/" title="Agent 终将是个性化的" target="_blank">Agent 终将是个性化的</a>
-            </h1>
-        </header>
-        
-  <time datetime="2025-06-12T04:00:00Z" class="post-meta meta-date dt-published">
-    2025年6月12日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/AI-Agent' target="_blank">AI Agent</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>还记得第一次和Siri对话时的兴奋感吗？那时的我们就像发现了新大陆一样，对着手机说&quot;嗨，Siri&quot;，然后看着它机械地回答我们的问题。虽然偶尔会闹出一些啼笑皆非的误解，但那种科幻感十足的体验让我们觉得未来已经到来。</p>
-<p>快进到2025年，AI Agent已经不再是那个只会按部就班回答问题的&quot;机器人&quot;了。它们开始有了自己的&quot;脾气&quot;，有了自己的&quot;喜好&quot;，甚至还会和我们开玩笑。没错，<strong>Agent终将是个性化的</strong>，这不仅仅是技术发展的必然趋势，更是人类内心深处对于陪伴的渴望。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-06-12-agents-will-ultimately-be-personalized/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2025-06-11-enhancing-ai-security-azure-prompt-shields-and-azure-ai-content-safety/" title="增强AI安全性：Azure Prompt Shields 与 Azure AI Content Safety" target="_blank">增强AI安全性：Azure Prompt Shields 与 Azure AI Content Safety</a>
-            </h1>
-        </header>
-        
-  <time datetime="2025-06-11T04:00:00Z" class="post-meta meta-date dt-published">
-    2025年6月11日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>近年来，生成式AI的应用越来越广泛，但随之而来的安全问题也愈发突出。其中，提示注入攻击（Prompt Injection）已成为对AI系统的主要威胁之一。为了应对这一挑战，Azure推出了Prompt Shields和Azure AI Content Safety，帮助开发者保护AI系统免受直接和间接威胁。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-06-11-enhancing-ai-security-azure-prompt-shields-and-azure-ai-content-safety/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -519,11 +543,23 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/" title="[译]基于模型的机器学习 - 4.3 建模多个特征" target="_blank">[译]基于模型的机器学习 - 4.3 建模多个特征</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/" title="用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构" target="_blank">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a>
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-11-mbml-emailclassifier_a_model_for_classification/" title="[译]基于模型的机器学习 - 4.2 一个用于分类的模型" target="_blank">[译]基于模型的机器学习 - 4.2 一个用于分类的模型</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota Tiers" target="_blank">Microsoft Foundry 的 Quota Tiers</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" title="[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据" target="_blank">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a>
     </li>
     
     <li>
@@ -544,18 +580,6 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/" title="[译]基于模型的机器学习 - 3.2 推断玩家的技能" target="_blank">[译]基于模型的机器学习 - 3.2 推断玩家的技能</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/" title="[译]基于模型的机器学习 - 3.1 建模游戏的结果" target="_blank">[译]基于模型的机器学习 - 3.1 建模游戏的结果</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/" title="[译]基于模型的机器学习 - 3 匹配你的对手" target="_blank">[译]基于模型的机器学习 - 3 匹配你的对手</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" title="[译]基于模型的机器学习 - 插曲：机器学习生命周期" target="_blank">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a>
     </li>
     
 </ul>
@@ -581,7 +605,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (23)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (26)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (6)</a></li>
     

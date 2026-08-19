@@ -10,28 +10,28 @@
 		
 		
 		
-			<lastBuildDate>Tue, 11 Aug 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Sun, 16 Aug 2026 10:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>Microsoft Foundry</title>
-				<link>https://beanhsiang.github.io/tags/Microsoft-Foundry/</link>
-				<pubDate>Tue, 11 Aug 2026 12:00:00 +0800</pubDate>
-				<guid>https://beanhsiang.github.io/tags/Microsoft-Foundry/</guid>
-				<description></description>
-			</item>
-			<item>
 				<title>Machine Learning</title>
 				<link>https://beanhsiang.github.io/tags/Machine-Learning/</link>
-				<pubDate>Sat, 01 Aug 2026 10:00:00 +0800</pubDate>
+				<pubDate>Sun, 16 Aug 2026 10:00:00 +0800</pubDate>
 				<guid>https://beanhsiang.github.io/tags/Machine-Learning/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Model-Based</title>
 				<link>https://beanhsiang.github.io/tags/Model-Based/</link>
-				<pubDate>Sat, 01 Aug 2026 10:00:00 +0800</pubDate>
+				<pubDate>Sun, 16 Aug 2026 10:00:00 +0800</pubDate>
 				<guid>https://beanhsiang.github.io/tags/Model-Based/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Microsoft Foundry</title>
+				<link>https://beanhsiang.github.io/tags/Microsoft-Foundry/</link>
+				<pubDate>Tue, 11 Aug 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Microsoft-Foundry/</guid>
 				<description></description>
 			</item>
 			<item>

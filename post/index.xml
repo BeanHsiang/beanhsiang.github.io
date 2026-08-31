@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Sun, 16 Aug 2026 10:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Tue, 25 Aug 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>为 Foundry 托管代理开启 A2A 端点和 Agent Card</title>
+				<link>https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/</link>
+				<pubDate>Tue, 25 Aug 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/</guid>
+				<description>&lt;p&gt;最近在给 Foundry 上的托管代理配置对外能力时，碰到了一个绕不开的问题：怎么让别的 agent 框架也能发现我这个代理、跟它对话。翻了一圈 Microsoft Foundry 的文档，发现官方已经把 Agent-to-Agent（A2A）协议接进了托管代理里，跨框架、跨技术栈的代理之间能直接打通。原文在这儿：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/4546979?WT.mc_id=AI-MVP-5003172&#34;&gt;Enabling A2A endpoint and Agent Card for a Hosted Agent&lt;/a&gt;（原文作者 srisatyakrishna5，发布于 2026 年 8 月 24 日）。我把自己跑通的过程和踩的坑整理了一下。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>[译]基于模型的机器学习 - 4.3 建模多个特征</title>
 				<link>https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/</link>

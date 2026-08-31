@@ -82,6 +82,32 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-25T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月25日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>最近在给 Foundry 上的托管代理配置对外能力时，碰到了一个绕不开的问题：怎么让别的 agent 框架也能发现我这个代理、跟它对话。翻了一圈 Microsoft Foundry 的文档，发现官方已经把 Agent-to-Agent（A2A）协议接进了托管代理里，跨框架、跨技术栈的代理之间能直接打通。原文在这儿：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/4546979?WT.mc_id=AI-MVP-5003172">Enabling A2A endpoint and Agent Card for a Hosted Agent</a>（原文作者 srisatyakrishna5，发布于 2026 年 8 月 24 日）。我把自己跑通的过程和踩的坑整理了一下。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/" target="_blank">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a>
             </h1>
         </header>
@@ -345,33 +371,6 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" target="_blank">Microsoft Foundry 智能体的 AI 可观测性入门套件</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-05-30T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年5月30日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>本文编译自 Microsoft Tech Community 上 varghesejoji 的博客文章 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/ai-observability-starter-kit-for-microsoft-foundry-agents/4522751?WT.mc_id=AI-MVP-5003172">AI Observability Starter Kit for Microsoft Foundry agents</a>，我按自己上手时的理解重新整理，并补充了一些实际跑下来的体会。</p>
-<p>先把结论放前面：一条 PowerShell 命令，就能拉起一个包含四个智能体的 Microsoft Foundry 环境，带遥测、8 个内置评估器、1 个自定义合规评估器、一次自动化红队扫描，还有两条 scheduled-query 告警。整套东西端到端验证过，再敲一条命令就能全部拆掉。Fork 下来直接跑。我觉得它最对胃口的人群是那些在 Azure 上跑 AI 智能体、又不想自己手写一堆管道代码的应用开发者、ML 工程师和 SRE。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
@@ -454,6 +453,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" title="为 Foundry 托管代理开启 A2A 端点和 Agent Card" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/" title="[译]基于模型的机器学习 - 4.3 建模多个特征" target="_blank">[译]基于模型的机器学习 - 4.3 建模多个特征</a>
     </li>
     
@@ -489,10 +492,6 @@
         <a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" title="[译]基于模型的机器学习 - 3.3 一个解法：期望传播" target="_blank">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-28-mbml-trueskill_inferring_the_players_skills/" title="[译]基于模型的机器学习 - 3.2 推断玩家的技能" target="_blank">[译]基于模型的机器学习 - 3.2 推断玩家的技能</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -512,7 +511,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (37)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (38)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

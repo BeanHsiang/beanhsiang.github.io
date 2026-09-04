@@ -9,20 +9,23 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
     
 
-    <title>.NET | Innovation with tech</title>
-    <meta property="og:title" content=".NET - Innovation with tech">
+    <title>大模型会推理了，但还学不会企业的价值观 | Innovation with tech</title>
+    <meta property="og:title" content="大模型会推理了，但还学不会企业的价值观 - Innovation with tech">
     <meta property="og:type" content="article">
         
+    <meta property="article:published_time" content='2026-09-04T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-09-04T12:00:00&#43;08:00'>
         
     <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
-    <meta name="description" content=".NET">
+    <meta name="description" content="大模型会推理了，但还学不会企业的价值观">
     <meta name="author" content="">
-    <meta property="og:url" content="https://beanhsiang.github.io/tags/.NET/">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-09-04-large-models-can-reason-but-not-learn-enterprise-values/">
     <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
 
     <link rel="stylesheet" href='/css/normalize.css'>
     <link rel="stylesheet" href='/css/style.css'>
-    <link rel="alternate" type="application/rss+xml" href="https://beanhsiang.github.io/tags/.NET/index.xml" title="Innovation with tech" />
     <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     
@@ -49,7 +52,7 @@
             </div>
             <div>
                 <nav id="nav-menu" class="clearfix">
-                    <a class="" href="https://beanhsiang.github.io/">首页</a>
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
                     
                     <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
                     
@@ -71,46 +74,106 @@
                     
 <div class="res-cons">
     
-    <h3 class="archive-title">
-        
-        <span class="keyword">.NET</span>
-        中的文章
-    </h3>
-    
-
-    
     <article class="post">
         <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" target="_blank">用 CSnakes 把 MarkItDown 嵌入到 .NET 应用程序中</a>
-            </h1>
+            <h1 class="post-title">大模型会推理了，但还学不会企业的价值观</h1>
         </header>
         
-  <time datetime="2025-03-07T04:00:00Z" class="post-meta meta-date dt-published">
-    2025年3月7日
+  <time datetime="2026-09-04T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月4日
   </time>
 
 
 <div class="post-meta meta-category">
   <span>&nbsp;|</span>
   
-    <a href='/categories/Azure-AI' target="_blank">Azure AI</a>
+    <a href='/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85' target="_blank">穿越人机融合之际</a>
   
 </div>
 
 
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
         <div class="post-content">
-            <p>最近在开发智能文档搜索的工作中，我需要将各种文件转换为 Markdown 格式，然后通过向量化计算，把它们创建到向量数据库中，以便实现语义搜索文档的功能。并结合 LLMs 和 RAG（Retrieval Augmented Generation）来获取与搜索目标相关的文档内容完成二次创作。由于多模态下需要处理的文档类型太多了，我曾用 python 写了几个工具方法，使用 MarkItDown 来统一处理的。但现实问题是 MarkItDown 目前没有 .NET 版本的实现，而我的应用是 .NET 的程序，如果能有一个办法将 python 脚本无缝嵌入到我的 .NET 应用程序中那就太棒了，这就是我为什么要使用 CSnakes 的原因。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-03-07-embedding-markitdown-into-dotnet/" target="_blank">阅读全文</a></p>
+            <p>过去一年多，大模型的变化越来越明显。它们不再只是等待提问、生成答案的语言工具，越来越像 agent 的执行引擎。以前我们要让一个模型真正做事，往往需要在外围搭很多东西：上下文管理、检索、工具调用、流程编排，每一步都要由开发者事先安排好。现在，不少模型已经能够自己理解目标，判断是否需要调用工具，再根据工具返回的结果继续往下做。</p>
+<p>这让使用大模型变得简单了一些。我们不必把每个步骤都写成指令，只要把意图说明白，再提供相应的脚本、API 或其他工具，它就有机会把一件事情做完。模型正在从一个需要人不断推动的问答界面，变成一个可以自行推进任务的代理。</p>
+<p>但我越来越觉得，交互变简单，并不等于模型真的理解了我们。它在通用知识和常见推理上的表现已经相当不错，放到个人使用或企业应用的具体场景里，问题就会变得细很多。一个企业有自己的价值判断，也有一套不容易写进制度里的处事方式：哪些事情应该优先，遇到风险时愿意付出什么代价，什么时候可以妥协，什么情况必须停下来请人决定。</p>
+<p>这些内容很少完整地存在于企业文档里。历史记录通常只留下最后的决定，知识库保存的是已经整理过的结论，产品则体现了某些选择，却不会告诉我们当初放弃了哪些选择。即使让创始人或管理者亲自讲述，也很难靠一次访谈把这些判断的来龙去脉全部说明白。人的思考本来就不是一份结构清楚、可以直接导入模型的说明书。很多判断是在具体情境里跳出来的，连做决定的人自己都未必能事先总结出一套完整规则。</p>
+<p>这大概就是企业迟迟不敢把大模型当作数字员工来使用的原因。现在的模型已经可以写方案、查资料、操作系统，甚至独立完成一段复杂流程。但当任务越过了明确的规则边界，它给出的答案可能在语言上无可挑剔，却不符合这家企业的取舍。更麻烦的是，它未必知道这一次应该站在哪一边，也未必知道什么时候不该继续执行。</p>
+<p>所以，现阶段更容易落地的，还是那些确定性较高、边界已经被规则限定好的工作。我们可以告诉模型哪些数据能读，哪些系统能调用，哪些操作需要审批，出现什么情况必须停止。在这样的范围内，模型的推理、工具调用和反复执行都能派上用场。可一旦希望它自己补足企业没有明说的价值观，事情就没有那么乐观了。</p>
+<p>大模型现在处在一个有意思的阶段。上下文、工具、知识和各种外围能力还在不断补齐，模型越来越会做事；但在智力水平本身上，我暂时还没有看到同样清晰的突破。单纯把模型做大、塞入更多知识，能不能让它获得真正的判断力，我并不确定。知识的规模和价值取舍之间，毕竟不是一回事。至于超级智能或超级智慧什么时候出现，我也不愿意轻易下结论。我更愿意先把眼前能用的能力用好，遥远的终点没有必要急着替它下判断。</p>
+<p>这还牵涉到我们应该怎样看待大模型的不确定性。我们希望它学习全人类的知识和经验，同时又要求它每一次都给出百分之百确定的结果。这个要求放在人身上也不现实。一个人也会判断失误，也会在复杂任务里漏掉细节。大模型的错误率可能是百分之一，也可能是百分之十，真正重要的是它被放在哪一种工作里，以及有没有相应的复核和补救办法。</p>
+<p>一份内部摘要写错了，通常可以重新生成；一次资料整理漏掉了内容，也可以让它从头再做一遍。模型不是只能执行一次的机器，它可以在有限次数里反复尝试，通过工具结果和人的反馈把任务推到完成。可如果它正在替企业做一项不可逆的决定，或者处理不能出错的数据，那么同样的错误率就完全是另一回事了。即使接受不确定性，边界和责任也必须留下来。</p>
+<p>在我看来，人机协同不该从“把所有工作交给模型”开始。更现实的做法是，人来确定目标、边界和那些不能被轻易改变的取舍，模型在边界之内理解意图、调用工具、处理重复步骤，遇到拿不准的地方停下来。这听起来没有那么科幻，却更像企业真正用得起来的东西。</p>
+<p>如果大模型能够把我们生活和工作中大量繁琐的事情接过去，在有限的尝试次数里稳定地完成任务，这已经足以改变许多工作的节奏。我们需要习惯它会犯错，也要给它设计好重试、审批和退出的路径。至于一家企业最看重什么、愿意承担什么、哪些决定必须由人来做，这些事情暂时还不能只寄希望于模型自己领会。人机协同的下一步，也许正是在这些没有写出来的地方，慢慢把彼此的边界摸清楚。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-09-04-large-models-can-reason-but-not-learn-enterprise-values/">https://beanhsiang.github.io/post/2026-09-04-large-models-can-reason-but-not-learn-enterprise-values/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2025-06-06-the-programming-models-are-clearing-the-way-in-the-field-of-software-development/">编程大模型正在软件开发领域“清理门户”</a></li>
+        
+        <li><a href="/post/2024-12-23-ai-agents-manipulation-engines/">AI 代理将成为操纵引擎</a></li>
+        
+        <li><a href="/post/2024-07-15-keep-more-original-knowledge/">努力保留更多的原创知识</a></li>
+        
+        <li><a href="/post/2024-06-21-llm-is-the-brain-and-rpa-are-the-hands/">LLM 是脑，RPA 是手</a></li>
+        
+        <li><a href="/post/2024-04-25-why-is-it-difficult-to-land-large-models/">为什么大模型难落地？</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85' target="_blank">穿越人机融合之际</a></li>
+                
+            </ul>
+            
         </div>
     </article>
     
-
     
 
-
-
-
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
 
 </div>
 
@@ -131,10 +194,98 @@
 </footer>
 
 
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
 
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
 
 
     <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>

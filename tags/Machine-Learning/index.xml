@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Mon, 31 Aug 2026 10:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Wed, 02 Sep 2026 10:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/tags/Machine-Learning/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>[译]基于模型的机器学习 - 5 做出推荐</title>
+				<link>https://beanhsiang.github.io/post/2026-09-02-mbml-recommender/</link>
+				<pubDate>Wed, 02 Sep 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-09-02-mbml-recommender/</guid>
+				<description>&lt;p&gt;无论你钟情于音乐、书籍、电影还是电子游戏，一条好的推荐都能带来实实在在的乐趣——还能帮助那些名气不大的作品走入聚光灯下。但一个人眼中的新经典，另一个人可能会一口断定为烂作。能否用一个&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;模型&lt;/a&gt;来理解一个人的喜好与厌恶，理解得足够透彻，从而提供量身定制的推荐呢？&lt;/p&gt;&#xA;&lt;p&gt;各行各业的零售商都渴望向他们的顾客做出准确、个性化的推荐。然而，开发一套自动推荐系统所需的专业能力和投入，超出了许多零售商——尤其是较小的零售商——的承受范围。作为替代方案，这类零售商可以转向云端，利用在线推荐服务。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>[译]基于模型的机器学习 - 4.6 随邮件到达而学习</title>
 				<link>https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/</link>

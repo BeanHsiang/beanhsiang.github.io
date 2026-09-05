@@ -82,6 +82,33 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-09-02-mbml-recommender/" target="_blank">[译]基于模型的机器学习 - 5 做出推荐</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-09-02T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月2日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>无论你钟情于音乐、书籍、电影还是电子游戏，一条好的推荐都能带来实实在在的乐趣——还能帮助那些名气不大的作品走入聚光灯下。但一个人眼中的新经典，另一个人可能会一口断定为烂作。能否用一个<a href="/post/2025-04-21-mbml-introduction">模型</a>来理解一个人的喜好与厌恶，理解得足够透彻，从而提供量身定制的推荐呢？</p>
+<p>各行各业的零售商都渴望向他们的顾客做出准确、个性化的推荐。然而，开发一套自动推荐系统所需的专业能力和投入，超出了许多零售商——尤其是较小的零售商——的承受范围。作为替代方案，这类零售商可以转向云端，利用在线推荐服务。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-02-mbml-recommender/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
             </h1>
         </header>
@@ -384,39 +411,6 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" target="_blank">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-29T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月29日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>我们已经看到，<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>使我们能够在<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.10</a> 的<a href="/post/2025-04-21-mbml-introduction">模型</a>中计算变量 <code>Jskill</code> 的精确边缘<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。虽然 <code>Jskill</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>是一个由两个参数描述的高斯，但<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>分布不是高斯，而是一个需要四个参数的更复杂分布。为阻止参数数量在每局游戏后不断增加，我们需要一种方法用具有固定数量参数的分布来近似这个真实的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>，为此我们选择高斯。这样<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>就会与<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>具有相同的函数形式，模仿<a href="https://www.mbmlbook.com/TrueSkill_Inferring_the_players_skills.html#conjugate">共轭</a><a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>的行为。如果我们能做到这一点，就能把所得的近似<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>当作下一局游戏的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>。这样，每个玩家的技能将始终由一个仅受两个参数支配的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>表示。</p>
-<p>第一个问题是如何用一个高斯来近似一个非<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>。一个简单的解法是求出该非<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>，然后选一个具有相同均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>的高斯作为我们的近似。事实证明这是一个合理的近似，它可以通过优化两个<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>不相似性的某种度量来形式化地推导出来 [Bishop, 2006; Minka, 2005]。</p>
-<p>我们也许会因此想干脆直接用一个高斯来近似 <code>Jskill</code> 的精确<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。虽然这对<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.10</a> 的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>会令人满意地奏效，但当我们转向更复杂的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>（例如本章后面将遇到的那些）时，它又会失效。具有简单函数形式的消息在穿过<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>后往往会变得更复杂。当我们把<a href="/post/2025-04-21-mbml-introduction">模型</a>扩展到更大、更精巧的图时，很快就会遇到消息无法被精确计算的情形。这类问题可以通过在每个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>处局部地做近似来避免，从而使所有消息都具有所需的分布类型。这确保了只要每个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>都能使用适当的分布类型向所有相邻的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>发送近似消息，<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>就可以被组合成任意的图。</p>
-<p>下面这一小节会深入这类<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>的数学细节。如果你想跳过这些细节，尽可直接看下一节。</p>
-<blockquote>
-<p><strong>推断深入探讨</strong></p>
-<p>在这个可选小节中，我们引入期望传播这一<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a>技术，我们将在本书中广泛使用它。如果你想专注于建模，尽可跳过本小节。</p>
-<p>回到<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.12</a>（为方便起见在图 3.21 中重现），我们看到消息 (6) 是我们遇到的第一个非高斯消息。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
@@ -499,6 +493,10 @@
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-02-mbml-recommender/" title="[译]基于模型的机器学习 - 5 做出推荐" target="_blank">[译]基于模型的机器学习 - 5 做出推荐</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
     </li>
     
@@ -530,10 +528,6 @@
         <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota Tiers" target="_blank">Microsoft Foundry 的 Quota Tiers</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" title="[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据" target="_blank">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -557,7 +551,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (29)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (30)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (7)</a></li>
     

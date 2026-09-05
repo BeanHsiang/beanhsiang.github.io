@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 4.4 设计特征集 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 4.4 设计特征集 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-08-21T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-08-21T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 4.4 设计特征集">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 4.4 设计特征集</h1>
+        </header>
+        
+  <time datetime="2026-08-21T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月21日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>要使用我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">模型</a>，我们需要设计<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>来变换数据，使其尽可能贴近地符合<a href="/post/2025-04-21-mbml-introduction">模型</a>中内置的假设（<a href="/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features">表 4.3</a>）。例如，为满足<a href="/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features">假设 4.7</a>（即<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>包含与用户行为相关的所有信息），我们需要确保我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>包含所有与预测回复相关的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>。由于一封邮件几乎任何部分都可能有助于做出这样的预测，这意味着我们将不得不在<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>中编码邮件的几乎所有方面。这将包括谁发送了邮件、收件人栏和抄送栏上的收件人、邮件的主题以及邮件的正文，还有关于该邮件所属会话的信息。</p>
+<p>在设计一个新<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>时，我们需要确保：</p>
+<ul>
+<li>该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>捕捉到数据中某个有信息量的方面；</li>
+<li>该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的输出具有适合输入到<a href="/post/2025-04-21-mbml-introduction">模型</a>的正确形式；</li>
+<li>该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>提供了关于标签的新信息，超出了既有<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>所提供的信息。</li>
+</ul>
+<p>在本节中，我们将展示如何为我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>设计若干新<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，同时确保它们满足上述前两条标准。在下一节中，我们将展示如何通过在有和没有某些<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的情况下评估系统，来检查第三条标准。</p>
+<h3 id="具有多个状态的特征">具有多个状态的特征</h3>
+<p>到目前为止，我们用一个 ToLine <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>来表示用户出现在邮件中的位置。这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>只有两个状态：用户要么在收件人栏中，要么不在。因此这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>忽略了用户是否在抄送栏中，尽管我们可能预期用户在出现在抄送栏中时比完全不出现时更有可能回复邮件。这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>还忽略了用户在收件人/抄送栏上的位置。如果用户排在收件人栏的第一位，我们可能预期他比排在一长串收件人末尾时更有可能回复。我们可以用我们的数据集来检验这些直觉，方法是找出在若干情形下所有训练/验证邮件中实际被回复的比例：当用户在收件人栏中排第一、第二或第二之后时，当用户在抄送栏中排第一或其他位置时，以及当用户既不在收件人栏也不在抄送栏时（例如，如果他通过邮件列表收到邮件）。</p>
+<p>图 4.8 绘制了这些比例，显示回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>确实会根据适用于哪种情形而有很大变化。这幅图表明，一个能够区分这些情形的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>确实会捕捉到数据中有信息量的方面（即我们上面的第一条标准）。在评估回复比例（例如图 4.8 中的那些）时，重要的是要考虑该比例是从多少封邮件计算得来的，因为从少量邮件计算出的比例不会很准确。为检查这一点，在图 4.8 中我们在每个条形标签下方的括号中显示了邮件数量，表明每个情形都有足够的邮件来准确计算比例，因此我们可以信赖所计算的值。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_FeatureHistograms_ToCcPosition.png">
+            <img class="mx-auto" alt="图 4.8" src="/uploads/EmailClassifier_FeatureHistograms_ToCcPosition.png" />
+        </a>
+    </p>
+<p><em>图 4.8：对于用户在收件人栏或抄送栏上六种可能位置中的每一种，被回复的邮件比例。用户处于每个位置的邮件数量显示在括号中（回复比例是这些邮件中被回复的比例）。该图显示，对于我们的数据集，排在收件人栏第一位表示最高的回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，但如果用户排在第二位或更后，这个概率会降低。它还显示，如果用户没有出现在收件人栏或抄送栏，回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>非常低。</em></p>
+<p>我们可以改进这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>来捕捉这样的线索，方法是给它多个状态，图 4.8 的每个条形各对应一个。因此状态将是：{ NotOnToOrCcLine、FirstOnToLine、SecondOnToLine、ThirdOrLaterOnToLine、FirstOnCcLine、SecondOrLaterOnCcLine }。现在我们只需弄清楚<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的输出应该是什么，才能适合我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>（第二条标准）。我们可以尝试对 NotOnToOrCcLine 返回值 0.0、对 FirstOnToLine 返回 1.0，依此类推直到对 SecondOrLaterOnCcLine 返回 5.0。但是，根据<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">假设 4.3</a>（<code>score</code> 变化等于权重乘以<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值），这将意味着当值从 0.0 变到 5.0 时，回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>要么稳步上升，要么稳步下降。图 4.8 表明情况并非如此，因为从左到右回复比例是有升有降的。所以这样的假设会是错误的。一般来说，我们希望避免做出依赖于某些本身没有内在顺序的状态排序的假设，就像这些状态一样。相反，我们希望能够分别学习每个状态如何影响回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</p>
+<p>为实现这一点，我们可以修改<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，让它输出多个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值，每个状态一个。我们对适用于某封邮件的那个状态用值 1.0，对所有其他状态用值 0.0——这有时被称为<strong>独热</strong>（one-hot）编码。因此，用户排在收件人栏第一位的邮件将由<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值 $\{0.0,1.0,0.0,0.0,0.0,0.0\}$ 表示。类似地，用户排在抄送栏第一位的邮件将由<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值 $\{0.0,0.0,0.0,0.0,1.0,0.0\}$ 表示。这样做，我们实际上创建了一组相关的二值<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>——不过，把它们看成一个输出多个值的单一 ToCcPosition <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>要方便得多。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/shutterstock_187842779.jpg">
+            <img class="mx-auto" alt="邮件位置示意" src="/uploads/shutterstock_187842779.jpg" />
+        </a>
+    </p>
+<p>为避免术语上的混淆，我们将把这样一个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的不同元素称为<strong>特征桶</strong>（feature bucket）——因此 ToCcPosition <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>包含六个<strong>特征桶</strong>。对于某封特定的邮件，你可以把一个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的<strong>独热</strong>编码想象成扔一个球，它落进其中一个桶里。</p>
+<p>使用这个术语，我们<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>中横跨各<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>现在应被解释为横跨所有<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的所有桶，因此每个桶有它自己的 <code>featureValue</code> 和它自己关联的 <code>weight</code>。这意味着我们 ToCcPosition <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的每个桶可以有不同的权重——因此我们不再假设回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>在各桶之间稳步上升或下降。</p>
+<h3 id="数值特征">数值特征</h3>
+<p>我们还需要创建编码数值量的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，例如邮件正文的字符数。如果我们直接把字符数用作<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值，我们就会假设更长的邮件意味着回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>总是比更短的邮件更高或总是更低。但实际上，我们可能预期用户不太可能回复一封非常短的邮件（“谢谢”）或一封非常长的邮件（例如时事通讯），但可能会回复长度介于两者之间的邮件。同样，我们可以通过绘制各种正文长度下被回复的邮件比例来考察这些看法。为得到一个有用的图，有必要把长度相近的邮件归到一组，以便我们有足够的邮件来可靠地估计回复比例。在图 4.9 中，我们用相应的正文长度范围来标注柱状图中的每个条形。每个条形的长度范围大约是前一个的两倍，最后一个条形对应非常长的邮件（超过 1023 个字符）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_FeatureHistograms_BodyLength.png">
+            <img class="mx-auto" alt="图 4.9" src="/uploads/EmailClassifier_FeatureHistograms_BodyLength.png" />
+        </a>
+    </p>
+<p><em>图 4.9：对于由邮件正文字符数给出的各种正文长度范围，被回复的邮件比例。落入每个长度范围的邮件数量显示在括号中。零长度邮件很可能把消息放在主题行中，因此回复比例相当高。对于其他邮件，回复比例在约 9–16 个字符处达到峰值，然后总体下降，直到对于非常长的邮件变得非常低。</em></p>
+<p>这幅图有几个方面值得评论。零长度邮件有相当高的回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，很可能是因为这些是消息在主题中的邮件。正如我们所预料的，非常短的邮件回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>相对较低，这个概率上升到 9–16 个字符处的峰值，然后大致保持恒定，直到我们到达 513 个字符或更长的非常长的邮件，此时回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>开始逐渐减小。为捕捉回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>中的这些变化，我们可以采用刚才对 ToCcPosition 使用的同样方法，把图中的每个条形当作一个不同的<strong>特征桶</strong>。这给了我们一个有 11 个桶的 BodyLength <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>。长度落入某个特定长度范围（例如 33–64 个字符）的邮件都映射到单个桶。这个映射编码了这样一个假设：回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>不取决于确切的正文长度，而只取决于该长度落入哪个范围。</p>
+<h3 id="具有极多状态的特征">具有极多状态的特征</h3>
+<p>我们可能预期，一封邮件的发件人会是预测用户是否会回复的最有用的属性之一。但既然我们能使用数据，何必依赖看法呢？图 4.10 显示了 User35CB8E5 最频繁的二十个发件人的邮件被回复的比例。如你所见，从一个发件人到另一个发件人，回复比例有很大的变化：有些发件人根本没有回复，而另一些发件人有很高的回复比例。类似的模式对我们数据集中的其他用户也成立。所以，发件人确实是预测回复的一个非常有用的线索。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_TopSenders_.png">
+            <img class="mx-auto" alt="图 4.10" src="/uploads/EmailClassifier_TopSenders_.png" />
+        </a>
+    </p>
+<p><em>图 4.10：User35CB8E5 最常见的 20 个发件人的邮件被回复的比例（每个发件人的邮件数量显示在括号中）。回复比例在不同发件人之间差异显著，表明这是预测回复的一个非常有用的线索。正如<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">第 4.1 节</a>中所讨论的，发件人身份已被<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">匿名化</a>以保护用户的隐私。</em></p>
+<p>为把发件人信息纳入<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>，我们可以使用一个多状态的 Sender <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，数据集中的每个发件人各一个状态。例如，User35CB8E5 在训练集和<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">验证集</a>合起来中有 658 个唯一的发件人。这将导致一个有 658 个桶的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，其中 657 个值为 0.0，而对应于实际发件人的那个桶值为 1.0。由于如此多的<strong>特征桶</strong>值会是零，把我们的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>改为只包含实际“活跃”（非零）的<strong>特征桶</strong>要高效得多。一个经过适当修改的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>如图 4.11 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_SparseFeatures.png">
+            <img class="mx-auto" alt="图 4.11" src="/uploads/EmailClassifier_SparseFeatures.png" />
+        </a>
+    </p>
+<p><em>图 4.11：只表示非零<strong>特征桶</strong>的修改后<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。<code>featureIndices</code> 变量包含具有非零值的<strong>特征桶</strong>的索引。<code>featureValues</code> 变量包含这些桶对应的值。<code>Subarray</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>用于抽出 <code>weight</code> 数组中相关的元素，把它们放入 <code>featureWeight</code> 数组。</em></p>
+<p>在这个修改后的图中，一封邮件的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值由非零值的索引（<code>featureIndices</code>）以及这些索引处对应的值（<code>featureValues</code>）来表示。我们使用<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">第 2.4 节</a>中引入的 <code>Subarray</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>，从完整的权重数组（<code>weight</code>）中抽出活跃桶的权重（<code>featureWeight</code>）。这个新的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>使得像 Sender 这样的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>可以被添加进来，而不会导致训练和<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a>时间大幅变慢。例如，在 User35CB8E5 的<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">训练集</a>上训练，使用旧<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>需要 9.2 秒，而使用这个新<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>仅需 0.43 秒。如果我们在更多邮件上训练，这个加速会更大，因为会有更多唯一的发件人。</p>
+<h3 id="一个初始特征集">一个初始特征集</h3>
+<p>现在我们知道如何编码各种不同类型的数据属性了，我们可以完成我们的初始<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>，准备开始实验。为编码剩余的数据属性，我们再添加三个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>：FromMe、HasAttachments 和 SubjectLength，它们的<strong>特征桶</strong>和回复比例如图 4.12 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_FeatureHistograms_FromMe.png">
+            <img class="mx-auto" alt="图 4.12a FromMe" src="/uploads/EmailClassifier_FeatureHistograms_FromMe.png" />
+        </a>
+    </p>
+<p><em>(a) FromMe</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_FeatureHistograms_HasAttachments.png">
+            <img class="mx-auto" alt="图 4.12b HasAttachments" src="/uploads/EmailClassifier_FeatureHistograms_HasAttachments.png" />
+        </a>
+    </p>
+<p><em>(b) HasAttachments</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_FeatureHistograms_SubjectLength.png">
+            <img class="mx-auto" alt="图 4.12c SubjectLength" src="/uploads/EmailClassifier_FeatureHistograms_SubjectLength.png" />
+        </a>
+    </p>
+<p><em>(c) SubjectLength</em></p>
+<p><em>图 4.12：对于三个新<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，每个<strong>特征桶</strong>被回复的邮件比例。落入每个<strong>特征桶</strong>的邮件数量显示在括号中。</em></p>
+<p>正如我们早先在<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">第 4.1 节</a>中讨论的，我们从数据集中移除了主题行和邮件正文的内容，因此无法添加任何编码主题或邮件正文实际词语的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>。为 Exchange 项目构建<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类器</a>时，使用了来自自愿提供的数据的<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">匿名化</a>主题词和正文词。正如你可能预料的，纳入这样的主题词和正文词<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>确实对预测准确性有实质性的帮助。</p>
+<p>我们的初始<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>有六个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，如表 4.4 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_FeatureSetDescriptions_Initial.png">
+            <img class="mx-auto" alt="表 4.4" src="/uploads/EmailClassifier_FeatureSetDescriptions_Initial.png" />
+        </a>
+    </p>
+<p><em>表 4.4：用于预测一封邮件回复的初始<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>集。对每个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，我们显示了<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>类型、简要描述以及该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的<strong>特征桶</strong>数量（在该数量固定的情况下）。</em></p>
+<p>现在我们有了一个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">模型</a>和一个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>，我们准备好看看它们如何协同工作来预测用户是否会回复一封新邮件了。</p>
+<h4 id="本页引入概念回顾">本页引入概念回顾</h4>
+<p><strong>独热（one-hot）</strong>：一种用大小为 $N$ 的向量来编码 1-of-$N$ 选择的方式。该向量除了对应于所选项的位置为 1 之外，处处为零。因此，如果有三个选项，第一个将由 $\{1.0, 0.0, 0.0\}$ 编码，第二个由 $\{0.0, 1.0, 0.0\}$ 编码，第三个由 $\{0.0, 0.0, 1.0\}$ 编码。</p>
+<p><strong>特征桶（feature buckets）</strong>：标识返回多个值的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>各个值的标签。例如，图 4.8 中的 ToCcPosition <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>有六个特征桶：NotOnToOrCcLine、FirstOnToLine、SecondOnToLine、ThirdOrLaterOnToLine、FirstOnCcLine 和 SecondOrLaterOnCcLine。对于这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，与其中一个桶关联的值将是 1.0，其他值将是 0.0，但对于其他<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，可能有多个桶具有非零值。</p>
+<hr>
+<p>下一节：<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">评估与改进特征集</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/">https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/">[译]基于模型的机器学习 - 4.3 建模多个特征</a></li>
+        
+        <li><a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification/">[译]基于模型的机器学习 - 4.2 一个用于分类的模型</a></li>
+        
+        <li><a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a></li>
+        
+        <li><a href="/post/2026-08-01-mbml-emailclassifier/">[译]基于模型的机器学习 - 4 清理你的收件箱</a></li>
+        
+        <li><a href="/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/">[译]基于模型的机器学习 - 3.5 允许技能变化</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-04-large-models-can-reason-but-not-learn-enterprise-values/" title="大模型会推理了，但还学不会企业的价值观" target="_blank">大模型会推理了，但还学不会企业的价值观</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" title="[译]基于模型的机器学习 - 4.5 评估与改进特征集" target="_blank">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" title="为 Foundry 托管代理开启 A2A 端点和 Agent Card" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" title="[译]基于模型的机器学习 - 4.4 设计特征集" target="_blank">[译]基于模型的机器学习 - 4.4 设计特征集</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/" title="[译]基于模型的机器学习 - 4.3 建模多个特征" target="_blank">[译]基于模型的机器学习 - 4.3 建模多个特征</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/" title="用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构" target="_blank">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-11-mbml-emailclassifier_a_model_for_classification/" title="[译]基于模型的机器学习 - 4.2 一个用于分类的模型" target="_blank">[译]基于模型的机器学习 - 4.2 一个用于分类的模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota Tiers" target="_blank">Microsoft Foundry 的 Quota Tiers</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" title="[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据" target="_blank">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (38)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (29)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (7)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

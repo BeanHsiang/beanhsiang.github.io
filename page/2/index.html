@@ -75,6 +75,110 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-01T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月1日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>收发电子邮件的庞大数量意味着，一名典型的办公室职员每天要花好几个小时来处理自己的收件箱。源源不断涌入的新邮件很容易让人应接不暇。同时，一封重要邮件淹没在杂乱信息中的可能性也比以往任何时候都大。<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>能否帮助减轻这种信息过载呢？</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/PileOfMail_80130295.jpg">
+            <img class="mx-auto" alt="一堆邮件" src="/uploads/PileOfMail_80130295.jpg" />
+        </a>
+    </p>
+<p>普通办公室职员每天花在处理电子邮件上的时间将近三个小时。这些时间中约 90% 花在阅读收到的邮件或管理已有的邮件上——只有剩下的 10% 用于撰写或回复邮件 [Outlook team, 2008]。一个能加快阅读和管理邮件速度的自动工具，将为人们腾出大量时间，让他们能够专注于重要任务，避免信息过载带来的压力。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" title="[译]基于模型的机器学习 - 3.5 允许技能变化" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-31T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月31日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>至此，我们似乎已经为本章开头提出的问题找到了一个全面的解决方案。我们有了一个关于多支玩家队伍之间游戏（含平局）的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>，其中更简单的情形（两名玩家、个人而非队伍、无平局的游戏）作为特例出现。然而，当这个系统面向真实的 beta 测试者部署时，人们发现它的配对并不总是令人满意。特别是，某些玩家的技能值似乎“卡”在了较低的取值上，即使这些玩家已经打了很多游戏并有了很大进步，从而导致糟糕的配对。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/tennis_779423224.jpg">
+            <img class="mx-auto" alt="网球" src="/uploads/tennis_779423224.jpg" />
+        </a>
+    </p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-30T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月30日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>到目前为止，我们已经为两名玩家之间、以其中一方获胜告终的一局游戏构建了一个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>。为处理 Xbox Live 所需的各种各样的游戏，我们需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>以应对若干额外的复杂性。具体而言，真实游戏可能以平局结束、可能涉及超过两名玩家、并且可能在多支队伍之间进行。现在我们将展示如何扩展最初的<a href="/post/2025-04-21-mbml-introduction">模型</a>以考虑这些复杂性。这种灵活性很好地说明了<a href="/post/2025-04-21-mbml-introduction">基于模型</a>的机器学习方法的强大之处。</p>
+<p>具体来说，我们需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>，使它能够：</p>
+<ul>
+<li>在结果为平局时更新技能；</li>
+<li>对团队游戏，更新各个团队成员的技能；</li>
+<li>适用于超过两名玩家的游戏。</li>
+</ul>
+<p><a href="/post/2025-04-21-mbml-introduction">基于模型</a>的方法允许以透明的方式并入这些扩展，从而产生一个能够处理上述所有复杂性、同时仍保持可理解、可维护的解决方案。</p>
+<h3 id="如果一局游戏可能以平局结束怎么办">如果一局游戏可能以平局结束怎么办？</h3>
+<p>在我们当前的<a href="/post/2025-04-21-mbml-introduction">模型</a>中，在某一局游戏中表现值较高的玩家就是那局的赢家。对于也可能以平局结束的游戏，我们可以引入<strong>平局边界</strong>（draw margin）这一概念来修改这个假设：只有当一名玩家的表现超过另一名玩家至少一个平局边界的值时，他才是赢家。数学上这可以表达为</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" title="[译]基于模型的机器学习 - 3.3 一个解法：期望传播" target="_blank">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a>
             </h1>
         </header>
@@ -310,104 +414,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" title="让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆" target="_blank">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-17T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月17日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>我最近一直在琢磨一件事：为什么 AI 智能体用起来总有种&quot;似曾相识的挫败感&quot;。</p>
-<p>我们把越来越多的活儿交给它——写材料、排会议、报税，甚至直接上手构建和调试生产系统。它的能力肉眼可见地在变强，可有个毛病始终没治好：同样的坑，它会一次又一次地踩进去。</p>
-<p>举个我自己踩过的例子。智能体执行 <code>python main.py</code>，结果项目是用 <code>uv</code> 管理依赖的，直接甩给我一个 <code>ModuleNotFoundError</code>。它试了好几轮，最后摸索出 <code>uv run python main.py</code> 才是对的。但下周再来一次呢？同样的报错，同样白烧掉的 token 和时间。如果它有&quot;程序性记忆&quot;（Procedural Memory），学一次就够了，然后记住这条：在用 uv 管理的项目里，一律走 <code>uv run</code>。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/" title="在 Microsoft Copilot Studio 里落地多智能体编排" target="_blank">在 Microsoft Copilot Studio 里落地多智能体编排</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-16T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月16日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>
-        <a data-fancybox="gallery" href="/uploads/20260730143430-7fb4077b336941d29c203188425e3974.png">
-            <img class="mx-auto" alt="" src="/uploads/20260730143430-7fb4077b336941d29c203188425e3974.png" />
-        </a>
-    </p>
-<p>把 copilot 从简单问答升级成真能干活的助手，我很快撞上一堵墙：单个智能体应付不了那种要走好几步、还跨领域的任务。当你指望一个 copilot 同时做推理、读实时数据、又要遵守各领域自己的规则时，问题就冒出来了，比如排障流程、汇总多个系统的洞察，或者把好几条业务线的信息揉到一起。</p>
-<p>多智能体编排的思路，是让 copilot 把活儿分给专门的智能体，同时留一个统一的决策层。下面这套编排器—专家（orchestrator–specialist）模式来自真实的客户实践，我照着在 Microsoft Copilot Studio 里从头走了一遍，顺带用 Activity Map 这类内置工具验证了智能体之间到底有没有好好协作。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-16-implementing-multi-agent-orchestration-in-microsoft-copilot-studio/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" title="[译]基于模型的机器学习 - 2.5 诊断问题" target="_blank">[译]基于模型的机器学习 - 2.5 诊断问题</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-10T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月10日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>当一个机器学习系统不工作时，通常有三个可能的原因：<strong>坏数据</strong>、<strong>坏模型</strong>或<strong>坏推断</strong>。以下是这三个类别下各自一些常见的问题成因：</p>
-<ul>
-<li><strong>坏数据（Bad data）</strong>：数据项被错误地录入、存储或加载；数据项不完整或标注错误；数据值噪声太大而无用；数据有偏或不能代表系统将被使用的方式；这是任务的错误数据；数据不足以做出准确预测。</li>
-<li><strong>坏模型（Bad model）</strong>：一个或多个建模假设是错的——即与实际生成数据的过程不一致；<a href="/post/2025-04-21-mbml-introduction">模型</a>做了太多简化假设；给定可用数据量，<a href="/post/2025-04-21-mbml-introduction">模型</a>包含的假设不足以做出准确预测。</li>
-<li><strong>坏推断（Bad inference）</strong>：<a href="/post/2025-04-21-mbml-introduction">推断</a>代码含有 bug；<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>不好；<a href="/post/2025-04-21-mbml-introduction">推断</a>尚未<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>；存在数值问题（例如舍入、溢出）；<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>不够准确。</li>
-</ul>
-<p>在我们的情形中，我们可以相当有信心地认为数据是好的，因为我们已经仔细地检查和可视化过它。所以看起来问题很可能出在<a href="/post/2025-04-21-mbml-introduction">模型</a>或<a href="/post/2025-04-21-mbml-introduction">推断</a>上。我们将从检查<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>——即<a href="/post/2026-06-16-mbml-learning-skills_loopiness">循环置信传播</a>——是否正确工作开始。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -463,7 +469,7 @@
         
         
         <li >
-            <a href="https://beanhsiang.github.io/page/13/">13</a>
+            <a href="https://beanhsiang.github.io/page/14/">14</a>
         </li>
         
     
@@ -531,7 +537,19 @@
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" title="[译]基于模型的机器学习 - 4.5 评估与改进特征集" target="_blank">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" title="为 Foundry 托管代理开启 A2A 端点和 Agent Card" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" title="[译]基于模型的机器学习 - 4.4 设计特征集" target="_blank">[译]基于模型的机器学习 - 4.4 设计特征集</a>
     </li>
     
     <li>
@@ -552,18 +570,6 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" title="[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据" target="_blank">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" title="[译]基于模型的机器学习 - 3.5 允许技能变化" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
     </li>
     
 </ul>
@@ -589,7 +595,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (26)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (29)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (7)</a></li>
     

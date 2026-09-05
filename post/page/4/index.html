@@ -75,6 +75,104 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 AI 可观测性入门套件" target="_blank">Microsoft Foundry 智能体的 AI 可观测性入门套件</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-05-30T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年5月30日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>本文编译自 Microsoft Tech Community 上 varghesejoji 的博客文章 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/ai-observability-starter-kit-for-microsoft-foundry-agents/4522751?WT.mc_id=AI-MVP-5003172">AI Observability Starter Kit for Microsoft Foundry agents</a>，我按自己上手时的理解重新整理，并补充了一些实际跑下来的体会。</p>
+<p>先把结论放前面：一条 PowerShell 命令，就能拉起一个包含四个智能体的 Microsoft Foundry 环境，带遥测、8 个内置评估器、1 个自定义合规评估器、一次自动化红队扫描，还有两条 scheduled-query 告警。整套东西端到端验证过，再敲一条命令就能全部拆掉。Fork 下来直接跑。我觉得它最对胃口的人群是那些在 Azure 上跑 AI 智能体、又不想自己手写一堆管道代码的应用开发者、ML 工程师和 SRE。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-05-30-ai-observability-starter-kit-for-microsoft-foundry-agents/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" title="GPT Realtime 上生产环境：到底该选哪种上下文策略？" target="_blank">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-05-30T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年5月30日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>如果你已经把 gpt-realtime 跑上了生产环境，大概率撞到过同一个问题：多轮对话之间，上下文到底该怎么管？</p>
+<p>听上去像个实现细节，其实不是。这个决定直接关系到：你每通电话的成本是三毛还是九毛，你呼叫中心的延迟能不能压在两秒以内，以及你的客户会不会在同一通电话里被迫把账号报上五遍。</p>
+<p>企业客户把语音和对话式 AI 从 demo 推向规模化时，追问的其实是同一件事：怎么优化 prompt 缓存策略，让调用量从每天一百通涨到十万通时，token 账单和延迟预算不会跟着爆炸。缓存是 realtime API 上撬动成本最狠的那根杠杆：缓存过的音频输入比未缓存便宜 99%，而解锁它靠的是一个稳定的前缀（prefix）。但到底哪种缓存策略真的赢，取决于你的应用是一次性查询、一段简短对话，还是呼叫中心那种动辄三十轮的升级工单。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions/" title="[译]基于模型的机器学习 - 2.1 模型即一组假设" target="_blank">[译]基于模型的机器学习 - 2.1 模型即一组假设</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-05-19T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年5月19日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>在为某些数据设计<a href="/post/2025-04-21-mbml-introduction">模型</a>时，我们必须对产生这些数据的过程做出假设。事实上，我们可以说，模型就是这组假设，而这组假设就是模型。模型与它所表示的假设之间的关系如此重要，值得强调：</p>
+<blockquote>
+<p><strong>模型 = 关于数据的一组假设</strong></p>
+</blockquote>
+<p>选择在<a href="/post/2025-04-21-mbml-introduction">模型</a>中包含哪些假设，是模型设计的关键环节。错误的假设会导致模型给出不准确的预测，正是这些有缺陷的假设造成了这种结果。然而，不做任何假设是不可能建立<a href="/post/2025-04-21-mbml-introduction">模型</a>的——至少必须做出一些假设。</p>
+<p>正如你在<a href="/post/2025-04-22-mbml-murder-mystery">第 1 章</a>中所见，本书将使用<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>来表示我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>。随着阅读的深入，你将学会如何构建对一组选定假设进行编码的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。同样，你也将学会观察一张<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>并推断出它所表示的假设。你可以把<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>看作一组假设的精确数学表示。例如，在<a href="/post/2025-04-22-mbml-murder-mystery">第 1 章</a>中，我们构建了一张<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>来表示关于一起谋杀之谜的一组精确假设。对于当前这个应用，我们需要对“一个具备特定技能集的候选人如何回答一组测试问题”这一过程做出假设。这将定义候选人的潜在技能与其测试答案之间的关系，随后我们可以将其反转，从测试答案中推断出他们的技能。</p>
+<p>在设计<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>时，我们首先要选择希望图中包含哪些变量。图中至少必须包含表示我们实际拥有的数据的变量（候选人是否答对了每道题），以及我们想要了解的变量（技能）。正如我们将看到的，引入其它中间变量往往也很有用。选定变量之后，我们就可以开始向图中添加<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>，以编码这些变量在答题过程中如何相互影响。通常从我们想要了解的变量（技能）开始，沿着这个过程一路推进，直到我们真正能够测量的变量（候选人是否答对了题目），这样做往往会很有帮助。</p>
+<p>那么，从技能变量开始，这是我们的第一个假设：</p>
+<blockquote>
+<p><strong>1</strong> 每位候选人要么已掌握某项技能，要么没有掌握。</p>
+</blockquote>
+<p>假设 2.1 意味着我们可以把候选人的技能表示为一个二值（true/false）变量：如果候选人掌握了该技能，则为 true；否则为 false。像我们目前见过的所有变量那样，只能取一组固定值之一的变量，称为<strong>离散变量</strong>。在本章后面，我们会遇到<strong>连续变量</strong>，它可以在一段连续取值范围内取任意值，例如 0 到 1 之间的任意实数。正如我们将看到的，连续变量在学习事件<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>等许多用途上都非常有用。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-04-29-architecting-cost-aware-llm-workloads-with-model-router-in-microsoft-foundry/" title="在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载" target="_blank">在 Microsoft Foundry 中用 Model Router 构建成本感知的 LLM 工作负载</a>
             </h1>
         </header>
@@ -285,94 +383,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/" title="使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理" target="_blank">使用 GitHub Copilot SDK 和 Microsoft Agent Framework 构建 AI 代理</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-02-02T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年2月2日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>我发现 Microsoft Agent Framework 现在与 <a href="https://github.com/github/copilot-sdk?WT.mc_id=AI-MVP-5003172">GitHub Copilot SDK</a> 集成,让我们能够构建由 GitHub Copilot 驱动的 AI 代理。这个集成将 Agent Framework 一致的代理抽象与 GitHub Copilot 的强大功能结合在一起,包括函数调用、流式响应、多轮对话、Shell 命令执行、文件操作、URL 获取以及 Model Context Protocol (MCP) 服务器集成 —— 所有这些功能在 .NET 和 Python 中都可用。</p>
-<h2 id="为什么将-agent-framework-与-github-copilot-sdk-结合使用">为什么将 Agent Framework 与 GitHub Copilot SDK 结合使用?</h2>
-<p>你可以单独使用 GitHub Copilot SDK 来构建代理。那么为什么要通过 Agent Framework 来使用它呢?以下是几个关键原因:</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-02-02-build-ai-agents-with-github-copilot-sdk-and-microsoft-agent-framework/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/" title="微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型" target="_blank">微软研究院发布 OptiMind:一个将自然语言转换为优化求解器就绪模型的 200 亿参数模型</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-01-20T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年1月20日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>微软研究院发布了 OptiMind,这是一个基于 AI 的系统,能够将复杂决策问题的自然语言描述转换为优化求解器可执行的数学公式。它解决了运筹学中长期存在的一个瓶颈问题:将业务意图转换为混合整数线性规划通常需要专业建模人员和数天的工作。</p>
-<h2 id="optimind-是什么以及它输出什么">OptiMind 是什么以及它输出什么?</h2>
-<p><a href="https://huggingface.co/microsoft/OptiMind-SFT?WT.mc_id=AI-MVP-5003172">OptiMind-SFT</a> 是 gpt-oss transformer 系列中的一个专业化 200 亿参数专家混合模型。每个 token 约激活 36 亿参数,因此推理成本更接近中型模型,同时保持较高的容量。上下文长度为 128,000 tokens,这允许在单个请求中处理长规范和多步推理轨迹。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-01-20-microsoft-research-releases-optimind-a-20b-parameter-model-that-turns-natural-language-into-solver-ready-optimization-models/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/" title="Agent Framework (Python) 完全指南" target="_blank">Agent Framework (Python) 完全指南</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-01-19T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年1月19日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p><strong>agent_framework</strong> 是微软推出的 Python 库,专门用于构建 AI 代理应用程序。我在研究这个框架时发现,它为聊天代理、工作流、工具调用和中间件提供了非常优雅的抽象。核心类包括实现 <code>AgentProtocol</code> 协议的<strong>代理</strong>、用于在工作流中运行代理的<strong>执行器</strong>、用于聊天输入/输出的<strong>消息</strong>,以及用于定义工作流拓扑的<strong>构建器</strong>。例如,<code>AgentProtocol</code> 是一个结构化接口,任何代理都必须遵循它(比如 ChatAgent 就实现了这个接口)。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -449,7 +459,7 @@
         
         
         <li >
-            <a href="https://beanhsiang.github.io/post/page/13/">13</a>
+            <a href="https://beanhsiang.github.io/post/page/14/">14</a>
         </li>
         
     
@@ -517,7 +527,19 @@
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" title="[译]基于模型的机器学习 - 4.5 评估与改进特征集" target="_blank">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" title="为 Foundry 托管代理开启 A2A 端点和 Agent Card" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" title="[译]基于模型的机器学习 - 4.4 设计特征集" target="_blank">[译]基于模型的机器学习 - 4.4 设计特征集</a>
     </li>
     
     <li>
@@ -538,18 +560,6 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" title="[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据" target="_blank">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" title="[译]基于模型的机器学习 - 3.5 允许技能变化" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
     </li>
     
 </ul>
@@ -575,7 +585,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (26)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (29)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (7)</a></li>
     

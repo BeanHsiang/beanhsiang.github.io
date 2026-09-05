@@ -103,6 +103,91 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-31T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月31日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>到目前为止，我们能够一次性在大量邮件上训练我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>。但对我们的应用而言，我们需要能够在用户回复一封新邮件时、或在明确用户不会回复它时，立即从这封邮件中学习。我们不能等到收到大量邮件后，再一次性在它们上面训练、然后永远使用训练好的<a href="/post/2025-04-21-mbml-introduction">模型</a>。相反，我们必须随着新邮件的到来持续训练<a href="/post/2025-04-21-mbml-introduction">模型</a>，并始终使用最新训练好的<a href="/post/2025-04-21-mbml-introduction">模型</a>来做预测。</p>
+<p>正如我们在上一章<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">第 3.3 节</a>中看到的，我们可以使用<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>在收到新训练数据时持续更新我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>。在我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>中，<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>很直接：对每一批自上次训练以来到达的邮件，我们把之前对 <code>weight</code> 和 <code>threshold</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>用作训练的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。一旦对这一批的训练完成，对 <code>weight</code> 和 <code>threshold</code> 的新<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>就可以用来做预测。之后当训练下一批邮件时，这些<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>将充当新的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。我们可以通过把训练数据分成若干批、并在每一批到来时运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>，来检查这个过程工作得如何。然后我们可以把这种方法与离线训练相比较，离线训练一次性呈现到该时间点为止见过的所有训练数据。图 4.20 显示了使用离线训练、或使用不同批量大小的在线训练时，在全部 10 个用户上平均的 AUC 和 <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">AP</a>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AreaUnderCurve.png">
+            <img class="mx-auto" alt="图 4.20a 曲线下面积" src="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AreaUnderCurve.png" />
+        </a>
+    </p>
+<p><em>(a) 曲线下面积</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AveragePrecision.png">
+            <img class="mx-auto" alt="图 4.20b 平均精确率" src="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AveragePrecision.png" />
+        </a>
+    </p>
+<p><em>(b) <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">平均精确率</a></em></p>
+<p><em>图 4.20：随着越来越多训练邮件变得可用时的预测准确性，在全部 10 个用户上平均。对每个指标，离线曲线显示如果我们在到该时间点为止收到的所有邮件上从头重新训练<a href="/post/2025-04-21-mbml-introduction">模型</a>的准确性。另外四条曲线显示如果我们改为在每 1、5、10 或 50 封邮件后做在线训练以增量更新<a href="/post/2025-04-21-mbml-introduction">模型</a>的准确性。</em></p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" title="[译]基于模型的机器学习 - 4.5 评估与改进特征集" target="_blank">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-26T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月26日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>使用我们新完成的<a href="/post/2025-04-21-mbml-introduction">模型</a>和<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>，我们可以为数据集中的每个用户训练一个个性化的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类器</a>。确切地说，对每个用户的<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">训练集</a>，我们为每封邮件计算活跃的<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a> <code>featureIndices</code> 以及它们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值 <code>featureValue</code>。给定这些已观测变量，我们随后可以应用<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>来学习每个桶的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a> <code>weight</code> 分布，以及对 <code>threshold</code> 值的单个<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。但首先我们需要看看如何为我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>安排消息传递。</p>
+<h3 id="并行调度与顺序调度">并行调度与顺序调度</h3>
+<p><strong>推断深入</strong></p>
+<p>在这个可选小节中，我们看看如何为我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>安排<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>消息的调度。如果你想直接去看运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>的结果，尽可跳过本节。</p>
+<p>在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>时，选择一个好的<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>很重要。在这种<a href="/post/2025-04-21-mbml-introduction">模型</a>中，糟糕的调度很容易导致消息传递<a href="/post/2025-04-21-mbml-introduction">算法</a>无法<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>或收敛得非常慢。当你有一个带重复结构的<a href="/post/2025-04-21-mbml-introduction">模型</a>（例如我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">模型</a>）时，可以使用两种主要的<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>：顺序调度或并行调度。为理解这两种调度，让我们看看在一个简化形式的<a href="/post/2025-04-21-mbml-introduction">模型</a>上的消息传递，它有两个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>和两个权重：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_TwoSchedules.png">
+            <img class="mx-auto" alt="图 4.13 两种调度" src="/uploads/EmailClassifier_TwoSchedules.png" />
+        </a>
+    </p>
+<p>在这幅图中，我们没有使用跨越各桶的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>，而是为每个权重复制了<a href="/post/2025-04-21-mbml-introduction">模型</a>的相应部分。在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中做消息传递时，两种调度选择是：</p>
+<ul>
+<li><strong>顺序调度</strong>，依次处理两个权重。对第一个权重，这种调度按 A、A1、B1、B 的顺序传递消息。处理完这个权重后，消息传递在图的下半部分发生（未显示）。然后调度转到第二个权重，按 A、A2、B2、B 的顺序传递消息。</li>
+<li><strong>并行调度</strong>，一次处理两个权重。在这种调度中，首先传递标记为 A 的消息。然后同时传递两组消息（A1 和 B1）与（A2 和 B2），其中来自加号<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的消息使用之前的 B1 和 B2 消息来计算。最后，传递标记为 B 的消息。</li>
+</ul>
+<p>为看出两种调度的差异，看看从加号<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>出来的第一条 A2 消息是如何计算的。在顺序调度中，它使用本次调度迭代中刚刚更新的 B1 消息来计算。在并行调度中，它使用上一次迭代中计算的 B1 消息，换句话说，是一个较旧版本的消息。因此，并行调度比顺序调度收敛得更慢，也更可能完全无法<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>。那么我们为什么会想使用并行调度呢？主要原因是如果你想把<a href="/post/2025-04-21-mbml-introduction">推断</a>计算并行分布到若干台机器上以加速它。在这种情况下，最好的选择是使用一种组合调度：在每台机器内部处理的<a href="/post/2025-04-21-mbml-introduction">模型</a>部分上是顺序的，但跨机器是并行的。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" title="为 Foundry 托管代理开启 A2A 端点和 Agent Card" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
             </h1>
         </header>
@@ -124,6 +209,44 @@
             <p>最近在给 Foundry 上的托管代理配置对外能力时，碰到了一个绕不开的问题：怎么让别的 agent 框架也能发现我这个代理、跟它对话。翻了一圈 Microsoft Foundry 的文档，发现官方已经把 Agent-to-Agent（A2A）协议接进了托管代理里，跨框架、跨技术栈的代理之间能直接打通。原文在这儿：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/4546979?WT.mc_id=AI-MVP-5003172">Enabling A2A endpoint and Agent Card for a Hosted Agent</a>（原文作者 srisatyakrishna5，发布于 2026 年 8 月 24 日）。我把自己跑通的过程和踩的坑整理了一下。</p>……
         </div>
         <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" title="[译]基于模型的机器学习 - 4.4 设计特征集" target="_blank">[译]基于模型的机器学习 - 4.4 设计特征集</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-21T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月21日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>要使用我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">模型</a>，我们需要设计<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>来变换数据，使其尽可能贴近地符合<a href="/post/2025-04-21-mbml-introduction">模型</a>中内置的假设（<a href="/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features">表 4.3</a>）。例如，为满足<a href="/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features">假设 4.7</a>（即<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>包含与用户行为相关的所有信息），我们需要确保我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>包含所有与预测回复相关的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>。由于一封邮件几乎任何部分都可能有助于做出这样的预测，这意味着我们将不得不在<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>中编码邮件的几乎所有方面。这将包括谁发送了邮件、收件人栏和抄送栏上的收件人、邮件的主题以及邮件的正文，还有关于该邮件所属会话的信息。</p>
+<p>在设计一个新<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>时，我们需要确保：</p>
+<ul>
+<li>该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>捕捉到数据中某个有信息量的方面；</li>
+<li>该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的输出具有适合输入到<a href="/post/2025-04-21-mbml-introduction">模型</a>的正确形式；</li>
+<li>该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>提供了关于标签的新信息，超出了既有<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>所提供的信息。</li>
+</ul>
+<p>在本节中，我们将展示如何为我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>设计若干新<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，同时确保它们满足上述前两条标准。在下一节中，我们将展示如何通过在有和没有某些<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的情况下评估系统，来检查第三条标准。</p>
+<h3 id="具有多个状态的特征">具有多个状态的特征</h3>
+<p>到目前为止，我们用一个 ToLine <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>来表示用户出现在邮件中的位置。这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>只有两个状态：用户要么在收件人栏中，要么不在。因此这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>忽略了用户是否在抄送栏中，尽管我们可能预期用户在出现在抄送栏中时比完全不出现时更有可能回复邮件。这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>还忽略了用户在收件人/抄送栏上的位置。如果用户排在收件人栏的第一位，我们可能预期他比排在一长串收件人末尾时更有可能回复。我们可以用我们的数据集来检验这些直觉，方法是找出在若干情形下所有训练/验证邮件中实际被回复的比例：当用户在收件人栏中排第一、第二或第二之后时，当用户在抄送栏中排第一或其他位置时，以及当用户既不在收件人栏也不在抄送栏时（例如，如果他通过邮件列表收到邮件）。</p>
+<p>图 4.8 绘制了这些比例，显示回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>确实会根据适用于哪种情形而有很大变化。这幅图表明，一个能够区分这些情形的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>确实会捕捉到数据中有信息量的方面（即我们上面的第一条标准）。在评估回复比例（例如图 4.8 中的那些）时，重要的是要考虑该比例是从多少封邮件计算得来的，因为从少量邮件计算出的比例不会很准确。为检查这一点，在图 4.8 中我们在每个条形标签下方的括号中显示了邮件数量，表明每个情形都有足够的邮件来准确计算比例，因此我们可以信赖所计算的值。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" target="_blank">阅读全文</a></p>
     </article>
     
     
@@ -292,110 +415,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-08-01T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年8月1日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>收发电子邮件的庞大数量意味着，一名典型的办公室职员每天要花好几个小时来处理自己的收件箱。源源不断涌入的新邮件很容易让人应接不暇。同时，一封重要邮件淹没在杂乱信息中的可能性也比以往任何时候都大。<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>能否帮助减轻这种信息过载呢？</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/PileOfMail_80130295.jpg">
-            <img class="mx-auto" alt="一堆邮件" src="/uploads/PileOfMail_80130295.jpg" />
-        </a>
-    </p>
-<p>普通办公室职员每天花在处理电子邮件上的时间将近三个小时。这些时间中约 90% 花在阅读收到的邮件或管理已有的邮件上——只有剩下的 10% 用于撰写或回复邮件 [Outlook team, 2008]。一个能加快阅读和管理邮件速度的自动工具，将为人们腾出大量时间，让他们能够专注于重要任务，避免信息过载带来的压力。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" title="[译]基于模型的机器学习 - 3.5 允许技能变化" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-31T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月31日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>至此，我们似乎已经为本章开头提出的问题找到了一个全面的解决方案。我们有了一个关于多支玩家队伍之间游戏（含平局）的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>，其中更简单的情形（两名玩家、个人而非队伍、无平局的游戏）作为特例出现。然而，当这个系统面向真实的 beta 测试者部署时，人们发现它的配对并不总是令人满意。特别是，某些玩家的技能值似乎“卡”在了较低的取值上，即使这些玩家已经打了很多游戏并有了很大进步，从而导致糟糕的配对。</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/tennis_779423224.jpg">
-            <img class="mx-auto" alt="网球" src="/uploads/tennis_779423224.jpg" />
-        </a>
-    </p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-30T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月30日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>到目前为止，我们已经为两名玩家之间、以其中一方获胜告终的一局游戏构建了一个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>。为处理 Xbox Live 所需的各种各样的游戏，我们需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>以应对若干额外的复杂性。具体而言，真实游戏可能以平局结束、可能涉及超过两名玩家、并且可能在多支队伍之间进行。现在我们将展示如何扩展最初的<a href="/post/2025-04-21-mbml-introduction">模型</a>以考虑这些复杂性。这种灵活性很好地说明了<a href="/post/2025-04-21-mbml-introduction">基于模型</a>的机器学习方法的强大之处。</p>
-<p>具体来说，我们需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>，使它能够：</p>
-<ul>
-<li>在结果为平局时更新技能；</li>
-<li>对团队游戏，更新各个团队成员的技能；</li>
-<li>适用于超过两名玩家的游戏。</li>
-</ul>
-<p><a href="/post/2025-04-21-mbml-introduction">基于模型</a>的方法允许以透明的方式并入这些扩展，从而产生一个能够处理上述所有复杂性、同时仍保持可理解、可维护的解决方案。</p>
-<h3 id="如果一局游戏可能以平局结束怎么办">如果一局游戏可能以平局结束怎么办？</h3>
-<p>在我们当前的<a href="/post/2025-04-21-mbml-introduction">模型</a>中，在某一局游戏中表现值较高的玩家就是那局的赢家。对于也可能以平局结束的游戏，我们可以引入<strong>平局边界</strong>（draw margin）这一概念来修改这个假设：只有当一名玩家的表现超过另一名玩家至少一个平局边界的值时，他才是赢家。数学上这可以表达为</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -440,7 +459,7 @@
         
         
         <li >
-            <a href="https://beanhsiang.github.io/post/page/13/">13</a>
+            <a href="https://beanhsiang.github.io/post/page/14/">14</a>
         </li>
         
     
@@ -508,7 +527,19 @@
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" title="[译]基于模型的机器学习 - 4.5 评估与改进特征集" target="_blank">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" title="为 Foundry 托管代理开启 A2A 端点和 Agent Card" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" title="[译]基于模型的机器学习 - 4.4 设计特征集" target="_blank">[译]基于模型的机器学习 - 4.4 设计特征集</a>
     </li>
     
     <li>
@@ -529,18 +560,6 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" title="[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据" target="_blank">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" title="[译]基于模型的机器学习 - 4 清理你的收件箱" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" title="[译]基于模型的机器学习 - 3.5 允许技能变化" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
     </li>
     
 </ul>
@@ -566,7 +585,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (26)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (29)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (7)</a></li>
     

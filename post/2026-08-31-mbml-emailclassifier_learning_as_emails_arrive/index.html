@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 4.6 随邮件到达而学习 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 4.6 随邮件到达而学习 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-08-31T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-08-31T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 4.6 随邮件到达而学习">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</h1>
+        </header>
+        
+  <time datetime="2026-08-31T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月31日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>到目前为止，我们能够一次性在大量邮件上训练我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>。但对我们的应用而言，我们需要能够在用户回复一封新邮件时、或在明确用户不会回复它时，立即从这封邮件中学习。我们不能等到收到大量邮件后，再一次性在它们上面训练、然后永远使用训练好的<a href="/post/2025-04-21-mbml-introduction">模型</a>。相反，我们必须随着新邮件的到来持续训练<a href="/post/2025-04-21-mbml-introduction">模型</a>，并始终使用最新训练好的<a href="/post/2025-04-21-mbml-introduction">模型</a>来做预测。</p>
+<p>正如我们在上一章<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">第 3.3 节</a>中看到的，我们可以使用<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>在收到新训练数据时持续更新我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>。在我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>中，<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>很直接：对每一批自上次训练以来到达的邮件，我们把之前对 <code>weight</code> 和 <code>threshold</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>用作训练的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。一旦对这一批的训练完成，对 <code>weight</code> 和 <code>threshold</code> 的新<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>就可以用来做预测。之后当训练下一批邮件时，这些<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>将充当新的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。我们可以通过把训练数据分成若干批、并在每一批到来时运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>，来检查这个过程工作得如何。然后我们可以把这种方法与离线训练相比较，离线训练一次性呈现到该时间点为止见过的所有训练数据。图 4.20 显示了使用离线训练、或使用不同批量大小的在线训练时，在全部 10 个用户上平均的 AUC 和 <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">AP</a>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AreaUnderCurve.png">
+            <img class="mx-auto" alt="图 4.20a 曲线下面积" src="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AreaUnderCurve.png" />
+        </a>
+    </p>
+<p><em>(a) 曲线下面积</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AveragePrecision.png">
+            <img class="mx-auto" alt="图 4.20b 平均精确率" src="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AveragePrecision.png" />
+        </a>
+    </p>
+<p><em>(b) <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">平均精确率</a></em></p>
+<p><em>图 4.20：随着越来越多训练邮件变得可用时的预测准确性，在全部 10 个用户上平均。对每个指标，离线曲线显示如果我们在到该时间点为止收到的所有邮件上从头重新训练<a href="/post/2025-04-21-mbml-introduction">模型</a>的准确性。另外四条曲线显示如果我们改为在每 1、5、10 或 50 封邮件后做在线训练以增量更新<a href="/post/2025-04-21-mbml-introduction">模型</a>的准确性。</em></p>
+<p>这些结果表明，<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>给出的准确性与离线训练相似，但略低，较大的批量大小通常给出更好的准确性。这些图还显示，随着收到更多邮件，准确性的差异会减小。因此，一旦收到足够的邮件，<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>似乎可以是一个合适的解法。但这把我们带到另一个问题：大约需要 400 到 500 封邮件，<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">平均精确率</a>才能接近一个稳定值。在达到那个数量之前的一段时间内，特别是当训练过的邮件相对较少时，<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类器</a>的准确性很低。这意味着新用户的体验会很差。当然，我们可以等到用户已收到并处理了足够多的邮件，但对某些用户来说这可能需要数周或数月。如果我们能立即给他们一个良好的体验，那会好得多。在还没有任何训练数据的情况下为新用户做出良好预测的挑战，被称为<strong>冷启动问题</strong>（cold start problem）。</p>
+<h3 id="为一个用户社区建模">为一个用户社区建模</h3>
+<p>我们已经展示了可以通过改变<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>来解决某些预测问题。但在这个情况下，没有任何对<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>的改变能帮助我们——在我们至少见过一封邮件之前，我们甚至无法计算<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值！但由于我们有的是一个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">模型</a>而非一个固定的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">算法</a>，我们有一个额外的选项可用：改变<a href="/post/2025-04-21-mbml-introduction">模型</a>。</p>
+<p>我们如何改变<a href="/post/2025-04-21-mbml-introduction">模型</a>来解决<strong>冷启动问题</strong>呢？我们可以利用不同用户往往会回复相同种类邮件这一事实。例如，用户往往更可能回复他们排在收件人栏第一位、或邮件被转发给他们的邮件。这提示我们可能预期学到的权重在用户之间是相似的，至少对那些捕捉用户共有行为的<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a>而言。然而，也可能有其他<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a>捕捉了用户之间行为的差异，我们可能预期它们学到的权重在用户之间会不同。为考察哪些<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a>在用户之间相似，我们可以为前五个用户绘制他们所共有的所有<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a>（即除 Sender 和 Recipients <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的桶之外的所有桶）学到的权重。得到的图如图 4.21 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_5EvaluatingAndImprovingTheFeatureSetSingleUserOffline_SharedWeightsWithSDs.png">
+            <img class="mx-auto" alt="图 4.21" src="/uploads/EmailClassifier_5EvaluatingAndImprovingTheFeatureSetSingleUserOffline_SharedWeightsWithSDs.png" />
+        </a>
+    </p>
+<p><em>图 4.21：为我们数据集中前五个用户学到的各<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a>权重的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>。对大多数<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a>，学到的权重在用户之间相似，表明他们回复具有相似特征的邮件。</em></p>
+<p>如你所见，对许多<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a>，五个用户的权重都相似，即使对那些用户间变异性较大的桶，权重也倾向于全为正或全为负。但在少数情况下，例如 FromMe <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，用户之间的变异性更大。这种变异性表明这些<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>捕捉了用户之间行为的差异，例如某个特定用户是否给自己发邮件作为提醒。总体而言，用户之间似乎有足够的相似性，我们可以利用这种相似性来为一个全新的用户做预测。为此，我们需要对权重如何在多个用户之间变化做出一个新的建模假设：</p>
+<ul>
+<li>在许多用户之间，一个<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a>权重的变异性可以用一个<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>来捕捉。</li>
+</ul>
+<p>这个假设是说，我们可以用一个平均权重（<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>的均值）和一个衡量典型用户权重偏离这个平均值多少的度量（<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>）来表示一个权重如何在用户之间变化。</p>
+<p>让我们改变<a href="/post/2025-04-21-mbml-introduction">模型</a>来加入这个假设。由于我们现在为多个用户建模，我们需要添加一个跨用户的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>，并把我们整个既有<a href="/post/2025-04-21-mbml-introduction">模型</a>放进它里面。这个新<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>之外唯一的变量将是每个<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a>的两个新变量：<code>weightMean</code> 捕捉跨用户的平均权重，<code>weightPrecision</code> 捕捉跨用户的<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">精度</a>（逆<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>）。然后我们把<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>内的 Gaussian(0,1) <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>（我们过去用作<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>的那个）替换为一个连接到 <code>weightMean</code> 和 <code>weightPrecision</code> 的 Gaussian <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。得到的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>如图 4.22 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_SparseFeaturesHierarchy.png">
+            <img class="mx-auto" alt="图 4.22" src="/uploads/EmailClassifier_SparseFeaturesHierarchy.png" />
+        </a>
+    </p>
+<p><em>图 4.22：联合分类多个用户邮件的<a href="/post/2025-04-21-mbml-introduction">模型</a>。我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">模型</a>通过放进一个 users <a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>内而对每个用户复制一份。然后我们为每个<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a>引入两个共享变量：<code>weightMean</code> 捕捉该桶跨用户的典型（平均）权重，<code>weightPrecision</code> 捕捉该权重跨用户的变化程度。</em></p>
+<p>你会注意到，我们使用了<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">精度</a>（逆<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>）而非<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>来捕捉权重跨用户的变异性。一个桶的高 <code>weightPrecision</code> 意味着它的权重在用户之间往往非常相似，而低 <code>weightPrecision</code> 意味着桶权重在用户之间往往变化很大。我们选择使用<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">精度</a>，是因为我们现在试图学习这种变异性，而事实证明用<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">精度</a>而非<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>来做这件事要容易得多。这个选择允许我们使用一个<strong>伽马分布</strong>（gamma distribution）来表示 <code>weightPrecision</code> 变量中的不确定性，无论是在设定其<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>时，还是在推断其<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>时。伽马分布是一个对连续正值（即大于零的值）的分布。我们需要使用一个新分布，因为<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">精度</a>只能为正——我们不能使用<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>，因为它允许负值；我们也不能使用<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">贝塔分布</a>，因为它只允许 0 到 1 之间的值。<strong>伽马分布</strong>还有一个优点：它是<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>精度的<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">共轭分布</a>，这使得推断更容易。</p>
+<p><strong>伽马分布</strong>有如下密度函数：</p>
+$$\mathit{Gamma}(x ; k,\theta) = \dfrac{x^{k-1}e^{-\frac{x}{\theta}}}{\theta^k \,\mathrm{\Gamma}(k)}$$<p>其中 $\mathrm{\Gamma}()$ 是伽马函数，用于确保密度函数下的面积为 1.0。<strong>伽马分布</strong>有两个参数：形状参数 $k$ 和尺度参数 $\theta$——具有这些参数不同取值的示例<strong>伽马分布</strong>如图 4.23a 所示。令人困惑的是，<strong>伽马分布</strong>有时用形状和尺度的倒数（称为<strong>率</strong>，rate）来参数化。由于两个版本都很常见，检查正在使用的是哪个很重要——在本书中，我们将始终使用形状和尺度参数。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveGammasDemo_.png">
+            <img class="mx-auto" alt="图 4.23a" src="/uploads/EmailClassifier_6LearningAsEmailsArriveGammasDemo_.png" />
+        </a>
+    </p>
+<p><em>(a)</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveGammasDemo_[3].png">
+            <img class="mx-auto" alt="图 4.23b" src="/uploads/EmailClassifier_6LearningAsEmailsArriveGammasDemo_[3].png" />
+        </a>
+    </p>
+<p><em>(b)</em></p>
+<p><em>图 4.23：(a) 形状和尺度参数不同取值的示例<strong>伽马分布</strong>。(b) 我们用作权重<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">精度</a><a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>的 Gamma(4, 0.5) 分布。</em></p>
+<p>由于我们的用户相对较少，我们需要在选择 <code>weightPrecision</code> 的伽马<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>时小心，因为它会对<a href="/post/2025-04-21-mbml-introduction">模型</a>的行为有很大的影响。通常我们预期<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">精度</a>高于 1.0，因为我们预期大多数权重在用户之间相似。然而，我们也需要允许<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">精度</a>对那些在用户之间变化很大的较罕见权重在 1.0 左右。图 4.23b 显示了一个满足这两个要求的 Gamma(4,0.5) 分布。</p>
+<p>在我们试用图 4.22 中的<a href="/post/2025-04-21-mbml-introduction">模型</a>之前，还有一点要讨论。如果你非常细心，你会注意到 <code>threshold</code> 变量已被固定为零。这是因为我们想使用我们共同的 <code>weightMean</code> 和 <code>weightPrecision</code> 来学习 <code>threshold</code> 如何在用户之间变化，正如学习权重如何变化一样。为此，我们可以使用一个常见的技巧：把 <code>threshold</code> 固定为零，并创建一个对所有邮件始终开启的新<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>——这被称为<strong>偏置</strong>（bias）。这个想法是，对所有邮件把 <code>score</code> 改变一个固定值，等价于把 <code>threshold</code> 改变相同的值。所以我们可以使用<strong>偏置</strong><a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>来有效地设定阈值，同时让实际的 <code>threshold</code> 固定为 0。由于<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>权重有一个 Gaussian(0,1) <a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>，但 <code>threshold</code> 有一个 Gaussian(0,10) <a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>，我们需要把这个新<strong>偏置</strong><a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的值设为 $\sqrt{10}$，以便让<a href="/post/2025-04-21-mbml-introduction">模型</a>保持不变——如果我们有一个不确定性为 Gaussian(0,1) 的变量，并把它乘以 $\sqrt{10}$，我们就得到一个不确定性为 Gaussian(0,10) 的变量，正如所需。</p>
+<h3 id="解决冷启动问题">解决冷启动问题</h3>
+<p>
+        <a data-fancybox="gallery" href="/uploads/shutterstock_174735434.jpg">
+            <img class="mx-auto" alt="解决冷启动" src="/uploads/shutterstock_174735434.jpg" />
+        </a>
+    </p>
+<p><strong>冷启动问题的一个动手解法</strong></p>
+<p>我们现在可以在前五个用户（其权重在图 4.21 中被绘制的用户）上训练我们共同的<a href="/post/2025-04-21-mbml-introduction">模型</a>。尽管我们已经大幅改变了<a href="/post/2025-04-21-mbml-introduction">模型</a>，我们仍然能够使用<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>来做训练或预测这样的<a href="/post/2025-04-21-mbml-introduction">推断</a>任务。所以我们不需要发明一个新<a href="/post/2025-04-21-mbml-introduction">算法</a>来对多个用户做联合训练——我们只需在扩展后的<a href="/post/2025-04-21-mbml-introduction">模型</a>上运行熟悉的 EP <a href="/post/2025-04-21-mbml-introduction">算法</a>。</p>
+<p>图 4.24 显示了学到的社区权重分布：每个条形显示对 <code>weightMean</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>的均值，误差条显示由 <code>weightPrecision</code> 的均值给出的一个<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>。注意误差条的不同用法——用来显示 <code>weightPrecision</code>（学到的跨用户变异性）而非 <code>weightMean</code> 自身的不确定性。如果你把图 4.24 的分布与图 4.21 的各个用户权重相比较，你可以看到学到的分布如何很好地捕捉了权重跨用户的变异性。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveCommunityOnline_CommunityPosteriors-SharedMeanAndStandardDeviationMeans.png">
+            <img class="mx-auto" alt="图 4.24" src="/uploads/EmailClassifier_6LearningAsEmailsArriveCommunityOnline_CommunityPosteriors-SharedMeanAndStandardDeviationMeans.png" />
+        </a>
+    </p>
+<p><em>图 4.24：从我们数据集中前五个用户学到的社区权重分布。蓝色条显示 <code>weightMean</code> 的期望值，误差条显示这个值两侧各一个<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>，对应于 <code>weightPrecision</code> 的期望值。与图 4.21 比较表明，学到的权重分布与为每个用户单独学到的权重一致。</em></p>
+<p>为把我们学到的社区权重分布应用于一个新用户，我们可以使用为单个用户配置的同一<a href="/post/2025-04-21-mbml-introduction">模型</a>，把对 <code>weightMean</code> 和 <code>weightPrecision</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>替换为从前五个用户学到的高斯和伽马<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>。即使我们还没见过新用户的任何邮件，我们也可以使用这个<a href="/post/2025-04-21-mbml-introduction">模型</a>来做预测。但我们也可以使用这个<a href="/post/2025-04-21-mbml-introduction">模型</a>在收到新用户邮件时做在线训练。当我们使用社区<a href="/post/2025-04-21-mbml-introduction">模型</a>做在线训练时，我们可以从做出可能适用于任何用户的通用预测，平滑地演化为做出特定于新用户的个性化预测。这种演化完全通过在我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>中做<a href="/post/2025-04-21-mbml-introduction">推断</a>而自动发生——我们无需指定一个从社区预测切换到个性化预测的临时过程。</p>
+<p>图 4.25 显示了在社区<a href="/post/2025-04-21-mbml-introduction">模型</a>中使用在线训练所做预测的准确性，与个体<a href="/post/2025-04-21-mbml-introduction">模型</a>（使用批量大小 5）相比，在不同训练数据量下的情况。对这幅图我们再次在全部十个用户上平均——我们使用一个在后五个用户上训练的单独社区<a href="/post/2025-04-21-mbml-introduction">模型</a>来为前五个用户做预测结果。结果非常令人满意——初始准确性很高（平均 <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">AP</a> 为 41.8%），然后它继续平滑上升，直到在训练了 500 封邮件后达到平均 <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">AP</a> 43.2%。正如我们所希望的，我们的社区<a href="/post/2025-04-21-mbml-introduction">模型</a>从一开始就做出良好的预测，然后随着<a href="/post/2025-04-21-mbml-introduction">模型</a>个性化到具体用户而变得更好。<strong>冷启动问题</strong>被解决了！</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveCommunityOnline_CommunityMetrics-AverageAreaUnderCurve.png">
+            <img class="mx-auto" alt="图 4.25a 曲线下面积" src="/uploads/EmailClassifier_6LearningAsEmailsArriveCommunityOnline_CommunityMetrics-AverageAreaUnderCurve.png" />
+        </a>
+    </p>
+<p><em>(a) 曲线下面积</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveCommunityOnline_CommunityMetrics-AverageAveragePrecision.png">
+            <img class="mx-auto" alt="图 4.25b 平均精确率" src="/uploads/EmailClassifier_6LearningAsEmailsArriveCommunityOnline_CommunityMetrics-AverageAveragePrecision.png" />
+        </a>
+    </p>
+<p><em>(b) <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">平均精确率</a></em></p>
+<p><em>图 4.25：使用个体<a href="/post/2025-04-21-mbml-introduction">模型</a>或社区<a href="/post/2025-04-21-mbml-introduction">模型</a>时，预测准确性对训练数据量的关系。两种情况下训练都以 5 封邮件为批量在线进行。结果在全部 10 个用户上平均——对前五个用户，预测使用在后五个用户上训练的社区<a href="/post/2025-04-21-mbml-introduction">模型</a>，对后五个用户反之亦然。</em></p>
+<p>在 Exchange 使用的生产系统中，我们有多得多的用户可以从中学习社区权重。在这种情况下，对 <code>weightMean</code> 和 <code>weightPrecision</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>变得非常窄。当这些<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>被用作<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>时，<code>weightMean</code> 和 <code>weightPrecision</code> 的值实际上是固定的。这允许我们对系统做一个有益的简化：一旦我们使用多用户<a href="/post/2025-04-21-mbml-introduction">模型</a>学到了社区权重分布，我们就可以回到单用户<a href="/post/2025-04-21-mbml-introduction">模型</a>去做在线训练和预测。我们需要做的只是把单用户<a href="/post/2025-04-21-mbml-introduction">模型</a>中的 Gaussian(0,1) <a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>替换为一个均值和<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">精度</a>由那些窄的 <code>weightMean</code> 和 <code>weightPrecision</code> 分布的期望值给出的高斯<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。所以，在生产中，多用户<a href="/post/2025-04-21-mbml-introduction">模型</a>在大量用户上离线训练一次，然后学到的社区权重分布被用来为每个用户分别做训练和预测。这种分离使部署、管理和调试系统行为更容易，因为每个用户可以被单独考虑。</p>
+<p>在我们把系统部署给一些 beta 测试者之前，还有最后一件事要做。还记得我们在本章开头搁在一边的邮件数据<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">测试集</a>吗？现在是时候把它们拿出来，看看我们在<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">测试集</a>上得到的结果是否与我们在<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">验证集</a>上看到的结果相当。验证集和<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">测试集</a>的对比结果如表 4.5 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_5EvaluatingAndImprovingTheFeatureSetSingleUserOffline_IndividualResultsWithTest-WithRecipient.png">
+            <img class="mx-auto" alt="表 4.5" src="/uploads/EmailClassifier_5EvaluatingAndImprovingTheFeatureSetSingleUserOffline_IndividualResultsWithTest-WithRecipient.png" />
+        </a>
+    </p>
+<p><em>表 4.5：每个用户和总体的验证集和<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">测试集</a>的最终准确性结果。右侧各列显示每个数据集中被回复的邮件数量，这给出了相应<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">平均精确率</a>指标可靠性的一个指示。</em></p>
+<p>该表显示，用户<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">测试集</a>的 AUC 测量值通常与<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">验证集</a>的相当相似，没有明显偏向其中之一的<strong>偏置</strong>。这表明在设计我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>和<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>时，我们没有对验证数据<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">过拟合</a>。<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">AP</a> 测量值差异更大，特别是对某些用户——这是因为<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">测试集</a>相当小，有些只包含少数被回复的邮件。在这种情况下，<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">AP</a> 测量值变得相当嘈杂和不可靠。然而，即使我们聚焦于那些有更多被回复邮件的用户，测试 <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">AP</a> 似乎也不一致地低于验证 <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">AP</a>。所以两个<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">评估指标</a>都表明测试集和<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">验证集</a>准确性之间没有根本差异，因此我们应当预期为真实用户达到相似的预测准确性。</p>
+<h3 id="最终测试与改动">最终测试与改动</h3>
+<p>此时，预测系统被部署给 beta 测试者以进行进一步的真实世界测试。问卷被用来获取关于系统对用户工作得如何的反馈。这次测试和反馈凸显了两个额外的问题：</p>
+<ul>
+<li>随着用户行为的演变，预测似乎随时间变得不那么准确，例如，当他们更换项目或更换团队时，杂物邮件预测似乎变化得不够快以匹配更新后的行为。</li>
+<li>系统的<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">校准</a>虽然平均而言正确，但对个别用户不正确。预测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>对某些用户太高，对另一些用户太低。</li>
+</ul>
+<p>对第一个问题的调查识别出一个与我们在<a href="/post/2026-07-26-mbml-trueskill">第 3 章</a>中诊断的问题相似的问题。我们假设了<a href="/post/2025-04-21-mbml-introduction">模型</a>中的权重对某个特定用户在时间上是固定的。这个假设不允许用户行为改变。解法是改变<a href="/post/2025-04-21-mbml-introduction">模型</a>以允许权重随时间改变，正如我们在 TrueSkill 系统中允许技能随时间改变一样。修改后的<a href="/post/2025-04-21-mbml-introduction">模型</a>对每个时间段（例如每周一个变量）的每个桶权重都有<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>。图 4.26a 显示了一个包含两个连续周权重 $\mathit{weight}_{(1)}$ 和 $\mathit{weight}_{(2)}$ 的示例<a href="/post/2025-04-21-mbml-introduction">模型</a>片段。为允许权重随时间改变，通过添加方差非常低的高斯噪声，第二周的权重被允许与第一周的权重略有不同。与 TrueSkill 系统一样，这个改动允许系统追踪缓慢变化的用户行为。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_UserBehaviourChange.png">
+            <img class="mx-auto" alt="图 4.26a 用户行为变化" src="/uploads/EmailClassifier_UserBehaviourChange.png" />
+        </a>
+    </p>
+<p><em>(a)</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_NoisyLabels.png">
+            <img class="mx-auto" alt="图 4.26b 噪声标签" src="/uploads/EmailClassifier_NoisyLabels.png" />
+        </a>
+    </p>
+<p><em>(b)</em></p>
+<p><em>图 4.26：为修复 beta 测试者发现的问题而对<a href="/post/2025-04-21-mbml-introduction">模型</a>所做的修改。(a) 允许权重随时间改变，解决了行为预测不随用户行为改变而演化的问题。(b) 显式地建模意图行为标签与实际行为标签之间的差异，解决了当意图标签与实际标签不匹配时出现的糟糕<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">校准</a>。</em></p>
+<p>第二个问题更难诊断。对该问题的调查发现，过高的预测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>出现在杂物量低的用户身上，而过低的预测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>出现在杂物量高的用户身上。原来问题在于我们在<a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">第 4.5 节</a>中遇到的带噪声的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>——对杂物量高的用户，很多杂物项被错误地标记为非杂物，对杂物量低的用户则反之。用这些不正确的标签训练，把一个相应的<strong>偏置</strong>引入了预测的杂物<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。这里的解法是改变<a href="/post/2025-04-21-mbml-introduction">模型</a>以显式地表示标签噪声。例如，对于回复预测，我们可以在<a href="/post/2025-04-21-mbml-introduction">模型</a>中创建一个新变量 <code>intendedToReply</code>，表示用户是否真正意图回复该消息的真实标签。然后我们把已观测的标签 <code>repliedTo</code> 定义为这个变量的一个带噪声版本，使用一个像我们早在<a href="/post/2026-01-06-mbml-learning-skills">第 2 章</a>中使用的 AddNoise <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>那样的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。图 4.26b 显示了加入这个改动后修改的<a href="/post/2025-04-21-mbml-introduction">模型</a>的相关片段。做出这个改动后，发现<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">校准</a>在所有用户之间都更接近理想，杂物量高或低用户的系统性<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">校准</a>变化消失了。</p>
+<p>在处理这些问题的每一个时，我们都需要对<a href="/post/2025-04-21-mbml-introduction">模型</a>做出改动，这对于一个黑盒<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">算法</a>是不可能的，但却是<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>方法的核心。有了这些<a href="/post/2025-04-21-mbml-introduction">模型</a>改动，杂物预测系统现在作为 Office365 的一部分被部署，帮助从人们的收件箱中移除杂物邮件。图 4.27 显示了系统运行中的一个截图，全部使用<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>！</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/clutter-screenshot.jpg">
+            <img class="mx-auto" alt="图 4.27" src="/uploads/clutter-screenshot.jpg" />
+        </a>
+    </p>
+<p><em>图 4.27：Office 365 中运行中的杂物系统。</em></p>
+<h4 id="本页引入概念回顾">本页引入概念回顾</h4>
+<p><strong>冷启动问题（cold start problem）</strong>：在几乎没有（或没有）特定于某个新实体（例如一个新用户）的可用训练数据时，为该实体做出良好预测的问题。一般来说，冷启动问题可以出现在任何引入新实体的系统中——例如，在一个推荐系统中，当试图预测某人是否会喜欢一部尚未收到任何评分的新上映电影时，就会出现冷启动问题。</p>
+<p><strong>伽马分布（gamma distribution）</strong>：一个对正连续<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>的<a href="/post/2025-04-22-mbml-murder-mystery">概率分布</a>，其<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">概率密度函数</a>为</p>
+$$\mathit{Gamma}(x ; k,\theta) = \dfrac{x^{k-1}e^{-\frac{x}{\theta}}}{\theta^k \,\mathrm{\Gamma}(k)}$$<p>其中 $\mathrm{\Gamma}()$ 是伽马函数，用于确保密度函数下的面积为 1.0。伽马分布有两个参数：形状参数 $k$ 和尺度参数 $\theta$。</p>
+<p>下图显示了 $k$ 和 $\theta$ 不同取值的伽马分布：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveGammasDemo_.png">
+            <img class="mx-auto" alt="伽马分布示例" src="/uploads/EmailClassifier_6LearningAsEmailsArriveGammasDemo_.png" />
+        </a>
+    </p>
+<p><strong>偏置（bias）</strong>：一个对所有数据项始终开启的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>。由于偏置<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>始终开启，它的权重编码了标签的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验概率</a>。例如，偏置权重可能编码在我们查看某封特定邮件的任何特征之前，用户会回复一封邮件的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。等价地，使用一个偏置<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>允许 <code>threshold</code> 变量被固定为零，因为它不再需要表示<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>标签<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</p>
+<h4 id="参考文献">参考文献</h4>
+<p>[Bishop, 2006] Bishop, C. M. (2006). <em>Pattern Recognition and Machine Learning</em>. Springer.</p>
+<hr>
+<p>下一章：<a href="/post/2026-09-02-mbml-recommender">做出推荐</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/">https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a></li>
+        
+        <li><a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/">[译]基于模型的机器学习 - 4.4 设计特征集</a></li>
+        
+        <li><a href="/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/">[译]基于模型的机器学习 - 4.3 建模多个特征</a></li>
+        
+        <li><a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification/">[译]基于模型的机器学习 - 4.2 一个用于分类的模型</a></li>
+        
+        <li><a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-04-large-models-can-reason-but-not-learn-enterprise-values/" title="大模型会推理了，但还学不会企业的价值观" target="_blank">大模型会推理了，但还学不会企业的价值观</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" title="[译]基于模型的机器学习 - 4.5 评估与改进特征集" target="_blank">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" title="为 Foundry 托管代理开启 A2A 端点和 Agent Card" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" title="[译]基于模型的机器学习 - 4.4 设计特征集" target="_blank">[译]基于模型的机器学习 - 4.4 设计特征集</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/" title="[译]基于模型的机器学习 - 4.3 建模多个特征" target="_blank">[译]基于模型的机器学习 - 4.3 建模多个特征</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/" title="用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构" target="_blank">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-11-mbml-emailclassifier_a_model_for_classification/" title="[译]基于模型的机器学习 - 4.2 一个用于分类的模型" target="_blank">[译]基于模型的机器学习 - 4.2 一个用于分类的模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota Tiers" target="_blank">Microsoft Foundry 的 Quota Tiers</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" title="[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据" target="_blank">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (38)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (29)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (7)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

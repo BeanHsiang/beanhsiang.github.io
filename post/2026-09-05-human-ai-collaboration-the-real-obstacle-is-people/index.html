@@ -9,20 +9,23 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
     
 
-    <title>Q-Learning | Innovation with tech</title>
-    <meta property="og:title" content="Q-Learning - Innovation with tech">
+    <title>人机协同里，卡住我们的常常不是机器，是人 | Innovation with tech</title>
+    <meta property="og:title" content="人机协同里，卡住我们的常常不是机器，是人 - Innovation with tech">
     <meta property="og:type" content="article">
         
+    <meta property="article:published_time" content='2026-09-05T11:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-09-05T11:00:00&#43;08:00'>
         
     <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
-    <meta name="description" content="Q-Learning">
+    <meta name="description" content="人机协同里，卡住我们的常常不是机器，是人">
     <meta name="author" content="">
-    <meta property="og:url" content="https://beanhsiang.github.io/tags/q-learning/">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/">
     <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
 
     <link rel="stylesheet" href='/css/normalize.css'>
     <link rel="stylesheet" href='/css/style.css'>
-    <link rel="alternate" type="application/rss+xml" href="https://beanhsiang.github.io/tags/q-learning/index.xml" title="Innovation with tech" />
     <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     
@@ -49,7 +52,7 @@
             </div>
             <div>
                 <nav id="nav-menu" class="clearfix">
-                    <a class="" href="https://beanhsiang.github.io/">首页</a>
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
                     
                     <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
                     
@@ -71,47 +74,101 @@
                     
 <div class="res-cons">
     
-    <h3 class="archive-title">
-        
-        <span class="keyword">q-learning</span>
-        中的文章
-    </h3>
-    
-
-    
     <article class="post">
         <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2025-05-29-q-learning-python-tic-tac-toe/" target="_blank">[译]Q-learning强化学习实践：用Python构建井字棋智能代理</a>
-            </h1>
+            <h1 class="post-title">人机协同里，卡住我们的常常不是机器，是人</h1>
         </header>
         
-  <time datetime="2025-05-29T02:00:00Z" class="post-meta meta-date dt-published">
-    2025年5月29日
+  <time datetime="2026-09-05T03:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月5日
   </time>
 
 
 <div class="post-meta meta-category">
   <span>&nbsp;|</span>
   
-    <a href='/categories/Machine-Learning' target="_blank">Machine Learning</a>
+    <a href='/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85' target="_blank">穿越人机融合之际</a>
   
 </div>
 
 
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
         <div class="post-content">
-            <p>还记得2016年3月AlphaGo与李世石的那场世纪对决吗？当时的第37手让全世界为之震惊——这一步看似错误的棋，后来却被誉为天才之举。这就是强化学习的魅力所在。</p>
-<p>最近重看了《AlphaGo》纪录片，再次被这种学习方式深深打动。可怕的是，AlphaGo并没有从数据库、规则或策略书中学习棋艺，而是通过数百万次自我对弈，在实践中学会了如何获胜。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-05-29-q-learning-python-tic-tac-toe/" target="_blank">阅读全文</a></p>
+            <p>在之前的文章里我提过，现在的大模型已经足够聪明，却始终解决不了一件事：怎么跟使用者的价值观对齐。这段时间我又留意到一个更具体的现象，我们一边拼命教大模型像人一样思考、像人一样做事，一边又受不了它真的需要跟人商量。</p>
+<p>这个要求本身没问题。让大模型学会像人一样处理事情，是脑力劳动能被替代、人的负担能被减轻的前提，方向没有错。但只要往前多走一步就会发现，大模型给出的任何规划都绕不开跟人协同这件事。总有一些关键的判断和决策，只能由人来拿主意，它自己走不出电脑那一步，那一步还得人去补。可我们一边希望它像机器一样不吃不睡、连轴转，一边又见不得它真的需要人插手：它做的事总有需要收尾、需要人兜底的地方，让人没法完全放心；等它真按要求把决策权交回来，跟人配合，我们又嫌它一点人味都没有，理解不了它为什么非要这样。这个矛盾挺有意思，我们既想要一个像人一样思考的工具，又不想承担一个像人一样需要沟通的伙伴该有的成本。</p>
+<p>另一个我最近想得比较多的问题，出现在大模型真的被放进组织里以后。一个组织里人和人之间的协同，本来就存在信任问题；现在多了 AI 进来，信任关系从两方变成了三方，问题不但没被稀释，反而好像被放大了。人对大模型的不信任尤其明显，现阶段谁也不敢把一件事完全交给它，出了错还得靠人去善后，做不到真正意义上的托管。</p>
+<p>表面上这是个信任问题，往深了挖，我觉得绕不开的还是人性。不管是人还是模型执行一件事，最终都要有人对结果负责。可现在的组织里，尤其是一线员工，越来越难讲真话。诊断一个组织出了什么问题，靠的是听到真实的情况，看不到真相，就没法做出准确的判断和对策。而大模型的训练材料，说到底来自这些以人为中心的组织行为和语言，人怎么表达、怎么取舍，很大程度上决定了模型学到什么。人有的毛病，模型大概率也会学去。所以指望大模型在组织里说真话，本身就不太现实，它同样会顺着使用者的意图说话，甚至讨好。</p>
+<p>想到这里，我大概能明白为什么现在还谈不上机器真正取代人，或者说智能体真正取代人。卡住的不是算力，也不是推理能力，是人性这部分很难被真正学会。人善变，也是多面的，同一个人在不同场景下的反应，未必能靠他以前的行为模式去推断。大模型现在的思考之所以还不太像人，恰恰可能卡在这里：它得先学会应付一个不按套路出牌的对象，这件事本身就有点悖论的味道。</p>
+<p>大概还需要不少时间，靠更多的观察和学习，才有可能让大模型在这方面更贴近人一点。往这个方向想，倒也还是有点值得期待。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/">https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-09-04-large-models-can-reason-but-not-learn-enterprise-values/">大模型会推理了，但还学不会企业的价值观</a></li>
+        
+        <li><a href="/post/2025-06-06-the-programming-models-are-clearing-the-way-in-the-field-of-software-development/">编程大模型正在软件开发领域“清理门户”</a></li>
+        
+        <li><a href="/post/2024-12-23-ai-agents-manipulation-engines/">AI 代理将成为操纵引擎</a></li>
+        
+        <li><a href="/post/2024-07-15-keep-more-original-knowledge/">努力保留更多的原创知识</a></li>
+        
+        <li><a href="/post/2024-06-21-llm-is-the-brain-and-rpa-are-the-hands/">LLM 是脑，RPA 是手</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85' target="_blank">穿越人机融合之际</a></li>
+                
+            </ul>
+            
         </div>
     </article>
     
-
     
 
-
-
-
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
 
 </div>
 
@@ -132,10 +189,98 @@
 </footer>
 
 
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
 
 <a id="rocket" href="#top"></a>
 <script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
 
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
 
 
     <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>

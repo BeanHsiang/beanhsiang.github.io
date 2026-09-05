@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Fri, 04 Sep 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Sat, 05 Sep 2026 11:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>人机协同里，卡住我们的常常不是机器，是人</title>
+				<link>https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/</link>
+				<pubDate>Sat, 05 Sep 2026 11:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/</guid>
+				<description>&lt;p&gt;在之前的文章里我提过，现在的大模型已经足够聪明，却始终解决不了一件事：怎么跟使用者的价值观对齐。这段时间我又留意到一个更具体的现象，我们一边拼命教大模型像人一样思考、像人一样做事，一边又受不了它真的需要跟人商量。&lt;/p&gt;&#xA;&lt;p&gt;这个要求本身没问题。让大模型学会像人一样处理事情，是脑力劳动能被替代、人的负担能被减轻的前提，方向没有错。但只要往前多走一步就会发现，大模型给出的任何规划都绕不开跟人协同这件事。总有一些关键的判断和决策，只能由人来拿主意，它自己走不出电脑那一步，那一步还得人去补。可我们一边希望它像机器一样不吃不睡、连轴转，一边又见不得它真的需要人插手：它做的事总有需要收尾、需要人兜底的地方，让人没法完全放心；等它真按要求把决策权交回来，跟人配合，我们又嫌它一点人味都没有，理解不了它为什么非要这样。这个矛盾挺有意思，我们既想要一个像人一样思考的工具，又不想承担一个像人一样需要沟通的伙伴该有的成本。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>大模型会推理了，但还学不会企业的价值观</title>
 				<link>https://beanhsiang.github.io/post/2026-09-04-large-models-can-reason-but-not-learn-enterprise-values/</link>

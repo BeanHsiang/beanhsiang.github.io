@@ -82,6 +82,40 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/" target="_blank">Microsoft Foundry 与 Azure OpenAI 模型迁移全流程</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-09-01T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月1日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260901-model-migration-hero.png">
+            <img class="mx-auto" alt="" src="/uploads/20260901-model-migration-hero.png" />
+        </a>
+    </p>
+<blockquote>
+<p>本文编译自 Microsoft Community Hub 的文章 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/model-migration-process-on-microsoft-foundry-and-azure-openai/4541236?WT.mc_id=AI-MVP-5003172">Model Migration Process on Microsoft Foundry and Azure OpenAI</a>，原作者 Meera Kurup（Microsoft）。我把里面这套模型迁移流程读了几遍，觉得挺实用，就整理成中文分享给大家，案例和数据都保留了原文的说法。</p>
+</blockquote>
+<p>只要你的应用是跑在某个大模型上的，迟早会碰到换模型这件事。可能是你在用的模型被官方标了退役日期，也可能单纯是有更好、更快或更便宜的新模型出来了。把代码里的模型名从 gpt-4o 换成 gpt-5.1，理论上一行代码就能搞定。但这一行代码背后藏着的工作量，经常被严重低估。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
             </h1>
         </header>
@@ -343,34 +377,6 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" target="_blank">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-05-30T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年5月30日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>如果你已经把 gpt-realtime 跑上了生产环境，大概率撞到过同一个问题：多轮对话之间，上下文到底该怎么管？</p>
-<p>听上去像个实现细节，其实不是。这个决定直接关系到：你每通电话的成本是三毛还是九毛，你呼叫中心的延迟能不能压在两秒以内，以及你的客户会不会在同一通电话里被迫把账号报上五遍。</p>
-<p>企业客户把语音和对话式 AI 从 demo 推向规模化时，追问的其实是同一件事：怎么优化 prompt 缓存策略，让调用量从每天一百通涨到十万通时，token 账单和延迟预算不会跟着爆炸。缓存是 realtime API 上撬动成本最狠的那根杠杆：缓存过的音频输入比未缓存便宜 99%，而解锁它靠的是一个稳定的前缀（prefix）。但到底哪种缓存策略真的赢，取决于你的应用是一次性查询、一段简短对话，还是呼叫中心那种动辄三十轮的升级工单。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
@@ -469,6 +475,10 @@
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/" title="Microsoft Foundry 与 Azure OpenAI 模型迁移全流程" target="_blank">Microsoft Foundry 与 Azure OpenAI 模型迁移全流程</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
     </li>
     
@@ -486,10 +496,6 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/" title="[译]基于模型的机器学习 - 4.3 建模多个特征" target="_blank">[译]基于模型的机器学习 - 4.3 建模多个特征</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/" title="用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构" target="_blank">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a>
     </li>
     
 </ul>
@@ -511,7 +517,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (38)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (39)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

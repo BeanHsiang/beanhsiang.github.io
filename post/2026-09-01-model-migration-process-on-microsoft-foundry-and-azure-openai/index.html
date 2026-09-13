@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>Microsoft Foundry 与 Azure OpenAI 模型迁移全流程 | Innovation with tech</title>
+    <meta property="og:title" content="Microsoft Foundry 与 Azure OpenAI 模型迁移全流程 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-09-01T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-09-01T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="Microsoft Foundry 与 Azure OpenAI 模型迁移全流程">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">Microsoft Foundry 与 Azure OpenAI 模型迁移全流程</h1>
+        </header>
+        
+  <time datetime="2026-09-01T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月1日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260901-model-migration-hero.png">
+            <img class="mx-auto" alt="" src="/uploads/20260901-model-migration-hero.png" />
+        </a>
+    </p>
+<blockquote>
+<p>本文编译自 Microsoft Community Hub 的文章 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/model-migration-process-on-microsoft-foundry-and-azure-openai/4541236?WT.mc_id=AI-MVP-5003172">Model Migration Process on Microsoft Foundry and Azure OpenAI</a>，原作者 Meera Kurup（Microsoft）。我把里面这套模型迁移流程读了几遍，觉得挺实用，就整理成中文分享给大家，案例和数据都保留了原文的说法。</p>
+</blockquote>
+<p>只要你的应用是跑在某个大模型上的，迟早会碰到换模型这件事。可能是你在用的模型被官方标了退役日期，也可能单纯是有更好、更快或更便宜的新模型出来了。把代码里的模型名从 gpt-4o 换成 gpt-5.1，理论上一行代码就能搞定。但这一行代码背后藏着的工作量，经常被严重低估。</p>
+<p>模型出问题这件事，对系统来说往往是悄无声息的，对用户来说却很响亮。程序不会崩溃，错误率看起来还是老样子，各种仪表盘也都显示一切正常。可与此同时，回复的措辞变了、摘要变得又长又啰嗦、JSON 里的字段消失了、工具调用的顺序也变了。用户是能感觉到的，工单会变多，那些依赖旧行为写的下游代码，也开始出各种毛病。</p>
+<p>一次靠谱的迁移，得让应用的行为保持不变，或者往更好的方向改变。这需要一套能重复使用的流程：发现漂移、安全地适配、在大范围上线前拿出证据证明质量没有下降。</p>
+<p>Microsoft Foundry（包括 Azure OpenAI）给出的模型迁移流程一共有六个阶段：<strong>发现（Discover）→评估（Assess）→适配（Adapt）→验证（Validate）→上线（Roll out）→退役（Retire）</strong>。下面我会逐一说明每个阶段具体要做什么、Foundry 现在有哪些工具能帮上忙，哪些地方还得团队自己动手补。最后我会用一个零售购物助手的例子把整个流程走一遍，文末还附了几个可以深入阅读的资源。</p>
+<h2 id="为什么现在就要考虑迁移">为什么现在就要考虑迁移</h2>
+<p>每个模型都有退役日期。在 Microsoft Foundry 上，正式发布（GA）的模型一般会给出大约 18 个月后的退役时间，老一代模型也在不断被替换掉。比如<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/model-lifecycle-retirement?WT.mc_id=AI-MVP-5003172">模型生命周期与退役计划表</a>里写着，gpt-4o（2024-05-13 版本）会在 2026 年 10 月 1 日退役，替代型号是 gpt-5.1。</p>
+<p>退役之后会发生什么，取决于你当初买的是哪种容量：</p>
+<ul>
+<li><strong>标准版、全球标准版、数据区标准版（按量付费）</strong>：这些部署会按区域滚动自动升级。你可以通过 <em>versionUpgradeOption</em> 控制升级时机，三个选项分别是 <em>OnceNewDefaultVersionAvailable</em>、<em>OnceCurrentVersionExpired</em>、<em>NoAutoUpgrade</em>，选了 <em>NoAutoUpgrade</em> 的话，部署到了退役日期就直接停止工作。优先处理（Priority Processing）走的是同一套逻辑。</li>
+<li><strong>预置吞吐量（PTU）</strong>：不会自动升级，得自己动手迁移。要么原地迁移（流量在 20 到 30 分钟的窗口内平滑切过去，不停机），要么并行部署（先建新部署，测试没问题后切流量，最后删掉旧的）。</li>
+<li><strong>批处理部署</strong>：走的是并行部署的路子，部署新模型、重新提交任务、退役旧部署。</li>
+</ul>
+<p>不管走哪条路，开发者要面对的问题都是同一个：流量最终会打到一个不同的模型上，但平台不会告诉你应用的行为是不是还和之前一样。接口能正常响应，不代表应用行为是对的。这一点我踩过坑：新模型悄悄改了格式、语气、工具调用方式或 JSON 结构，代码却要等用户投诉了才会发现。</p>
+<h2 id="什么时候动手比较合适">什么时候动手比较合适</h2>
+<p>我的建议是：在退役日期之前就开始。自动升级能帮你把流量切过去，但行为有没有变、变得好不好，这个责任还是在团队自己身上。预置吞吐量的部署更是逃不掉，必须手动迁移。</p>
+<p>微软一般会提前放出替代模型：全球标准版大约提前 90 天，预置区域大约提前 30 天，标准区域大约提前两周。这段时间够你按自己的节奏去评估新模型。退役日期本身是没法延后的。</p>
+<p>而且你不需要等到收到退役通知才开始动手。只要有一个新模型在质量、速度或成本上可能更好，现在就可以把它拉进这套流程里跑一遍。要是拖着不动，最后往往会变成一场慢动作的车祸：回复慢慢跑偏、解析代码越来越脆弱、工单一点点堆起来，团队最后是在一个自己没选、日期也没定的情况下疲于奔命地调试模型。提前主动迁移，能把退役日期变成走个流程的形式，也能沉淀出一套下次还能接着用的方法。</p>
+<h2 id="这套流程适合谁">这套流程适合谁</h2>
+<p>如果你所在的团队负责某个应用里由大模型驱动的功能，并且愿意认真走一遍迁移流程，这套方法就是给你准备的。它同样适用于那些替其他业务团队集中管理模型的平台团队，阶段是一样的，只是平台团队往往可以并行、快速地跑，而不是按顺序一步步来。</p>
+<p>微调过的模型不在这篇文章的讨论范围内。原因很简单：它们没法自动升级，训练和部署各自有一套退役时间表，而且到了&quot;适配&quot;阶段，要做的事情更像是蒸馏或重新训练，而不是改改提示词那么简单。</p>
+<h2 id="六个阶段">六个阶段</h2>
+<table>
+	<thead>
+			<tr>
+					<th>阶段</th>
+					<th>定义</th>
+					<th>成功的样子</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>发现</strong></td>
+					<td>得知模型即将发生变化，或者已经有必要更换了。</td>
+					<td>团队及时收到一个结构化的信号，里面写清楚了弃用日期、替代模型和迁移窗口。</td>
+			</tr>
+			<tr>
+					<td><strong>评估</strong></td>
+					<td>选定目标模型，并确认它在运营层面是可用的。</td>
+					<td>团队清楚有哪些候选模型，开始调优之前已经确认好容量、区域和 SKU。</td>
+			</tr>
+			<tr>
+					<td><strong>适配</strong></td>
+					<td>把现有工作负载在新模型上重放一遍，诊断出变化在哪里，然后更新提示词、参数、工具定义、输出结构和调用代码。</td>
+					<td>团队用真实或有代表性的流量做并排重放，能看清行为上的差异，并把每一处改动都记下来。</td>
+			</tr>
+			<tr>
+					<td><strong>验证</strong></td>
+					<td>让适配后的负载跑一遍质量评分标准，判断能不能安全上线。</td>
+					<td>团队有一套跑得起、业务方和评审都信得过的评估体系。</td>
+			</tr>
+			<tr>
+					<td><strong>上线</strong></td>
+					<td>分阶段把模型推向生产环境，监控真实表现，决定保留还是回滚。</td>
+					<td>金丝雀发布或加权路由已经就位，实时质量和延迟、错误率一起被盯着，回滚随时可行。</td>
+			</tr>
+			<tr>
+					<td><strong>退役</strong></td>
+					<td>下线旧部署，释放容量，归档评估产物，更新内部文档。</td>
+					<td>旧的 SKU 彻底消失，部署数量下降，团队把这次学到的东西带进下一次迁移。</td>
+			</tr>
+	</tbody>
+</table>
+<h2 id="foundry-现有的工具">Foundry 现有的工具</h2>
+<p>Microsoft Foundry 在每个阶段都提供了对应的工具。</p>
+<table>
+	<thead>
+			<tr>
+					<th>阶段</th>
+					<th>Microsoft Foundry 功能（含 Azure OpenAI）</th>
+					<th>文档</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><strong>发现</strong></td>
+					<td>模型退役计划表、生命周期策略、Service Health 告警，以及 Models API 的 <em>lifecycleStatus</em> 字段</td>
+					<td><a href="https://review.learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule?WT.mc_id=AI-MVP-5003172">模型退役计划表</a> · <a href="https://review.learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirements?WT.mc_id=AI-MVP-5003172">生命周期策略</a></td>
+			</tr>
+			<tr>
+					<td><strong>评估</strong></td>
+					<td>覆盖质量、安全性、成本、吞吐和延迟的模型排行榜与基准；权衡对比图；并排比较；推荐替代模型</td>
+					<td><a href="https://review.learn.microsoft.com/en-us/azure/foundry/concepts/model-benchmarks?WT.mc_id=AI-MVP-5003172">模型排行榜与基准</a> · <a href="https://review.learn.microsoft.com/en-us/azure/foundry/how-to/benchmark-model-in-catalog?WT.mc_id=AI-MVP-5003172">并排比较</a></td>
+			</tr>
+			<tr>
+					<td><strong>适配</strong></td>
+					<td>Foundry Agent playground 里的 Prompt Optimizer；智能体优化；用于生成合成数据的模拟器</td>
+					<td><a href="https://review.learn.microsoft.com/en-us/azure/foundry/observability/how-to/prompt-optimizer?WT.mc_id=AI-MVP-5003172">Prompt Optimizer</a> · <a href="https://review.learn.microsoft.com/en-us/azure/foundry/agents/how-to/optimize-agent-targets?WT.mc_id=AI-MVP-5003172">智能体优化</a> · <a href="https://review.learn.microsoft.com/en-us/azure/foundry/observability/how-to/evaluation-dataset-synthetic?WT.mc_id=AI-MVP-5003172">模拟器</a></td>
+			</tr>
+			<tr>
+					<td><strong>验证</strong></td>
+					<td>带 30 多个评估器的 Azure AI Evaluation SDK、LLM-as-judge、评分器，以及门户里的评估向导</td>
+					<td><a href="https://review.learn.microsoft.com/en-us/azure/foundry/how-to/develop/cloud-evaluation?WT.mc_id=AI-MVP-5003172">Azure AI Evaluation SDK</a> · <a href="https://review.learn.microsoft.com/en-us/azure/foundry/how-to/evaluate-generative-ai-app?WT.mc_id=AI-MVP-5003172">门户评估</a></td>
+			</tr>
+			<tr>
+					<td><strong>上线</strong></td>
+					<td>自动升级与 <em>versionUpgradeOption</em>；预置容量的原地迁移或并行迁移；持续评估；Azure Monitor 告警</td>
+					<td><a href="https://review.learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirements?WT.mc_id=AI-MVP-5003172">用 versionUpgradeOption 自动升级</a> · <a href="https://review.learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard?WT.mc_id=AI-MVP-5003172#set-up-continuous-evaluation">持续评估</a></td>
+			</tr>
+			<tr>
+					<td><strong>退役</strong></td>
+					<td>用 Models API 确认 <em>410 Gone</em>；用可观测性仪表盘跟踪部署数量</td>
+					<td><a href="https://review.learn.microsoft.com/en-us/azure/foundry/openai/concepts/retired-models?WT.mc_id=AI-MVP-5003172">Models API</a> · <a href="https://review.learn.microsoft.com/en-us/azure/foundry/concepts/observability?WT.mc_id=AI-MVP-5003172">可观测性仪表盘</a></td>
+			</tr>
+	</tbody>
+</table>
+<h2 id="六个阶段逐一拆解">六个阶段逐一拆解</h2>
+<h3 id="第-0-步准备测试数据集">第 0 步：准备测试数据集</h3>
+<p>在正式进入六个阶段之前，先准备一批有代表性的输入、预期输出，以及大家都认可的成功标准。这份数据集卡在整个生命周期的中段：适配阶段需要它来做重放，验证阶段需要它来当真值和评分依据。</p>
+<p>第 0 步描述的是工作负载本身，而不是候选模型，所以在发现阶段、也就是团队还没选定目标模型之前，就可以开始准备了。数据可以来自生产环境抓取的流量，也可以用业务领域里的样例，存成 .csv 或 .jsonl 格式。要是拿不到有代表性的数据，可以用<a href="https://review.learn.microsoft.com/en-us/azure/foundry/observability/how-to/evaluation-dataset-synthetic?WT.mc_id=AI-MVP-5003172">模拟器</a>生成一批合成输入。</p>
+<p>有两件事决定了这份数据集最后值不值：</p>
+<ul>
+<li><strong>提前打开抓取开关。</strong> 生产环境的内容抓取是选择性开启的，而且没法事后补录。现在就把提示词、回复、延迟和 token 数记录下来，团队以后才有东西可以拿来评估。</li>
+<li><strong>冻结数据集。</strong> 输入、真值和成功标准在整个迁移过程中要保持不变。一旦中途改动，新旧模型跑出来的结果就没法放在一起比了。</li>
+</ul>
+<p>除此之外，你还需要一份工作负载里用到的模型部署清单，包括它们的部署类型（标准、预置还是批处理）。每个源模型对应的退役日期和推荐替代模型，可以去<a href="https://review.learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule?WT.mc_id=AI-MVP-5003172">模型退役计划表</a>里查。</p>
+<h3 id="第-1-步发现">第 1 步：发现</h3>
+<p>&ldquo;发现&quot;阶段的起点，通常是有什么事情逼着团队开始考虑换模型：一份弃用通知、一个新出的 GA 模型、成本或延迟出了问题，或者发现现有模型缺了某个能力。这一阶段结束于一个决定：要么开始迁移，要么继续用现在的模型，前提是它还稳定、表现还不错，也没有临近退役。</p>
+<p><strong>Foundry 里能用的工具。</strong><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/model-lifecycle-retirement?WT.mc_id=AI-MVP-5003172">模型生命周期与退役计划表</a>公布了退役日期和推荐替代模型。<a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/model-retirements?WT.mc_id=AI-MVP-5003172">Azure OpenAI 模型退役文档</a>讲清楚了通知时间：GA 模型退役至少提前 60 天通知，预览版模型至少提前 30 天。文档里还说明了怎么配置 Azure Service Health 告警，以及怎么用 Models API 做程序化的 <em>lifecycleStatus</em> 和弃用检查。这些接口给内部的发现机制提供了一个稳定的数据基础。</p>
+<p><strong>这一步容易在哪里翻车。</strong> 很多客户是通过邮件、服务健康告警，或者干脆是生产环境报错才知道要退役了。等消息传到该负责的团队手里，可能已经临近弃用窗口的尾声，快要撞上退役日期了。</p>
+<p><strong>你的团队还需要补什么。</strong> 退役计划表和 Models API 已经把数据以稳定的接口形式暴露出来了。比较成熟的团队可以再加一层轻量的通知机制，把信号路由给正确的负责人。</p>
+<h3 id="第-2-步评估">第 2 步：评估</h3>
+<p>团队要选出一个候选目标模型，并确认它是可以真正用起来的：区域和 SKU 对不对、配额够不够，以及和现有模型能不能同时存在，这样才留得住回滚的余地。</p>
+<p>评估阶段也包括根据历史流量估算每月成本。不同代的模型定价结构不一样，推理 token、缓存输入、结构化输出的额外开销都会影响价格，这些差异可能让单位经济性差出两倍甚至更多。对于受监管的业务，BAA、FedRAMP 之类的合规要求，以及区域标准版和全球标准版的可用性差异，可能在质量测试开始之前就先把候选名单收窄了。</p>
+<p><strong>Foundry 里能用的工具。</strong> 先从退役计划表推荐的替代模型开始，再用<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/model-benchmarks?WT.mc_id=AI-MVP-5003172">模型基准</a>拉出一个候选清单，这些基准会对比质量、安全性、成本、吞吐和延迟。用质量对成本这类权衡图表，加上最多支持三个模型的<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/benchmark-model-in-catalog?WT.mc_id=AI-MVP-5003172">并排比较</a>工具。记得对比上下文窗口大小、函数调用/结构化输出/视觉这些功能支持情况，还有可用的接口端点。SKU、区域、配额和升级机制，可以在<a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/model-retirements?WT.mc_id=AI-MVP-5003172">模型退役文档</a>里确认。</p>
+<p><strong>这一步容易在哪里翻车。</strong> 团队常常面对好几个看起来都靠谱的候选，比如 gpt-5.1、gpt-5.2，再加一个 nano 版本，却分不清它们之间该怎么选。选中的模型也可能在需要的区域或 SKU 里根本用不了，这种限制有时候是规划做到一半才冒出来的。历史流量套进新模型算下来，成本可能明显更高，逼着团队临时做一个没计划过的预算决定。</p>
+<p><strong>你的团队还需要补什么。</strong> 公开基准应该用来筛选候选名单，而不是拿来做最终决定。拿自己的工作负载去验证这份候选清单。每月成本这张图，得靠 token 日志和当前定价自己搭出来。</p>
+<h3 id="第-3-步适配">第 3 步：适配</h3>
+<p>对于嵌入式的、面向产品的工作负载来说，&ldquo;适配&quot;往往是最费时间的阶段。换成受监管的业务，&ldquo;验证&quot;阶段可能才是真正的大头。</p>
+<p>第一步是原样重放现有工作负载在新模型上跑一遍，先不做任何改动，这样才能把模型带来的变化单独隔离出来。观察冗长程度、推理深度、结构化输出的遵循程度、工具调用的形态和延迟有没有变化。然后更新应用，直到它恢复甚至超过之前的表现。</p>
+<p>改提示词只是&quot;适配&quot;的一部分。一次迁移通常还会牵动另外四个层面：</p>
+<ul>
+<li><strong>参数。</strong> <em>temperature</em>、<em>top_p</em>、<em>max_tokens</em>、<em>reasoning-effort</em> 这些控制项，在不同代模型之间未必能直接对应，有些参数在新一代模型里干脆不支持了。</li>
+<li><strong>工具定义。</strong> 之前能可靠引导旧模型的参数名、描述和必填字段，换到新模型上可能需要更清晰的措辞或更严格的约束。</li>
+<li><strong>输出结构。</strong> 结构化输出的行为在不同模型之间会变。旧模型可能只是松散地遵循某个 schema，新模型也许终于开始严格执行了，或者反过来需要你显式加约束。</li>
+<li><strong>调用代码。</strong> API 和 SDK 上的差异，比如 Chat Completions 和 Responses 之间的区别、流式格式、新增或改名的请求字段，都可能要求改代码。下游的解析逻辑也可能默认了旧的响应结构。</li>
+</ul>
+<p>对于智能体和工作流类负载，输出结构和工具调用上的变化，影响往往比提示词的变化更大。</p>
+<p><strong>Foundry 里能用的工具。</strong> <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/prompt-optimizer?WT.mc_id=AI-MVP-5003172">Prompt Optimizer</a> 在 Agent playground 里系统指令字段下面的&quot;优化&quot;按钮就能找到。它会重新组织指令，逐段解释改了什么，还支持反复迭代。比如你可以加一条约束&quot;严格保持这个 JSON schema&rdquo;，然后再优化一次。对于本来需要手工重写的提示词，这是个不错的第一遍打磨。</p>
+<p>面向智能体的工作负载，<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/optimize-agent-targets?WT.mc_id=AI-MVP-5003172">智能体优化</a>会把指令、工具和模型选择放在一起调。Prompt Optimizer 和智能体优化目前只在 Microsoft Foundry 里提供，Azure OpenAI 没有。要是拿不到生产数据，<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/evaluation-dataset-synthetic?WT.mc_id=AI-MVP-5003172">模拟器</a>可以生成合成的、甚至带对抗性的输入。</p>
+<p><strong>这一步容易在哪里翻车。</strong> 大部分迁移时间都花在手工诊断的循环里：团队一遍遍手动跑提示词，肉眼对比输出，却很少把改了什么、为什么改记录下来。对做智能体的团队来说，常规的对话基准可能压根测不出工具调用上的回归，比如多出来的字段、改名的参数、变了顺序的调用，这些问题往往只有在重放真实的智能体轨迹时才会暴露出来。</p>
+<p>有三件事值得提前留意：</p>
+<ul>
+<li><strong>先用优化器打个底，再自己核实一遍。</strong> 优化器是一次性套用一些通用做法，而不是针对你的数据集去调。它们只会调整指令文本，不会碰工具定义或输出 schema。先把原始提示词复制一份留底，毕竟没有版本历史，然后拿冻结好的数据集去评估优化后的版本。</li>
+<li><strong>跨模型家族迁移，手工活会更多。</strong> 目前没有&quot;针对目标模型 X 做优化&quot;这种一键流程。从一个模型家族换到另一个，比如从 OpenAI 换到 Claude，仍然需要人工去做提示词和 schema 的转译。</li>
+<li><strong>提前记录流量，不要等到需要时才想起来。</strong> 重放的价值取决于抓到的数据有多好。现有的轨迹目前可以作为智能体的评估数据源，但内容抓取是选择性开启、也没法事后补的。现在就把提示词、回复、延迟和 token 记下来，为下一次适配做准备。</li>
+</ul>
+<h3 id="第-4-步验证">第 4 步：验证</h3>
+<p>拿冻结好的数据集，跑一遍质量评分标准，检验适配后的负载表现如何。评分标准可以是规则、LLM-as-judge 评估、人工审核、已有的用户反馈信号，也可以是某个业务专用的打分框架，比如医疗行业的临床摘要评分标准，或者智能体场景里的工具调用顺序断言。</p>
+<p>验证阶段最终会给出一个能不能上线的判断。做 AI 原生产品的团队，可能会把这套信号变成每次提交都跑一遍的持续检查，而不只是一次性的把关。</p>
+<p>数据集是适配和验证共用的依赖，最好在评估阶段前后就搭建并冻结好，虽然它主要是为验证阶段服务的。验证有两个关键节点：</p>
+<ol>
+<li><strong>适配之前</strong>，先冻结数据集和成功标准，跑一遍当前模型，建立源模型的基线。</li>
+<li><strong>适配之后</strong>，用同一份数据集和同一套评估器跑目标模型，和源模型基线做对比，做出发布决定。</li>
+</ol>
+<p>评估的运行环境最好提前搭好，等适配完成后再拿来把关，这两步都属于验证阶段的工作。</p>
+<p><strong>Foundry 里能用的工具。</strong> 用 <code>pip install azure-ai-evaluation</code> 安装的 <a href="https://review.learn.microsoft.com/en-us/azure/foundry/how-to/develop/cloud-evaluation?WT.mc_id=AI-MVP-5003172">Azure AI Evaluation SDK</a> 内置了 30 多个评估器，覆盖对齐度、相关性、检索、连贯性、流畅度、问答质量、基于参考的相似度、F1、BLEU、ROUGE、安全性、智能体行为，以及 Azure OpenAI 的评分器。团队也可以针对具体任务，自己搭一套 LLM-as-judge 评估器。</p>
+<p><a href="https://review.learn.microsoft.com/en-us/azure/foundry/how-to/evaluate-generative-ai-app?WT.mc_id=AI-MVP-5003172">门户里的评估流程</a>可以用同一套评估器跑模型、智能体、数据集和轨迹这几种目标。在冻结好的数据集上，用完全相同的评估器跑源模型和目标模型的输出，结果才有可比性。</p>
+<p>签发上线决定时，重点看三个维度：</p>
+<ul>
+<li><strong>质量：</strong> 评估器给出的结果</li>
+<li><strong>延迟：</strong> 排行榜上的首 token 时间和吞吐量，再加上工作负载实际跑出来的延迟</li>
+<li><strong>成本：</strong> 输入 token 数 × 输入单价，加上输出 token 数 × 输出单价</li>
+</ul>
+<p><strong>这一步容易在哪里翻车。</strong> 大多数团队根本没有一套评估体系。有的团队自己搭了一套，但没用平台自带的评估工具。受监管的业务还要加一道强制人工审核，这一步很容易变成瓶颈。对这些团队来说，迁移往往卡在验证阶段，而不是适配阶段。</p>
+<p><strong>你的团队还需要补什么。</strong> 评估器是现成的，但模型工作负载还是需要团队自己从生产流量里整理出一份贴合业务的测试集。这也是为什么第 0 步的投入最终都是划算的。</p>
+<h3 id="第-5-步上线">第 5 步：上线</h3>
+<p>分阶段推广已经验证好的配置：先在非生产环境，然后是金丝雀发布或按百分比放量的生产流量，最后再逐步扩大暴露面。把实时的延迟、错误和质量信号，跟迁移前的基线做对比，然后决定保留还是回滚。</p>
+<p>有些工作负载没办法在测试阶段就把新模型暴露给真实用户，比如涉及受保护健康信息或金融交易的流程。这种情况可以用影子模式或镜像模式：让新模型离线跑一遍生产输入，把它的输出和旧模型的输出做对比，不影响真实用户。</p>
+<p><strong>Foundry 里能用的工具。</strong> 具体的迁移机制取决于部署的 SKU：</p>
+<ul>
+<li><strong>标准版、全球标准版、数据区标准版部署</strong>会按滚动计划自动升级，可以用 <em>versionUpgradeOption</em> 控制时机：<em>OnceNewDefaultVersionAvailable</em>、<em>OnceCurrentVersionExpired</em> 或 <em>NoAutoUpgrade</em>。优先处理走的是同一套路径。</li>
+<li><strong>预置、全球预置、数据区预置部署</strong>需要手动迁移，要么在 20 到 30 分钟的 Azure 托管流量切换窗口内原地完成，要么走并行部署。</li>
+<li><strong>批处理部署</strong>走并行部署：部署新模型、重新提交任务，再退役旧部署。</li>
+<li><strong>微调部署</strong>不会自动升级，训练和部署各有一套独立的退役时间表，得提前规划重训或蒸馏。</li>
+</ul>
+<p>具体到每种部署类型该怎么做，可以查<a href="https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/model-retirements?WT.mc_id=AI-MVP-5003172">模型退役文档</a>。</p>
+<p>用<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard?tabs=python&amp;WT.mc_id=AI-MVP-5003172#set-up-continuous-evaluation">持续评估</a>在 Foundry 可观测性仪表盘里对一部分生产流量打分，把评估结果和轨迹关联起来做根因分析，再给质量回归配上 Azure Monitor 告警。</p>
+<p><strong>这一步容易在哪里翻车。</strong> 离线评估可能漏掉生产环境里才会暴露的质量和延迟回归。回滚决定有时候也是被弃用截止日期逼出来的，而不是靠证据做出来的。</p>
+<p><strong>你的团队还需要补什么。</strong> 加权路由通常得由团队自己在应用层或网关层实现。团队还得自己决定旧部署要保温多久以备回滚，嵌入式副驾类的团队一般会盯着大概 30 天这个数字。这两套机制值得一次设计好，后面每次迁移都能复用。</p>
+<h3 id="第-6-步退役">第 6 步：退役</h3>
+<p>&ldquo;退役&quot;这一步最容易被忘掉。要下线旧部署、释放它占的容量、归档评估产物、更新内部文档，还要把变化告诉下游的相关方，这可能包括面向客户的文档、营销页面、支持手册和审计日志。受监管的业务甚至要把这些产物保留好几年。</p>
+<p>退役同时也是一道治理关卡。</p>
+<p><strong>Foundry 里能用的工具。</strong> 用 Models API 通过 <em>lifecycleStatus</em> 或 <em>410 Gone</em> 确认旧版本确实退役了，用<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/observability?WT.mc_id=AI-MVP-5003172">可观测性仪表盘</a>确认活跃部署数量在下降。把有用的生产轨迹加进黄金数据集，下一次迁移就能有更好的证据可用。</p>
+<p><strong>这一步容易在哪里翻车。</strong> 团队会直接跳过这一步。旧部署越积越多，最后留下一堆没收尾的迁移残骸。</p>
+<p><strong>你的团队还需要补什么。</strong> 可观测性仪表盘能显示部署数量，但哪些部署还有真实流量，得团队自己判断。开一张明确的退役工单，别指望有人会自己记得。嵌入式副驾类的团队还得记得更新&quot;由 gpt-4o 驱动&quot;这类对外的说法，模型换了这些话也得跟着改。</p>
+<h2 id="案例zava-购物助手从-gpt-4o-mini-迁移到-gpt-5x">案例：Zava 购物助手从 gpt-4o mini 迁移到 gpt-5.x</h2>
+<p>Zava 是原文里用来讲故事的一个虚构零售商，代表一类真实的客户案例，反映的是面向客户的嵌入式 AI 工作负载里常见的模式。</p>
+<p>Zava 的购物助手是公司体量最大的大模型工作负载之一，分两个阶段：</p>
+<ol>
+<li>逐条评论的洞察提取，从成千上万条商品评论里识别情感、属性提及和质量问题信号。</li>
+<li>商品维度的摘要，把这些发现呈现给商品页上的购物者。</li>
+</ol>
+<p>这两个阶段加起来，占了 Zava token 用量的很大一部分。</p>
+<h4 id="发现">发现</h4>
+<p>Zava 的中央 AI 平台团队把 gpt-5.x 系列模型内部上线，并通知了各个业务团队。购物助手团队通过这个渠道得知有新模型，也拿到了 gpt-4o mini 弃用之前的目标迁移窗口。</p>
+<p>Zava 内部有一套建立在退役计划表和 Models API 之上的发现机制。微软提供底层数据，Zava 负责把信号路由给对应的业务负责人。</p>
+<h4 id="评估">评估</h4>
+<p>团队用排行榜的权衡对比图，把延迟和成本更低的 gpt-5.4 nano 拿来和 gpt-5.1、gpt-5.2 做对比。选型这块并不轻松，新模型发布节奏很快，几个变体之间的定位不够清晰，而且也没有一个现成的、针对商品问答场景的行为基准可以参考。</p>
+<p>容量规划需要和 AI 平台团队协调。gpt-4o mini 和候选的 gpt-5.x 模型都得在同一个区域里同时保留，团队才留得住回滚的余地。</p>
+<h4 id="适配">适配</h4>
+<p>团队拿现有的购物助手提示词，在一份脱敏后的流量样本上跑 gpt-5.4 nano。客户查询在重放之前，个人身份信息已经被清洗掉了。</p>
+<p>行为对比暴露出三个问题：</p>
+<ul>
+<li>摘要里出现了更多含糊其辞的措辞，有时候还和底层的评论证据自相矛盾，这对购物者的信任是个风险。</li>
+<li>洞察的数量在多次运行之间不稳定，模型有时候提取出的属性提及数量明显多于或少于 gpt-4o mini，影响了下游的筛选逻辑。</li>
+<li>在同步的商品页路径上，延迟的波动比预期的更大。</li>
+</ul>
+<p>Prompt Optimizer 帮着重新组织了摘要提示词，但团队还是得靠自己手动诊断这些差异。他们在已抓取的流量之上，自建了一套重放系统和行为对比工具。这次重新打磨花了好几周，而且不只是改提示词，参数和洞察提取输出端的下游解析逻辑也都跟着变了。</p>
+<h4 id="验证">验证</h4>
+<p>团队用 Zava 自己的产品答案质量（PAQ）评分标准给结果打分，九条评判标准覆盖了事实依据、属性准确性、语气，以及对超出商品目录范围问题的拒答行为。Zava 把这套评分标准实现成了 Azure AI Evaluation SDK 里的自定义评估器。</p>
+<p>最初的评估用的是没改动过的提示词，目的是先把模型本身带来的行为差异单独看清楚，之后每改一次提示词就重新跑一遍。Zava 的 QA 团队也做了一轮人工审核，公司规定任何要用在面向客户流程里的新模型都必须过这一关。</p>
+<p>逐条评论的洞察提取这个阶段，目前还没有自动化评估，团队暂时接受了这个缺口。</p>
+<h4 id="上线">上线</h4>
+<p>验证通过的配置先进了非生产环境，然后是分阶段暴露：先给内部员工用，再放给一小部分购物者。</p>
+<p>金丝雀发布暴露出了离线评估没发现的延迟回归。团队把延迟敏感的同步商品页路径回滚了，同时让离线预生成的路径继续留在新模型上。</p>
+<h4 id="退役">退役</h4>
+<p>退役这一步还没走完。gpt-4o mini 的部署仍然保温着，以备回滚。团队得先解决同步路径上的延迟回归，这个问题目前又把那条代码路径送回了适配阶段。</p>
+<p>这种&quot;一半上线、一半还没迁完&quot;的状态其实挺常见。退役经常会比上线晚上几周甚至几个月，旧部署也会一直挂在部署清单里，成为那种迟迟没清理的技术债数据。</p>
+<h3 id="从这个案例里能学到什么">从这个案例里能学到什么</h3>
+<ul>
+<li><strong>适配阶段吃掉了大部分时间。</strong> 重放工具、行为对比和提示词重新打磨这三件事，是微软最应该投入精力去帮团队缩短迁移周期的地方。</li>
+<li><strong>验证之所以顺利，是因为 Zava 提前投入过。</strong> 大多数客户手头并没有 PAQ 这种东西。要是能把打造业务专属评估的门槛降低一些，这个阶段的可信度会高很多。</li>
+<li><strong>迁移是分阶段、非二元切换的。</strong> 流程得支持这种&quot;部分上线、部分回滚&quot;的中间状态，而不能假设从旧模型到新模型是一刀切的开关。</li>
+</ul>
+<h2 id="怎么把这套流程用起来">怎么把这套流程用起来</h2>
+<p>这六个阶段既可以当团队的检查清单，也可以当审计已有迁移流程时的访谈提纲。</p>
+<ul>
+<li><strong>文档和流程：</strong> 从这六个阶段讲起，大多数团队一看就懂。</li>
+<li><strong>投入优先级：</strong> 先把精力放在适配和验证上。看下来，这两个阶段在各种客户案例里都是最耗时间、也最影响信心的。</li>
+<li><strong>访谈和复盘：</strong> 针对每个阶段，问一问它到底有没有真的在做、谁负责、用的是什么工具、上一次在哪里翻车了，以及需要什么样的证据才能提升信心。</li>
+<li><strong>指标：</strong> 发现和退役是最容易埋点的两个阶段，比如通知触达率、活跃部署数量。适配和验证需要专门搭建的埋点，大多数团队目前还没有。</li>
+</ul>
+<h2 id="延伸阅读">延伸阅读</h2>
+<p>原文还附了两份配套资源，把这套流程落到了更具体的实施步骤上：</p>
+<ul>
+<li><strong><a href="https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/model-migration?WT.mc_id=AI-MVP-5003172">Microsoft Learn 指南</a>：</strong> 沿着这六个阶段，讲了怎么识别受影响的部署、怎么准备测试数据集、怎么适配提示词、怎么评估源模型和目标模型，以及按部署类型该怎么上线。</li>
+<li><strong><a href="https://github.com/microsoft-foundry/foundry-models-accelerator?WT.mc_id=AI-MVP-5003172">Foundry Models Accelerator</a>：</strong> 一个社区维护的工具包，包含部署清单扫描器、可行性评估手册、代码和 API 迁移审计脚本、带黄金数据集的 A/B 评估工具，以及上线指引，遵循的是同一套六阶段流程。它是社区按 MIT 协议提供的，不在微软官方支持范围内，模型可用性和退役日期还是要以官方文档为准。</li>
+</ul>
+<p>另外还可以看看 <a href="https://microsoft-foundry.github.io/forgebook/?WT.mc_id=AI-MVP-5003172">Foundry Forgebook</a>，里面有一大堆手把手的代码迁移食谱，涵盖了各种源模型到目标模型的迁移，包括跨模型家族的情况。</p>
+<p>写完这篇整理，我的体会是：模型迁移从来不是&quot;改个模型名字&quot;这么简单的事，真正的目标是不让应用的行为跑偏，或者顺便让它变得更好。六个阶段立起来，资源优先砸在适配和验证上，退役当成一道正经的治理关卡去走完，别拖成没人管的尾巴。这套流程，我打算在自己手上的项目里也试试看。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/">https://beanhsiang.github.io/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a></li>
+        
+        <li><a href="/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a></li>
+        
+        <li><a href="/post/2026-08-06-microsoft-foundry-quota-tiers/">Microsoft Foundry 的 Quota Tiers</a></li>
+        
+        <li><a href="/post/2026-07-23-design-the-network-before-you-deploy-best-practices-for-microsoft-foundry-standard-agents-byovnet/">先设计网络，再部署：Microsoft Foundry 标准智能体自带 VNet 的实战经验</a></li>
+        
+        <li><a href="/post/2026-07-17-agents-can-learn-with-memory-in-microsoft-foundry-agent-service/">让智能体拥有记忆：Microsoft Foundry Agent Service 的程序性记忆</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-07-agent-automation-stuck-behind-interfaces-built-for-humans/" title="智能体的自动化，为什么还没有想象中那么高效" target="_blank">智能体的自动化，为什么还没有想象中那么高效</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/" title="人机协同里，卡住我们的常常不是机器，是人" target="_blank">人机协同里，卡住我们的常常不是机器，是人</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-04-large-models-can-reason-but-not-learn-enterprise-values/" title="大模型会推理了，但还学不会企业的价值观" target="_blank">大模型会推理了，但还学不会企业的价值观</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-02-mbml-recommender/" title="[译]基于模型的机器学习 - 5 做出推荐" target="_blank">[译]基于模型的机器学习 - 5 做出推荐</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/" title="Microsoft Foundry 与 Azure OpenAI 模型迁移全流程" target="_blank">Microsoft Foundry 与 Azure OpenAI 模型迁移全流程</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" title="[译]基于模型的机器学习 - 4.5 评估与改进特征集" target="_blank">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" title="为 Foundry 托管代理开启 A2A 端点和 Agent Card" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" title="[译]基于模型的机器学习 - 4.4 设计特征集" target="_blank">[译]基于模型的机器学习 - 4.4 设计特征集</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/" title="[译]基于模型的机器学习 - 4.3 建模多个特征" target="_blank">[译]基于模型的机器学习 - 4.3 建模多个特征</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (30)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -82,6 +82,33 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/" target="_blank">用 Azure API Management 给 Microsoft Foundry 里的 Claude 模型套一层企业网关</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-06-05T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年6月5日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>这篇是我照着 Microsoft 社区里一篇实战文章跑通之后整理的笔记，原文作者是 MuraliKumanduri，2026 年 6 月发布，<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/connecting-claude-clients-with-azure-api-management-and-claude-models-in-microso/4525212?WT.mc_id=AI-MVP-5003172">原文在这里</a>。我把它跑通并按自己的理解重讲一遍，方便以后复用。</p>
+<p>先说结论：这是一套能上生产的模式，给跑在 Microsoft Foundry 里的 Claude 模型前面套一层用 Entra 保护的 LLM 网关，做到按开发者认证、限流、配额和成本追踪，而且任何一台笔记本上都不落模型密钥。全套实现大概两小时，只想搭个最小试点的话半小时够了。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-05-connecting-claude-clients-with-azure-api-management-and-claude-models-in-microsoft-foundry/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-05-30-gpt-realtime-in-production-which-context-strategy-should-you-actually-use/" target="_blank">GPT Realtime 上生产环境：到底该选哪种上下文策略？</a>
             </h1>
         </header>
@@ -333,33 +360,6 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/" target="_blank">使用 Microsoft Olive 和 Foundry Local 部署自定义模型</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-02-12T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年2月12日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>在过去的几周里,我一直在探索小语言模型(SLM)的部署之旅。从最初了解 Phi-4 和小语言模型的强大之处,到实践使用 Foundry Local 在本地运行模型,再到学习函数调用,最近还构建了一个完整的多智能体测验应用,其中包含一个协调专家智能体的编排器。</p>
-<p>这个测验应用在本地运行得很好,但它依赖于 Foundry Local 目录中的模型——这些模型经过预优化且随时可用。但如果想部署一个不在目录中的模型该怎么办?也许你已经在特定领域的测验数据上微调了一个模型,或者 Hugging Face 上刚发布了一个你想使用的新模型。今天我将展示如何从 Hugging Face 获取一个模型,使用 Microsoft Olive 优化它,在 Foundry Local 中注册它,并在测验应用中运行它。同样的工作流程适用于你可能为特定用例微调的任何模型。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-02-12-deploying-custom-models-with-microsoft-olive-and-foundry-local/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
@@ -446,6 +446,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/" title="评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”" target="_blank">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-09-07-agent-automation-stuck-behind-interfaces-built-for-humans/" title="智能体的自动化，为什么还没有想象中那么高效" target="_blank">智能体的自动化，为什么还没有想象中那么高效</a>
     </li>
     
@@ -481,10 +485,6 @@
         <a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" title="[译]基于模型的机器学习 - 4.4 设计特征集" target="_blank">[译]基于模型的机器学习 - 4.4 设计特征集</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/" title="[译]基于模型的机器学习 - 4.3 建模多个特征" target="_blank">[译]基于模型的机器学习 - 4.3 建模多个特征</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -504,7 +504,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (39)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (40)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

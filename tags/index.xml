@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Mon, 07 Sep 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Fri, 11 Sep 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Microsoft Foundry</title>
+				<link>https://beanhsiang.github.io/tags/Microsoft-Foundry/</link>
+				<pubDate>Fri, 11 Sep 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Microsoft-Foundry/</guid>
+				<description></description>
+			</item>
 			<item>
 				<title>穿越人机融合之际</title>
 				<link>https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/</link>
@@ -32,13 +39,6 @@
 				<link>https://beanhsiang.github.io/tags/Model-Based/</link>
 				<pubDate>Wed, 02 Sep 2026 10:00:00 +0800</pubDate>
 				<guid>https://beanhsiang.github.io/tags/Model-Based/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Microsoft Foundry</title>
-				<link>https://beanhsiang.github.io/tags/Microsoft-Foundry/</link>
-				<pubDate>Tue, 01 Sep 2026 12:00:00 +0800</pubDate>
-				<guid>https://beanhsiang.github.io/tags/Microsoft-Foundry/</guid>
 				<description></description>
 			</item>
 			<item>

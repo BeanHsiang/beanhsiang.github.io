@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Tue, 01 Sep 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Fri, 11 Sep 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/categories/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</title>
+				<link>https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/</link>
+				<pubDate>Fri, 11 Sep 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/</guid>
+				<description>&lt;p&gt;&lt;em&gt;原文：&lt;a href=&#34;https://techcommunity.microsoft.com/blog/c153713f-ba0f-4022-ba78-f73ade117066/evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/4555498?WT.mc_id=AI-MVP-5003172&#34;&gt;Evaluating Agentic AI in Microsoft Foundry: Beyond Final-Answer Quality&lt;/a&gt;，作者 jothsnapraveena，发布于 2026-09-10&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;AI 系统正在从单轮对话助手演变成会调用工具的智能体，评估方式也必须跟着变。这是我最近研究 Microsoft Foundry 智能体评估功能时最直接的感受。&lt;/p&gt;&#xA;&lt;p&gt;做传统 LLM 应用的团队，通常只关心最终回复是否相关、连贯、有依据。但智能体不一样，这只是问题的一部分。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>Microsoft Foundry 与 Azure OpenAI 模型迁移全流程</title>
 				<link>https://beanhsiang.github.io/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/</link>

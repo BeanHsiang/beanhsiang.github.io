@@ -75,6 +75,35 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/" title="[译]基于模型的机器学习 - 3.1 建模游戏的结果" target="_blank">[译]基于模型的机器学习 - 3.1 建模游戏的结果</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-27T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月27日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>我们的目标是构建一个能够评估在线游戏玩家技能的系统。作为迈向这一目标的第一步，我们需要先考察一个更简单的问题：在已经知道相关玩家技能的情况下，预测一局游戏的结果。这将使我们发展出解决“确定技能”这一更复杂问题所需的许多概念。</p>
+<p>假设 Jill 将在 Xbox Live 上与 Fred 玩一局《光环》。在<a href="/post/2026-01-06-mbml-learning-skills">第 2 章</a>中，我们用一个二值变量来表示一个人的软件开发技能，指示此人是否具备某项特定技能。当我们考虑一个人在《光环》这类典型 Xbox 游戏中的技能时，这种做法就不够用了，因为可能的技能水平存在很宽的谱系。相反，用一个连续值来表示一个人的技能更为合适。因此，我们的第一条建模假设是：</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/" title="[译]基于模型的机器学习 - 3 匹配你的对手" target="_blank">[译]基于模型的机器学习 - 3 匹配你的对手</a>
             </h1>
         </header>
@@ -369,41 +398,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" title="[译]基于模型的机器学习 - 2.3 有环性" target="_blank">[译]基于模型的机器学习 - 2.3 有环性</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-06-16T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年6月16日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>现在让我们把<a href="/post/2025-04-21-mbml-introduction">模型</a>稍微扩展一下，添加第四道需要两项技能的题目。这张新的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>如图 2.14 所示，我们为这道新题添加了新的 <code>isCorrect4</code> 和 <code>hasSkills4</code> 变量。在这张仅仅略微变大的图上，我们当然也可以用<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>来做<a href="/post/2025-04-21-mbml-introduction">推断</a>吧？其实，我们不能。</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/PlaneLoop_86879950.jpg">
-            <img class="mx-auto" alt="飞机航迹环" src="/uploads/PlaneLoop_86879950.jpg" />
-        </a>
-    </p>
-<p><em>环可能很棘手。</em></p>
-<p>问题在于，<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>只有在某个（未观测）节点的所有其它边上都收到了消息之后，才能从该节点发出一条消息（算法 2.1）。在这个约束下，只有当图中没有环时，我们才能把图中的所有消息都发送出去；这里的<strong>环</strong>是指一条穿过图、从同一个节点出发又回到该节点的路径（且不重复经过同一条边）。如果图中有一个环，那么我们无法沿着环上的任何一条边发送消息，因为这总是要求先计算出环上的另一条消息。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -530,6 +524,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/" title="评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”" target="_blank">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-09-07-agent-automation-stuck-behind-interfaces-built-for-humans/" title="智能体的自动化，为什么还没有想象中那么高效" target="_blank">智能体的自动化，为什么还没有想象中那么高效</a>
     </li>
     
@@ -565,10 +563,6 @@
         <a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" title="[译]基于模型的机器学习 - 4.4 设计特征集" target="_blank">[译]基于模型的机器学习 - 4.4 设计特征集</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/" title="[译]基于模型的机器学习 - 4.3 建模多个特征" target="_blank">[译]基于模型的机器学习 - 4.3 建模多个特征</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -588,7 +582,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (39)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (40)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

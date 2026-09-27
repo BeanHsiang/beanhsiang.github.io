@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>Microsoft Foundry 智能体的 A2A 端点与 A2A 工具 | Innovation with tech</title>
+    <meta property="og:title" content="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-09-19T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-09-19T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</h1>
+        </header>
+        
+  <time datetime="2026-09-19T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月19日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>最近我在研究 Microsoft Foundry 的多智能体能力时，注意到一个变化：智能体之间的协作终于不用再靠一堆自定义 API 拼凑了。A2A 工具和新的入站 A2A 端点现在支持 A2A 协议 1.0 版本，这个版本已经正式发布（GA）。之前预览阶段用的 a2a_preview 工具类型和 0.3 版协议依然保留，给已有的集成留了一条兼容路径。托管智能体（Hosted Agents）也可以通过暴露在 MCP 上的 Foundry 工具箱来使用 A2A 工具。</p>
+<p>如果你一直在关注早期预览版本，可能记得 A2A 端点以前叫&quot;A2A API head&quot;。思路其实很直白：</p>
+<ul>
+<li>A2A 端点：把一个 Foundry 智能体暴露出去，让外部智能体能发现它、调用它。</li>
+<li>A2A 工具：让 Foundry 智能体反过来去调用另一个兼容 A2A 协议的智能体。</li>
+<li>托管智能体：通过暴露成 MCP 端点的 Foundry 工具箱来使用 A2A 工具。</li>
+</ul>
+<p>这三块拼在一起，就能搭出一套多智能体系统：每个智能体各管一摊，把自己的能力发布出来，跨服务边界安全协作。</p>
+<h2 id="这为什么重要">这为什么重要</h2>
+<p>在这之前，很多多智能体模式都得靠自定义 API、临时适配器，或者跟某个框架深度绑定的编排逻辑来实现。A2A 协议解决的就是这个问题，它给智能体之间的通信定了一套标准。说实话，这种&quot;发智能体名片、按协议通信&quot;的思路，比我之前见过的那些各家自造协议要靠谱不少。</p>
+<p>也就是说，一个智能体可以直接向另一个智能体求助，完全不用了解对方内部是怎么实现的。调用方通过智能体名片（agent card）发现远程智能体的能力，通过 A2A 协议发送任务，拿到结果后再融入自己的对话里。</p>
+<p>对于 Foundry 托管的 A2A 端点，发现过程是需要认证的。智能体名片的 URL 和协议端点都要求 Microsoft Entra ID 认证，不是公开可访问的。</p>
+<p>举几个例子：</p>
+<ul>
+<li>客服智能体可以调用账单智能体。</li>
+<li>研究智能体可以调用数据分析智能体。</li>
+<li>Foundry 托管的企业智能体可以调用运行在 Foundry 之外的专用智能体。</li>
+<li>托管智能体可以调用包了一层 A2A 连接的 Foundry 工具箱。</li>
+</ul>
+<h2 id="架构一外部智能体通过-a2a-端点调用-foundry-智能体">架构一：外部智能体通过 A2A 端点调用 Foundry 智能体</h2>
+<p>这种模式下，Foundry 智能体被暴露成一个 A2A 端点，外部智能体发现它的智能体名片，然后用 A2A 协议去调用。</p>
+<p>（原文配图：外部智能体通过智能体名片发现 Foundry 智能体，用 A2A 协议 v1.0 调用，拿到由 Foundry 的工具、数据和模型生成的响应。）</p>
+<p>Foundry 智能体会用自己配置好的模型、指令、工具和企业数据源来处理这个请求，处理完再把结果返回给调用方。不过 Foundry 提示词智能体必须先支持 Responses 协议，才能通过入站 A2A 端点暴露出去，这个前提条件容易被忽略。</p>
+<p>Foundry 智能体暴露的 A2A 基础 URL 格式是这样的：</p>
+<pre tabindex="0"><code>https://{account}.services.ai.azure.com/api/projects/{project}/agents/{agent}/endpoint/protocols/a2a
+</code></pre><p>按版本区分的智能体名片 URL 则是：</p>
+<pre tabindex="0"><code>https://{account}.services.ai.azure.com/api/projects/{project}/agents/{agent}/endpoint/protocols/a2a/agentCard/v1.0
+</code></pre><pre tabindex="0"><code>https://{account}.services.ai.azure.com/api/projects/{project}/agents/{agent}/endpoint/protocols/a2a/agentCard/v0.3
+</code></pre><p>新做集成的话，建议直接对准 v1.0，这个版本已经 GA 了。v0.3 还留着，但那是给已有预览集成兼容用的，v1.0 才是往后要走的路。</p>
+<p>Foundry 用同一个 A2A 基础路径同时服务两个协议版本，调用方通过智能体名片协商、A2A-Version 请求头，或者 a2a-version 查询参数来选版本。生产环境的客户端最好显式指定 v1.0，不要指望默认行为帮你兜底。</p>
+<p>Foundry 的入站 A2A v1.0 端点用的是 JSON-RPC。入站 A2A v0.3 同时支持 JSON-RPC 和 HTTP+JSON，但 v0.3 还处于预览阶段。目前只支持文本模态，也不支持流式响应。</p>
+<h2 id="架构二foundry-智能体用-a2a-工具调用另一个智能体">架构二：Foundry 智能体用 A2A 工具调用另一个智能体</h2>
+<p>反过来的模式同样重要：Foundry 智能体可以用 A2A 工具去调用另一个兼容 A2A 的端点。</p>
+<p>（原文配图：A2A 工具调用远程 A2A 兼容智能体的架构示意。）</p>
+<p>RemoteA2A 项目连接负责存放远程 A2A 的基础 URL 和认证配置，A2A 工具引用这个连接，并指定要用的 A2A 协议版本。</p>
+<p>Foundry 会自动解析默认的智能体名片路径，并协商 A2A 协议版本。如果目标是 Foundry 智能体，你都不用配置 send_credentials_for_agent_card。</p>
+<p>先设置好当前的 Foundry 项目，再创建 RemoteA2A 连接：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#953800">PROJECT_ENDPOINT</span><span style="color:#0550ae">=</span><span style="color:#0a3069">&#34;https://{account}.services.ai.azure.com/api/projects/{project}&#34;</span>
+</span></span><span style="display:flex;"><span>azd ai project <span style="color:#6639ba">set</span> <span style="color:#0a3069">&#34;</span><span style="color:#953800">$PROJECT_ENDPOINT</span><span style="color:#0a3069">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>azd ai connection create my-a2a-connection <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>  --kind remote-a2a <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>  --target <span style="color:#0a3069">&#34;https://{account}.services.ai.azure.com/api/projects/{project}/agents/{agent}/endpoint/protocols/a2a&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>  --auth-type agentic-identity <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>  --audience <span style="color:#0a3069">&#34;https://ai.azure.com&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>目标 Foundry 项目或智能体得给调用方的身份授予 Foundry Agent Consumer 角色，或者其他包含所需端点权限的角色。分配角色的时候，用的是调用方身份的 Microsoft Entra 对象 ID 或主体 ID，不是应用 ID 或客户端 ID，这一点我自己也搞混过一次。</p>
+<p>角色分配既可以在目标项目范围创建，也可以在单个智能体范围创建：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>az role assignment create <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>  --assignee-object-id <span style="color:#0a3069">&#34;{calling-agent-principal-object-id}&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>  --assignee-principal-type <span style="color:#0a3069">&#34;ServicePrincipal&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>  --role <span style="color:#0a3069">&#34;eed3b665-ab3a-47b6-8f48-c9382fb1dad6&#34;</span> <span style="color:#0a3069">\
+</span></span></span><span style="display:flex;"><span>  --scope <span style="color:#0a3069">&#34;{target-project-or-agent-resource-id}&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>智能体身份和托管身份在 Microsoft Entra ID 里都是以服务主体的形式存在的，所以这里主体类型用的是 ServicePrincipal。</p>
+<h2 id="架构三托管智能体通过-foundry-工具箱使用-a2a">架构三：托管智能体通过 Foundry 工具箱使用 A2A</h2>
+<p>托管智能体可以通过挂载一个 Foundry 工具箱来使用 A2A。工具箱里包含一个 A2A 工具箱工具，并通过兼容 MCP 的端点把它暴露出来。</p>
+<p>完整的交互流程是这样的：</p>
+<ul>
+<li>托管智能体通过 MCP 连接到 Foundry 工具箱。</li>
+<li>托管智能体用 Microsoft Entra ID 向工具箱认证。</li>
+<li>工具箱调用它配置好的 A2A 工具箱工具。</li>
+<li>A2A 工具箱工具引用一个 RemoteA2A 项目连接。</li>
+<li>RemoteA2A 连接确定目标地址和下游认证配置。</li>
+<li>工具箱通过 A2A 协议调用远程智能体。</li>
+<li>结果通过工具箱的 MCP 端点返回给托管智能体。</li>
+</ul>
+<p>（原文配图：托管智能体通过 Foundry 工具箱和 RemoteA2A 项目连接安全调用远程 A2A 智能体。）</p>
+<p>这其实是个两跳架构：托管智能体先通过 MCP 连到 Foundry 工具箱，工具箱再通过 A2A 连到远程智能体。</p>
+<p>托管智能体使用的工具箱 MCP 端点格式是：</p>
+<pre tabindex="0"><code>https://{account}.services.ai.azure.com/api/projects/{project}/toolboxes/{toolbox-name}/versions/{version}/mcp?api-version=v1
+</code></pre><p>如果托管智能体必须锁定在某个不可变的工具箱版本上，也可以用带版本号的工具箱端点。</p>
+<p>托管智能体用 Microsoft Entra ID 向工具箱认证，用的作用域是：</p>
+<pre tabindex="0"><code>https://ai.azure.com/.default
+</code></pre><p>托管智能体通过 Microsoft Entra ID 向 Foundry 工具箱 MCP 端点认证，要直接获取令牌的话，用 <code>https://ai.azure.com/.default</code> 这个作用域就行。</p>
+<p>下游的凭据、密钥、托管身份设置和 OAuth 配置都应该留在 RemoteA2A 项目连接里，不要写死在托管智能体的代码里。</p>
+<h2 id="认证才是真正要花心思的部分">认证才是真正要花心思的部分</h2>
+<p>在这套体系里，最需要设计的其实是认证。A2A 支持不同的模式，具体用哪种取决于调用方智能体应该以自己的身份行事，还是代表用户去行事。</p>
+<p>这张表我建议直接收藏，选错认证方式是最容易在生产环境里踩坑的地方：</p>
+<table>
+	<thead>
+			<tr>
+					<th>认证类型</th>
+					<th>适用场景</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>none</td>
+					<td>远程端点不需要认证，生产环境很少这么用</td>
+			</tr>
+			<tr>
+					<td>custom-keys</td>
+					<td>端点需要 API 密钥、PAT、bearer token 或自定义请求头</td>
+			</tr>
+			<tr>
+					<td>oauth2</td>
+					<td>每个用户都要通过 OAuth 2.0 授权流程单独授权，下游操作需要保留用户个人权限时用这个</td>
+			</tr>
+			<tr>
+					<td>user-entra-token</td>
+					<td>需要把用户的 Microsoft Entra 身份传递给远程服务</td>
+			</tr>
+			<tr>
+					<td>project-managed-identity</td>
+					<td>项目里所有智能体共用同一个项目身份</td>
+			</tr>
+			<tr>
+					<td>agentic-identity</td>
+					<td>用智能体身份、服务主体或托管身份做服务间调用，角色分配时用这个作为主体类型</td>
+			</tr>
+	</tbody>
+</table>
+<p>对于 Foundry 智能体的入站 A2A 端点，认证要求更严格：</p>
+<ul>
+<li>入站 A2A 强制要求 Microsoft Entra ID 认证。</li>
+<li>不支持基于密钥的访问，也不支持匿名访问。</li>
+<li>调用方必须拥有 Foundry Agent Consumer 角色，或者其他能授予端点访问权限的角色。</li>
+<li>权限既可以在项目范围授予，也可以在单个智能体范围授予。</li>
+<li>调用可以用代表用户的身份，也可以用智能体身份、服务主体、托管身份这类服务身份。</li>
+</ul>
+<p>如果下游操作需要尊重每个用户各自的权限，就用 OAuth 或者用户身份透传。</p>
+<h2 id="需要配置的内容">需要配置的内容</h2>
+<p>要把一个 Foundry 智能体暴露成 A2A 端点，需要配置两样东西：一张描述智能体能力的智能体名片，以及智能体端点上的 A2A 协议。</p>
+<p>智能体 PATCH 请求体里相关的部分大概长这样：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;agent_card&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;A specialist agent that answers questions about invoices.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;version&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;1.0&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;skills&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;id&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;invoice-lookup&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Invoice lookup&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Finds and summarizes invoice status.&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;agent_endpoint&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;protocol_configuration&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;responses&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{},</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;a2a&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Foundry 门户里也能直接给提示词智能体配置智能体名片，配完之后别的智能体就能通过 Tools，用这个智能体的 A2A 端点来调用它了。</p>
+<p>（原文配图：Foundry 里某个智能体的 A2A 端点配置。）</p>
+<p>（原文配图：Foundry 智能体的智能体名片配置界面。）</p>
+<h2 id="写在最后">写在最后</h2>
+<p>A2A 端点和 A2A 工具让 Foundry 智能体变得可以拼装组合了。与其造一个什么都懂的巨型智能体，不如拆成几个各有专长的小智能体，让它们发布自己的能力、彼此安全协作，这个思路我个人是认同的。</p>
+<p>想让别的智能体调用你的 Foundry 智能体，就用 A2A 端点；想让你的 Foundry 智能体去调用别的智能体，就用 A2A 工具；如果是托管智能体，那就通过 Foundry 工具箱把 A2A 干净地接进托管运行时。</p>
+<p>延伸阅读：</p>
+<ul>
+<li><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-to-agent-authentication?WT.mc_id=AI-MVP-5003172">A2A 认证</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/agent-to-agent?WT.mc_id=AI-MVP-5003172">A2A 工具</a></li>
+<li><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/enable-agent-to-agent-endpoint?WT.mc_id=AI-MVP-5003172">A2A 端点</a></li>
+</ul>
+<p>原文链接：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/4557115?WT.mc_id=AI-MVP-5003172">A2A Endpoints and A2A Tool in Microsoft Foundry agents</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/">https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a></li>
+        
+        <li><a href="/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/">Microsoft Foundry 与 Azure OpenAI 模型迁移全流程</a></li>
+        
+        <li><a href="/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a></li>
+        
+        <li><a href="/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a></li>
+        
+        <li><a href="/post/2026-08-06-microsoft-foundry-quota-tiers/">Microsoft Foundry 的 Quota Tiers</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/" title="评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”" target="_blank">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-07-agent-automation-stuck-behind-interfaces-built-for-humans/" title="智能体的自动化，为什么还没有想象中那么高效" target="_blank">智能体的自动化，为什么还没有想象中那么高效</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/" title="人机协同里，卡住我们的常常不是机器，是人" target="_blank">人机协同里，卡住我们的常常不是机器，是人</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-04-large-models-can-reason-but-not-learn-enterprise-values/" title="大模型会推理了，但还学不会企业的价值观" target="_blank">大模型会推理了，但还学不会企业的价值观</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-02-mbml-recommender/" title="[译]基于模型的机器学习 - 5 做出推荐" target="_blank">[译]基于模型的机器学习 - 5 做出推荐</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/" title="Microsoft Foundry 与 Azure OpenAI 模型迁移全流程" target="_blank">Microsoft Foundry 与 Azure OpenAI 模型迁移全流程</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" title="[译]基于模型的机器学习 - 4.5 评估与改进特征集" target="_blank">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" title="为 Foundry 托管代理开启 A2A 端点和 Agent Card" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (41)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (30)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

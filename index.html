@@ -75,6 +75,34 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-09-19T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月19日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>最近我在研究 Microsoft Foundry 的多智能体能力时，注意到一个变化：智能体之间的协作终于不用再靠一堆自定义 API 拼凑了。A2A 工具和新的入站 A2A 端点现在支持 A2A 协议 1.0 版本，这个版本已经正式发布（GA）。之前预览阶段用的 a2a_preview 工具类型和 0.3 版协议依然保留，给已有的集成留了一条兼容路径。托管智能体（Hosted Agents）也可以通过暴露在 MCP 上的 Foundry 工具箱来使用 A2A 工具。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/" title="评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”" target="_blank">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a>
             </h1>
         </header>
@@ -365,44 +393,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" title="[译]基于模型的机器学习 - 4.4 设计特征集" target="_blank">[译]基于模型的机器学习 - 4.4 设计特征集</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-08-21T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年8月21日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>要使用我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">模型</a>，我们需要设计<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>来变换数据，使其尽可能贴近地符合<a href="/post/2025-04-21-mbml-introduction">模型</a>中内置的假设（<a href="/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features">表 4.3</a>）。例如，为满足<a href="/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features">假设 4.7</a>（即<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>包含与用户行为相关的所有信息），我们需要确保我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>包含所有与预测回复相关的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>。由于一封邮件几乎任何部分都可能有助于做出这样的预测，这意味着我们将不得不在<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>中编码邮件的几乎所有方面。这将包括谁发送了邮件、收件人栏和抄送栏上的收件人、邮件的主题以及邮件的正文，还有关于该邮件所属会话的信息。</p>
-<p>在设计一个新<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>时，我们需要确保：</p>
-<ul>
-<li>该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>捕捉到数据中某个有信息量的方面；</li>
-<li>该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的输出具有适合输入到<a href="/post/2025-04-21-mbml-introduction">模型</a>的正确形式；</li>
-<li>该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>提供了关于标签的新信息，超出了既有<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>所提供的信息。</li>
-</ul>
-<p>在本节中，我们将展示如何为我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>设计若干新<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，同时确保它们满足上述前两条标准。在下一节中，我们将展示如何通过在有和没有某些<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的情况下评估系统，来检查第三条标准。</p>
-<h3 id="具有多个状态的特征">具有多个状态的特征</h3>
-<p>到目前为止，我们用一个 ToLine <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>来表示用户出现在邮件中的位置。这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>只有两个状态：用户要么在收件人栏中，要么不在。因此这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>忽略了用户是否在抄送栏中，尽管我们可能预期用户在出现在抄送栏中时比完全不出现时更有可能回复邮件。这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>还忽略了用户在收件人/抄送栏上的位置。如果用户排在收件人栏的第一位，我们可能预期他比排在一长串收件人末尾时更有可能回复。我们可以用我们的数据集来检验这些直觉，方法是找出在若干情形下所有训练/验证邮件中实际被回复的比例：当用户在收件人栏中排第一、第二或第二之后时，当用户在抄送栏中排第一或其他位置时，以及当用户既不在收件人栏也不在抄送栏时（例如，如果他通过邮件列表收到邮件）。</p>
-<p>图 4.8 绘制了这些比例，显示回复<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>确实会根据适用于哪种情形而有很大变化。这幅图表明，一个能够区分这些情形的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>确实会捕捉到数据中有信息量的方面（即我们上面的第一条标准）。在评估回复比例（例如图 4.8 中的那些）时，重要的是要考虑该比例是从多少封邮件计算得来的，因为从少量邮件计算出的比例不会很准确。为检查这一点，在图 4.8 中我们在每个条形标签下方的括号中显示了邮件数量，表明每个情形都有足够的邮件来准确计算比例，因此我们可以信赖所计算的值。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -511,6 +501,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/" title="评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”" target="_blank">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a>
     </li>
     
@@ -546,10 +540,6 @@
         <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" title="为 Foundry 托管代理开启 A2A 端点和 Agent Card" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/" title="[译]基于模型的机器学习 - 4.4 设计特征集" target="_blank">[译]基于模型的机器学习 - 4.4 设计特征集</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -569,7 +559,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (40)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (41)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

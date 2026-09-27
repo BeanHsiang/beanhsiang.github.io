@@ -101,7 +101,12 @@
         
         
         <div class="post-content">
-            <p>最近我在研究 Microsoft Foundry 的多智能体能力时，注意到一个变化：智能体之间的协作终于不用再靠一堆自定义 API 拼凑了。A2A 工具和新的入站 A2A 端点现在支持 A2A 协议 1.0 版本，这个版本已经正式发布（GA）。之前预览阶段用的 a2a_preview 工具类型和 0.3 版协议依然保留，给已有的集成留了一条兼容路径。托管智能体（Hosted Agents）也可以通过暴露在 MCP 上的 Foundry 工具箱来使用 A2A 工具。</p>
+            <p>
+        <a data-fancybox="gallery" href="/uploads/a2a-hero.png">
+            <img class="mx-auto" alt="A2A Endpoints and A2A Tool in Microsoft Foundry agents" src="/uploads/a2a-hero.png" />
+        </a>
+    </p>
+<p>最近我在研究 Microsoft Foundry 的多智能体能力时，注意到一个变化：智能体之间的协作终于不用再靠一堆自定义 API 拼凑了。A2A 工具和新的入站 A2A 端点现在支持 A2A 协议 1.0 版本，这个版本已经正式发布（GA）。之前预览阶段用的 a2a_preview 工具类型和 0.3 版协议依然保留，给已有的集成留了一条兼容路径。托管智能体（Hosted Agents）也可以通过暴露在 MCP 上的 Foundry 工具箱来使用 A2A 工具。</p>
 <p>如果你一直在关注早期预览版本，可能记得 A2A 端点以前叫&quot;A2A API head&quot;。思路其实很直白：</p>
 <ul>
 <li>A2A 端点：把一个 Foundry 智能体暴露出去，让外部智能体能发现它、调用它。</li>
@@ -122,7 +127,11 @@
 </ul>
 <h2 id="架构一外部智能体通过-a2a-端点调用-foundry-智能体">架构一：外部智能体通过 A2A 端点调用 Foundry 智能体</h2>
 <p>这种模式下，Foundry 智能体被暴露成一个 A2A 端点，外部智能体发现它的智能体名片，然后用 A2A 协议去调用。</p>
-<p>（原文配图：外部智能体通过智能体名片发现 Foundry 智能体，用 A2A 协议 v1.0 调用，拿到由 Foundry 的工具、数据和模型生成的响应。）</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/a2a-architecture-1.png">
+            <img class="mx-auto" alt="外部智能体通过智能体名片发现 Foundry 智能体，用 A2A 协议 v1.0 调用，拿到由 Foundry 的工具、数据和模型生成的响应" src="/uploads/a2a-architecture-1.png" />
+        </a>
+    </p>
 <p>Foundry 智能体会用自己配置好的模型、指令、工具和企业数据源来处理这个请求，处理完再把结果返回给调用方。不过 Foundry 提示词智能体必须先支持 Responses 协议，才能通过入站 A2A 端点暴露出去，这个前提条件容易被忽略。</p>
 <p>Foundry 智能体暴露的 A2A 基础 URL 格式是这样的：</p>
 <pre tabindex="0"><code>https://{account}.services.ai.azure.com/api/projects/{project}/agents/{agent}/endpoint/protocols/a2a
@@ -134,7 +143,11 @@
 <p>Foundry 的入站 A2A v1.0 端点用的是 JSON-RPC。入站 A2A v0.3 同时支持 JSON-RPC 和 HTTP+JSON，但 v0.3 还处于预览阶段。目前只支持文本模态，也不支持流式响应。</p>
 <h2 id="架构二foundry-智能体用-a2a-工具调用另一个智能体">架构二：Foundry 智能体用 A2A 工具调用另一个智能体</h2>
 <p>反过来的模式同样重要：Foundry 智能体可以用 A2A 工具去调用另一个兼容 A2A 的端点。</p>
-<p>（原文配图：A2A 工具调用远程 A2A 兼容智能体的架构示意。）</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/a2a-architecture-2.png">
+            <img class="mx-auto" alt="Foundry 智能体通过 A2A 工具调用远程 A2A 兼容智能体的架构示意" src="/uploads/a2a-architecture-2.png" />
+        </a>
+    </p>
 <p>RemoteA2A 项目连接负责存放远程 A2A 的基础 URL 和认证配置，A2A 工具引用这个连接，并指定要用的 A2A 协议版本。</p>
 <p>Foundry 会自动解析默认的智能体名片路径，并协商 A2A 协议版本。如果目标是 Foundry 智能体，你都不用配置 send_credentials_for_agent_card。</p>
 <p>先设置好当前的 Foundry 项目，再创建 RemoteA2A 连接：</p>
@@ -191,7 +204,11 @@
 <li>工具箱通过 A2A 协议调用远程智能体。</li>
 <li>结果通过工具箱的 MCP 端点返回给托管智能体。</li>
 </ul>
-<p>（原文配图：托管智能体通过 Foundry 工具箱和 RemoteA2A 项目连接安全调用远程 A2A 智能体。）</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/a2a-architecture-3.png">
+            <img class="mx-auto" alt="托管智能体通过 Foundry 工具箱和 RemoteA2A 项目连接安全调用远程 A2A 智能体" src="/uploads/a2a-architecture-3.png" />
+        </a>
+    </p>
 <p>这其实是个两跳架构：托管智能体先通过 MCP 连到 Foundry 工具箱，工具箱再通过 A2A 连到远程智能体。</p>
 <p>托管智能体使用的工具箱 MCP 端点格式是：</p>
 <pre tabindex="0"><code>https://{account}.services.ai.azure.com/api/projects/{project}/toolboxes/{toolbox-name}/versions/{version}/mcp?api-version=v1
@@ -294,8 +311,16 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Foundry 门户里也能直接给提示词智能体配置智能体名片，配完之后别的智能体就能通过 Tools，用这个智能体的 A2A 端点来调用它了。</p>
-<p>（原文配图：Foundry 里某个智能体的 A2A 端点配置。）</p>
-<p>（原文配图：Foundry 智能体的智能体名片配置界面。）</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/a2a-endpoint-config.png">
+            <img class="mx-auto" alt="Foundry 里某个智能体的 A2A 端点配置" src="/uploads/a2a-endpoint-config.png" />
+        </a>
+    </p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/a2a-agentcard-config.png">
+            <img class="mx-auto" alt="Foundry 智能体的智能体名片配置界面" src="/uploads/a2a-agentcard-config.png" />
+        </a>
+    </p>
 <h2 id="写在最后">写在最后</h2>
 <p>A2A 端点和 A2A 工具让 Foundry 智能体变得可以拼装组合了。与其造一个什么都懂的巨型智能体，不如拆成几个各有专长的小智能体，让它们发布自己的能力、彼此安全协作，这个思路我个人是认同的。</p>
 <p>想让别的智能体调用你的 Foundry 智能体，就用 A2A 端点；想让你的 Foundry 智能体去调用别的智能体，就用 A2A 工具；如果是托管智能体，那就通过 Foundry 工具箱把 A2A 干净地接进托管运行时。</p>
@@ -305,7 +330,6 @@
 <li><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/agent-to-agent?WT.mc_id=AI-MVP-5003172">A2A 工具</a></li>
 <li><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/enable-agent-to-agent-endpoint?WT.mc_id=AI-MVP-5003172">A2A 端点</a></li>
 </ul>
-<p>原文链接：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/4557115?WT.mc_id=AI-MVP-5003172">A2A Endpoints and A2A Tool in Microsoft Foundry agents</a></p>
 
         </div>
 

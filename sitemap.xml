@@ -2,11 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/</loc>
+    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-09-19T12:00:00+08:00</lastmod>
+    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2026-09-19T12:00:00+08:00</lastmod>
+    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
+    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Model-Based/</loc>
+    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
+    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/</loc>
+    <lastmod>2026-09-22T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
     <lastmod>2026-09-19T12:00:00+08:00</lastmod>
@@ -17,14 +38,17 @@
     <loc>https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/</loc>
     <lastmod>2026-09-19T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-09-19T12:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/</loc>
+    <lastmod>2026-09-18T10:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
-    <lastmod>2026-09-19T12:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/</loc>
+    <lastmod>2026-09-14T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/</loc>
     <lastmod>2026-09-11T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people/</loc>
+    <lastmod>2026-09-10T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/</loc>
     <lastmod>2026-09-07T12:00:00+08:00</lastmod>
@@ -35,6 +59,9 @@
     <loc>https://beanhsiang.github.io/post/2026-09-07-agent-automation-stuck-behind-interfaces-built-for-humans/</loc>
     <lastmod>2026-09-07T12:00:00+08:00</lastmod>
   </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-09-06-mbml-recommender_learning_about_people_and_movies/</loc>
+    <lastmod>2026-09-06T10:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/</loc>
     <lastmod>2026-09-05T11:00:00+08:00</lastmod>
   </url><url>
@@ -42,15 +69,6 @@
     <lastmod>2026-09-04T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-09-02-mbml-recommender/</loc>
-    <lastmod>2026-09-02T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
-    <lastmod>2026-09-02T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Model-Based/</loc>
-    <lastmod>2026-09-02T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
     <lastmod>2026-09-02T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/</loc>

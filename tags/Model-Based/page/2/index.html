@@ -82,6 +82,194 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/" target="_blank">[译]基于模型的机器学习 - 4.3 建模多个特征</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-16T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月16日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>仅用一个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>时，我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">模型</a>在预测回复方面并不太准确，因此我们现在将扩展它以处理多个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>。我们可以通过改变<a href="/post/2025-04-21-mbml-introduction">模型</a>、使多个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>对一封邮件的 <code>score</code> 都有贡献来做到这一点。我们只需决定如何做，这涉及做出一个额外的假设：</p>
+<ul>
+<li>某个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值的某个特定变化，无论其他<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的值是多少，都会引起相同的 <code>score</code> 变化。</li>
+</ul>
+<p>让我们考虑把这个假设应用于 ToLine <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，并考虑把它从 0.0 改为 1.0。这个假设是说，无论其他<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值是多少，由这个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值变化所导致的 <code>score</code> 变化总是相同的。这个假设可以在<a href="/post/2025-04-21-mbml-introduction">模型</a>中这样编码：确保 ToLine <a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>对 <code>score</code> 的贡献总是被加到所有其他<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的贡献之上。由于同样的论证对其他每个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>也成立，这个假设意味着一封邮件的 <code>score</code> 必须是各个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>各自 <code>score</code> 贡献之和。</p>
+<p>因此，在我们的多<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a><a href="/post/2025-04-21-mbml-introduction">模型</a>（图 4.5）中，我们有一个 <code>featureScore</code> 数组，用于保存每封邮件中每个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的 <code>score</code> 贡献。随后我们可以使用一个确定性求和<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>把这些贡献加在一起，得到总 <code>score</code>。由于我们仍希望<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">假设 4.3</a> 对每个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>成立，一个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的 <code>featureScore</code> 可以像之前一样定义为 <code>featureValue</code> 与该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>权重之积。注意，我们添加了一个跨越各<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的新<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>，其中包含该<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的权重、<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值和<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>分数。值和分数也在各邮件<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>内，因为它们逐邮件变化，而权重在外面，因为它在所有邮件间共享。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-11-mbml-emailclassifier_a_model_for_classification/" target="_blank">[译]基于模型的机器学习 - 4.2 一个用于分类的模型</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-11T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月11日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>为一个数据项预测标签（例如“回复”或“不回复”）的问题称为<strong>分类</strong>（classification）。执行<strong>分类</strong>的系统被称为<strong>分类器</strong>（classifier），它们大概是当今使用最广泛的机器学习<a href="/post/2025-04-21-mbml-introduction">算法</a>。可用的<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>有许多种，而对某个特定的预测任务，有些会比另一些效果更好。解决<strong>分类</strong>问题的一种常见做法是尝试几种不同的<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>，看看哪一种效果最好。这种做法忽略了<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>在相同数据上做出不同预测的根本原因：每个<a href="/post/2025-04-21-mbml-introduction">算法</a>都隐含地对数据做出了不同的假设。遗憾的是，这些假设被隐藏在每个<a href="/post/2025-04-21-mbml-introduction">算法</a>的内部。</p>
+<p>你可能会惊讶地得知，许多<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>都可以被解释为在某个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>中进行<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a>。因此，与其运行一个<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>，我们不如构建相应的<a href="/post/2025-04-21-mbml-introduction">模型</a>，并使用一个<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>来做<strong>分类</strong>。我们为什么要这样做，而不直接使用<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>呢？因为一种<a href="/post/2025-04-21-mbml-introduction">基于模型</a>的<strong>分类</strong>方法给我们带来若干好处：</p>
+<ul>
+<li><strong>分类器</strong>中的假设被显式化。这有助于我们理解<strong>分类器</strong>在做什么，从而让我们可以改进使用它的方式以获得更好的预测准确率。</li>
+<li>我们可以修改<a href="/post/2025-04-21-mbml-introduction">模型</a>来提升其准确率，或赋予它超出原<strong>分类器</strong>能力之外的新能力。</li>
+<li>我们可以使用标准的<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>来同时训练<a href="/post/2025-04-21-mbml-introduction">模型</a>和做出预测。这在修改<a href="/post/2025-04-21-mbml-introduction">模型</a>时特别有用，因为训练和预测<a href="/post/2025-04-21-mbml-introduction">算法</a>会与修改后的<a href="/post/2025-04-21-mbml-introduction">模型</a>保持同步。此外，不同的<a href="/post/2025-04-21-mbml-introduction">算法</a>在速度与准确率之间有不同的权衡。我们可以选择最适合我们需求的<a href="/post/2025-04-21-mbml-introduction">算法</a>，同时保留我们所有的建模假设。</li>
+</ul>
+<p>这些好处并不小——在本章中，你将看到这三点如何都对交付一个成功的系统至关重要。我们将展示如何从零开始、通过对给定数据项时标签如何产生做出一系列假设，来构建一个广泛使用的<strong>分类器</strong>的<a href="/post/2025-04-21-mbml-introduction">模型</a>。随后我们将展示如何扩展这个最初的<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">模型</a>，以实现邮件<strong>分类</strong>系统所需的各种能力。在<a href="/post/2025-04-21-mbml-introduction">模型</a>演化的整个过程中，我们将使用一个标准的<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>（<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>）来做训练和预测。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-11-mbml-emailclassifier_a_model_for_classification/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" target="_blank">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-06T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月6日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>为了撰写本章，我们开发了一个工具，用于收集某个人在给定时间段内收到的全部电子邮件。随后我们用这个工具从 10 位志愿者那里收集了邮件，他们慷慨地同意分享自己的邮件数据——以匿名化的形式，我们稍后会讨论这一点。这是一个相当耗时的过程，因此我们需要仔细规划将如何使用这些宝贵的邮件数据。例如，我们需要决定用哪些数据来训练、用哪些数据来评估系统的准确率。极其重要的一点是，用于训练的数据不能用于评估。如果训练数据被用于评估，它会给出误导性的偏高准确率结果——因为当你已经被告知正确答案时，对一封邮件做出预测要容易得多！为避免这一点，我们需要把数据划分为不同的数据集：</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-01T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月1日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>收发电子邮件的庞大数量意味着，一名典型的办公室职员每天要花好几个小时来处理自己的收件箱。源源不断涌入的新邮件很容易让人应接不暇。同时，一封重要邮件淹没在杂乱信息中的可能性也比以往任何时候都大。<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>能否帮助减轻这种信息过载呢？</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/PileOfMail_80130295.jpg">
+            <img class="mx-auto" alt="一堆邮件" src="/uploads/PileOfMail_80130295.jpg" />
+        </a>
+    </p>
+<p>普通办公室职员每天花在处理电子邮件上的时间将近三个小时。这些时间中约 90% 花在阅读收到的邮件或管理已有的邮件上——只有剩下的 10% 用于撰写或回复邮件 [Outlook team, 2008]。一个能加快阅读和管理邮件速度的自动工具，将为人们腾出大量时间，让他们能够专注于重要任务，避免信息过载带来的压力。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" target="_blank">[译]基于模型的机器学习 - 3.5 允许技能变化</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-31T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月31日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>至此，我们似乎已经为本章开头提出的问题找到了一个全面的解决方案。我们有了一个关于多支玩家队伍之间游戏（含平局）的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>，其中更简单的情形（两名玩家、个人而非队伍、无平局的游戏）作为特例出现。然而，当这个系统面向真实的 beta 测试者部署时，人们发现它的配对并不总是令人满意。特别是，某些玩家的技能值似乎“卡”在了较低的取值上，即使这些玩家已经打了很多游戏并有了很大进步，从而导致糟糕的配对。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/tennis_779423224.jpg">
+            <img class="mx-auto" alt="网球" src="/uploads/tennis_779423224.jpg" />
+        </a>
+    </p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-31-mbml-trueskill_allowing_the_skills_to_vary/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-30T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月30日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>到目前为止，我们已经为两名玩家之间、以其中一方获胜告终的一局游戏构建了一个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>。为处理 Xbox Live 所需的各种各样的游戏，我们需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>以应对若干额外的复杂性。具体而言，真实游戏可能以平局结束、可能涉及超过两名玩家、并且可能在多支队伍之间进行。现在我们将展示如何扩展最初的<a href="/post/2025-04-21-mbml-introduction">模型</a>以考虑这些复杂性。这种灵活性很好地说明了<a href="/post/2025-04-21-mbml-introduction">基于模型</a>的机器学习方法的强大之处。</p>
+<p>具体来说，我们需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>，使它能够：</p>
+<ul>
+<li>在结果为平局时更新技能；</li>
+<li>对团队游戏，更新各个团队成员的技能；</li>
+<li>适用于超过两名玩家的游戏。</li>
+</ul>
+<p><a href="/post/2025-04-21-mbml-introduction">基于模型</a>的方法允许以透明的方式并入这些扩展，从而产生一个能够处理上述所有复杂性、同时仍保持可理解、可维护的解决方案。</p>
+<h3 id="如果一局游戏可能以平局结束怎么办">如果一局游戏可能以平局结束怎么办？</h3>
+<p>在我们当前的<a href="/post/2025-04-21-mbml-introduction">模型</a>中，在某一局游戏中表现值较高的玩家就是那局的赢家。对于也可能以平局结束的游戏，我们可以引入<strong>平局边界</strong>（draw margin）这一概念来修改这个假设：只有当一名玩家的表现超过另一名玩家至少一个平局边界的值时，他才是赢家。数学上这可以表达为</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" target="_blank">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a>
             </h1>
         </header>
@@ -199,205 +387,6 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" target="_blank">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-25T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月25日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>回到<a href="/post/2025-04-22-mbml-murder-mystery">第 1 章</a>处理谋杀之谜时，我们首先从犯罪现场收集证据，然后运用我们自己的知识来构建这起谋杀的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>。我们以观测变量的形式，把犯罪现场的证据整合进<a href="/post/2025-04-21-mbml-introduction">模型</a>，并执行<a href="/post/2025-04-21-mbml-introduction">推断</a>来回答我们关心的查询：每个嫌疑人是凶手的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>是多少？随后我们评估<a href="/post/2025-04-21-mbml-introduction">推断</a>的结果是否足够好——也就是说，<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>是否高到足以认定谋杀已被侦破？当结果不够好时，我们便收集更多数据、扩展<a href="/post/2025-04-21-mbml-introduction">模型</a>、重新运行<a href="/post/2025-04-21-mbml-introduction">推断</a>，最终达到了我们的目标<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</p>
-<p>在<a href="/post/2026-01-06-mbml-learning-skills">第 2 章</a>评估求职者技能时，我们从参加真实测试的人那里收集数据并对这些数据进行了可视化。然后我们基于对人们如何做测试的知识建立了一个<a href="/post/2025-04-21-mbml-introduction">模型</a>。我们运行了<a href="/post/2025-04-21-mbml-introduction">推断</a>，并评估出结果不够好。我们诊断了问题、扩展了<a href="/post/2025-04-21-mbml-introduction">模型</a>，然后对原始<a href="/post/2025-04-21-mbml-introduction">模型</a>和扩展后的<a href="/post/2025-04-21-mbml-introduction">模型</a>都进行了评估，以量化改进程度，并检查改进后的<a href="/post/2025-04-21-mbml-introduction">模型</a>是否达到了我们的成功标准。</p>
-<p>我们可以从这两个例子出发进行归纳，定义出任何<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>应用所需的步骤：</p>
-<ol>
-<li>收集用于训练和评估<a href="/post/2025-04-21-mbml-introduction">模型</a>的数据。</li>
-<li>收集知识，以帮助做出恰当的建模假设。</li>
-<li>可视化数据，以更好地理解它、检查数据问题，并获得对有用建模假设的洞见。</li>
-<li>构建一个<a href="/post/2025-04-21-mbml-introduction">模型</a>，使其捕捉关于问题领域的知识，并与你对数据的理解相一致。</li>
-<li>执行<a href="/post/2025-04-21-mbml-introduction">推断</a>，利用数据来固定其他变量的取值，从而对我们关心的变量做出预测。</li>
-<li>使用某种<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">评估指标</a>来评估结果，看它们是否满足目标应用的成功标准。</li>
-</ol>
-<p>在（通常的）系统第一次未能满足成功标准的情况下，还需要额外的两个步骤：</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" target="_blank">[译]基于模型的机器学习 - 2.6 学习猜测概率</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-24T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月24日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>你可能以为，推断猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>需要用到与我们目前所用完全不同的技术。事实上，我们的做法将完全相同：我们把想要学习的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>值作为新的连续<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>加入<a href="/post/2025-04-21-mbml-introduction">模型</a>，并用<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">概率推断</a>来计算它们的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。这展示了基于模型方法的威力——每当我们想知道某个东西时，我们就把它作为一个<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>引入<a href="/post/2025-04-21-mbml-introduction">模型</a>，然后用<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">概率推断</a>去求出它。</p>
-<p>让我们看看如何修改<a href="/post/2025-04-21-mbml-introduction">模型</a>，把猜测<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>作为<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>纳入进来。为了保持一致，我们也会为犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>（实际上是<strong>不犯错</strong><a href="/post/2025-04-22-mbml-murder-mystery">概率</a>）添加一个变量，但我们会把它固定在 10% 的犯错几率上。首先，我们要改变书写 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的方式。</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/LearningSkills_AddNoise.png">
-            <img class="mx-auto" alt="图 2.25a" src="/uploads/LearningSkills_AddNoise.png" />
-        </a>
-    </p>
-<p><em>(a) 内置概率的自定义因子</em></p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/LearningSkills_AddNoiseAsTable2.png">
-            <img class="mx-auto" alt="图 2.25b" src="/uploads/LearningSkills_AddNoiseAsTable2.png" />
-        </a>
-    </p>
-<p><em>(b) 通用的 Table 因子</em></p>
-<p><em>图 2.25：书写 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的两种方式：(a) 作为一个把猜测和犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>“内置”其中的自定义<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。(b) 使用一个通用的 <code>Table</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>，它带有两个参数：给定父节点为 <code>false</code> 时子节点为 <code>true</code> 的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>（左参数），以及给定父节点为 <code>true</code> 时子节点为 <code>true</code> 的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>（右参数）。这种书写<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的方式让我们可以把这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>作为变量提供给<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。</em></p>
-<p>图 2.25 展示了如何把现有的 <code>AddNoise</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>（其中猜测和不犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>被硬编码为 0.2 和 0.9）替换为一个通用的 <code>Table</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>，后者把这些<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>作为额外的参数。然后我们可以用两个新的<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>来设置这些参数，我们把它们命名为 <code>probGuess</code> 和 <code>probNoMistake</code>。推断这些变量的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>，就会给出我们所需的猜测和不犯错<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>的学习值——但为此，我们首先需要一种能表示这类变量不确定性的分布。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" target="_blank">[译]基于模型的机器学习 - 2.5 诊断问题</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-10T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月10日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>当一个机器学习系统不工作时，通常有三个可能的原因：<strong>坏数据</strong>、<strong>坏模型</strong>或<strong>坏推断</strong>。以下是这三个类别下各自一些常见的问题成因：</p>
-<ul>
-<li><strong>坏数据（Bad data）</strong>：数据项被错误地录入、存储或加载；数据项不完整或标注错误；数据值噪声太大而无用；数据有偏或不能代表系统将被使用的方式；这是任务的错误数据；数据不足以做出准确预测。</li>
-<li><strong>坏模型（Bad model）</strong>：一个或多个建模假设是错的——即与实际生成数据的过程不一致；<a href="/post/2025-04-21-mbml-introduction">模型</a>做了太多简化假设；给定可用数据量，<a href="/post/2025-04-21-mbml-introduction">模型</a>包含的假设不足以做出准确预测。</li>
-<li><strong>坏推断（Bad inference）</strong>：<a href="/post/2025-04-21-mbml-introduction">推断</a>代码含有 bug；<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>不好；<a href="/post/2025-04-21-mbml-introduction">推断</a>尚未<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>；存在数值问题（例如舍入、溢出）；<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>不够准确。</li>
-</ul>
-<p>在我们的情形中，我们可以相当有信心地认为数据是好的，因为我们已经仔细地检查和可视化过它。所以看起来问题很可能出在<a href="/post/2025-04-21-mbml-introduction">模型</a>或<a href="/post/2025-04-21-mbml-introduction">推断</a>上。我们将从检查<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>——即<a href="/post/2026-06-16-mbml-learning-skills_loopiness">循环置信传播</a>——是否正确工作开始。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/" target="_blank">[译]基于模型的机器学习 - 2.4 迁移到真实数据</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-06-26T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年6月26日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>既然我们已经在示例数据上充分试验过<a href="/post/2025-04-21-mbml-introduction">模型</a>，现在就可以用一些真实数据来工作了。我们请了 22 位志愿者完成一份由 48 道题组成的测评测试，用以评估七种不同的开发技能。许多题目需要两项技能，因为它们既需要某个软件开发概念的知识（例如面向对象编程），又需要该题所用编程语言的知识（例如 C#）。</p>
-<p>除了完成测试之外，我们还请每位志愿者说明他们认为自己具备哪些开发技能。这些自评技能将作为技能变量的<a href="/post/2025-04-21-mbml-introduction">真实标注</a>（ground truth）——也就是说，我们把它们当作变量的真实取值。这类真实标注数据将用于评估我们的系统从志愿者答案中自动推断技能的准确性。真实标注数据应当相当可靠，因为志愿者没有夸大自己技能的动机：结果是匿名的，所报告的技能和答案无法与任何特定志愿者关联。然而，某些志愿者也有可能高估或低估自己的技能，我们在用这些数据评估准确性时需要牢记这一点。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" target="_blank">[译]基于模型的机器学习 - 2.3 有环性</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-06-16T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年6月16日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>现在让我们把<a href="/post/2025-04-21-mbml-introduction">模型</a>稍微扩展一下，添加第四道需要两项技能的题目。这张新的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>如图 2.14 所示，我们为这道新题添加了新的 <code>isCorrect4</code> 和 <code>hasSkills4</code> 变量。在这张仅仅略微变大的图上，我们当然也可以用<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>来做<a href="/post/2025-04-21-mbml-introduction">推断</a>吧？其实，我们不能。</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/PlaneLoop_86879950.jpg">
-            <img class="mx-auto" alt="飞机航迹环" src="/uploads/PlaneLoop_86879950.jpg" />
-        </a>
-    </p>
-<p><em>环可能很棘手。</em></p>
-<p>问题在于，<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>只有在某个（未观测）节点的所有其它边上都收到了消息之后，才能从该节点发出一条消息（算法 2.1）。在这个约束下，只有当图中没有环时，我们才能把图中的所有消息都发送出去；这里的<strong>环</strong>是指一条穿过图、从同一个节点出发又回到该节点的路径（且不重复经过同一条边）。如果图中有一个环，那么我们无法沿着环上的任何一条边发送消息，因为这总是要求先计算出环上的另一条消息。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-16-mbml-learning-skills_loopiness/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/" target="_blank">[译]基于模型的机器学习 - 2.2 试验模型</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-06-06T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年6月6日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>构建好一个<a href="/post/2025-04-21-mbml-introduction">模型</a>之后，首先要做的就是用一些简单的示例数据来试验它，检查它的行为是否合理。假设有一位候选人懂 C# 但不懂 SQL——我们会预期他答对第一题，而答错另外两题。那么让我们针对这种情况试验一下<a href="/post/2025-04-21-mbml-introduction">模型</a>，看看对于这样的答题模式它会推断出哪些技能。为方便起见，我们用 <code>isCorrect</code> 来指代数组 <code>[isCorrect1, isCorrect2, isCorrect3]</code>，因此我们要考虑的是 <code>isCorrect</code> 为 <code>[true, false, false]</code> 的情形。</p>
-<p>我们想在给定这一组特定的 <code>isCorrect</code> 取值的条件下，推断候选人具备 <code>csharp</code> 和 <code>sql</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。这是一个<strong>推断查询</strong>的例子，它由我们想要推断的变量（<code>csharp</code>、<code>sql</code>）以及我们所条件化的变量（<code>isCorrect</code>）连同它们的观测值共同定义。由于这个例子相当小，我们可以用手工方式求出这个推断查询的答案。</p>
-<h3 id="手动进行推断">手动进行推断</h3>
-<p>作为开始，我们先来看看在只给定第一题答案的情况下，如何推断 <code>csharp</code> 技能的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。舍去其它变量后，就得到图 2.6 所示的简化<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-06-mbml-learning-skills_testing_out_the_model/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
@@ -421,6 +410,10 @@
     
     <li >
         <a href="https://beanhsiang.github.io/tags/Model-Based/page/3/">3</a>
+    </li>
+    
+    <li >
+        <a href="https://beanhsiang.github.io/tags/Model-Based/page/4/">4</a>
     </li>
     
 
@@ -480,7 +473,23 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" title="[译]基于模型的机器学习 - 5.4 我们的首次推荐" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" title="[译]基于模型的机器学习 - 5.3 训练我们的推荐系统" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
     </li>
     
     <li>
@@ -488,35 +497,19 @@
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people/" title="[译]基于模型的机器学习 - 5.2 多重特质与多人" target="_blank">[译]基于模型的机器学习 - 5.2 多重特质与多人</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-09-07-agent-automation-stuck-behind-interfaces-built-for-humans/" title="智能体的自动化，为什么还没有想象中那么高效" target="_blank">智能体的自动化，为什么还没有想象中那么高效</a>
     </li>
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-06-mbml-recommender_learning_about_people_and_movies/" title="[译]基于模型的机器学习 - 5.1 学习用户和电影" target="_blank">[译]基于模型的机器学习 - 5.1 学习用户和电影</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/" title="人机协同里，卡住我们的常常不是机器，是人" target="_blank">人机协同里，卡住我们的常常不是机器，是人</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-04-large-models-can-reason-but-not-learn-enterprise-values/" title="大模型会推理了，但还学不会企业的价值观" target="_blank">大模型会推理了，但还学不会企业的价值观</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-02-mbml-recommender/" title="[译]基于模型的机器学习 - 5 做出推荐" target="_blank">[译]基于模型的机器学习 - 5 做出推荐</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/" title="Microsoft Foundry 与 Azure OpenAI 模型迁移全流程" target="_blank">Microsoft Foundry 与 Azure OpenAI 模型迁移全流程</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" title="[译]基于模型的机器学习 - 4.5 评估与改进特征集" target="_blank">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/" title="为 Foundry 托管代理开启 A2A 端点和 Agent Card" target="_blank">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a>
     </li>
     
 </ul>
@@ -542,7 +535,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (30)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (36)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
     

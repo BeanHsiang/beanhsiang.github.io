@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 5.2 多重特质与多人 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 5.2 多重特质与多人 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-09-10T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-09-10T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 5.2 多重特质与多人">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 5.2 多重特质与多人</h1>
+        </header>
+        
+  <time datetime="2026-09-10T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月10日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>我们那个只有一个特质的<a href="/post/2025-04-21-mbml-introduction">模型</a>，并不能很好地刻画电影。为了看清这一点，让我们再看一眼<a href="/post/2026-09-06-mbml-recommender_learning_about_people_and_movies">图 5.4</a>：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/LikesAction.png">
+            <img class="mx-auto" alt="图 5.4" src="/uploads/LikesAction.png" />
+        </a>
+    </p>
+<p>只用动作/情感这一个特质，我们几乎无法区分《狮子王》和《莫扎特传》，因为它们在这条特质线上的位置非常接近。因此，对于这幅图中的这位女士，我们没办法在不同时推荐像《狮子王》这样的电影（她不喜欢）的情况下，去推荐像《莫扎特传》这样的电影（她喜欢）。</p>
+<p>我们可以通过使用额外的特质来解决这个问题。如果我们加入第二个特质，表示影片有多逃避现实或多写实，那么每部电影现在除了在原来的特质线上有一个位置外，在这条第二特质线上也会有一个位置。这个第二特质值让我们能够区分这两部电影。为了看清这一点，我们可以把电影展示在一张二维图上，其中逃避现实/写实的特质位置位于纵轴上，如图 5.8 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TwoTraits.png">
+            <img class="mx-auto" alt="图 5.8" src="/uploads/TwoTraits.png" />
+        </a>
+    </p>
+<p><em>图 5.8：二维图，其中新的纵轴表示一部电影有多逃避现实或多写实。虚线表示电影的水平位置没有改变。</em></p>
+<p>在图 5.8 中，更逃避现实的电影移到了情感/动作线的上方，而更写实的电影移到了下方。这些电影的左右位置相比之前没有改变（如虚线所示）。这个二维空间让《莫扎特传》能够远离《狮子王》，这意味着这两部电影现在可以彼此区分开来。</p>
+<p>有了这张二维图，我们就可以通过把每个人适当地放置在情感/动作线的上方或下方，来表示他对更逃避现实还是更写实的电影的偏好，如图 5.9 所示。看这幅图，你可以看到来自<a href="/post/2026-09-06-mbml-recommender_learning_about_people_and_movies">图 5.4</a>的那位女士现在已经移到了情感/动作线的下方，因为她偏好更写实的电影。她的偏好点现在离《莫扎特传》比离《狮子王》近得多——这意味着我们的系统现在有可能在不同时推荐《狮子王》的情况下推荐《莫扎特传》。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TwoTraitsPeople.png">
+            <img class="mx-auto" alt="图 5.9" src="/uploads/TwoTraitsPeople.png" />
+        </a>
+    </p>
+<p><em>图 5.9：把人放置在二维图上，让我们能够捕捉他们对逃避现实/写实电影的偏好，同时仍然表示他们对情感/动作电影的偏好。</em></p>
+<p>我们现在已经把电影和人放置在了一个二维空间中，我们将把这个空间称为<strong>特质空间</strong>（trait space）。如果我们有三个特质，那么特质空间就会是三维的，更多特质的情形以此类推。我们可以利用特质空间这个概念来更新我们的前两条假设，以允许多个特质：</p>
+<ol>
+<li>每部电影都可以由它在特质空间中的位置来刻画，每个特质表示为一个连续数值。</li>
+<li>一个人的偏好可以由他在特质空间中的位置来刻画，同样地，每个特质表示为一个连续数值。</li>
+</ol>
+<p><a href="/post/2026-09-06-mbml-recommender_learning_about_people_and_movies">假设 5.3</a> 不需要改变，因为我们把每个特质和偏好结合起来的方式，与只有一个特质时完全相同。不过，我们确实需要对一个人对不同特质的偏好如何结合成一个整体的 <code>affinity</code> 做一条额外的假设。</p>
+<ol start="4">
+<li>一个特质值对某人喜欢还是不喜欢一部电影的影响是相同的，无论这部电影具有其他什么样的特质值。</li>
+</ol>
+<p>我们可以把这条假设编码进我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>：为每个特质计算一个单独的 <code>affinity</code>（我们将称之为 <code>traitAffinity</code>），然后把它们直接加在一起，得到一个整体的 <code>affinity</code>。图 5.10 给出了这个<a href="/post/2025-04-21-mbml-introduction">模型</a>的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，其中新增了一个 traits <a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>，包含每部电影的 <code>trait</code> 值、每个人的 <code>preference</code> 和 <code>traitAffinity</code>，表明所有这些变量都按特质被复制。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_ManyTraits.png">
+            <img class="mx-auto" alt="图 5.10" src="/uploads/Recommender_ManyTraits.png" />
+        </a>
+    </p>
+<p><em>图 5.10：把多个特质结合在一起的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。</em></p>
+<p>这个<a href="/post/2025-04-21-mbml-introduction">模型</a>结合各个特质的方式，与我们在上一章中结合各个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>的方式完全相同。再一次，它导出了一个非常相似的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>——为看清这一点，把图 5.10 与<a href="/post/2026-08-16-mbml-emailclassifier_modelling_multiple_features">图 4.5</a>相比较。主要区别同样在于，我们现在有一个未观测的 <code>trait</code> 变量，而之前我们有的是一个已观测的 <code>featureValue</code>。这看起来似乎是一个很小的区别，但让这个变量成为未观测的，其含义是巨大的。我们现在不再使用那些人工设计、为每件物品提供既定取值的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>，而是要求我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>自己去学习这些特质以及特质值！想一想这件事——我们实际上是在要求我们的系统创建它自己的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>，并为每部电影给这些<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>赋值——而这一切仅仅通过使用电影评分就能做到。这件事居然可能做到，看起来简直像魔法一样——但它源自一个定义清晰的<a href="/post/2025-04-21-mbml-introduction">模型</a>与一个强大的<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>的结合。</p>
+<p>在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中出现了一个新的复杂之处，与 <code>trait</code> 和 <code>preference</code> 变量的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a><a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a> $\sigma^2$ 的选择有关。因为我们现在把若干个 <code>traitAffinity</code> 加在一起，我们就有了随着特质数量的变化而改变 <code>affinity</code> 所能取值范围的风险。为了让这个范围大致保持不变，我们设 $\sigma^2 = 1/\sqrt{T}$，其中 $T$ 是特质的数量。这个<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>选择背后的直觉是：我们由此会预期 <code>traitAffinity</code> 具有约为 $1/\sqrt{T}\times 1/\sqrt{T}= 1/T$ 的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>。而 $T$ 个这样的量之和会具有约为 $1$ 的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>，这与单个特质的<a href="/post/2025-04-21-mbml-introduction">模型</a>相同。</p>
+<h3 id="同时向许多人学习">同时向许多人学习</h3>
+<p>如果我们试图用这个<a href="/post/2025-04-21-mbml-introduction">模型</a>，仅根据一个人的数据来推断特质和偏好，那么我们只能了解到这个人评过分的那些电影——很可能没有多少。如果我们把许多人的数据汇集在一起，就能做得好得多，因为这很可能为热门电影提供大量数据，并为绝大多数电影至少提供一点数据。这种方法被称为<strong>协同过滤</strong>（collaborative filtering）——这个术语由 Tapestry（有史以来第一个推荐系统）的开发者提出。在 Tapestry 中，协同过滤被提出用来处理电子邮件文档，在那里“人们通过记录自己对所读文档的反应来协作，从而帮助彼此进行过滤”[Goldberg et al., 1992]。在我们的应用中，我们想通过记录其他人对他们所看电影的评分（也就是反应）来过滤电影——这是一个不同的应用，但底层原理是相同的。</p>
+<p>为了扩展我们的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>以处理多个人，我们添加一个跨 people 的新<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>，并把除 <code>trait</code> 变量（它在人之间共享）以外的所有变量都放进去。得到的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>如图 5.11 所示。看这个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，你可以看到它在人和电影之间是对称的。换句话说，我们可以把人和电影对调，最终会得到完全相同的<a href="/post/2025-04-21-mbml-introduction">模型</a>！</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_ManyTraitsManyPeople.png">
+            <img class="mx-auto" alt="图 5.11" src="/uploads/Recommender_ManyTraitsManyPeople.png" />
+        </a>
+    </p>
+<p><em>图 5.11：一个推荐<a href="/post/2025-04-21-mbml-introduction">模型</a>的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，它能够从汇集了许多人的喜欢/不喜欢数据中学习。</em></p>
+<p>在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中，我们选择把 <code>noisyAffinity</code> 在零处做阈值处理，这大致对应于这样一个假设：一半的评分会是“喜欢”，另一半会是“不喜欢”。这是一个相当强的假设，所以我们本可以像对<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类器</a><a href="/post/2025-04-21-mbml-introduction">模型</a>那样去学习这个阈值。但我们将做一件更好的事——我们会做一个改动，它实际上允许为每部电影和每个人学习不同的阈值。我们将为每部电影添加一个<a href="/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive">偏置</a>变量、为每个用户添加一个<a href="/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive">偏置</a>变量，并在我们计算总的 <code>affinity</code> 时把这两个变量包含进求和中。以这种方式引入偏置，让<a href="/post/2025-04-21-mbml-introduction">模型</a>能够捕捉一部电影的总体受欢迎程度，以及每个人总体上有多喜欢电影。例如，如果一个用户几乎喜欢每一部电影，那么他就会得到一个高的用户<a href="/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive">偏置</a>。类似地，如果一部电影几乎被每个用户喜欢，那么它就会得到一个高的电影<a href="/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive">偏置</a>。</p>
+<p>我们可以在不改变图 5.11 那个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>的情况下加入偏置——我们所做的只是使用一个比期望特质数量多两个的 traits <a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>，并把第一个 <code>preference</code> 值和第二个 <code>trait</code> 值固定为恰好 1.0。这样，第一个 <code>trait</code> 值就将是一部电影的<a href="/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive">偏置</a>，而第二个 <code>preference</code> 值就将是一个人的<a href="/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive">偏置</a>。我们将用这个技巧在本章的所有<a href="/post/2025-04-21-mbml-introduction">模型</a>中加入偏置，但为了保持<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>简单，它们不会在图中显式地展示出来。</p>
+<p>我们最后一条假设是：我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>中不需要任何更多的变量——或者换一种说法：</p>
+<ol start="5">
+<li>一个人会喜欢还是不喜欢一部电影，只取决于他对这部电影各特质的偏好，而不取决于其他任何东西。</li>
+</ol>
+<p>我们稍后会评估这条假设的有效性，但首先让我们把所有假设放在一处，以便我们能够一并回顾它们（表 5.2）。</p>
+<blockquote>
+<p><strong>表 5.2：我们的推荐<a href="/post/2025-04-21-mbml-introduction">模型</a>中所编码的假设。</strong></p>
+<ol>
+<li>每部电影都可以由它在特质空间中的位置来刻画，每个特质表示为一个连续数值。</li>
+<li>一个人的偏好可以由他在特质空间中的位置来刻画，同样地，每个特质表示为一个连续数值。</li>
+<li><code>preference</code> 取正值意味着这个人偏好 <code>trait</code> 取正值的电影（负值的情形反之亦然）。<code>preference</code> 值的绝对大小表示偏好的强度，其中零表示无所谓。</li>
+<li>一个特质值对某人喜欢还是不喜欢一部电影的影响是相同的，无论这部电影具有其他什么样的特质值。</li>
+<li>一个人会喜欢还是不喜欢一部电影，只取决于他对这部电影各特质的偏好，而不取决于其他任何东西。</li>
+</ol>
+</blockquote>
+<p>假设 5.1 似乎是合理的，因为理论上我们可以把特质空间做得任意大，以便完整地刻画任何电影——对较少数量的特质而言，这条假设成立的程度会差一些，但但愿它对实际目的来说仍是一个足够好的假设。假设 5.2 假定一个人的口味可以由特质空间中的单个点很好地表示。很有可能，人们可以占据特质空间中的多个点，例如某人可能既喜欢儿童动画片又喜欢非常暴力的电影，却不喜欢介于两者之间的任何东西。然而，可以合理地假设这样的人很少见，因此在大多数情况下，一个人占据单个点是一个不错的假设。</p>
+<p><a href="/post/2026-09-06-mbml-recommender_learning_about_people_and_movies">假设 5.3</a> 和假设 5.4 与电影特质和人的特质如何结合在一起产生 <code>affinity</code> 有关。这里也许最值得商榷的假设是假设 5.4，它说每个特质的影响不依赖于其他特质。在实践中，我们可能会预期某些特质会压过其他特质，或者以不寻常的方式结合。例如，如果某人只喜欢由阿诺·施瓦辛格主演的动作片，却不喜欢他出演的所有其他种类的电影——那么这就会被这些假设很糟糕地建模，因为“由阿诺·施瓦辛格主演”这个特质在某些情况下会有正面影响，在另一些情况下会有负面影响。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/xmas_220218490.jpg">
+            <img class="mx-auto" alt="一个人可能只在一年中的特定时节才喜欢某些电影" src="/uploads/xmas_220218490.jpg" />
+        </a>
+    </p>
+<p><em>一个人可能只在一年中的特定时节才喜欢某些电影</em></p>
+<p>最后，我们有假设 5.5，它说某人喜欢还是不喜欢一部电影只取决于他对这部电影各特质的偏好——而事实上它可能取决于许多其他东西。例如，一年中的时节可能是一个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>——某人可能在十二月热爱圣诞电影，却在一月厌恶它们。另一个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>可能是一起看电影的其他人——某人是否喜欢一部电影，很可能取决于是谁和他一起看。沿着这个思路，我们可以想象一个为一群人推荐电影的推荐系统——事实上，例如 Zhang 等人 [2015] 就已经探索过这一点。可能影响一个人观影乐趣的其他东西还包括：一天中的时间或一周中的时间、他们的情绪状态（他们想看一部欢乐的电影还是一部悲伤的？他们想从现实生活中被分散注意力，还是想被挑战？）等等。简而言之，关于假设 5.5 有很多可质疑之处——但暂时坚持它是没问题的，之后再考虑扩展<a href="/post/2025-04-21-mbml-introduction">模型</a>以捕捉额外的线索。</p>
+<p>所以，让我们暂且保持<a href="/post/2025-04-21-mbml-introduction">模型</a>不变，并用它来做一些推荐吧！</p>
+<h4 id="本页引入概念回顾">本页引入概念回顾</h4>
+<p><strong>特质空间（trait space）</strong>：一个多维空间，其中空间里的每个点对应于一件具有特定一组特质值的物品。相邻的点将对应于具有相似特质的物品，而相距较远的点则代表共同点较少的物品。特质空间对于识别相似物品以及做出物品推荐都很有用。关于一个二维特质空间的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">可视化</a>，见图 5.9。</p>
+<p><strong>协同过滤（collaborative filtering）</strong>：一种为系统的某个用户过滤物品的方法，其依据是该系统的其他用户对物品的隐式或显式评分。例如，根据他人对同一批邮件的反应来过滤邮件，或根据他人对电影的评分来推荐电影。</p>
+<h4 id="参考文献">参考文献</h4>
+<p>[Goldberg et al., 1992] Goldberg, D., Nichols, D., Oki, B. M., and Terry, D. (1992). Using collaborative filtering to weave an information tapestry. Communications of the ACM, 35:61–70.</p>
+<p>[Zhang et al., 2015] Zhang, C., Guiver, J., Minka, T., and Zaykov, Y. (2015). Groupbox: A generative model for group recommendation. Technical report, Microsoft Research.</p>
+<hr>
+<p>下一节：<a href="/post/2026-09-14-mbml-recommender_training_our_recommender">训练我们的推荐系统</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people/">https://beanhsiang.github.io/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-09-06-mbml-recommender_learning_about_people_and_movies/">[译]基于模型的机器学习 - 5.1 学习用户和电影</a></li>
+        
+        <li><a href="/post/2026-09-02-mbml-recommender/">[译]基于模型的机器学习 - 5 做出推荐</a></li>
+        
+        <li><a href="/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a></li>
+        
+        <li><a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a></li>
+        
+        <li><a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set/">[译]基于模型的机器学习 - 4.4 设计特征集</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" title="[译]基于模型的机器学习 - 5.4 我们的首次推荐" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" title="[译]基于模型的机器学习 - 5.3 训练我们的推荐系统" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/" title="评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”" target="_blank">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people/" title="[译]基于模型的机器学习 - 5.2 多重特质与多人" target="_blank">[译]基于模型的机器学习 - 5.2 多重特质与多人</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-07-agent-automation-stuck-behind-interfaces-built-for-humans/" title="智能体的自动化，为什么还没有想象中那么高效" target="_blank">智能体的自动化，为什么还没有想象中那么高效</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-06-mbml-recommender_learning_about_people_and_movies/" title="[译]基于模型的机器学习 - 5.1 学习用户和电影" target="_blank">[译]基于模型的机器学习 - 5.1 学习用户和电影</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/" title="人机协同里，卡住我们的常常不是机器，是人" target="_blank">人机协同里，卡住我们的常常不是机器，是人</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (41)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (36)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

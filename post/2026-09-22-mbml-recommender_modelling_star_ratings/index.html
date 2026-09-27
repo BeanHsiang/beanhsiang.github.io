@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 5.5 建模星级评分 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 5.5 建模星级评分 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-09-22T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-09-22T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 5.5 建模星级评分">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 5.5 建模星级评分</h1>
+        </header>
+        
+  <time datetime="2026-09-22T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月22日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/stars_404623879.jpg">
+            <img class="mx-auto" alt="星级评分" src="/uploads/stars_404623879.jpg" />
+        </a>
+    </p>
+<p>我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>把完整的星级评分范围变成了简单的喜欢或不喜欢，这意味着它丢弃了大量有用的信息。给一部电影打 3 星和打 5 星之间有天壤之别，然而我们却把这两种情况同等对待。为了利用不同的星级评分，我们需要改变<a href="/post/2025-04-21-mbml-introduction">模型</a>，使其能够处理完整的评分范围，而不是二值的喜欢/不喜欢。这不仅让我们能够在星级评分上训练，还让我们能够预测星级评分——一举两得！</p>
+<p>我们可以在已经设计好的二值喜欢/不喜欢<a href="/post/2025-04-21-mbml-introduction">模型</a>的基础上做出这一改变。在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中，我们有一个 affinity（好感度）变量，它是一个连续的数字，表示一个人对一部电影的喜欢程度。目前我们在零处对这个好感度取阈值，说大于零的值意味着这个人喜欢这部电影，小于零的值意味着他们不喜欢这部电影。为了<a href="/post/2025-04-21-mbml-introduction">建模</a>不同的星级评分，我们可以假设更高的好感度意味着一个人会给出更高的星级评分。更确切地说，我们现在不再只在零处取阈值，而是为每一个星级评分引入一个阈值。如果一个人对一部电影的好感度高于某个特定星数的阈值，那么我们就预期他们会给这部电影至少那么多星。</p>
+<p>要把这些阈值加入我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>，我们需要再做一个额外的假设。我们需要决定是否应该对所有人使用相同的阈值，还是不同的人可以有不同的阈值。允许不同的阈值可能是有用的——例如，有可能某些人给一部真正糟糕的电影打两星，而另一些人给一部真正糟糕的电影打一星甚至半星。如果我们想<a href="/post/2025-04-21-mbml-introduction">建模</a>这些不同的行为，我们就需要允许不同的人有不同的阈值。这可以做到，但它会引入数据稀缺的问题，因为某些人对某些特定阈值可能没有任何评分。我们不去解决这些问题，而是做一个简化假设：所有人的阈值都相同。我们可以精确地表述这个假设，如下所示：</p>
+<blockquote>
+<p><strong>6</strong> 当两个人对一部电影有相同的好感度时，他们会给它相同的星数。</p>
+</blockquote>
+<p>图 5.19 展示了对一个扩展<a href="/post/2025-04-21-mbml-introduction">模型</a>编码这一假设的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中，我们添加了一个新变量 <code>starThreshold</code>，它位于一个 stars <a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>内，意味着对每一个星数都有一个阈值。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_WithStarRatings.png">
+            <img class="mx-auto" alt="图 5.19" src="/uploads/Recommender_WithStarRatings.png" />
+        </a>
+    </p>
+<p><em>图 5.19：一个能够消费和预测星级评分的推荐<a href="/post/2025-04-21-mbml-introduction">模型</a>的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。如正文所讨论，评分间接地使用变量 <code>hasStar</code> 的二值来表示。</em></p>
+<p>对于每一部电影和每一个人，这个图中被观测的变量现在被称为 <code>hasStar</code>。这个变量位于 stars <a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>内，因此对每一个星数都有一个值。换句话说，每一个单独的星级评分都被表示为一组二值变量。对于某个特定星数的二值变量，当评分至少达到那个星数时为真。举个例子，三星的评分意味着前三个二值变量为真，而其余两个为假。图 5.20 展示了星级评分与用于观测 <code>hasStar</code> 的二值之间的关系。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/StarsToBinary.png">
+            <img class="mx-auto" alt="图 5.20" src="/uploads/StarsToBinary.png" />
+        </a>
+    </p>
+<p><em>图 5.20：不同星级评分与图 5.19 <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>中 <code>hasStar</code> 变量所用二值之间的关系。</em></p>
+<p>当我们训练这个<a href="/post/2025-04-21-mbml-introduction">模型</a>时，我们把 <code>hasStar</code> 设为图 5.20 中对应评分所给出的观测值。当使用这个<a href="/post/2025-04-21-mbml-introduction">模型</a>做推荐时，我们会得到每个二值变量为真的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验概率</a>。这些可以通过减法转换为拥有某个特定星数的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。例如，如果我们预测拥有 3 星或以上的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>是 70%、拥有 4 星或以上的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>是 60%，那么恰好拥有 3 星的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>一定是 $70\%-60\%=10\%$。使用这个技巧，我们可以把各个二值<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>转换回每个星级评分各自的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</p>
+<p>在我们能够训练这个<a href="/post/2025-04-21-mbml-introduction">模型</a>之前，还有几个细节需要处理。首先，在我们的数据集中，我们需要能够处理半星评分，比如 3½ 星。我们可以通过把阈值数量翻倍来处理它们，从而既有整星评分的阈值，也有半星评分的阈值。其次，星级阈值与偏置之间存在一种<a href="/post/2026-09-14-mbml-recommender_training_our_recommender">对称性</a>——给所有用户或电影偏置加上一个常数值、再从所有阈值中减去那个值，会导致相同的预测。这可以通过把其中一个阈值固定为零来解决——在我们的实验中，我们选择把三星阈值固定为零。最后，如果你看图 5.20，你会注意到第一个二值总是为真。这意味着好感度必须始终大于最低的阈值，所以我们可以简单地把它从<a href="/post/2025-04-21-mbml-introduction">模型</a>中移除。在我们的情形下，这意味着不会有 ½ 星的阈值，因此最低的阈值将是 1 星的。有了这些改动，我们现在就准备好训练了！</p>
+<h3 id="使用星级评分的结果">使用星级评分的结果</h3>
+<p>既然我们能够在星级评分上训练，我们就可以使用和之前相同的训练数据（<a href="/post/2026-09-14-mbml-recommender_training_our_recommender">5.3 节</a>），但不再把评分转换为喜欢/不喜欢。当我们做这样的训练时，我们期望来自星级评分的额外信息能让我们在<a href="/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people">特质空间</a>中更精确地定位电影。回到之前的图 5.14，我们发现，在喜欢/不喜欢上训练之后，有 158 部电影在<a href="/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people">特质空间</a>的每个维度上都有小于 0.2 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a><a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>。在星级评分上训练之后，具有如此低<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a><a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>的电影数量增加了，证实了这些额外信息确实让我们能够更精确地定位电影。</p>
+<p>作为训练<a href="/post/2025-04-21-mbml-introduction">模型</a>的一部分，我们还学到了每个星级评分的高斯<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>阈值——这些展示在图 5.21 中。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_5ModellingStarRatingsPosteriorDistributionsForStarRatingsThresholds_[2]-Value.png">
+            <img class="mx-auto" alt="图 5.21" src="/uploads/Recommender_5ModellingStarRatingsPosteriorDistributionsForStarRatingsThresholds_[2]-Value.png" />
+        </a>
+    </p>
+<p><em>图 5.21：从 1 星到 5 星的星级评分阈值的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。3 星的阈值被固定为恰好为零——所有其他阈值都是学习得到的。</em></p>
+<p>这些阈值<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>值得一看。首先要注意的是，阈值从 1 星到 5 星被正确地排序了，正如我们所预期的。这种排序并没有在<a href="/post/2025-04-21-mbml-introduction">模型</a>中直接强制，因为所有阈值的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>都是相同的——相反，这种排序是从<a href="/post/2025-04-21-mbml-introduction">模型</a>被训练的方式中产生的。另一件要注意的事是，1 星的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>比其他阈值宽得多。这是因为<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">训练集</a>中半星和一星极少（要确认这一点，回看之前的图 5.12）。正是这些评分被用来学习 1 星的阈值，因此它们的相对稀缺导致了阈值位置上更高的不确定性。最后一点是，半星阈值一般更靠近其上方的整星评分，而不是下方的。例如，3½ 星阈值离 4 星阈值比离 3 星阈值近得多。这意味着当一个人给一部电影打 3½ 星时，在他们心中，他们认为那几乎和一部 4 星电影一样好，而不是仅仅比 3 星电影好一点。另一种解释是，某些人可能从不使用半星（这就能解释为什么它们比周围的整星相对更稀缺），这会在推断出的阈值中引入一些<a href="/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive">偏置</a>。思考如何改变<a href="/post/2025-04-21-mbml-introduction">模型</a>以反映某些人从不使用半星这一事实，是一个有趣的练习。</p>
+<p>使用我们新训练的<a href="/post/2025-04-21-mbml-introduction">模型</a>，我们可以为和 <a href="/post/2026-09-18-mbml-recommender_our_first_recommendations">5.4 节</a>中完全相同的人和电影做预测。既然我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>现在预测的是星级评分，我们就可以绘制最可能的星级评分，而不是喜欢的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验概率</a>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_5ModellingStarRatingsPredictions_[2]-Value.png">
+            <img class="mx-auto" alt="图 5.22a 推断的最可能星数" src="/uploads/Recommender_5ModellingStarRatingsPredictions_[2]-Value.png" />
+        </a>
+    </p>
+<p><em>(a) 推断的最可能星数</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_5ModellingStarRatingsGroundTruth_.png">
+            <img class="mx-auto" alt="图 5.22b 真实标签星数" src="/uploads/Recommender_5ModellingStarRatingsGroundTruth_.png" />
+        </a>
+    </p>
+<p><em>(b) <a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>星数</em></p>
+<p><em>图 5.22：我们带星级评分的推荐<a href="/post/2025-04-21-mbml-introduction">模型</a>的结果。(a) 预测的最可能评分，其中白色方块对应五星，黑色对应半星，灰色的深浅表示介于两者之间的星数。(b) 使用相同颜色标度的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>评分。</em></p>
+<p>图 5.22a 很好地展示了，我们现在能够预测星数，而不仅仅是喜欢或不喜欢。比较两幅图，我们可以看到我们的预测中有时存在较暗或较亮的区域，与<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>中的区域相对应——但同样常常并非如此。几乎不可能看着图 5.22 就说出新<a href="/post/2025-04-21-mbml-introduction">模型</a>是否比旧的做出了更好的推荐。相反，我们需要做一个定量的比较，通过重新计算和之前相同的指标并比较结果。对于 NDCG，我们可以按星级评分对推荐排序，并像之前一样完全相同地计算这个指标。对于喜欢/不喜欢准确率，我们需要把星级预测转换回二值的喜欢/不喜欢预测。我们可以通过把所有 3 星或更高评分的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>相加来做到——如果这个和大于 0.5，那么我们预测这个人会喜欢这部电影，否则预测他们会不喜欢它。图 5.23 显示，我们的新<a href="/post/2025-04-21-mbml-introduction">模型</a>有明显改善的 NDCG，证明了使用完整星级评分的价值。这种改善甚至在我们相对不敏感的“预测正确比例”指标上也体现了出来，尽管变化要小得多。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_5ModellingStarRatingsFractionOfPredictionsCorrect_.png">
+            <img class="mx-auto" alt="图 5.23a 预测正确的比例" src="/uploads/Recommender_5ModellingStarRatingsFractionOfPredictionsCorrect_.png" />
+        </a>
+    </p>
+<p><em>(a) 预测正确的比例</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_5ModellingStarRatingsAverageNDCG@5_.png">
+            <img class="mx-auto" alt="图 5.23b 平均 NDCG@5" src="/uploads/Recommender_5ModellingStarRatingsAverageNDCG@5_.png" />
+        </a>
+    </p>
+<p><em>(b) 平均 NDCG@5</em></p>
+<p><em>图 5.23：旧的喜欢/不喜欢<a href="/post/2025-04-21-mbml-introduction">模型</a>与新的带星级评分<a href="/post/2025-04-21-mbml-introduction">模型</a>两个指标的比较。星级评分<a href="/post/2025-04-21-mbml-introduction">模型</a>给 NDCG 带来了显著的提升，甚至在喜欢/不喜欢准确率上也显示出了小的改善。</em></p>
+<p>因为我们在计算喜欢/不喜欢准确率指标时把不同星级评分的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>加在一起，我们其实丢弃了关于我们推荐的信息。例如，我们丢弃了我们预测的是 3、4 还是 5 星。其结果是使这个指标对准确性的改善不那么敏感。我们只是为了能够和最初<a href="/post/2025-04-21-mbml-introduction">模型</a>的结果做比较，才为图 5.23 计算了它。既然我们现在有了星级评分的预测，我们就需要用一个能够利用评分的新指标来替代这个指标。对于这个新指标，我们可以看预测评分正确匹配<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>评分的次数比例。然而，这将意味着一个差半星的预测会和一个差四星的预测被同等对待。相反，我们可以看预测的星数离实际星数有多远，于是误差为：</p>
+$$
+\text{误差} = |\text{预测星级评分} - \text{真实标签星级评分}| \tag{5.1}
+$$<p>在方程 (5.1) 中，竖线表示我们取差的绝对大小。例如，如果预测是两星、<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>是五星，误差就是 3.0。如果我们把这两者互换，使预测是五星、<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>是两星，误差同样是 3.0。因为我们使用这个绝对大小，我们把这个误差称为绝对误差。为了在所有预测上计算一个指标，我们对每个预测的绝对误差取平均，得到一个称为<strong>平均绝对误差</strong>（Mean Absolute Error，MAE）的指标。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_5ModellingStarRatingsMeanAbsoluteError%28MAE%29_.png">
+            <img class="mx-auto" alt="图 5.24" src="/uploads/Recommender_5ModellingStarRatingsMeanAbsoluteError%28MAE%29_.png" />
+        </a>
+    </p>
+<p><em>图 5.24：我们新的星级评分<a href="/post/2025-04-21-mbml-introduction">模型</a>中不同特质数量下的平均绝对误差。随着我们增加特质数量，MAE 一般略有下降。</em></p>
+<p>图 5.24 展示了在我们新<a href="/post/2025-04-21-mbml-introduction">模型</a>中，为不同特质数量计算的这个指标。把三个指标放在一起看，拥有更多特质一般似乎能给出更高质量的推荐。所以我们可以选择使用我们最新<a href="/post/2025-04-21-mbml-introduction">模型</a>的 16 特质版本，它给出的 NDCG@5 为 0.881、MAE 为 0.663。虽然这给了我们迄今为止表现最好的推荐系统，但能够做出进一步的改进仍然是好的。在下一节中，我们将诊断我们仍在哪里犯错，并研究一种进一步提高推荐准确性的方法。</p>
+<h4 id="本页引入概念回顾">本页引入概念回顾</h4>
+<p><strong>绝对误差（absolute error）</strong>：预测值与对应<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>值之间的差，忽略结果的符号。2 星和 5 星之间的绝对误差是 3。5 星和 2 星之间的绝对误差也是 3。因为我们忽略符号，绝对误差总是正的（或为零）。</p>
+<p><strong>平均绝对误差（mean absolute error）</strong>：在所有预测上，预测值与<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>值之间绝对误差的平均值（均值）。这个指标可能的最佳值是 0。所有其他值都是正数，较小的值被认为优于较大的值。</p>
+<hr>
+<p>下一节：<a href="/post/2026-09-26-mbml-recommender_another_cold_start_problem">另一个冷启动问题</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/">https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-09-18-mbml-recommender_our_first_recommendations/">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a></li>
+        
+        <li><a href="/post/2026-09-14-mbml-recommender_training_our_recommender/">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a></li>
+        
+        <li><a href="/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people/">[译]基于模型的机器学习 - 5.2 多重特质与多人</a></li>
+        
+        <li><a href="/post/2026-09-06-mbml-recommender_learning_about_people_and_movies/">[译]基于模型的机器学习 - 5.1 学习用户和电影</a></li>
+        
+        <li><a href="/post/2026-09-02-mbml-recommender/">[译]基于模型的机器学习 - 5 做出推荐</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" title="[译]基于模型的机器学习 - 5.4 我们的首次推荐" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" title="[译]基于模型的机器学习 - 5.3 训练我们的推荐系统" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/" title="评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”" target="_blank">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people/" title="[译]基于模型的机器学习 - 5.2 多重特质与多人" target="_blank">[译]基于模型的机器学习 - 5.2 多重特质与多人</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-07-agent-automation-stuck-behind-interfaces-built-for-humans/" title="智能体的自动化，为什么还没有想象中那么高效" target="_blank">智能体的自动化，为什么还没有想象中那么高效</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-06-mbml-recommender_learning_about_people_and_movies/" title="[译]基于模型的机器学习 - 5.1 学习用户和电影" target="_blank">[译]基于模型的机器学习 - 5.1 学习用户和电影</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/" title="人机协同里，卡住我们的常常不是机器，是人" target="_blank">人机协同里，卡住我们的常常不是机器，是人</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (41)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (36)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,1283 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估 | Innovation with tech</title>
+    <meta property="og:title" content="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-10-01T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-10-01T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</h1>
+        </header>
+        
+  <time datetime="2026-10-01T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月1日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>本文参考了 Microsoft Community Hub 上 Robin Lester 的文章 <a href="https://techcommunity.microsoft.com/blog/azuredevcommunityblog/using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/4559851?WT.mc_id=AI-MVP-5003172">Using Jev with Agents in Microsoft Foundry for Model Evaluation</a>，下面是我整理的理解和步骤。</p>
+<h2 id="jev-是什么">Jev 是什么</h2>
+<p>Jev 是 TypeSafe AI 推出的新模型，2026 年 9 月 15 日开放了抢先体验。TypeSafe 把它称为自家第一个“System One”模型，它不写长篇文字，只负责又快又结构化地做判断。</p>
+<p>用法很直接：把一段状态或上下文交给它，再说明你想让它做什么判断，它会返回一个带类型的概率化结果。结果有三种形式：</p>
+<ul>
+<li>Choice：从给定的选项里选一个</li>
+<li>Score：在一个有序的刻度上打分</li>
+<li>Yes/No 概率：判断某个条件成立的概率</li>
+</ul>
+<p>普通 LLM 吐出的是字符串，Jev 放弃了这一点，换来类型安全的结构化数值。TypeSafe 自己的说法是：输入非结构化的状态，输出带类型的概率化决策。</p>
+<h2 id="为什么要用-jev">为什么要用 Jev</h2>
+<p>当应用需要的是一次判断，而不是一段回答时，Jev 最能派上用场。比如：</p>
+<ul>
+<li>按明确定义的标准做一致的评估</li>
+<li>输出结构化结果，应用可以直接消费</li>
+<li>分类、评估、路由和决策支持</li>
+<li>在 Agent 工作流里，先判断再决定要不要执行动作</li>
+<li>做护栏，例如判断 Agent 该不该发起某次工具调用</li>
+<li>做模型路由，由一次判断决定请求交给哪个模型或流程</li>
+</ul>
+<p>每个决策还可以带上置信度或概率。有了这个数，应用就能设阈值：高于阈值自动往下走，低于阈值转人工复核。</p>
+<h3 id="jev-与可解释性">Jev 与可解释性</h3>
+<p>对于 Model-as-a-Service（MaaS）和托管的 LLM 方案，Jev 提供了另一种解释思路。</p>
+<p>SHAP 这类传统的可解释性技术给出的是特征归因，解释模型为什么做出某个预测。但模型只通过托管 API 访问、拿不到内部结构时，这些技术就很难用上。</p>
+<p>Jev 不能取代 SHAP，给不出同类的特征归因。它的位置是一个独立的判断层：按明确的标准去评估 LLM 的输入、输出或打算执行的动作，再返回带置信度的结构化决策。流程大概是这样：</p>
+<p><strong>LLM 生成答案 → Jev 评估答案 → 应用决定下一步</strong></p>
+<p>对那些看不透内部的 MaaS 模型来说，这等于在外面套了一层可度量的评估。</p>
+<h2 id="换成另一个-llm-行不行">换成另一个 LLM 行不行</h2>
+<p>行。你完全可以让普通 LLM 对输入做分类、打分或评估，并要求它输出 JSON。</p>
+<p>区别在于 Jev 是专门为这类任务造的，不是通用的文本生成模型。TypeSafe 称 Jev 并行产出结果，而不是逐个 token 顺序生成，托管服务目前标称的典型决策延迟约为 70 到 500 毫秒。</p>
+<h2 id="价格">价格</h2>
+<p>截至 2026 年 9 月，TypeSafe 文档里列出的 Jev 1.13（jev-1.13.0）价格是每百万输入 token 0.042 美元，输出 token 免费。限速是每秒 250,000 个 token、每分钟 1,200 次请求，不过 TypeSafe 说明这些限制可能调整。</p>
+<p>Jev 产出的是决策而不是文本，所以你付费的对象是它要评估的上下文，而不是生成的内容。</p>
+<p><em>价格可能变动，以上数字仅在原文发布时有效。</em></p>
+<h2 id="在-microsoft-foundry-里使用-jev">在 Microsoft Foundry 里使用 Jev</h2>
+<p>我觉得比较实用的一种搭法，是在 Microsoft Foundry 里把 Jev 当成生成式模型旁边的专用判断组件：</p>
+<p><strong>用户/应用 → Foundry 模型或 Agent → Jev 判断 → 确定性逻辑 → 动作/响应</strong></p>
+<p>举个例子：Foundry 上托管的模型先生成一个候选答案，Jev 按预设标准评估这个答案，应用再根据评估结果决定流程能不能继续。</p>
+<p>具体配置步骤如下。</p>
+<h3 id="申请-jev-并创建-api-key">申请 Jev 并创建 API Key</h3>
+<p>先向 TypeSafe 申请 Jev 的预览资格。有了账号以后，需要创建一个 API Key。</p>
+<p>在菜单里进入 API Keys，新建一个 Key，并把它复制下来，后面要在 Foundry 里用。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261001205611-jev-foundry-1.png">
+            <img class="mx-auto" alt="TypeSafe 控制台的 API Keys 页面" src="/uploads/20261001205611-jev-foundry-1.png" />
+        </a>
+    </p>
+<p>你可能还会收到一些免费额度。Jev 的单价很低，拿来做实验绰绰有余。</p>
+<h3 id="在-foundry-里创建-agent-并添加-openapi-工具">在 Foundry 里创建 Agent 并添加 OpenAPI 工具</h3>
+<p>接下来到 Foundry 里为 Jev 新建一个 Agent。在 Agent 里添加一个 Tool，选择 OpenAPI tool，如下图所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261001205611-jev-foundry-2.png">
+            <img class="mx-auto" alt="在 Foundry 的 Select a tool 窗口中选择 OpenAPI tool" src="/uploads/20261001205611-jev-foundry-2.png" />
+        </a>
+    </p>
+<p>然后按下图填写对话框。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261001205611-jev-foundry-3.png">
+            <img class="mx-auto" alt="Update OpenAPI tool 对话框的填写示例" src="/uploads/20261001205611-jev-foundry-3.png" />
+        </a>
+    </p>
+<p>这里需要新建一个连接。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261001205611-jev-foundry-4.png">
+            <img class="mx-auto" alt="新建连接时填写的 Credential" src="/uploads/20261001205611-jev-foundry-4.png" />
+        </a>
+    </p>
+<p>Key 的格式是 <code>Bearer apikey_&lt;你的 Key 的其余部分&gt;</code>。</p>
+<p>Schema 部分填入下面这段：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">132
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">133
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">134
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">135
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">136
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">137
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">138
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">139
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">140
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">141
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">142
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">143
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">144
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">145
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">146
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">147
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">148
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">149
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">150
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">151
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">152
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">153
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">154
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">155
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">156
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">157
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">158
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">159
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">160
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">161
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">162
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">163
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">164
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">165
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">166
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">167
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">168
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">169
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">170
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">171
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">172
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">173
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">174
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">175
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">176
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">177
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">178
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">179
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">180
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">181
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">182
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">183
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">184
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">185
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">186
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">187
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">188
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">189
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">190
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">191
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">192
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">193
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">194
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">195
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">196
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">197
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">198
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">199
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">200
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">201
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">202
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">203
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">204
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;openapi&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;3.0.3&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;info&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;title&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;TypeSafe Jev System One&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;version&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;1.1.0&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Evaluate content using TypeSafe Jev System One.&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;servers&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;url&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;https://api.typesafe.ai&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;paths&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;/v1/systemone&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;post&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;operationId&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;evaluate_with_jev&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;summary&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Evaluate content using Jev&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Evaluate state against typed questions using TypeSafe Jev.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;security&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;bearerAuth&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;requestBody&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;required&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;application/json&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0550ae">&#34;schema&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;object&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;additionalProperties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;required&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;state&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;model&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0a3069">&#34;questions&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;properties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;state&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;The original text or content for Jev to evaluate.&#34;</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;model&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;enum&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>                      <span style="color:#0a3069">&#34;jev-latest&#34;</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;default&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;jev-latest&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;The TypeSafe Jev model. Use jev-latest.&#34;</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;questions&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;object&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;A map of named questions for Jev to answer. Each question must be a Noul, Choice, or Score question.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#0550ae">&#34;additionalProperties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                      <span style="color:#0550ae">&#34;oneOf&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                          <span style="color:#0550ae">&#34;$ref&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;#/components/schemas/NoulQuestion&#34;</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                          <span style="color:#0550ae">&#34;$ref&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;#/components/schemas/ChoiceQuestion&#34;</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                          <span style="color:#0550ae">&#34;$ref&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;#/components/schemas/ScoreQuestion&#34;</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>                      <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;responses&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;200&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Successful Jev evaluation&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0550ae">&#34;application/json&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;schema&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;object&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                  <span style="color:#0550ae">&#34;additionalProperties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;400&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Invalid request&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;401&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Authentication failed&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;422&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Request validation failed&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;components&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;schemas&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;NoulQuestion&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;object&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;additionalProperties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;required&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;instructions&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;properties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;enum&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0a3069">&#34;noul&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;instructions&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;The yes/no question for Jev to evaluate.&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;criteria&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;object&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;additionalProperties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;properties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0550ae">&#34;true&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Description of what a yes or value near 1 means.&#34;</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0550ae">&#34;false&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Description of what a no or value near 0 means.&#34;</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;ChoiceQuestion&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;object&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;additionalProperties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;required&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;instructions&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;criteria&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;properties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;enum&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0a3069">&#34;choice&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;instructions&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;The question for Jev to decide between the supplied choices.&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;criteria&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;object&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;A map where each property name is a possible choice and its value describes that choice.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;minProperties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">2</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;additionalProperties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;ScoreQuestion&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;object&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;additionalProperties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;required&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;type&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;instructions&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0a3069">&#34;criteria&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;properties&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;enum&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0a3069">&#34;score&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;instructions&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;The attribute or question Jev should score.&#34;</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#0550ae">&#34;criteria&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;array&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;description&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Ordered scoring levels from lowest to highest.&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;minItems&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0550ae">2</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#0550ae">&#34;items&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>              <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;string&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>          <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;securitySchemes&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;bearerAuth&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;apiKey&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;name&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;Authorization&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#0550ae">&#34;in&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;header&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;security&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;bearerAuth&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="给-agent-写指令">给 Agent 写指令</h3>
+<p>这个例子里我们用 Jev 来评估客户投诉，所以 Agent 的指令如下：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>You are a customer-support triage agent.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>For every customer-support message you MUST call the evaluate_with_jev tool.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IMPORTANT:
+</span></span><span style="display:flex;"><span>When calling evaluate_with_jev, construct Jev questions using ONLY the following property names:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>For a Noul question:
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  &#34;type&#34;: &#34;noul&#34;,
+</span></span><span style="display:flex;"><span>  &#34;instructions&#34;: &#34;...&#34;,
+</span></span><span style="display:flex;"><span>  &#34;criteria&#34;: {
+</span></span><span style="display:flex;"><span>    &#34;true&#34;: &#34;...&#34;,
+</span></span><span style="display:flex;"><span>    &#34;false&#34;: &#34;...&#34;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>For a Choice question:
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  &#34;type&#34;: &#34;choice&#34;,
+</span></span><span style="display:flex;"><span>  &#34;instructions&#34;: &#34;...&#34;,
+</span></span><span style="display:flex;"><span>  &#34;criteria&#34;: {
+</span></span><span style="display:flex;"><span>    &#34;option1&#34;: &#34;...&#34;,
+</span></span><span style="display:flex;"><span>    &#34;option2&#34;: &#34;...&#34;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>For a Score question:
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  &#34;type&#34;: &#34;score&#34;,
+</span></span><span style="display:flex;"><span>  &#34;instructions&#34;: &#34;...&#34;,
+</span></span><span style="display:flex;"><span>  &#34;criteria&#34;: [
+</span></span><span style="display:flex;"><span>    &#34;lowest level&#34;,
+</span></span><span style="display:flex;"><span>    &#34;middle level&#34;,
+</span></span><span style="display:flex;"><span>    &#34;highest level&#34;
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NEVER use these properties:
+</span></span><span style="display:flex;"><span>- question
+</span></span><span style="display:flex;"><span>- prompt
+</span></span><span style="display:flex;"><span>- options
+</span></span><span style="display:flex;"><span>- ordered_criteria
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Always use:
+</span></span><span style="display:flex;"><span>- instructions
+</span></span><span style="display:flex;"><span>- criteria
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>For customer support tickets, ask Jev these three questions:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>billing:
+</span></span><span style="display:flex;"><span>type = noul
+</span></span><span style="display:flex;"><span>instructions = &#34;Does this ticket concern billing, payments, charges, invoices or refunds?&#34;
+</span></span><span style="display:flex;"><span>criteria.true = &#34;The issue concerns billing or a financial transaction.&#34;
+</span></span><span style="display:flex;"><span>criteria.false = &#34;The issue does not concern billing or a financial transaction.&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tone:
+</span></span><span style="display:flex;"><span>type = choice
+</span></span><span style="display:flex;"><span>instructions = &#34;What is the customer&#39;s tone?&#34;
+</span></span><span style="display:flex;"><span>criteria:
+</span></span><span style="display:flex;"><span>calm = &#34;Neutral, polite or informational.&#34;
+</span></span><span style="display:flex;"><span>frustrated = &#34;Dissatisfied, impatient or inconvenienced.&#34;
+</span></span><span style="display:flex;"><span>angry = &#34;Strongly confrontational or extremely dissatisfied.&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>urgency:
+</span></span><span style="display:flex;"><span>type = score
+</span></span><span style="display:flex;"><span>instructions = &#34;How urgently does this ticket require attention?&#34;
+</span></span><span style="display:flex;"><span>criteria in this exact order:
+</span></span><span style="display:flex;"><span>1. &#34;Can wait&#34;
+</span></span><span style="display:flex;"><span>2. &#34;Handle this week&#34;
+</span></span><span style="display:flex;"><span>3. &#34;Handle today&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Always set model to &#34;jev-latest&#34;.
+</span></span><span style="display:flex;"><span>Pass the customer&#39;s original message as state.
+</span></span><span style="display:flex;"><span>Do not classify the ticket yourself.
+</span></span><span style="display:flex;"><span>Use the values returned by Jev.
+</span></span><span style="display:flex;"><span>Always show the Jev output at the end of the response
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="试一条投诉">试一条投诉</h3>
+<p>现在给它一条投诉，看看 Jev 怎么判断：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>The room had no water in and one of the towels was dirty
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Agent 的回复如下：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>I’m sorry about the issues you experienced—no running water and a dirty towel are unacceptable. I’ll get this addressed right away.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Immediate help I can arrange now:
+</span></span><span style="display:flex;"><span>- Send maintenance to restore water.
+</span></span><span style="display:flex;"><span>- Have housekeeping deliver fresh towels and re-service the bathroom.
+</span></span><span style="display:flex;"><span>- Provide bottled water immediately.
+</span></span><span style="display:flex;"><span>- If water can’t be restored quickly, arrange a room move.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Please share:
+</span></span><span style="display:flex;"><span>- Your reservation name and room number
+</span></span><span style="display:flex;"><span>- Best contact number
+</span></span><span style="display:flex;"><span>- Whether there’s no water at all or only hot/cold is affected
+</span></span><span style="display:flex;"><span>- Whether you prefer immediate service or a room change
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>If you’ve already left, let me know the date/time this happened so we can investigate and follow up.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Jev output:
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  &#34;model&#34;: &#34;jev-1.13.0&#34;,
+</span></span><span style="display:flex;"><span>  &#34;answers&#34;: {
+</span></span><span style="display:flex;"><span>    &#34;billing&#34;: {
+</span></span><span style="display:flex;"><span>      &#34;type&#34;: &#34;noul&#34;,
+</span></span><span style="display:flex;"><span>      &#34;noul&#34;: 0.02
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    &#34;tone&#34;: {
+</span></span><span style="display:flex;"><span>      &#34;type&#34;: &#34;choice&#34;,
+</span></span><span style="display:flex;"><span>      &#34;choice&#34;: &#34;frustrated&#34;,
+</span></span><span style="display:flex;"><span>      &#34;confidence&#34;: 0.6,
+</span></span><span style="display:flex;"><span>      &#34;probabilities&#34;: {
+</span></span><span style="display:flex;"><span>        &#34;frustrated&#34;: 0.74,
+</span></span><span style="display:flex;"><span>        &#34;calm&#34;: 0.26,
+</span></span><span style="display:flex;"><span>        &#34;angry&#34;: 0.0
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    &#34;urgency&#34;: {
+</span></span><span style="display:flex;"><span>      &#34;type&#34;: &#34;score&#34;,
+</span></span><span style="display:flex;"><span>      &#34;score&#34;: 1.81,
+</span></span><span style="display:flex;"><span>      &#34;confidence&#34;: 0.72,
+</span></span><span style="display:flex;"><span>      &#34;legend&#34;: {
+</span></span><span style="display:flex;"><span>        &#34;0&#34;: &#34;Can wait&#34;,
+</span></span><span style="display:flex;"><span>        &#34;1&#34;: &#34;Handle this week&#34;,
+</span></span><span style="display:flex;"><span>        &#34;2&#34;: &#34;Handle today&#34;
+</span></span><span style="display:flex;"><span>      },
+</span></span><span style="display:flex;"><span>      &#34;probabilities&#34;: {
+</span></span><span style="display:flex;"><span>        &#34;0&#34;: 0.03,
+</span></span><span style="display:flex;"><span>        &#34;1&#34;: 0.12,
+</span></span><span style="display:flex;"><span>        &#34;2&#34;: 0.85
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  &#34;usage&#34;: {
+</span></span><span style="display:flex;"><span>    &#34;input_tokens&#34;: 466,
+</span></span><span style="display:flex;"><span>    &#34;output_tokens&#34;: 75
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这样 Jev 的决策和背后的概率就都看得到了。这条投诉几乎不可能和账单有关，客户的语气是 frustrated，需要当天处理的概率高达 0.85。</p>
+<p>我最看重的是接下来这一步。下一步动作不必靠生成的文字来推断，应用直接拿这些结构化的概率做确定性处理就行：路由投诉，升级处理，置信度低于设定的阈值时就转人工复核。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/">https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a></li>
+        
+        <li><a href="/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a></li>
+        
+        <li><a href="/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/">Microsoft Foundry 与 Azure OpenAI 模型迁移全流程</a></li>
+        
+        <li><a href="/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a></li>
+        
+        <li><a href="/post/2026-08-11-securing-azure-openai-with-private-endpoints-building-a-zero-trust-ai-architecture/">用私有终结点加固 Azure OpenAI：搭建一套零信任 AI 架构</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" title="[译]基于模型的机器学习 - 5.4 我们的首次推荐" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" title="[译]基于模型的机器学习 - 5.3 训练我们的推荐系统" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/" title="评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”" target="_blank">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people/" title="[译]基于模型的机器学习 - 5.2 多重特质与多人" target="_blank">[译]基于模型的机器学习 - 5.2 多重特质与多人</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-07-agent-automation-stuck-behind-interfaces-built-for-humans/" title="智能体的自动化，为什么还没有想象中那么高效" target="_blank">智能体的自动化，为什么还没有想象中那么高效</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-06-mbml-recommender_learning_about_people_and_movies/" title="[译]基于模型的机器学习 - 5.1 学习用户和电影" target="_blank">[译]基于模型的机器学习 - 5.1 学习用户和电影</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (2)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (42)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (36)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

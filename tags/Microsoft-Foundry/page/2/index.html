@@ -82,6 +82,35 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" target="_blank">自动生成的 Rubric 评估器：为 AI 智能体打造上下文感知的评估方案</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-06-19T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年6月19日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <blockquote>
+<p>本文编译自 Microsoft Community Hub 的文章 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/4524095?WT.mc_id=AI-MVP-5003172">Auto-Generated Rubric Evaluators: Building Context-Aware Evaluators for AI Agents</a>，原作者 Shuo Qiu 等人。我读完之后觉得这套验证方法挺扎实，就顺手整理成中文，把里面的数据和结论都留了下来。</p>
+</blockquote>
+<p>预置评估器有个老毛病：它们太通用了，一旦碰到真实业务里的智能体，往往不够贴身。Microsoft Foundry 里的自动生成 Rubric 评估器就是冲着这个问题去的——你手头已经有的上下文，它拿来生成一个针对具体任务的 Rubric 评估器。团队从四个方面做了验证，结论是：在测试条件下，用推荐配置跑出来的评估器，有效性和可靠性都站得住。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-06-19-auto-generated-rubric-evaluators-building-context-aware-evaluators-for-ai-agents/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-06-13-how-to-measure-token-impact-of-mcp-tool-invocation-in-microsoft-foundry/" target="_blank">如何在 Microsoft Foundry 中衡量 MCP 工具调用的 Token 影响</a>
             </h1>
         </header>
@@ -337,33 +366,6 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/" target="_blank">Agent 可观测性：Application Insights·OpenTelemetry·Trace 分析</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-03-06T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年3月6日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>这篇文章记录的是如何观察和了解 Agent 在现实中的实际运行状态。</p>
-<p>Agent 与普通 API 有根本的不同。它不是简单的请求/响应就结束，而是一套多阶段流程：LLM 推理 → 工具调用 → 结果处理 → 再推理。出错时，很难立即看出是哪个阶段因为什么原因失败了。速度慢时，也搞不清楚时间消耗在哪里。在成本方面，更难分析是哪个查询消耗了大量 Token。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-03-06-agent-observability-application-insights-opentelemetry-trace-analysis-part-4/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
@@ -454,6 +456,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
     </li>
     
@@ -489,10 +495,6 @@
         <a href="https://beanhsiang.github.io/post/2026-09-06-mbml-recommender_learning_about_people_and_movies/" title="[译]基于模型的机器学习 - 5.1 学习用户和电影" target="_blank">[译]基于模型的机器学习 - 5.1 学习用户和电影</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/" title="人机协同里，卡住我们的常常不是机器，是人" target="_blank">人机协同里，卡住我们的常常不是机器，是人</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -512,7 +514,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (41)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (42)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

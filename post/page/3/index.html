@@ -75,6 +75,41 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-08-11-mbml-emailclassifier_a_model_for_classification/" title="[译]基于模型的机器学习 - 4.2 一个用于分类的模型" target="_blank">[译]基于模型的机器学习 - 4.2 一个用于分类的模型</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-08-11T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年8月11日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>为一个数据项预测标签（例如“回复”或“不回复”）的问题称为<strong>分类</strong>（classification）。执行<strong>分类</strong>的系统被称为<strong>分类器</strong>（classifier），它们大概是当今使用最广泛的机器学习<a href="/post/2025-04-21-mbml-introduction">算法</a>。可用的<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>有许多种，而对某个特定的预测任务，有些会比另一些效果更好。解决<strong>分类</strong>问题的一种常见做法是尝试几种不同的<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>，看看哪一种效果最好。这种做法忽略了<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>在相同数据上做出不同预测的根本原因：每个<a href="/post/2025-04-21-mbml-introduction">算法</a>都隐含地对数据做出了不同的假设。遗憾的是，这些假设被隐藏在每个<a href="/post/2025-04-21-mbml-introduction">算法</a>的内部。</p>
+<p>你可能会惊讶地得知，许多<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>都可以被解释为在某个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>中进行<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a>。因此，与其运行一个<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>，我们不如构建相应的<a href="/post/2025-04-21-mbml-introduction">模型</a>，并使用一个<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>来做<strong>分类</strong>。我们为什么要这样做，而不直接使用<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">算法</a>呢？因为一种<a href="/post/2025-04-21-mbml-introduction">基于模型</a>的<strong>分类</strong>方法给我们带来若干好处：</p>
+<ul>
+<li><strong>分类器</strong>中的假设被显式化。这有助于我们理解<strong>分类器</strong>在做什么，从而让我们可以改进使用它的方式以获得更好的预测准确率。</li>
+<li>我们可以修改<a href="/post/2025-04-21-mbml-introduction">模型</a>来提升其准确率，或赋予它超出原<strong>分类器</strong>能力之外的新能力。</li>
+<li>我们可以使用标准的<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>来同时训练<a href="/post/2025-04-21-mbml-introduction">模型</a>和做出预测。这在修改<a href="/post/2025-04-21-mbml-introduction">模型</a>时特别有用，因为训练和预测<a href="/post/2025-04-21-mbml-introduction">算法</a>会与修改后的<a href="/post/2025-04-21-mbml-introduction">模型</a>保持同步。此外，不同的<a href="/post/2025-04-21-mbml-introduction">算法</a>在速度与准确率之间有不同的权衡。我们可以选择最适合我们需求的<a href="/post/2025-04-21-mbml-introduction">算法</a>，同时保留我们所有的建模假设。</li>
+</ul>
+<p>这些好处并不小——在本章中，你将看到这三点如何都对交付一个成功的系统至关重要。我们将展示如何从零开始、通过对给定数据项时标签如何产生做出一系列假设，来构建一个广泛使用的<strong>分类器</strong>的<a href="/post/2025-04-21-mbml-introduction">模型</a>。随后我们将展示如何扩展这个最初的<strong>分类</strong><a href="/post/2025-04-21-mbml-introduction">模型</a>，以实现邮件<strong>分类</strong>系统所需的各种能力。在<a href="/post/2025-04-21-mbml-introduction">模型</a>演化的整个过程中，我们将使用一个标准的<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>（<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>）来做训练和预测。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-11-mbml-emailclassifier_a_model_for_classification/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-08-06-microsoft-foundry-quota-tiers/" title="Microsoft Foundry 的 Quota Tiers" target="_blank">Microsoft Foundry 的 Quota Tiers</a>
             </h1>
         </header>
@@ -266,7 +301,94 @@
 <blockquote>
 <p><strong>推断深入探讨</strong></p>
 <p>在这个可选小节中，我们引入期望传播这一<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a>技术，我们将在本书中广泛使用它。如果你想专注于建模，尽可跳过本小节。</p>
-<p>回到<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.12</a>（为方便起见在图 3.21 中重现），我们看到消息 (6) 是我们遇到的第一个非高斯消息。</p>……
+<p>回到<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.12</a>（为方便起见在图 3.21 中重现），我们看到消息 (6) 是我们遇到的第一个非高斯消息。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessages.png">
+            <img class="mx-auto" alt="图 3.21" src="/uploads/TrueSkill_TwoPlayersMessages.png" />
+        </a>
+    </p>
+<p><em>图 3.21：在应用<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>计算 <code>Jskill</code> 更新分布时出现的消息。（重现自<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.12</a>。）</em></p>
+<p>因此我们的目标是用一个高斯来近似消息 (6)，从而确保所有后续消息也都是<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>。</p>
+<p>尽管这似乎是一个可取的目标，但也似乎存在一个重大障碍——如<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.17</a> 所示，消息 (6) 的精确形式看起来一点也不像高斯！事实上，它的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>甚至都没有良好定义（两者都是无穷）。找到一个合理高斯近似的关键在于注意到：消息 (6) 的近似版本随后会作为消息 (7) 和 (8) 的修改形式在图中传递，然后会被向下的消息 (9) 相乘，以确定 <code>Jskill</code> 的（近似）<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>分布。因此我们的目标将是：让消息 (6)（关于 <code>Jperf</code>）的高斯近似在那些被图中其他部分传来的信息认为更可能的区域上最为精确。然而，正如我们刚刚讨论的，我们需要把近似保持在图中生成该消息的局部区域内。消息 (6) 被发送到节点 <code>Jperf</code>，因此我们可以选择我们的近似，使 <code>Jperf</code> 边缘分布的精度最大化。这通过把消息 (6) 乘以图中同一条边上向下的消息得到，后者可如图 3.22 所示计算。注意，求 <code>Fskill</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>边缘时也需要这些相同的消息，因此计算它们并不引入额外开销。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessagesContext.png">
+            <img class="mx-auto" alt="图 3.22" src="/uploads/TrueSkill_TwoPlayersMessagesContext.png" />
+        </a>
+    </p>
+<p><em>图 3.22：计算将用于为消息 (6) 找高斯近似的“上下文”消息。</em></p>
+<p>让我们更详细地考虑<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>中靠近 <code>Jperf</code> 节点的部分，如图 3.23 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessagesContextZoom.png">
+            <img class="mx-auto" alt="图 3.23a" src="/uploads/TrueSkill_TwoPlayersMessagesContextZoom.png" />
+        </a>
+    </p>
+<p><em>(a)</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessagesContextZoom2.png">
+            <img class="mx-auto" alt="图 3.23b" src="/uploads/TrueSkill_TwoPlayersMessagesContextZoom2.png" />
+        </a>
+    </p>
+<p><em>(b)</em></p>
+<p><em>图 3.23：<code>Jperf</code> 节点周围<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>的细节，展示所涉及的消息：(a) 运行<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>时；(b) 对来自 <code>GreaterThan</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的向上消息做局部高斯近似时。</em></p>
+<p>这里 $e$ 表示此前在<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.20</a> 中所见的精确消息 (6)，$c$ 表示向下的“上下文”消息，$g$ 表示我们所需的对消息 $e$ 的高斯近似。这些消息都只是变量 <code>Jperf</code> 的函数。我们已经看到，我们不能简单地用高斯来近似消息 $e$，因为消息 $e$ 具有无穷的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>。相反，我们对 <code>Jperf</code> 的边缘分布做高斯近似。精确的边缘由入向消息之积 $ce$ 给出。因此我们把近似消息 $g$ 定义为：使消息 $c$ 与 $g$ 之积给出的 <code>Jperf</code> 边缘分布是对真实边缘的最佳高斯近似，从而</p>
+$$cg = \text{Proj}\left( ce \right). \tag{3.14}$$<p>这里 Proj() 表示“投影”，代表用一个具有相同均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>的高斯替换一个非<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>的过程。这可以看作把精确消息投影到<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>族中“最近”的消息上。两边同除以 $c$，我们于是得到</p>
+$$g = \frac{\text{Proj}\left( ce \right)}{c}. \tag{3.15}$$<p>如何做到这一点的数学细节在 Herbrich 等人 [2007] 中讨论。</p>
+<p>因此我们如下为精确消息 (6) 找到一个高斯近似。首先我们像之前一样计算精确的输出消息 (6)。它在图 3.24 中以蓝色显示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[2].png">
+            <img class="mx-auto" alt="图 3.24" src="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[2].png" />
+        </a>
+    </p>
+<p><em>图 3.24：蓝色为精确的输出消息 (6)，红色为入向的上下文消息 $c$，绿色为这两条消息之积。</em></p>
+<p>然后我们把它乘以入向的上下文消息 $c$（在图 3.24 中以红色显示）。这给出一个分布（在图 3.24 中以绿色显示），它是非高斯的，但是局部化的，因此具有有限的均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>，从而可以用一个高斯来近似。这条曲线在图 3.25 中重复出现，图 3.25 还展示了具有相同均值和<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>的<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[3].png">
+            <img class="mx-auto" alt="图 3.25" src="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[3].png" />
+        </a>
+    </p>
+<p><em>图 3.25：绿色为从图 3.24 复制来的、真实<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>消息与入向上下文消息之积。橙色为对此积的高斯近似，即 Gaussian(140.4, 28.5²)。</em></p>
+<p>最后，我们把这个<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">高斯分布</a>除以入向的高斯上下文消息 $c$，以生成我们的近似输出消息。因为两个高斯之比本身也是一个高斯 [Bishop, 2006]，所得的输出消息也将是高斯的，这正是我们最初的目标。对于我们这个具体例子，这条消息是一个均值为 160.8、<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>为 40.2 的高斯。近似消息的计算过程总结于图 3.26。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[4].png">
+            <img class="mx-auto" alt="图 3.26" src="/uploads/TrueSkill_3ASolutionExpectationPropagationTheExpectationPropagationMessageExample_Subplots[4].png" />
+        </a>
+    </p>
+<p><em>图 3.26：计算消息 (6) 高斯近似所涉及的步骤。蓝色曲线为精确消息 (6)，红色曲线为入向上下文消息 $c$，橙色曲线为真实消息与上下文消息之积的高斯近似，即 Gaussian(140.4, 28.5²)。最后，紫色曲线为橙色曲线除以红色上下文消息的结果，给出 Gaussian(160.8, 40.2²)。这个高斯随后被用作消息 (6)。</em></p>
+<p>我们看到，总体上我们先乘以入向上下文消息，然后做高斯近似，最后再把上下文消息除掉。因此入向消息所提供的证据仅用于确定高斯近似应当在哪个区域上精确，而不会被直接并入近似消息本身。如果我们恰好有一个<a href="https://www.mbmlbook.com/TrueSkill_Inferring_the_players_skills.html#conjugate">共轭分布</a>，那么投影运算就没有必要，上下文消息也不会产生任何影响。</p>
+<p>既然我们已经为输出消息 (6) 找到了合适的高斯近似，我们就可以继续沿图传递消息，给出相应的近似消息 (7)，如图 3.27 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessagesApprox.png">
+            <img class="mx-auto" alt="图 3.27" src="/uploads/TrueSkill_TwoPlayersMessagesApprox.png" />
+        </a>
+    </p>
+<p><em>图 3.27：计算 <code>Jskill</code> 更新分布时的消息 (5)、(6) 和 (7)。注意以橙色高亮的消息 (6) 和 (7) 不同于<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.18</a> 中的精确消息，它们均为 Gaussian(160.8, 40.2²)。</em></p>
+<p>对新的（近似）版本消息 (8) 的计算同样涉及一个高斯与一个高斯的<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">卷积</a>，结果如图 3.28 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/TrueSkill_TwoPlayersMessagesApprox__1.png">
+            <img class="mx-auto" alt="图 3.28" src="/uploads/TrueSkill_TwoPlayersMessagesApprox__1.png" />
+        </a>
+    </p>
+<p><em>图 3.28：计算 <code>Jskill</code> 更新分布时的消息 (8) 和 (9)。注意除了消息 (6) 和 (7)，消息 (8)（橙色，Gaussian(160.8, 40.5²)）也不同于<a href="/post/2026-07-28-mbml-trueskill_inferring_the_players_skills">图 3.19</a> 中的精确消息。</em></p>
+<p>向下的消息 (9) 保持不变，因此我们最终可以把 <code>Jskill</code> <a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>的高斯近似计算为两个高斯之积，给出最终结果：一个均值为 140.1、<a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">标准差</a>为 28.5 的高斯。</p>
+<p>这种在消息传递过程中局部近似消息的方法被称为<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#expectation_propagation">期望传播</a>（expectation propagation，简称 EP），由 Minka [2001] 提出。近似是在<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>处局部做出的，而且其方式<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">独立</a>于图其余部分的结构。因此，只要每个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>都一致地用所需的分布类型（此处为高斯）发送和接收消息，该技术就可以应用于任意结构的图。<a href="https://www.mbmlbook.com/TrueSkill_A_solution__expectation_propagation.html#expectation_propagation">期望传播</a><a href="/post/2025-04-21-mbml-introduction">算法</a>总结于算法 3.1，其中与<a href="/post/2026-06-16-mbml-learning-skills_loopiness">循环置信传播</a>的差异以红色高亮。</p>
+<blockquote>
+<p><strong>算法 3.1：期望传播</strong></p>
+<p><strong>输入</strong>：<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>、要计算边缘的目标变量列表、<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>、初始消息值（可选）、每条边的近似分布选择。</p>
+<p><strong>输出</strong>：目标变量的边缘分布。</p>
+<ol>
+<li>把所有消息初始化为均匀（或初始值，若已提供）。</li>
+<li>对消息传递调度中的每一条边：发送下面适当的消息——
+<ul>
+<li><a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>消息：在其他边上收到的<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">所有消息之积</a>；</li>
+<li><a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子节点</a>消息：计算<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">置信传播</a>消息（见算法 2.1）。乘以上下文消息（在这条边上朝该因子传来的消息）。用矩匹配把它投影到这条边所需的分布类型。把上下文消息除掉。</li>
+<li>观测节点消息：在观测值处的一个<a href="/post/2025-04-22-mbml-murder-mystery">点质量</a>；</li>
+</ul>
+</li>
+<li>直到所有消息收敛。</li>
+<li>在每个目标<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">变量节点</a>处，把所有入向消息之积计算为边缘分布。</li>
+</ol>
+</blockquote>
+</blockquote>……
         </div>
         <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" target="_blank">阅读全文</a></p>
     </article>
@@ -362,45 +484,6 @@
 <p>对于游戏而言，在线世界的一大优势在于随时随地都能找到对手，无论白天黑夜。Xbox Live 的一项重要需求，是能够找到技能水平相当的对手，以便让玩家获得愉快的游戏体验。这一需求意味着系统必须有办法估计玩家的技能。然而，要做到这一点会面临一些重大挑战——尤其是，实力更强的玩家并不总能赢得一局游戏。许多游戏都带有运气成分，在某一局中运气可能会偏向较弱的玩家。更普遍地说，一名玩家的表现会因疲劳或热情起伏等<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>而在不同对局之间发生变化。因此，我们不能假设某一局的胜者一定比败者技能更高。另一方面，我们确实预期实力更强的玩家在与较弱玩家的对局中，赢的次数会多于输的次数，所以对局结果确实能提供关于玩家相对技能的有用信息。</p>……
         </div>
         <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-26-mbml-trueskill/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" title="[译]基于模型的机器学习 - 插曲：机器学习生命周期" target="_blank">[译]基于模型的机器学习 - 插曲：机器学习生命周期</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-25T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月25日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>回到<a href="/post/2025-04-22-mbml-murder-mystery">第 1 章</a>处理谋杀之谜时，我们首先从犯罪现场收集证据，然后运用我们自己的知识来构建这起谋杀的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>。我们以观测变量的形式，把犯罪现场的证据整合进<a href="/post/2025-04-21-mbml-introduction">模型</a>，并执行<a href="/post/2025-04-21-mbml-introduction">推断</a>来回答我们关心的查询：每个嫌疑人是凶手的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>是多少？随后我们评估<a href="/post/2025-04-21-mbml-introduction">推断</a>的结果是否足够好——也就是说，<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>是否高到足以认定谋杀已被侦破？当结果不够好时，我们便收集更多数据、扩展<a href="/post/2025-04-21-mbml-introduction">模型</a>、重新运行<a href="/post/2025-04-21-mbml-introduction">推断</a>，最终达到了我们的目标<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。</p>
-<p>在<a href="/post/2026-01-06-mbml-learning-skills">第 2 章</a>评估求职者技能时，我们从参加真实测试的人那里收集数据并对这些数据进行了可视化。然后我们基于对人们如何做测试的知识建立了一个<a href="/post/2025-04-21-mbml-introduction">模型</a>。我们运行了<a href="/post/2025-04-21-mbml-introduction">推断</a>，并评估出结果不够好。我们诊断了问题、扩展了<a href="/post/2025-04-21-mbml-introduction">模型</a>，然后对原始<a href="/post/2025-04-21-mbml-introduction">模型</a>和扩展后的<a href="/post/2025-04-21-mbml-introduction">模型</a>都进行了评估，以量化改进程度，并检查改进后的<a href="/post/2025-04-21-mbml-introduction">模型</a>是否达到了我们的成功标准。</p>
-<p>我们可以从这两个例子出发进行归纳，定义出任何<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>应用所需的步骤：</p>
-<ol>
-<li>收集用于训练和评估<a href="/post/2025-04-21-mbml-introduction">模型</a>的数据。</li>
-<li>收集知识，以帮助做出恰当的建模假设。</li>
-<li>可视化数据，以更好地理解它、检查数据问题，并获得对有用建模假设的洞见。</li>
-<li>构建一个<a href="/post/2025-04-21-mbml-introduction">模型</a>，使其捕捉关于问题领域的知识，并与你对数据的理解相一致。</li>
-<li>执行<a href="/post/2025-04-21-mbml-introduction">推断</a>，利用数据来固定其他变量的取值，从而对我们关心的变量做出预测。</li>
-<li>使用某种<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">评估指标</a>来评估结果，看它们是否满足目标应用的成功标准。</li>
-</ol>
-<p>在（通常的）系统第一次未能满足成功标准的情况下，还需要额外的两个步骤：</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-25-mbml-life-cycle/" target="_blank">阅读全文</a></p>
     </article>
     
     
@@ -531,6 +614,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
     </li>
     
@@ -566,10 +653,6 @@
         <a href="https://beanhsiang.github.io/post/2026-09-06-mbml-recommender_learning_about_people_and_movies/" title="[译]基于模型的机器学习 - 5.1 学习用户和电影" target="_blank">[译]基于模型的机器学习 - 5.1 学习用户和电影</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-05-human-ai-collaboration-the-real-obstacle-is-people/" title="人机协同里，卡住我们的常常不是机器，是人" target="_blank">人机协同里，卡住我们的常常不是机器，是人</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -589,7 +672,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (41)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (42)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

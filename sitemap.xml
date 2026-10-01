@@ -2,13 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/</loc>
-    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
+    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
+    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
+    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
+    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/</loc>
+    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/</loc>
     <lastmod>2026-09-26T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
@@ -20,20 +35,8 @@
     <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
     <lastmod>2026-09-26T10:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
-    <lastmod>2026-09-26T10:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/</loc>
     <lastmod>2026-09-22T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
-    <lastmod>2026-09-19T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
-    <lastmod>2026-09-19T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/</loc>
     <lastmod>2026-09-19T12:00:00+08:00</lastmod>

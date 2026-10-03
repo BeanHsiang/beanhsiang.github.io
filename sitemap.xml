@@ -2,23 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://beanhsiang.github.io/tags/AI-Agents/</loc>
+    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/GitHub-Copilot/</loc>
+    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/GitHub-Copilot/</loc>
+    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/HydraFusion/</loc>
+    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
-    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
-    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/</loc>
-    <lastmod>2026-10-01T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/</loc>
+    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/</loc>
     <lastmod>2026-10-01T12:00:00+08:00</lastmod>
@@ -282,9 +297,6 @@
     <lastmod>2025-08-12T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Azure-AI/</loc>
-    <lastmod>2025-07-03T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/GitHub-Copilot/</loc>
     <lastmod>2025-07-03T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/</loc>
@@ -562,9 +574,6 @@
   </url><url>
     <loc>https://beanhsiang.github.io/post/2023-12-03-announcing-ml-net-3-0/</loc>
     <lastmod>2023-12-03T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/GitHub-Copilot/</loc>
-    <lastmod>2023-11-27T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2023-11-27-coding-with-github-copilot-in-vs-code/</loc>
     <lastmod>2023-11-27T12:00:00+08:00</lastmod>

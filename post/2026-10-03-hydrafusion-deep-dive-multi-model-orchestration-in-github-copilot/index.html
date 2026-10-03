@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流 | Innovation with tech</title>
+    <meta property="og:title" content="深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-10-03T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-10-03T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</h1>
+        </header>
+        
+  <time datetime="2026-10-03T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月3日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/GitHub-Copilot' target="_blank">GitHub Copilot</a>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20261003161935-b6ce6421d9b945eaad5a7a0edd63dc86.jpg">
+            <img class="mx-auto" alt="Research preview: HydraFusion. Advanced runtime model orchestration in GitHub Copilot." src="/uploads/20261003161935-b6ce6421d9b945eaad5a7a0edd63dc86.jpg" />
+        </a>
+    </p>
+<p><em>题图来自 GitHub Blog 的 <a href="https://github.blog/ai-and-ml/github-copilot/project-hydrafusion-frontier-quality-via-multi-model-orchestration/?WT.mc_id=AI-MVP-5003172">Project HydraFusion</a>。</em></p>
+<p>9 月初 GitHub 放出了 HydraFusion，一个在 Copilot 模型选择器里排着的&quot;模型&quot;，但它其实不是模型。我把官方博客、Changelog、社区讨论帖、HyDRA 论文和 Rubber Duck 的两篇文章放在一起读了一遍，想弄清楚三件事：它到底在每一轮里做了什么，那组&quot;成本降 67%、质量还更高&quot;的数字能信到什么程度，以及现在值不值得切过去用。</p>
+<p>先说明一下：这篇文章里的所有数字都来自官方材料和社区帖子，我没有自己跑过评测。我能做的是把材料对齐、把推导补上，并且指出哪些地方我觉得证据还不够。</p>
+<h2 id="一句话版本">一句话版本</h2>
+<p>Auto 回答的问题是&quot;这个请求该交给哪个模型&quot;。HydraFusion 回答的是&quot;这个请求该用什么流程来做，流程里需要几个模型&quot;。从选模型到选工作流，抽象层级上了一层，后面所有的设计取舍都是从这一点推出来的。</p>
+<h2 id="它是怎么一步步演变过来的">它是怎么一步步演变过来的</h2>
+<p>官方在社区 FAQ 里给了一条很清楚的时间线：</p>
+<table>
+	<thead>
+			<tr>
+					<th>阶段</th>
+					<th>时间</th>
+					<th>做什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Auto V1</td>
+					<td>2026 年 1 月</td>
+					<td>按容量和 SKU 感知，为每个请求选一个模型</td>
+			</tr>
+			<tr>
+					<td>Auto V2（HyDRA）</td>
+					<td>2026 年 5 月</td>
+					<td>按任务意图打分，路由到够用且最省的模型</td>
+			</tr>
+			<tr>
+					<td>HydraFusion</td>
+					<td>2026 年 8 月至 9 月</td>
+					<td>按轮次编排多个模型，并带缓存感知的工作流</td>
+			</tr>
+	</tbody>
+</table>
+<p>另一条线是 Critique 这个模式的来源。2026 年 4 月 Copilot CLI 上线了 Rubber Duck，让另一个模型家族的模型充当只读评审，5 月又扩展成双向配对。HydraFusion 的博客明确写了 Critique&quot;遵循与 Rubber Duck 相同的评审模式&quot;。</p>
+<p>所以 HydraFusion 不是凭空冒出来的新东西。它把 HyDRA 的&quot;路由&quot;和 Rubber Duck 的&quot;评审&quot;装进了同一个运行时，再加上&quot;升级&quot;这一手。这个来龙去脉，官方博客里一句带过，我觉得挺值得拆开讲。</p>
+<h2 id="三种执行模式">三种执行模式</h2>
+<p>每个请求进来，HydraFusion 目前在三种模式里挑一种：</p>
+<ul>
+<li>Single：选定一个模型，直接解决。</li>
+<li>Cascade：一个高效模型先起草，质量闸门判断是接受还是升级给更强的模型。</li>
+<li>Critique：一个模型起草，另一个模型家族的独立只读评审员审查，起草模型据此修订一次。</li>
+</ul>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>请求
+</span></span><span style="display:flex;"><span> └─ 能力信号打分（推理 / 代码生成 / 调试 / 工具使用）
+</span></span><span style="display:flex;"><span>     ├─ Single   ：模型 A ──────────────────────► 结果
+</span></span><span style="display:flex;"><span>     ├─ Cascade  ：高效模型起草 ─► 质量闸门
+</span></span><span style="display:flex;"><span>     │                              ├─ 通过 ─────► 结果
+</span></span><span style="display:flex;"><span>     │                              └─ 不通过 ─► 强模型接手 ─► 结果
+</span></span><span style="display:flex;"><span>     └─ Critique ：模型 A 起草 ─► 模型 B 评审（只读、无工具）
+</span></span><span style="display:flex;"><span>                                  └─► 模型 A 修订一次 ─► 结果
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>官方对三者的定位是这样的：Single 在一个模型就能搞定时保住速度和效率；Cascade 让便宜的模型先试一次，同时留一条升级通道；Critique 用在&quot;评审比再试一次更有价值&quot;的任务上。</p>
+<p>官方有一句话我很认同：选择性是关键。有些任务直接做就行，有些需要评审、修订或升级。HydraFusion 会选&quot;预期能满足需求的最简单工作流&quot;，只在额外调用很可能提升结果时才多花一次模型调用。</p>
+<p>另外还有一点容易被忽略。官方说随着前沿模型推进，新模型进入 Copilot 之后会被评估并纳入 HydraFusion 的模型池。这意味着你选的是一个会自己换零件的东西，每次用到的实际模型组合不是固定的，官方也明确说不公布固定名单。</p>
+<h2 id="路由的底座hydra">路由的底座：HyDRA</h2>
+<p>决定&quot;用哪种工作流&quot;靠的是能力信号，这套信号来自 HyDRA。HyDRA 的论文是 2026 年 5 月上 arXiv 的，作者里 Aashna Garg 和 Shengyu Fu 同时出现在 HydraFusion 的团队名单里，两者的继承关系很直接。</p>
+<p>论文的做法是这样的：</p>
+<ul>
+<li>用一个 ModernBERT 编码器，后面接 K=4 个相互独立的 sigmoid 头，对每个查询分别预测推理、代码生成、调试和工具使用四个维度的能力需求。</li>
+<li>模型池里每个模型的能力画像写在配置里，路由时做&quot;缺口匹配&quot;（shortfall matching），选出能力满足预测需求的最便宜模型。</li>
+<li>预测器和模型目录完全解耦。增删模型只改配置，不用重新训练。线上预测器的 CPU 推理延迟中位数是 86 毫秒。</li>
+</ul>
+<p>我觉得&quot;与模型目录解耦&quot;是整套体系里最实用的一点，也解释了为什么 HydraFusion 敢说新模型一上线就能纳入。如果路由器的参数绑定了具体模型，每次换模型都得重训，这个迭代节奏根本跟不上现在的发布速度。</p>
+<p>为了帮自己理解缺口匹配，我写了一段示意代码。它不是官方实现，只是把&quot;满足需求的最便宜模型&quot;这句话翻译成代码：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#57606a"># 示意：按能力缺口选模型，threshold 越大越激进（省钱）</span>
+</span></span><span style="display:flex;"><span><span style="color:#cf222e">def</span> <span style="color:#6639ba">route</span><span style="color:#1f2328">(</span>required<span style="color:#1f2328">,</span> pool<span style="color:#1f2328">,</span> threshold<span style="color:#0550ae">=</span><span style="color:#0550ae">0.0</span><span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">def</span> <span style="color:#6639ba">shortfall</span><span style="color:#1f2328">(</span>m<span style="color:#1f2328">):</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#6639ba">max</span><span style="color:#1f2328">(</span><span style="color:#6639ba">max</span><span style="color:#1f2328">(</span><span style="color:#0550ae">0.0</span><span style="color:#1f2328">,</span> required<span style="color:#1f2328">[</span>k<span style="color:#1f2328">]</span> <span style="color:#0550ae">-</span> m<span style="color:#0550ae">.</span>cap<span style="color:#1f2328">[</span>k<span style="color:#1f2328">])</span> <span style="color:#cf222e">for</span> k <span style="color:#0550ae">in</span> required<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ok <span style="color:#0550ae">=</span> <span style="color:#1f2328">[</span>m <span style="color:#cf222e">for</span> m <span style="color:#0550ae">in</span> pool <span style="color:#cf222e">if</span> shortfall<span style="color:#1f2328">(</span>m<span style="color:#1f2328">)</span> <span style="color:#0550ae">&lt;=</span> threshold<span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">if</span> ok<span style="color:#1f2328">:</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#cf222e">return</span> <span style="color:#6639ba">min</span><span style="color:#1f2328">(</span>ok<span style="color:#1f2328">,</span> key<span style="color:#0550ae">=</span><span style="color:#cf222e">lambda</span> m<span style="color:#1f2328">:</span> m<span style="color:#0550ae">.</span>cost<span style="color:#1f2328">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#cf222e">return</span> <span style="color:#6639ba">min</span><span style="color:#1f2328">(</span>pool<span style="color:#1f2328">,</span> key<span style="color:#0550ae">=</span>shortfall<span style="color:#1f2328">)</span>  <span style="color:#57606a"># 没有满足的就选缺口最小的</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>论文里 SWE-Bench Verified 的结果对应这个阈值的三个档位。模型池是 5 个模型：GPT-5.4-mini、Claude Haiku 4.5、GPT-5.3 Codex、Claude Sonnet 4.6 和 GPT-5.4。</p>
+<table>
+	<thead>
+			<tr>
+					<th>档位</th>
+					<th>质量</th>
+					<th>成本</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>峰值质量</td>
+					<td>解决率 75.4%，高于始终使用 Sonnet 4.6 的 74.2%</td>
+					<td>省 12.9%</td>
+			</tr>
+			<tr>
+					<td>等质量</td>
+					<td>与 Sonnet 4.6 持平</td>
+					<td>省 54.1%（此前自研二元路由器仅省 9.1%，约 6 倍提升）</td>
+			</tr>
+			<tr>
+					<td>激进</td>
+					<td>质量下降 3.2 个点</td>
+					<td>省 72.5%</td>
+			</tr>
+	</tbody>
+</table>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261003161936-e6bc98a5aa024257a567229da37b7fdc.png">
+            <img class="mx-auto" alt="HyDRA 三个工作点：峰值档比 Sonnet 高、省 12.9%；激进档省 72.5%" src="/uploads/20261003161936-e6bc98a5aa024257a567229da37b7fdc.png" />
+        </a>
+    </p>
+<p><em>图：HyDRA 的三个工作点（来自 <a href="https://github.blog/ai-and-ml/github-copilot/getting-more-from-each-token-how-copilot-improves-context-handling-and-model-routing/?WT.mc_id=AI-MVP-5003172">Getting more from each token</a>）。</em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261003161937-0065dfb4ce2346a8ac32e7bf44c46235.png">
+            <img class="mx-auto" alt="HyDRA（保守档）与 OpenRouter Auto 解决率同为 70.8%，节省是后者的 3.3 倍" src="/uploads/20261003161937-0065dfb4ce2346a8ac32e7bf44c46235.png" />
+        </a>
+    </p>
+<p><em>图：保守档与 OpenRouter Auto 的解决率持平（70.8%），节省是 3.3 倍。</em></p>
+<p>6 月那篇 Auto 博客还透露了几个落地细节，我觉得对理解 HydraFusion 同样重要：</p>
+<ul>
+<li>缓存感知路由。在一段对话里频繁换模型会破坏提示词前缀缓存，省下的钱可能不够补缓存失效的损失。Auto 只在自然的缓存边界做路由：第一轮（本来没有缓存），以及上下文压缩之后（前缀本来就要重置）。HydraFusion 的 FAQ 里也提到了&quot;缓存感知的工作流&quot;。</li>
+<li>跨语言一致。路由模型用 16 个语系的对话训练，评估里各语言组的路由准确率与英文基线相差不超过 4 个点，质量没有统计上显著的差距。评估集取自生产环境 VS Code 聊天遥测，覆盖 19 种语言。</li>
+<li>学习&quot;什么时候升级才有用&quot;。不是把任务简单标成难或易，而是对每条训练查询，比较弱模型和强模型的回答在多个质量维度上的差异，让路由器学会强模型到底在哪里更好。</li>
+</ul>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261003161937-589d469e62824f38af043f6ff8d63fb3.png">
+            <img class="mx-auto" alt="路由效果在英文、欧洲语言、CJK 和其他文字之间的对比" src="/uploads/20261003161937-589d469e62824f38af043f6ff8d63fb3.png" />
+        </a>
+    </p>
+<p><em>图：智能路由与英文基线的差距在 4 个点以内。</em></p>
+<h2 id="critique-的前身rubber-duck">Critique 的前身：Rubber Duck</h2>
+<p>HydraFusion 的 Critique 模式沿用了 Rubber Duck 的评审模式，所以有必要看看 Rubber Duck 的设计理由。</p>
+<p><a href="https://github.blog/ai-and-ml/github-copilot/github-copilot-cli-combines-model-families-for-a-second-opinion/?WT.mc_id=AI-MVP-5003172">4 月那篇文章</a>的出发点是：编码代理早期做的决定，尤其是规划阶段的决定，会变成后面所有工作的地基，错误的假设和低效的做法会变成依赖。让模型自查是有效的老办法，但自查受限于同一套训练数据和技术，盲区也是同一批。所以 Rubber Duck 让另一个家族的模型当评审。</p>
+<p>几个数字值得记下来：</p>
+<ul>
+<li>在 SWE-Bench Pro 上，Claude Sonnet 4.6 搭配运行 GPT-5.4 的 Rubber Duck，补上了 Sonnet 与 Opus 4.6 之间 74.7% 的性能差距。</li>
+<li>在跨 3 个以上文件、通常要 70 多步的难题上，Sonnet 加 Rubber Duck 比 Sonnet 基线高 3.8%；在三次试验中识别出的最难问题上高 4.8%。</li>
+</ul>
+<p>文章还举了三个被抓出来的例子，我读着觉得很能说明评审的价值所在：</p>
+<ul>
+<li>调度器会启动后立刻退出、一个任务都不跑（OpenLibrary 的异步调度器），就算修好，其中一个任务本身还是死循环。</li>
+<li>循环里每次迭代都覆盖同一个 <code>dict</code> 键，导致四个 Solr 分面类别里有三个从每次搜索里消失，而且不报任何错误。</li>
+<li>三个文件都在读一个 Redis 键，而新代码已经不再写它，部署后确认界面和清理路径会静默失效。</li>
+</ul>
+<p>复杂任务里，Copilot 会在回报最高的几个检查点自动寻求评审：规划完成后，复杂实现之后，写完测试但执行之前。代理卡住时也会主动求助，用户随时可以手动要求评审。设计上刻意&quot;少用&quot;，只在信号最强的时刻调用。</p>
+<p>5 月的 <a href="https://github.blog/changelog/2026-05-07-rubber-duck-in-github-copilot-cli-now-supports-more-models/?WT.mc_id=AI-MVP-5003172">Changelog</a> 把它扩展成双向：选 GPT 作为编排者时，评审员换成 Claude；选 Claude 时，评审员升级为 GPT-5.5。这就是 HydraFusion 里&quot;来自不同模型家族的独立评审员&quot;的工程基础。</p>
+<p>有了这个背景再看 Critique 模式：起草 → 异家族评审 → 起草者修订一次。只修订一次，评审成本有明确的上限，这和下面要讲的&quot;有界执行&quot;原则是对得上的。</p>
+<h2 id="运行时设计五条原则">运行时设计：五条原则</h2>
+<p>多模型编排听上去很美，真正难的是让它在一个会修改仓库的编码代理里可靠地工作。官方列了五条运行原则：</p>
+<ul>
+<li>完整计量：汇总工作流每一段（起草、评审、修订、升级、重试、回退）的成本和用量。</li>
+<li>有界执行：每一段都有明确的超时和取消行为，把执行时间和成本控制在边界内。</li>
+<li>隔离评审：评审在隔离的、没有工具的上下文里运行，求解步骤使用共享工作区和正常的权限感知代理循环。评审模型能独立判断，同时碰不到仓库。</li>
+<li>故障安全应用：工作流被取消或验证失败时，不应用任何补丁，避免未完成的修改进入仓库。</li>
+<li>验证路由：执行前先校验工作流定义、模型绑定、回退行为和模型可用性。</li>
+</ul>
+<p>内部会记录每一段的角色、结果、成本、延迟和诊断信息，事后能复盘。对外则只给开发者一个连贯的回答和一份带权限感知的变更集。</p>
+<p>我觉得其中最关键的是&quot;隔离评审&quot;和&quot;故障安全应用&quot;。前者保证评审员不会一边审一边改，后者保证半途而废的结果不会留在仓库里。多模型流水线里最怕的就是中间态泄漏，这两条正好堵住了。</p>
+<h3 id="看一次真实的-cascade-交接">看一次真实的 Cascade 交接</h3>
+<p>社区帖子里有位用户贴出了会话日志里的一条事件，能看到 Cascade 升级时发生了什么。下面是帖子里可见的字段，内容被截断的部分我用省略号表示：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;type&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;session.fusion_handoff&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;data&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;fusionId&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;fusion-2d2a6f1d-…&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;sourcePhaseId&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;fusion-2d2a6f1d-…:judge&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;targetPhaseId&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;fusion-2d2a6f1d-…:repair&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;targetModel&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;gpt-5.6-sol&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;message&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;role&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;user&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0550ae">&#34;content&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;HydraFusion Cascade escalation.\nComplete the original
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">        task in the current workspace. The workspace may contain an
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">        incomplete prior attempt; inspect it independently, preserve
+</span></span></span><span style="display:flex;"><span><span style="color:#0a3069">        correct work, …&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这条记录有几处信息量很大。阶段 ID 以 <code>:judge</code> 和 <code>:repair</code> 结尾，说明 Cascade 里有专门的&quot;裁判&quot;阶段和&quot;修复&quot;阶段。升级给 GPT-5.6 Sol 的指令明确写着：工作区里可能有上一次未完成的尝试，请独立检查、保留正确的部分。也就是说，强模型接手时看到的是一个&quot;可能有半成品的工作区&quot;，而不是一张白纸，这样能省下重做的成本。</p>
+<p>这位用户的完整流程是：先用 claude-sonnet-5 读记忆库文件，规划阶段跑了 Cascade，实现阶段按 Single 走，测试由 claude-haiku-4.5 执行（他自己判断这更像是子代理而不是 HydraFusion 的选择），最后的代码审查用 gpt-5.6-sol。</p>
+<h2 id="基准测试">基准测试</h2>
+<h3 id="评测设置">评测设置</h3>
+<p>官方在三个智能体编码基准上评估固定的 HydraFusion 策略，对比基线是 Claude Opus 5 和 GPT-5.6 Sol：</p>
+<ul>
+<li>TerminalBench 2.1：终端环境里复杂的多步任务。</li>
+<li>DeepSWE：需要在大型代码库里跨文件理解依赖并给出端到端修复的仓库级任务。</li>
+<li>CheckpointBench：GitHub 内部的多轮基准，取自真实的 Copilot 智能体编码会话。每段对话锚定在一个公开仓库的不可变提交上，保证可回放，并且按语言、任务类型和难度平衡、做过质量清洗。</li>
+</ul>
+<p>CheckpointBench 的构成：难度分布是简单 42.0%、中等 38.8%、困难 19.2%；语言里 Python 系占 33.3%，TypeScript 17.4%，C/C++ 9.8%；任务类型里 Bug 修复与调试占 32.6%，功能实现占 26.4%，代码解释与问答占 15.9%。</p>
+<p>所有比较使用相同的任务输入、工具、执行限制、价格假设、评分条件和缺失结果处理方式，所有模型都在同一个中等推理级别下评估。衡量的是&quot;经验证的任务质量&quot;（确认答对的任务占比）和完整的预估工作流成本，成本包含每一个被调用的环节。</p>
+<h3 id="相对-opus-5-的结果">相对 Opus 5 的结果</h3>
+<table>
+	<thead>
+			<tr>
+					<th>基准</th>
+					<th>成本</th>
+					<th>质量</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>TerminalBench 2.1</td>
+					<td>低 67%</td>
+					<td>+4.9 个百分点</td>
+			</tr>
+			<tr>
+					<td>DeepSWE</td>
+					<td>低 36%</td>
+					<td>-1.5 个百分点</td>
+			</tr>
+			<tr>
+					<td>CheckpointBench</td>
+					<td>低 65%</td>
+					<td>-0.1 个百分点</td>
+			</tr>
+	</tbody>
+</table>
+<p>这里展示的是调优后最好的 HydraFusion 配置。</p>
+<h3 id="完整数据">完整数据</h3>
+<p>我把官方散点图里标注的数值整理成了下面三张表，方便横向看。</p>
+<p>TerminalBench 2.1（pass@1 解决率，每任务平均成本）：</p>
+<table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th>解决率</th>
+					<th>每任务成本</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>HydraFusion</td>
+					<td>84.7%</td>
+					<td>$0.30</td>
+			</tr>
+			<tr>
+					<td>Opus 5</td>
+					<td>79.8%</td>
+					<td>$0.90</td>
+			</tr>
+			<tr>
+					<td>Sonnet 5</td>
+					<td>76%</td>
+					<td>$0.55</td>
+			</tr>
+			<tr>
+					<td>GPT-5.6-Sol</td>
+					<td>73.3%</td>
+					<td>$0.30</td>
+			</tr>
+			<tr>
+					<td>GPT-5.6-Terra</td>
+					<td>72.5%</td>
+					<td>$0.25</td>
+			</tr>
+			<tr>
+					<td>GPT-5.6-Luna</td>
+					<td>56%</td>
+					<td>$0.03</td>
+			</tr>
+	</tbody>
+</table>
+<p>DeepSWE：</p>
+<table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th>解决率</th>
+					<th>每任务成本</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Opus 5</td>
+					<td>64.1%</td>
+					<td>$4.20</td>
+			</tr>
+			<tr>
+					<td>HydraFusion</td>
+					<td>62.6%</td>
+					<td>$2.70</td>
+			</tr>
+			<tr>
+					<td>GPT-5.6-Sol</td>
+					<td>60.4%</td>
+					<td>$2.40</td>
+			</tr>
+			<tr>
+					<td>Sonnet 5</td>
+					<td>38.9%</td>
+					<td>$2.47</td>
+			</tr>
+			<tr>
+					<td>GPT-5.6-Terra</td>
+					<td>37.8%</td>
+					<td>$0.75</td>
+			</tr>
+			<tr>
+					<td>GPT-5.6-Luna</td>
+					<td>20.5%</td>
+					<td>$0.08</td>
+			</tr>
+	</tbody>
+</table>
+<p>CheckpointBench（平均会话得分）：</p>
+<table>
+	<thead>
+			<tr>
+					<th>模型</th>
+					<th>得分</th>
+					<th>每任务成本</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Opus 5</td>
+					<td>77.6%</td>
+					<td>$24.10</td>
+			</tr>
+			<tr>
+					<td>HydraFusion</td>
+					<td>77.5%</td>
+					<td>$8.50</td>
+			</tr>
+			<tr>
+					<td>GPT-5.6-Sol</td>
+					<td>76.1%</td>
+					<td>$7.50</td>
+			</tr>
+			<tr>
+					<td>Sonnet 5</td>
+					<td>75.85%</td>
+					<td>$5.30</td>
+			</tr>
+			<tr>
+					<td>GPT-5.6-Terra</td>
+					<td>75.3%</td>
+					<td>$2.00</td>
+			</tr>
+			<tr>
+					<td>GPT-5.6-Luna</td>
+					<td>74.35%</td>
+					<td>$0.30</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="我读这些数字的几点想法">我读这些数字的几点想法</h3>
+<p>TerminalBench 上最有意思的一行是 GPT-5.6-Sol：成本和 HydraFusion 一样是 $0.30，解决率 73.3%，比 HydraFusion 低 11.4 个点。同样的钱，编排让结果好了一大截。这是我觉得 HydraFusion 论点最有说服力的地方，它比&quot;便宜模型随便凑合&quot;强，也比&quot;贵模型全程在线&quot;划算。</p>
+<p>DeepSWE 就没那么漂亮了。HydraFusion 比 Opus 5 低 1.5 个点，成本低 36%，但它花的 $2.70 其实比 Sol 的 $2.40 还多一点，解决率只高 2.2 个点。仓库级任务看起来是 HydraFusion 的短板。官方没有拆解这里的成本构成，我猜是难题更常触发升级和评审，多出来的调用把成本抬了上去，但这只是我的推测。</p>
+<p>CheckpointBench 的纵轴范围只有 74% 到 79%，六个模型挤在 3.25 个点里。最便宜的 Luna 每任务 $0.30，得分 74.35%，只比 HydraFusion 低 3.15 个点，而成本是它的 1/28。从这张图看，更该问的是这个基准区分度够不够，而不是 HydraFusion 比 Opus 5 省了 65%。官方自己也承认 TerminalBench 的&quot;相对饱和&quot;，所以才补了 DeepSWE。</p>
+<p>还有一点，团队自己讲得很坦诚：这些是受控的离线结果，对应特定的基准版本、工作流配置、模型池和价格假设，是否能迁移到真实开发负载，要靠这次研究预览来验证。官方引用了一位微软主任软件工程师的早期反馈：&ldquo;HydraFusion 的推理和任务解决能力达到或优于 Opus&rdquo;，我把它当成一条轶事看，不算证据。</p>
+<h2 id="策略是怎么爬山调出来的">策略是怎么&quot;爬山&quot;调出来的</h2>
+<p>HydraFusion 的路由策略是在真实 Copilot 使用方式的基础上塑造的，所以才有 CheckpointBench。团队在三个基准上反复改进，目标是整体表现，不是某一个基准。</p>
+<p>调参方式也有意思：不手工调阈值，而是用束搜索（beam search）来构造最优决策策略。每个候选策略都跟一份冻结的基线对比质量、成本和失败模式，保证每次改进都站在稳定的参照上。</p>
+<p>TerminalBench 2.1 的运行序列最完整，所以拿它作为迭代过程的例子。官方说这个进程不是线性的：8 月 11 日到 8 月 25 日之间，评测框架出现两次运行故障，产生了无效运行，这些被排除在性能趋势之外，修复后 HydraFusion 的配置继续提升，到 8 月 25 日达到记录系列里最强的工作点，best-of-2 等效 91.8%。</p>
+<p>官方图里还标了几个节点：8 月 11 日是回退失败（0/89 到 89/89 个代理错误），8 月 14 日是第二次框架故障（11 次重跑，±7.3 个任务的噪声）。图表以 89 道任务为分母，趋势约为每天多解决 0.7 道题。这提醒我，在这个规模上单个任务就占约 1.1 个百分点，几个点的差距要谨慎对待。</p>
+<h2 id="怎么用">怎么用</h2>
+<p>HydraFusion 目前是研究预览，三个入口：</p>
+<p>Copilot CLI：</p>
+<ol>
+<li>运行 <code>/update</code> 安装最新版</li>
+<li>运行 <code>/experimental on</code></li>
+<li>运行 <code>/model</code>，选择 <code>HydraFusion (Research Preview)</code></li>
+</ol>
+<p>VS Code（1.140 或更高版本，或 Insiders）：在 Copilot Chat 模型选择器里选 HydraFusion。没出现的话打开设置 <code>chat.copilot.hydraFusion.enabled</code>。通过组织或企业获得 Copilot 的话，可能需要管理员在组织或企业设置里允许预览功能。</p>
+<p>GitHub Copilot 应用：更新到最新版，打开设置搜索 &ldquo;HydraFusion&rdquo; 并打开，然后在模型选择器里选它。</p>
+<p>可用范围方面，9 月 4 日的博客说 CLI 上所有 Copilot 方案都可以用；9 月 30 日的 Changelog 写的是 Copilot Pro、Pro+、Business 和 Enterprise，Business 和 Enterprise 需要管理员开启预览功能。两处措辞有出入，我以最新的 Changelog 为准。</p>
+<p>计费是按实际调用的模型用 <a href="https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing?WT.mc_id=AI-MVP-5003172">标准费率</a> 计，没有单独的 HydraFusion 收费，一轮的成本是各阶段之和。</p>
+<p>最适合的任务是官方建议的：首轮单提示的编码任务，也就是边界清晰、有一定分量、能在自动驾驶模式下一次交给 Copilot 的任务。多轮迭代的长会话性能是接下来才要重点做的方向。</p>
+<h3 id="和-auto-的区别">和 Auto 的区别</h3>
+<p>9 月 30 日的 Changelog 把这个区别又讲了一遍：Auto 为每个请求选一个模型；HydraFusion 探索 Copilot 怎样既能选工作流，又能在一轮之内协调多个模型。官方说两者最终会合并成一个体验，具体形态还在评估。</p>
+<h2 id="社区在说什么">社区在说什么</h2>
+<p>官方发布帖下面有二十多条评论，我挑了几类有代表性的。</p>
+<p>用起来的感受大多是正面的。有人说质量&quot;相比全程 Opus 5 不算差&quot;，但额度消耗大约只有平时的 10%；另一位在项目起步阶段发现，便宜的 mai-code-1.1-flash 大约承担了 30% 的轮次。也有人把它当作&quot;非前沿任务的默认选择&quot;。</p>
+<p>成本方面并非一边倒。一位用户让它规划并实现一个电影搜索小应用，规划约 500 AIC，实现约 2300 AIC，他说合计占了 Pro+ 额度的 40%。他自己也怀疑超支更多来自带子代理的长会话（他为此另外提了一个关于提示缓存失效的 Issue）。我觉得这个例子说明一件事：HydraFusion 的&quot;省&quot;是相对的，会话结构会影响缓存命中，缓存命中又直接影响费用。</p>
+<p>最集中的抱怨是看不到中间过程。官方 FAQ 的解释是：中间产物可能被评审、修订或丢弃，实时展示会让没做完的东西看起来像最终结果，所以现在只展示工作流阶段，把草稿压住直到返回一个连贯的结果。但用户反馈的实际问题是：</p>
+<ul>
+<li>研究型任务看不到分析内容，只能看到最后的提问&quot;你想怎么处理&quot;。</li>
+<li>要求确认审批时，看不到被审批的计划是什么。</li>
+<li>取消不够及时，会继续跑一段才停。</li>
+<li>实现阶段选了哪个模型不显示，希望有斜杠命令能看各模型的占比，这样才能建立信任。</li>
+</ul>
+<p>官方在 9 月 30 日的 Changelog 里回应了一部分：VS Code 和应用里加了更多进度更新和更清晰的状态。官方也承认&quot;等待却看不到足够信息&quot;是一个真实的权衡。</p>
+<p>还有一批问题到我写这篇文章时在帖子里没看到官方回答，我觉得对企业用户尤其关键：</p>
+<ul>
+<li>内部路由是否严格遵守企业层面禁用模型的策略，包括评审、裁判、回退、升级各阶段的模型？使用的模型是否在已有的数据处理协议覆盖范围内？</li>
+<li>是否尊重企业启用的模型列表？（有人说 Auto 不尊重，所以一直在用过时的旧模型。）</li>
+<li>能不能和 BYOK 一起用？</li>
+<li>模型池更新多快？有用户发现它还在选 GPT-5.6 Terra，而按他的判断，新发布的 GPT-6 Luna 和 GPT-6.1 Sol 在性价比上已经胜出。</li>
+</ul>
+<p>社区里还出现了一些使用层面的小坑：计划模式下切换到 HydraFusion 会被弹回之前的模型（官方确认像是 bug）；有人发现用 <code>copilot --model hydrafusion</code> 启动会报模型不可用，社区里流传的一个绕法是先设置环境变量 <code>COPILOT_CLI_ENABLED_FEATURE_FLAGS=HYDRAFUSION_ROLLOUT</code>。这个是用户之间互相分享的做法，不是官方文档里的，用之前请自己判断。</p>
+<h2 id="microsoft-365-里的同构做法">Microsoft 365 里的同构做法</h2>
+<p>HydraFusion 不是微软体系里唯一的多模型编排。<a href="https://techcommunity.microsoft.com/blog/microsoft365insiderblog/choosing-the-right-ai-model-in-microsoft-365-flexibility-control-and-confidence/4530762?WT.mc_id=AI-MVP-5003172">Microsoft 365 的这篇文章</a>讲到 Researcher 的 Auto 模式：先由 GPT 生成报告，再由 Claude 做第二遍推理复核，这和 HydraFusion 的 Cascade 与 Critique 是同构的两阶段流水线。Model Council 则让多个深度推理代理并行运行，高亮一致和分歧之处。</p>
+<p><a href="https://techcommunity.microsoft.com/blog/microsoftmechanicsblog/claude--gpt--multi-model-intelligence-in-copilot/4509773?WT.mc_id=AI-MVP-5003172">Microsoft Mechanics 的视频帖</a>把这两种形态拆开演示：Critique 让生成模型和独立评审模型分离，强调来源可靠性与证据接地；Model Council 把同一个提示并行发给 GPT 和 Claude，并排比较完整的推理。拿它们和 HydraFusion 的三种模式对照看，能发现一个共同的思路：评审和并行比对，都是在用模型之间的差异补足单一模型的盲区。</p>
+<h2 id="我的几点判断">我的几点判断</h2>
+<p>我自己的看法是，HydraFusion 值得认真试，但不要被&quot;67%&ldquo;这类数字带着走。</p>
+<p>它的核心价值是把&quot;开发者手工做的事&quot;放进运行时：挑模型、找另一个模型复核、难题升级。这些事现在很多人都在手工做，有位社区用户就说自己一直在用编排器加子代理拼类似的东西。把它产品化的收益很实在，尤其是&quot;我不想每次都想该用哪个模型&quot;这类省心。</p>
+<p>保留意见主要有四点：</p>
+<ul>
+<li>基准是官方自己调的。策略在 CheckpointBench、DeepSWE 和 TerminalBench 上反复爬山，之后又在这些基准上报告结果，虽然官方强调是跨评估集优化而非针对单个基准，但这仍然是需要真实负载来验证的地方。</li>
+<li>成本口径是&quot;预估成本&rdquo;，而且前提是所有模型都在中等推理级别。如果你平时对 Opus 开高推理，这个比较的参照物就不同了。</li>
+<li>可观测性不够。你不知道某一轮用了哪几个模型，也就很难判断钱花在哪、什么时候该手动换模型。社区有人建议公开结构化的执行遥测，比如选了哪种策略、哪些模型家族参与、是否发生升级、评审是否否决了初稿，我觉得比公开原始推理过程更现实。</li>
+<li>企业合规问题没有答案。模型池不公布、不能自选或排除，对有严格模型白名单和数据处理要求的团队，目前基本是阻塞项。</li>
+</ul>
+<p>我计划的用法是：先把它用在那些边界清楚、可以一次性交给自动驾驶的中等规模任务上，用 <code>/session id</code> 记下会话，再回头对照模型占比和花费。如果你在 Copilot CLI 里试，反馈时带上调试日志或会话 ID，官方明确要这个。</p>
+<p>官方的最后一段话给了一个判断：编码代理的下一步收益，会来自把前沿智能和运行时编排结合起来，HydraFusion 是第一次下注，目标是从&quot;选最好的模型&quot;转向&quot;为每个任务动态构造最好的解法&quot;。我基本认同这个方向，至于这次下注赢多少，要看预览期之后的真实数据。</p>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://github.blog/ai-and-ml/github-copilot/project-hydrafusion-frontier-quality-via-multi-model-orchestration/?WT.mc_id=AI-MVP-5003172">Project HydraFusion: Frontier quality via multi-model orchestration</a>（GitHub Blog，2026-09-04）</li>
+<li><a href="https://github.blog/changelog/2026-09-30-hydrafusion-in-vs-code-and-the-github-copilot-app?WT.mc_id=AI-MVP-5003172">HydraFusion in VS Code and the GitHub Copilot app</a>（GitHub Changelog，2026-09-30）</li>
+<li><a href="https://github.blog/changelog/2026-09-10-github-copilot-weekly-releases-september-7/?WT.mc_id=AI-MVP-5003172">GitHub Copilot weekly releases: September 7</a>（GitHub Changelog，2026-09-10）</li>
+<li><a href="https://github.com/orgs/community/discussions/206492?WT.mc_id=AI-MVP-5003172">HydraFusion 研究预览发布与 FAQ</a>（GitHub Community）</li>
+<li><a href="https://docs.github.com/early-access/copilot/hydrafusion?WT.mc_id=AI-MVP-5003172">HydraFusion 官方文档</a></li>
+<li><a href="https://github.blog/ai-and-ml/github-copilot/getting-more-from-each-token-how-copilot-improves-context-handling-and-model-routing/?WT.mc_id=AI-MVP-5003172">Getting more from each token: How Copilot improves context handling and model routing</a>（GitHub Blog，2026-06-17）</li>
+<li><a href="https://arxiv.org/abs/2605.17106?WT.mc_id=AI-MVP-5003172">HyDRA: Hybrid Dynamic Routing Architecture for Heterogeneous LLM Pools</a>（arXiv:2605.17106）</li>
+<li><a href="https://github.blog/ai-and-ml/github-copilot/github-copilot-cli-combines-model-families-for-a-second-opinion/?WT.mc_id=AI-MVP-5003172">GitHub Copilot CLI combines model families for a second opinion</a>（GitHub Blog，2026-04-06）</li>
+<li><a href="https://github.blog/changelog/2026-05-07-rubber-duck-in-github-copilot-cli-now-supports-more-models/?WT.mc_id=AI-MVP-5003172">Rubber Duck in GitHub Copilot CLI now supports more models</a>（GitHub Changelog，2026-05-07）</li>
+<li><a href="https://github.blog/ai-and-ml/github-copilot/evaluating-performance-and-efficiency-of-the-github-copilot-agentic-harness-across-models-and-tasks/?WT.mc_id=AI-MVP-5003172">Evaluating performance and efficiency of the GitHub Copilot agentic harness across models and tasks</a>（GitHub Blog，2026-06-25）</li>
+<li><a href="https://techcommunity.microsoft.com/blog/microsoft365insiderblog/choosing-the-right-ai-model-in-microsoft-365-flexibility-control-and-confidence/4530762?WT.mc_id=AI-MVP-5003172">Choosing the right AI model in Microsoft 365</a>（Microsoft Tech Community，2026-06-25）</li>
+<li><a href="https://techcommunity.microsoft.com/blog/microsoftmechanicsblog/claude--gpt--multi-model-intelligence-in-copilot/4509773?WT.mc_id=AI-MVP-5003172">Claude + GPT | Multi-model intelligence in Copilot</a>（Microsoft Tech Community，2026-04-09）</li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/">https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a></li>
+        
+        <li><a href="/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a></li>
+        
+        <li><a href="/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a></li>
+        
+        <li><a href="/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/">Microsoft Foundry 与 Azure OpenAI 模型迁移全流程</a></li>
+        
+        <li><a href="/post/2026-08-25-enabling-a2a-endpoint-and-agent-card-for-a-hosted-agent/">为 Foundry 托管代理开启 A2A 端点和 Agent Card</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/GitHub-Copilot' target="_blank">GitHub Copilot</a></li>
+                
+                <li><a href='/tags/HydraFusion' target="_blank">HydraFusion</a></li>
+                
+                <li><a href='/tags/AI-Agents' target="_blank">AI Agents</a></li>
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/" title="深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流" target="_blank">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" title="[译]基于模型的机器学习 - 5.4 我们的首次推荐" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" title="[译]基于模型的机器学习 - 5.3 训练我们的推荐系统" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/" title="评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”" target="_blank">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people/" title="[译]基于模型的机器学习 - 5.2 多重特质与多人" target="_blank">[译]基于模型的机器学习 - 5.2 多重特质与多人</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-07-agent-automation-stuck-behind-interfaces-built-for-humans/" title="智能体的自动化，为什么还没有想象中那么高效" target="_blank">智能体的自动化，为什么还没有想象中那么高效</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (43)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (36)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

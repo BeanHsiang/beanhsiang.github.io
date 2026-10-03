@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Thu, 01 Oct 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Sat, 03 Oct 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</title>
+				<link>https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/</link>
+				<pubDate>Sat, 03 Oct 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20261003161935-b6ce6421d9b945eaad5a7a0edd63dc86.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Research preview: HydraFusion. Advanced runtime model orchestration in GitHub Copilot.&#34; src=&#34;https://beanhsiang.github.io/uploads/20261003161935-b6ce6421d9b945eaad5a7a0edd63dc86.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;题图来自 GitHub Blog 的 &lt;a href=&#34;https://github.blog/ai-and-ml/github-copilot/project-hydrafusion-frontier-quality-via-multi-model-orchestration/?WT.mc_id=AI-MVP-5003172&#34;&gt;Project HydraFusion&lt;/a&gt;。&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;9 月初 GitHub 放出了 HydraFusion，一个在 Copilot 模型选择器里排着的&amp;quot;模型&amp;quot;，但它其实不是模型。我把官方博客、Changelog、社区讨论帖、HyDRA 论文和 Rubber Duck 的两篇文章放在一起读了一遍，想弄清楚三件事：它到底在每一轮里做了什么，那组&amp;quot;成本降 67%、质量还更高&amp;quot;的数字能信到什么程度，以及现在值不值得切过去用。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</title>
 				<link>https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/</link>

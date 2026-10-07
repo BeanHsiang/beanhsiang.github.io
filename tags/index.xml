@@ -10,21 +10,28 @@
 		
 		
 		
-			<lastBuildDate>Sat, 03 Oct 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Mon, 05 Oct 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
 			<item>
 				<title>AI Agents</title>
 				<link>https://beanhsiang.github.io/tags/AI-Agents/</link>
-				<pubDate>Sat, 03 Oct 2026 12:00:00 +0800</pubDate>
+				<pubDate>Mon, 05 Oct 2026 12:00:00 +0800</pubDate>
 				<guid>https://beanhsiang.github.io/tags/AI-Agents/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Evaluation</title>
 				<link>https://beanhsiang.github.io/tags/Evaluation/</link>
-				<pubDate>Sat, 03 Oct 2026 12:00:00 +0800</pubDate>
+				<pubDate>Mon, 05 Oct 2026 12:00:00 +0800</pubDate>
 				<guid>https://beanhsiang.github.io/tags/Evaluation/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Microsoft Foundry</title>
+				<link>https://beanhsiang.github.io/tags/Microsoft-Foundry/</link>
+				<pubDate>Mon, 05 Oct 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/tags/Microsoft-Foundry/</guid>
 				<description></description>
 			</item>
 			<item>
@@ -39,13 +46,6 @@
 				<link>https://beanhsiang.github.io/tags/HydraFusion/</link>
 				<pubDate>Sat, 03 Oct 2026 12:00:00 +0800</pubDate>
 				<guid>https://beanhsiang.github.io/tags/HydraFusion/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Microsoft Foundry</title>
-				<link>https://beanhsiang.github.io/tags/Microsoft-Foundry/</link>
-				<pubDate>Sat, 03 Oct 2026 12:00:00 +0800</pubDate>
-				<guid>https://beanhsiang.github.io/tags/Microsoft-Foundry/</guid>
 				<description></description>
 			</item>
 			<item>

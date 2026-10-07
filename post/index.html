@@ -75,6 +75,40 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-10-05T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月5日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20261007113027-foundry-composite-eval-title.png">
+            <img class="mx-auto" alt="Evaluate More, Spend Less: Batching Microsoft Foundry Evaluators" src="/uploads/20261007113027-foundry-composite-eval-title.png" />
+        </a>
+    </p>
+<p><em>题图来自 Microsoft Foundry 博客的 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/evaluate-more-spend-less-batching-microsoft-foundry-evaluators-for-efficient-eva/4560841?WT.mc_id=AI-MVP-5003172">Evaluate More, Spend Less: Batching Microsoft Foundry Evaluators for Efficient Evaluation</a>，作者是 Salma Elshafey、Ali Mahmoudzadeh、Kayla Ames、Ahmad Qardahji、Vivek Bhadauria、Morteza Ziyadi 和 April Kwong。</em></p>
+<p>给 Agent 做评估时，同一段对话往往要分别发给好几个评估器。这篇文章讲的是微软 Foundry 团队的一项实验：用一次 Judge 调用同时跑五六个 Microsoft Foundry 评估器，总输入 token 少了 61.25% 到 71.07%，实测运行耗时少了 35.74% 到 46.10%，而且在几个价值较高的评估维度上，前沿 Judge 模型的质量没有明显波动。我把它读完后觉得，数字好看是一回事，更有用的是它顺带给出了哪些评估器适合合并、哪些得留着单独跑。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/" title="深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流" target="_blank">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a>
             </h1>
         </header>
@@ -104,40 +138,6 @@
 <p>9 月初 GitHub 放出了 HydraFusion，一个在 Copilot 模型选择器里排着的&quot;模型&quot;，但它其实不是模型。我把官方博客、Changelog、社区讨论帖、HyDRA 论文和 Rubber Duck 的两篇文章放在一起读了一遍，想弄清楚三件事：它到底在每一轮里做了什么，那组&quot;成本降 67%、质量还更高&quot;的数字能信到什么程度，以及现在值不值得切过去用。</p>……
         </div>
         <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-10-03-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-10-03T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年10月3日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>
-        <a data-fancybox="gallery" href="/uploads/20261007113027-foundry-composite-eval-title.png">
-            <img class="mx-auto" alt="Evaluate More, Spend Less: Batching Microsoft Foundry Evaluators" src="/uploads/20261007113027-foundry-composite-eval-title.png" />
-        </a>
-    </p>
-<p><em>题图来自 Microsoft Foundry 博客的 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/evaluate-more-spend-less-batching-microsoft-foundry-evaluators-for-efficient-eva/4560841?WT.mc_id=AI-MVP-5003172">Evaluate More, Spend Less: Batching Microsoft Foundry Evaluators for Efficient Evaluation</a>，作者是 Salma Elshafey、Ali Mahmoudzadeh、Kayla Ames、Ahmad Qardahji、Vivek Bhadauria、Morteza Ziyadi 和 April Kwong。</em></p>
-<p>给 Agent 做评估时，同一段对话往往要分别发给好几个评估器。这篇文章讲的是微软 Foundry 团队的一项实验：用一次 Judge 调用同时跑五六个 Microsoft Foundry 评估器，总输入 token 少了 61.25% 到 71.07%，实测运行耗时少了 35.74% 到 46.10%，而且在几个价值较高的评估维度上，前沿 Judge 模型的质量没有明显波动。我把它读完后觉得，数字好看是一回事，更有用的是它顺带给出了哪些评估器适合合并、哪些得留着单独跑。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-03-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" target="_blank">阅读全文</a></p>
     </article>
     
     
@@ -531,7 +531,7 @@
 <ul class="widget-list">
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-03-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
+        <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
     </li>
     
     <li>

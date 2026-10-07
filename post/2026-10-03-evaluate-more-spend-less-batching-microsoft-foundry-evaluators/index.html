@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用 | Innovation with tech</title>
+    <meta property="og:title" content="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-10-03T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-10-03T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-10-03-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</h1>
+        </header>
+        
+  <time datetime="2026-10-03T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月3日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20261007113027-foundry-composite-eval-title.png">
+            <img class="mx-auto" alt="Evaluate More, Spend Less: Batching Microsoft Foundry Evaluators" src="/uploads/20261007113027-foundry-composite-eval-title.png" />
+        </a>
+    </p>
+<p><em>题图来自 Microsoft Foundry 博客的 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/evaluate-more-spend-less-batching-microsoft-foundry-evaluators-for-efficient-eva/4560841?WT.mc_id=AI-MVP-5003172">Evaluate More, Spend Less: Batching Microsoft Foundry Evaluators for Efficient Evaluation</a>，作者是 Salma Elshafey、Ali Mahmoudzadeh、Kayla Ames、Ahmad Qardahji、Vivek Bhadauria、Morteza Ziyadi 和 April Kwong。</em></p>
+<p>给 Agent 做评估时，同一段对话往往要分别发给好几个评估器。这篇文章讲的是微软 Foundry 团队的一项实验：用一次 Judge 调用同时跑五六个 Microsoft Foundry 评估器，总输入 token 少了 61.25% 到 71.07%，实测运行耗时少了 35.74% 到 46.10%，而且在几个价值较高的评估维度上，前沿 Judge 模型的质量没有明显波动。我把它读完后觉得，数字好看是一回事，更有用的是它顺带给出了哪些评估器适合合并、哪些得留着单独跑。</p>
+<p>一条 Agent 轨迹可能要评估 groundedness、coherence、指令遵循、任务完成度和工具使用是否正确。传统流水线里，每个评估器都会在一次独立的模型调用中重新拿到同样的消息、工具调用、工具结果和工具定义。轨迹越长，同一份上下文就被重复处理得越多。</p>
+<p>于是问题很直接：一次 LLM Judge 调用能不能同时应用五六个评估器，又不丢掉评估本身该有的区分度？实验的设计很简单，把共享上下文只发一次，让一个复合评估器在同一次调用里给多个标准打分。</p>
+<p>先看结论。在 100 行的质量样本和工具使用样本上，复合评估需要的模型调用少了 5 到 6 倍，总输入 token 减少 61.25% 到 71.07%，completion token 减少 46.63% 到 63.89%，实测运行耗时减少 35.74% 到 46.10%。在测试过的工作负载里，前沿 Judge 模型在多个关键维度上保持稳定。作者的建议是把复合评估当作成本更低的默认选项，对那些随工作负载变化较大的评分标准，再针对性地保留单独评估。</p>
+<h2 id="评估为什么会变贵">评估为什么会变贵</h2>
+<p>评估一段对话很少只看一个维度。常见的做法是同时检查回复是否连贯、是否遵循指令、是否完成用户任务、是否基于现有证据，以及工具用得对不对。每个维度通常对应一个独立的 prompt 和一次模型调用，所以对话轨迹、工具调用、工具输出和工具定义会被反复处理。成本既随评估标准的数量增长，也随共享上下文的长度增长，长 Agent 轨迹因此评估起来特别贵。</p>
+<h2 id="复合评估器的做法">复合评估器的做法</h2>
+<p>复合评估不再逐个维度独立评估，而是让一次 Judge 模型调用给多个标准打分，共享上下文只处理一遍。团队做了两个复合评估器。</p>
+<h3 id="output-quality-评估器">Output Quality 评估器</h3>
+<p>Output Quality 评估器在一次 LLM 调用里给六个 Microsoft Foundry 评估器打分：</p>
+<table>
+	<thead>
+			<tr>
+					<th>评估器</th>
+					<th>对应的问题</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Fluency</td>
+					<td>回复是否清晰、结构完整？</td>
+			</tr>
+			<tr>
+					<td>Coherence</td>
+					<td>是否与对话逻辑一致？</td>
+			</tr>
+			<tr>
+					<td>Intent Resolution</td>
+					<td>助手是否理解了用户的目标？</td>
+			</tr>
+			<tr>
+					<td>Task Adherence</td>
+					<td>是否遵循了用户的指令？</td>
+			</tr>
+			<tr>
+					<td>Groundedness</td>
+					<td>回复中的论断是否有现有证据支撑？</td>
+			</tr>
+			<tr>
+					<td>Task Completion</td>
+					<td>是否完成了被要求的任务？</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="tool-use-quality-评估器">Tool Use Quality 评估器</h3>
+<p>Tool Use Quality 评估器在一次 LLM 调用里给五个 Microsoft Foundry 评估器打分：</p>
+<table>
+	<thead>
+			<tr>
+					<th>评估器</th>
+					<th>对应的问题</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Tool Call Accuracy</td>
+					<td>这次工具调用整体上正确吗？</td>
+			</tr>
+			<tr>
+					<td>Tool Call Success</td>
+					<td>调用本身成功了吗？</td>
+			</tr>
+			<tr>
+					<td>Tool Input Accuracy</td>
+					<td>传入的参数正确吗？</td>
+			</tr>
+			<tr>
+					<td>Tool Output Utilization</td>
+					<td>回复是否正确使用了工具输出？</td>
+			</tr>
+			<tr>
+					<td>Tool Selection</td>
+					<td>选的工具合适吗？</td>
+			</tr>
+	</tbody>
+</table>
+<p>每个复合 prompt 里，共享的轨迹和工具定义只出现一次，后面依次附上每个评估器完整的定义、评分量表和适用性规则。prompt 还要求 Judge 对每个评估器独立判断，避免一个结论影响另一个。Judge 会为每条标准返回结构化结果，包含分数、理由和适用状态。多轮评估时，它还能指出最早出现失败的那一轮。</p>
+<h2 id="他们怎么验证评估质量">他们怎么验证评估质量</h2>
+<p>这项研究把单独评估器和复合评估器放在下面几个维度上做了对比：</p>
+<ul>
+<li>两种模式：Single-Turn 和 Multi-Turn。</li>
+<li>九个 Judge 模型：GPT-4o、GPT-5.4、GPT-5.4 mini、GPT-5.6 Luna、GPT-5.6 Sol、GPT-5.6 Terra、DeepSeek V4 Flash、DeepSeek V4 Pro 和 Grok 4.1 Fast Reasoning。</li>
+<li>多个数据集，见下表。</li>
+</ul>
+<table>
+	<thead>
+			<tr>
+					<th>数据集</th>
+					<th>模式</th>
+					<th>行数</th>
+					<th>主要验证目标</th>
+					<th>参考标签</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>内部质量集</td>
+					<td>Single-Turn 和 Multi-Turn</td>
+					<td>283</td>
+					<td>六个质量评估器</td>
+					<td>已有的逐评估器标签</td>
+			</tr>
+			<tr>
+					<td>内部工具使用集</td>
+					<td>Single-Turn 和 Multi-Turn</td>
+					<td>200</td>
+					<td>五个工具使用评估器</td>
+					<td>已有的逐评估器标签</td>
+			</tr>
+			<tr>
+					<td>BFCL v4</td>
+					<td>Multi-Turn</td>
+					<td>200</td>
+					<td>Task Completion、Tool Call Accuracy 和失败轮次定位</td>
+					<td>确定性的状态与工具调用检查</td>
+			</tr>
+			<tr>
+					<td>AgentIF</td>
+					<td>Multi-Turn</td>
+					<td>148</td>
+					<td>Task Adherence</td>
+					<td>约束级别的多数投票参考</td>
+			</tr>
+			<tr>
+					<td>FaithDial</td>
+					<td>Multi-Turn</td>
+					<td>300</td>
+					<td>Groundedness</td>
+					<td>忠实回复与幻觉回复</td>
+			</tr>
+			<tr>
+					<td>FED</td>
+					<td>Multi-Turn</td>
+					<td>125</td>
+					<td>Coherence</td>
+					<td>五位标注者的人工评分</td>
+			</tr>
+			<tr>
+					<td>Tau-Voice</td>
+					<td>Multi-Turn</td>
+					<td>278</td>
+					<td>Task Completion</td>
+					<td>由 reward 推导的完成标签</td>
+			</tr>
+			<tr>
+					<td>AgentRx tau_retail</td>
+					<td>Multi-Turn</td>
+					<td>29</td>
+					<td>失败轮次定位</td>
+					<td>人工标注的失败位置</td>
+			</tr>
+	</tbody>
+</table>
+<p>衡量的指标有这几类：</p>
+<ul>
+<li>输入 token、输出 token、模型调用次数和延迟</li>
+<li>有标签时的 accuracy、macro-F1 和 Cohen&rsquo;s kappa</li>
+<li>单独模式与复合模式之间的一致性和相关结构</li>
+<li>四次评估运行之间的可重复性</li>
+</ul>
+<h3 id="发现一输入-token-降-6125-到-7107延迟降-3574-到-4610">发现一：输入 token 降 61.25% 到 71.07%，延迟降 35.74% 到 46.10%</h3>
+<p>成本和延迟是在配对的 100 行 Single-Turn 样本上测的，一份给 Output Quality，一份给 Tool Use，对比的是并行跑单独评估器和每行只跑一次复合评估器。每一行的评估器上下文包括 query 和 response、工具调用及结果，以及序列化后的工具定义。</p>
+<p>这里的 Single-Turn 指评估器只关注最后一条 Agent 回复，但整段对话历史仍然会作为上下文传进去。</p>
+<h4 id="成本样本里的轨迹长度">成本样本里的轨迹长度</h4>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261007113027-foundry-composite-eval-traj.png">
+            <img class="mx-auto" alt="Distribution of trajectory lengths, before evaluator reformatting" src="/uploads/20261007113027-foundry-composite-eval-traj.png" />
+        </a>
+    </p>
+<p><em>评估器重新格式化之前的轨迹长度分布</em></p>
+<p>对数坐标下的分布显示，大多数行集中在几千个 token 左右，少数轨迹明显更长。两份样本里，评估器上下文越长，省下的 token 绝对数就越多。</p>
+<h4 id="实测的成本下降">实测的成本下降</h4>
+<p>整份样本的情况如下：</p>
+<ul>
+<li>重复上下文是省钱的主要来源。Output Quality 的总输入 token 从 2,058,930 降到 797,843，减少 61.25%；Tool Use 从 2,036,122 降到 589,097，减少 71.07%。未命中缓存的输入分别减少了 57.51% 和 53.29%。Output Quality 的复合调用里有 52.72% 的输入 token 命中缓存，单独评估整套是 56.88%；Tool Use 对应的数字是 46.22% 和 66.69%。不过复合评估处理的 token 总量仍然少得多。</li>
+<li>调用量骤降。Output Quality 从 600 次单独评估器调用降到 100 次复合调用，Tool Use 从 494 次降到 100 次。有 6 个评分标准与行的组合，按评估器自带的适用性规则本来就不该给分，比如这一行根本没有工具调用可评。这几次跳过解释了为什么单独评估的 Tool Use 基线低于 500。</li>
+<li>实测耗时更短。Output Quality 的 wall time 从 504.41 秒降到 324.12 秒，减少 35.74%；Tool Use 从 536.95 秒降到 289.42 秒，减少 46.10%。折算到每行，Output Quality 是 5.044 秒降到 3.241 秒，Tool Use 是 5.369 秒降到 2.894 秒。Completion token 分别减少 46.63% 和 63.89%。</li>
+</ul>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261007113027-foundry-composite-eval-cost.png">
+            <img class="mx-auto" alt="Parallel individual and composite evaluator token and wall-time comparison" src="/uploads/20261007113027-foundry-composite-eval-cost.png" />
+        </a>
+    </p>
+<p><em>并行单独评估器与复合评估器的 token 和 wall time 对比</em></p>
+<p>质量样本上，复合评估共用了 797,843 个输入 token 和 36,919 个 completion token，并行单独评估是 2,058,930 和 69,180。工具使用样本上，复合评估是 589,097 和 28,358，单独评估是 2,036,122 和 78,522。这些都是实测的运行总量，不是按 prompt 长度估算的。</p>
+<p>更大范围的实验结果相近。完整六评估器标准的 Single-Turn 研究少用了约 68% 的输入 token，283 行的 Multi-Turn 质量研究少用了约 77%：六次调用的等价输入是每行 28,715 个渲染后的输入 token，复合调用只要 6,608 个。具体能省多少钱取决于模型和部署的定价，但合并之后，重复的输入和往返开销确实一直被去掉了。</p>
+<h3 id="发现二质量上的取舍取决于评分标准和-judge-模型">发现二：质量上的取舍取决于评分标准和 Judge 模型</h3>
+<h4 id="output-quality-的基准结果">Output Quality 的基准结果</h4>
+<p>在内部 Single-Turn 质量集上，复合评估的 Task Adherence 准确率在每个 Judge 上都有提升，Task Completion 则和单独评估很接近。外部 Multi-Turn 基准的表现就杂得多，随评分标准、Judge 和工作负载而变。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261007113027-foundry-composite-eval-kappa.png">
+            <img class="mx-auto" alt="External benchmark delta in Cohen&rsquo;s Kappa" src="/uploads/20261007113027-foundry-composite-eval-kappa.png" />
+        </a>
+    </p>
+<p><em>外部基准上 Cohen&rsquo;s Kappa 的变化量</em></p>
+<p>图里画的是 Δκ = κComposite - κIndividual，蓝色表示复合评估更好，橙色表示单独评估更好。方向有正有负，说明挑好的评分标准和 Judge 之后，还是得用接近生产的数据验证一遍。</p>
+<p>BFCL 是带标签的 Multi-Turn 数据里对 Task Completion 最有说服力的一个。用 GPT-5.6 Luna 时，复合评估器的 macro-F1 是 0.848，κ 是 0.696，单独评估器是 0.836 和 0.672。换到别的 Judge，Sol、Terra 和 DeepSeek V4 Flash 上复合与单独的 Task Completion 表现接近，DeepSeek V4 Pro 和 Grok 4.1 Fast 的结果则偏向单独评估。</p>
+<h4 id="tool-use-quality-的基准结果">Tool Use Quality 的基准结果</h4>
+<p>五评估器的工具复合评估器是在生产风格的工具轨迹上测的。每一行只带一个来源评分标准的 ground truth，所以下表报告的是各评估器可用子集上的准确率。</p>
+<table>
+	<thead>
+			<tr>
+					<th>Judge</th>
+					<th>Tool Call Accuracy</th>
+					<th>Tool Call Success</th>
+					<th>Tool Input Accuracy</th>
+					<th>Tool Output Utilization</th>
+					<th>Tool Selection</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>gpt-4o</td>
+					<td>0.800</td>
+					<td>0.902</td>
+					<td>0.850</td>
+					<td>0.800</td>
+					<td>0.878</td>
+			</tr>
+			<tr>
+					<td>gpt-5.4</td>
+					<td>0.800</td>
+					<td>0.902</td>
+					<td>0.775</td>
+					<td>0.737</td>
+					<td>0.829</td>
+			</tr>
+			<tr>
+					<td>gpt-5.4-mini</td>
+					<td>0.750</td>
+					<td>0.902</td>
+					<td>0.725</td>
+					<td>0.763</td>
+					<td>0.756</td>
+			</tr>
+			<tr>
+					<td>gpt-5.6-luna</td>
+					<td>0.914</td>
+					<td>0.902</td>
+					<td>0.848</td>
+					<td>0.775</td>
+					<td>0.901</td>
+			</tr>
+			<tr>
+					<td>gpt-5.6-sol</td>
+					<td>0.886</td>
+					<td>0.902</td>
+					<td>0.750</td>
+					<td>0.743</td>
+					<td>0.854</td>
+			</tr>
+			<tr>
+					<td>gpt-5.6-terra</td>
+					<td>0.857</td>
+					<td>0.902</td>
+					<td>0.750</td>
+					<td>0.794</td>
+					<td>0.854</td>
+			</tr>
+			<tr>
+					<td>DeepSeek-V4-Flash</td>
+					<td>0.775</td>
+					<td>0.902</td>
+					<td>0.800</td>
+					<td>0.848</td>
+					<td>0.854</td>
+			</tr>
+			<tr>
+					<td>DeepSeek-V4-Pro</td>
+					<td>0.800</td>
+					<td>0.878</td>
+					<td>0.800</td>
+					<td>0.789</td>
+					<td>0.902</td>
+			</tr>
+			<tr>
+					<td>grok-4-1-fast-reasoning</td>
+					<td>0.946</td>
+					<td>0.902</td>
+					<td>0.925</td>
+					<td>0.745</td>
+					<td>0.823</td>
+			</tr>
+	</tbody>
+</table>
+<p>在整个生产风格语料上，复合评估器在五个评分标准上的准确率落在 0.75 到 0.95 之间。各模型有自己的强项：Grok 4.1 Fast 在 Tool Call Accuracy 和 Tool Input Accuracy 上最高，DeepSeek V4 Flash 在 Tool Output Utilization 上最高，DeepSeek V4 Pro 在 Tool Selection 上最高。Tool Call Success 在大多数 Judge 上并列 0.902。Luna 整体仍然排在前面，但没有哪个 Judge 在所有评分标准上都占优。</p>
+<h5 id="分类准确率">分类准确率</h5>
+<p>在真正的多轮 BFCL 基准上，Tool Call Accuracy 是唯一带原生 ground truth 的工具评分标准。GPT-5.6 Terra 在单次运行的榜单上以 0.864 的 macro-F1 领先，GPT-5.6 Sol 是 0.858，GPT-5.6 Luna 是 0.828。其他模型更低：Grok 4.1 Fast 为 0.626，DeepSeek V4 Pro 为 0.625，V4 Flash 为 0.521。这说明只要选对模型，复合评估器在完整对话上判断整体工具调用是否正确，表现不输生产风格的轨迹。</p>
+<h5 id="失败定位">失败定位</h5>
+<p>同一次 BFCL 运行还测了失败出现在哪一轮。GPT-5.6 Terra 的 member-any 失败轮次定位达到 0.78，也就是在 78% 的失败对话里，Tool Call Accuracy 评分标准预测的那一轮，至少命中了 BFCL 失败轮次集合中的一轮。它在 75 条通过的对话里产生了 22 次误报。GPT-5.6 Sol 的 member-any 是 0.75，GPT-5.6 Luna 是 0.74。Luna 的 Tool Selection 通道可以当作高精度的辅助信号，它在 50% 的失败里找到了失败轮次，误报只有 3 次。</p>
+<p>为了确认定位能力不只在机械可检查的 BFCL 轨迹上成立，团队又用了带人工失败标注的 29 行 AgentRx tau_retail 数据集。在 8 个属于工具机制的失败里，Sol 找对了 8 个根因，Terra 和 Luna 找对了 7 个。Grok 4.1 Fast 只找对 2 个，两个 DeepSeek 模型只找对 1 个。样本很小，这个结果只能当作方向性的参考。</p>
+<h3 id="合并之后评分标准之间的关系还在吗">合并之后，评分标准之间的关系还在吗</h3>
+<p>测完直接的准确率，团队又看了批量评估是否保留了各评分结论之间的关系。这是结构上的辅助证据，不是对照 ground truth 得出的准确率。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261007113027-foundry-composite-eval-heat.png">
+            <img class="mx-auto" alt="Side-by-side heatmaps comparing individual and composite rubric correlations" src="/uploads/20261007113027-foundry-composite-eval-heat.png" />
+        </a>
+    </p>
+<p><em>单独评估与复合评估的评分标准相关性热力图对比</em></p>
+<p>热力图比较的是 GPT-5.6 Luna 二值化评分结论的 Spearman 相关系数，取的是两种模式都打过分的行。工具使用的结构特别稳定，Tool Call Accuracy 与 Tool Input Accuracy 的相关性最强，两种模式下都是 0.76。质量方面的关系就比较杂了。例如 Single-Turn 的 Intent Resolution 与 Task Completion 从 0.71 掉到 0.31，Multi-Turn 的 Task Adherence 与 Task Completion 从 0.53 掉到 0.23。批量评估能保住大体的评分结构，但不是每一对关系都保得一样好。</p>
+<h3 id="发现三可靠性同时取决于评分标准和-judge">发现三：可靠性同时取决于评分标准和 Judge</h3>
+<h4 id="multi-turn-质量评估的可靠性">Multi-Turn 质量评估的可靠性</h4>
+<p>团队在同样的 200 行 BFCL 数据上把六评估器复合调用重复跑了四次。九个 Judge 里，DeepSeek V4 Flash 的平均 flip rate 最低，为 3.9%；GPT-5.6 Sol 和 Grok 4.1 Fast 是 5.2%，DeepSeek V4 Pro 是 5.6%，GPT-5.6 Luna 是 6.8%，GPT-4o 是 7.4%，GPT-5.6 Terra 是 7.8%，GPT-5.4 mini 是 10.9%，GPT-5.4 是 15.6%。</p>
+<p>比排行榜更值得看的是按评分标准拆开的结果：</p>
+<ul>
+<li>Fluency：平均 flip rate 为 0.0%</li>
+<li>Coherence：2.4%</li>
+<li>Intent Resolution：8.6%</li>
+<li>Task Adherence：6.7%</li>
+<li>Task Completion：11.5%</li>
+<li>Groundedness：16.4%</li>
+</ul>
+<p>同一个 Judge 可能在某条标准上非常稳，在另一条上却很飘。可靠性应该按标准逐条监控，没法从一个汇总分数里推出来。</p>
+<h4 id="multi-turn-工具使用的可靠性">Multi-Turn 工具使用的可靠性</h4>
+<p>五评估器的多轮工具研究也得出了同样的结论，需要逐条标准监控。在四次 BFCL 重复运行中，GPT-5.6 Terra 和 DeepSeek V4 Flash 的平均 flip rate 最低，为 6.0%，GPT-5.6 Sol 是 6.1%，GPT-5.6 Luna 和 GPT-4o 是 7.0%。GPT-5.6 Sol 取得了最强的四次取众数 Tool Call Accuracy kappa，为 0.759，而 Terra 在单次运行的质量与定位结果里领先。Tool Call Success 是最稳定的标准，各 Judge 的平均 flip rate 只有 4.7%。</p>
+<h2 id="实践建议">实践建议</h2>
+<p>综合质量、工具使用、失败定位和可靠性几组研究，作者给出了选 Judge 和选择批量评估器的实用建议。</p>
+<h4 id="推荐的-judgegpt-56-系列">推荐的 Judge：GPT-5.6 系列</h4>
+<p>在质量、工具使用、失败定位和可靠性这些实验里，GPT-5.6 系列的整体结果一直最强。个别基准偶尔会偏向别的模型或某个特定的 GPT-5.6 变体，但 Luna、Sol 和 Terra 反复排在前列，在各类工作负载上的表现也最均衡。Sol 在多次重复的质量与工具使用研究里通常最可靠，Terra 在若干 BFCL 工具使用和失败轮次定位评估中领先，Luna 在所有测试负载上的平均质量最高。如果你的工作负载和实验里的相近，作者建议先从 GPT-5.6 Judge 开始，再按自己的侧重在 Sol、Terra 和 Luna 里选。部署成本更低的时候，Luna 是很有吸引力的选项，它保持了前沿水准的评估质量，同时在实验里平均表现最强。相比之下，成本更低的模型往往要在质量、可靠性和基准表现上做更大的取舍。具体省多少钱取决于模型定价和部署配置，所以在只看成本做优化之前，先在接近生产的负载上给候选 Judge 做个基准测试。</p>
+<h4 id="适合合并的评估器">适合合并的评估器</h4>
+<p>下面这些评估器放进复合评估器后，表现和单独跑时一样好，可以直接合并：</p>
+<ul>
+<li>Fluency 和 Coherence：在九个 Judge 和多次重复中都非常稳定</li>
+<li>Tool Call Success 和 Tool Selection：在测试过的各个 Judge 模型上都很稳健</li>
+<li>Task Completion：在各基准上与单独评估接近，GPT-5.6 Luna 在 BFCL 上略强</li>
+<li>Tool Call Accuracy、Tool Input Accuracy 和 Tool Output Utilization：在生产风格的轨迹上表现很好，准确率随评估器和 Judge 在 0.75 到 0.95 之间</li>
+</ul>
+<h4 id="需要留意的评估器">需要留意的评估器</h4>
+<p>下面这些评估器的结果会随工作负载或 Judge 而变。它们仍然可以合并，但建议在自己的数据上核对：</p>
+<ul>
+<li>Task Adherence：普通对话上表现不错，但一条请求里包含很多彼此独立的约束时就吃力</li>
+<li>Intent Resolution：虽然有些数据集上一致性很高，但整体上各数据集的结果不太一样</li>
+<li>Groundedness：这是测试里最不稳定的评估器，重复运行时分数的变化比其他任何维度都多，不过在 GPT-5.6 Luna 和 GPT-5.4 这类前沿模型上表现更好。如果你的场景对 grounding 的准确性要求很高，可以把单独的评估器留作后备</li>
+</ul>
+<h2 id="这种做法适合用在哪">这种做法适合用在哪</h2>
+<p>复合评估最适合当作有选择的默认方案，不适合无差别地取代所有独立评估器。GPT-5.6 Sol 的整体平衡性最好，Terra 在单次运行的 BFCL 工具结果里领先，Luna 是推荐的较便宜的高质量选项。不管选哪个，Judge 和评分标准都应该在接近生产的数据上验证。</p>
+<p>Multi-Turn 对比有一个结构上的边界：Multi-Turn 的 Fluency 和 Intent Resolution 并没有原生的单独评估器。复合评估器可以产出这两个维度，但在这种设置下，没办法做单独评估与复合评估的直接验证。</p>
+<p>最后一点，token 节省换算成钱，没有一个固定的百分比。价格随模型和部署而不同，输出长度和重试行为也随工作负载而不同。</p>
+<h2 id="小结">小结</h2>
+<p>复合评估器能把评估流水线里重复的上下文去掉。在更新后的 100 行对比里，六个质量评估器的总输入 token 减少了 61.25%，五个工具使用评估器减少了 71.07%，completion token 减少 46.63% 到 63.89%，实测运行耗时分别减少 35.74% 和 46.10%，很多维度上的质量仍然相当。</p>
+<p>最稳妥的做法是有选择地用，别全盘切换：先选一个 GPT-5.6 系列的模型，把稳定的评估器合并起来并分别监控，对不稳定的评估器保留专门的后备。</p>
+<p>我自己的看法是，这篇文章最有价值的不是那几个百分比，而是它把每条评分标准的稳定性单独拆开给你看。Fluency 的 flip rate 是 0.0%，Groundedness 是 16.4%，同样是合并，风险完全不是一个量级。</p>
+<h2 id="上手试试">上手试试</h2>
+<p>可以先用复合评估器跑一小批已知好和已知坏的 Agent 对话。想评估六条质量标准就选 Output Quality，想评估五条工具使用标准就选 Tool Use Quality。逐条看分数和适用状态，再针对你最在意的失败模式，和单独评估器的结果抽查对比。</p>
+<p>作者推荐从 GPT-5.6 系列开始选 Judge 模型。换了 Judge 模型，或者对话所属的领域变了，记得重新核对结果。</p>
+<p>现在就可以在 <a href="https://ai.azure.com/?WT.mc_id=AI-MVP-5003172">Microsoft Foundry</a> 门户里试这些评估器，使用方法见文档 <a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/agent-evaluators?WT.mc_id=AI-MVP-5003172">Agent Evaluators for Generative AI - Microsoft Foundry | Microsoft Learn</a>。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-10-03-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/">https://beanhsiang.github.io/post/2026-10-03-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a></li>
+        
+        <li><a href="/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a></li>
+        
+        <li><a href="/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a></li>
+        
+        <li><a href="/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a></li>
+        
+        <li><a href="/post/2026-09-01-model-migration-process-on-microsoft-foundry-and-azure-openai/">Microsoft Foundry 与 Azure OpenAI 模型迁移全流程</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+                <li><a href='/tags/AI-Agents' target="_blank">AI Agents</a></li>
+                
+                <li><a href='/tags/Evaluation' target="_blank">Evaluation</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-03-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/" title="深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流" target="_blank">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-02-mbml-asthma/" title="[译]基于模型的机器学习 - 6 理解哮喘" target="_blank">[译]基于模型的机器学习 - 6 理解哮喘</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" title="[译]基于模型的机器学习 - 5.4 我们的首次推荐" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" title="[译]基于模型的机器学习 - 5.3 训练我们的推荐系统" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/" title="评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”" target="_blank">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (44)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (37)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Evaluation/">Evaluation</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

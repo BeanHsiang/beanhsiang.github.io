@@ -5,6 +5,9 @@
     <loc>https://beanhsiang.github.io/tags/AI-Agents/</loc>
     <lastmod>2026-10-05T12:00:00+08:00</lastmod>
   </url><url>
+    <loc>https://beanhsiang.github.io/tags/Azure-OpenAI/</loc>
+    <lastmod>2026-10-05T12:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
     <lastmod>2026-10-05T12:00:00+08:00</lastmod>
   </url><url>
@@ -20,6 +23,9 @@
     <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
     <lastmod>2026-10-05T12:00:00+08:00</lastmod>
   </url><url>
+    <loc>https://beanhsiang.github.io/tags/Performance/</loc>
+    <lastmod>2026-10-05T12:00:00+08:00</lastmod>
+  </url><url>
     <loc>https://beanhsiang.github.io/post/</loc>
     <lastmod>2026-10-05T12:00:00+08:00</lastmod>
   </url><url>
@@ -27,6 +33,9 @@
     <lastmod>2026-10-05T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/</loc>
+    <lastmod>2026-10-05T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-10-05-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/</loc>
     <lastmod>2026-10-05T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/GitHub-Copilot/</loc>
@@ -394,9 +403,6 @@
   </url><url>
     <loc>https://beanhsiang.github.io/post/2025-05-08-a-technical-deep-dive-into-orchestrating-ai-agents-using-semantic-kernel-plugins/</loc>
     <lastmod>2025-05-08T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Azure-OpenAI/</loc>
-    <lastmod>2025-05-03T09:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/GPT-4o/</loc>
     <lastmod>2025-05-03T09:00:00+08:00</lastmod>

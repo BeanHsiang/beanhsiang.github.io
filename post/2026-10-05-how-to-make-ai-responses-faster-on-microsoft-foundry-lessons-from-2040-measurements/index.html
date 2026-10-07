@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验 | Innovation with tech</title>
+    <meta property="og:title" content="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-10-05T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-10-05T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-10-05-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</h1>
+        </header>
+        
+  <time datetime="2026-10-05T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月5日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20261007113827-foundry-faster-responses-title.png">
+            <img class="mx-auto" alt="How to make AI responses faster on Microsoft Foundry" src="/uploads/20261007113827-foundry-faster-responses-title.png" />
+        </a>
+    </p>
+<p><em>题图来自 Microsoft Foundry 博客的 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measureme/4560073?WT.mc_id=AI-MVP-5003172">How to make AI responses faster on Microsoft Foundry: lessons from 2,040 measurements</a>，作者是 Yassine El Ghali。</em></p>
+<p>模型换得更快，应用不一定就更快。这篇文章的作者在 Microsoft Foundry 上把文本、图片、文件、工具和 MCP 几类工作负载都测了一遍，想知道哪些改动真能降低延迟，又不牺牲正确性。我读下来最大的感受是，延迟的来源比我平时想的杂得多：输出长度、重复的 prompt 内容、图片和文档处理、工具选择、连接建立、串行等待，还有多出来的模型请求，都会占时间。</p>
+<p>按作者的口径，把优化过的软件配置和经过验证的 Priority Processing 组合起来，与未优化的 Standard 按量付费相比，AI 路径的中位延迟降低了 23% 到 50%，具体看工作负载。要注意，这个数字没有单独拆出 Priority Processing 的贡献。</p>
+<p>先看短版本：</p>
+<ul>
+<li>去掉不必要的输出、视觉处理和工具定义。</li>
+<li>复用稳定的 prompt 前缀，以及由应用管理的 MCP 会话。</li>
+<li>去掉串行等待和多余的模型轮次，再对剩下的工作测试 Priority Processing。</li>
+</ul>
+<p>延迟要和正确性、可靠性一起测。又快又错的答案，不算性能提升。</p>
+<h2 id="测量方法">测量方法</h2>
+<p>这里的一次测量，指的是某个场景、某个变体、某个 fixture 的一次执行。每个用例在五个确定性 fixture 上，按带种子的随机顺序跑出 30 个有效观测。处理组和对照组在同一个 fixture、同一轮、同一次执行里运行时，会配对比较。</p>
+<p>分析用的数据集一共有 2,040 次测量。审计记录里有 2,160 次基准执行，是发布前那轮实验里记下来的，不含云端预检。另有 120 次更早的客户端生命周期运行，因为后来修正了计时边界，被排除在外。</p>
+<p>自动化的确定性评分器会检查必填字段、事实、工具调用和参数。失败和不正确的运行仍然算在可靠性统计里，延迟百分位只用正确完成的运行来算，也不会悄悄重试失败的请求。</p>
+<p>AI 路径延迟，从模型请求（或一段编排好的模型加工具工作流）发出之前开始计时，到该响应或工作流完成为止。校验决定结果能否进入延迟分析，但校验耗时不在主计时器里。用户到应用之间的网络、UI 渲染，以及图片缩放、PDF 生成、文本提取、OCR 这类预处理，也都在计时之外。</p>
+<p>基准只用了一个 Azure 账号，资源在 East US 2。除非某个处理组明确要测内部请求或工具的扇出，否则一次只跑一个基准用例。组合基准用的是 Azure OpenAI Global Standard 部署，所以 East US 2 只说明资源所在区域，并不保证推理一直在这个区域里完成。单项优化测试用的是 <code>gpt-4.1-mini</code>，组合基准用的是 <code>gpt-4.1</code>，版本 <code>2025-04-14</code>。这不是负载测试，两组结果的百分比不能放在一起算。</p>
+<p>fixture 是合成的、确定性的。组合基准复用了同一批 fixture 家族，所以它不是在留出的生产输入上做的独立复现。中位数效应用的是 5,000 次抽样的 bootstrap 区间，区间没有针对多重比较做校正，30 个观测算出的 p95 只能当作描述性数字。协议和局限在 <a href="https://github.com/yelghali/foundy-ai-perf-testing/blob/main/docs/lab-report.md?WT.mc_id=AI-MVP-5003172">lab report</a> 里有记录，执行 ID、产物版本、区间和可靠性事件在 <a href="https://github.com/yelghali/foundy-ai-perf-testing/blob/main/docs/publication-results.md?WT.mc_id=AI-MVP-5003172">result ledger</a> 里。</p>
+<h2 id="结果速览">结果速览</h2>
+<p>下表汇总了最值得参考的单变量结果。</p>
+<table>
+	<thead>
+			<tr>
+					<th>测试的改动</th>
+					<th>工作负载</th>
+					<th>观测到的中位数结果</th>
+					<th>重要的限定条件</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>生成简洁的文本回答</td>
+					<td>文本</td>
+					<td>快 26.0%</td>
+					<td>29/30 正确，有一次流在完成前就结束了</td>
+			</tr>
+			<tr>
+					<td>生成简洁的 JSON</td>
+					<td>图片</td>
+					<td>快 24.9%</td>
+					<td>30/30 正确</td>
+			</tr>
+			<tr>
+					<td>复用可缓存的 prompt 前缀</td>
+					<td>文本 / 图片</td>
+					<td>分别快 14.9% / 23.6%</td>
+					<td>请求必须报告命中了缓存 token</td>
+			</tr>
+			<tr>
+					<td>使用低图片细节</td>
+					<td>图片</td>
+					<td>快 17.8%</td>
+					<td>细小文字和视觉证据必须仍然准确</td>
+			</tr>
+			<tr>
+					<td>发送已提取的文本，而不是 PDF</td>
+					<td>文件</td>
+					<td>AI 路径快 17.2%</td>
+					<td>提取或 OCR 的时间在计时之外</td>
+			</tr>
+			<tr>
+					<td>并发处理三个相互独立的页面</td>
+					<td>文件</td>
+					<td>快 56.8%</td>
+					<td>模型请求还是那三个，只改了调度</td>
+			</tr>
+			<tr>
+					<td>在一次模型响应里请求两个必需的函数</td>
+					<td>函数工具</td>
+					<td>快 28.2%</td>
+					<td>主要是少了一次模型请求，不只是处理函数并行了</td>
+			</tr>
+			<tr>
+					<td>暴露 5 个工具而不是 20 个</td>
+					<td>函数工具</td>
+					<td>快 16.8%</td>
+					<td>必需的工具必须仍然可用</td>
+			</tr>
+			<tr>
+					<td>使用最简工具描述</td>
+					<td>函数工具</td>
+					<td>快 14.4%</td>
+					<td>工具选择和参数必须仍然正确</td>
+			</tr>
+			<tr>
+					<td>复用由应用管理的 MCP 会话</td>
+					<td>MCP</td>
+					<td>冷会话慢 34.1%</td>
+					<td>需要安全的生命周期和恢复处理</td>
+			</tr>
+			<tr>
+					<td>给 50 个工具的 Toolbox 加上 tool search</td>
+					<td>Toolbox / MCP</td>
+					<td>p50 慢 43.0%</td>
+					<td>输入 token 降了 26%；正确率 30/30 对 29/30，描述性 p95 更低</td>
+			</tr>
+	</tbody>
+</table>
+<p>这些都是针对具体工作负载的发现，不是服务保证。只有配对的中位数效应 95% 区间不包含零时，作者才标注为&quot;更快&quot;。</p>
+<h2 id="一去掉任务不需要的工作">一、去掉任务不需要的工作</h2>
+<h3 id="只生成需要的输出">只生成需要的输出</h3>
+<p>文本方面，证据最清楚的优化是缩短输出约定。</p>
+<p>文本任务里，要求紧凑回答把中位延迟从 2,078 ms 降到 1,537 ms，在正确完成的请求里提升了 26.0%。</p>
+<p>图片提取任务里，改成简洁 JSON 把中位数从 1,646 ms 降到 1,237 ms，提升 24.9%，30/30 正确完成。</p>
+<p>这不是说每个回答都该写得很短。意思是，模型不该生成下一步应用会丢掉的内容。</p>
+<p>一张 UI 卡片可能只要五个字段，一个路由步骤可能只要一个枚举值，一个工具规划器可能只需要校验过的参数。先把这份约定明确写出来，再验证更短的回答是否仍然满足产品需求。</p>
+<p>减少输入则是另一回事。去掉 12 轮无关的历史对话，文本中位延迟降了 12.7%，但配对的 95% 置信区间包含零，所以在这个小测试里结论不确定。去掉无关上下文仍然可以降低输入 token 的成本，但这个实验并没有证明它能降低延迟。</p>
+<h3 id="只用任务需要的视觉表示">只用任务需要的视觉表示</h3>
+<p>在提取发票 ID、总额和状态的任务上，低图片细节比高细节快 17.8%。</p>
+<p>低细节和缩小源文件不是一回事。完整图片仍然会发送，只是 <code>detail: &quot;low&quot;</code> 让服务去分析一个 512 x 512 的表示，而不是做高分辨率的分块检查。参见 <a href="https://learn.microsoft.com/azure/foundry/openai/how-to/gpt-with-vision?WT.mc_id=AI-MVP-5003172#configure-image-detail-level">Configure image detail level</a>。</p>
+<p>对于大而清晰的印刷字段，这样做效果不错，但它可能漏掉小字、手写内容、图表或空间位置上的证据。只有确定性校验证实所有必需字段仍然准确时，才从低细节开始。</p>
+<p>缩放图片也把中位数降了 12.8%，但描述性 p95 从 5.1 秒升到了 8.8 秒。这不影响中位数的结论，只是变慢的尾部延迟观测还需要进一步调查。本地缩放耗时同样在 AI 路径计时器之外。</p>
+<p>文件方面，发送已经提取好的文本，比直接发原生 PDF 快 17.2%。这个结论刻意限定得很窄，因为提取或 OCR 发生在计时之前。</p>
+<p>任务只依赖文字事实时，用文本就行。版面、签名、图表、手写内容或其他视觉证据重要时，就保留原生文档处理。要做完整流水线的决策，必须把提取成本和可靠性算进去。</p>
+<h2 id="二复用工作和连接">二、复用工作和连接</h2>
+<h3 id="把重复的-prompt-内容放在最前面">把重复的 prompt 内容放在最前面</h3>
+<p>Prompt caching 缓存的不是模型的回答。它临时复用的是服务已经对长输入开头部分做过的处理。第一次请求照常处理，之后的请求可以复用匹配的前缀。</p>
+<p>对实验里的 <code>gpt-4.1</code> 模型来说，符合条件的请求至少要有 1,024 个输入 token，并且前 1,024 个 token 要与最近的某次请求一致。</p>
+<p>服务不会分别缓存请求里的各个字段，而是从开头开始，只复用匹配的内容，直到出现第一处差异为止。所以请求里内容的顺序很重要。</p>
+<p>下面是一个简化的 Responses API 请求：</p>
+<pre tabindex="0"><code>{
+  &#34;model&#34;: &#34;&lt;deployment-name&gt;&#34;,
+  &#34;instructions&#34;: &#34;[REUSABLE] Stable system instructions, examples, and output rules&#34;,
+  &#34;input&#34;: [
+    {
+      &#34;type&#34;: &#34;message&#34;,
+      &#34;role&#34;: &#34;user&#34;,
+      &#34;content&#34;: [
+        {
+          &#34;type&#34;: &#34;input_text&#34;,
+          &#34;text&#34;: &#34;[REUSABLE] Reference content shared by many requests&#34;
+        },
+        {
+          &#34;type&#34;: &#34;input_text&#34;,
+          &#34;text&#34;: &#34;[CHANGES] The current user&#39;s question&#34;
+        }
+      ]
+    }
+  ]
+}
+</code></pre><p>可复用的开头部分可以包含系统指令、示例、输出规则、工具定义或共享的参考文本。保持它们完全一致并放在最前面，当前的问题、请求 ID、图片、文档和其他会变的内容放在后面。</p>
+<p>如果开头出现了时间戳或请求 ID，各个请求从一开始就不同，后面那些稳定的指令也就没法形成一段足够长的匹配前缀。</p>
+<p>预热前缀的缓存让文本中位延迟降了 14.9%，图片降了 23.6%。文本的平均首 token 时间从 991 ms 降到 602 ms。</p>
+<p>作者没有想当然地认为机制生效，而是做了验证。大约 93% 到 100% 的重复请求报告了缓存命中。对照组在开头改了一个值，就没有报告任何缓存 token。</p>
+<p>做法就是：共享内容放前面，请求特有的内容放后面，再检查响应里的 <code>cached_tokens</code>。</p>
+<p>在这次运行里，缓存对文件任务和函数工具任务没有带来明确的中位数改善。当文档处理、工具选择或别的环节占了大头时，复用 prompt 的处理就没那么重要了。</p>
+<p>最新的资格条件和保留时长见 <a href="https://learn.microsoft.com/azure/foundry/openai/how-to/prompt-caching?WT.mc_id=AI-MVP-5003172">Prompt caching</a>。</p>
+<h3 id="别让每个任务都重新连接-mcp">别让每个任务都重新连接 MCP</h3>
+<p>当应用自己充当 MCP 客户端时，连接建立和工具发现可能在关键路径上占相当一部分。</p>
+<p>复用会话时，p50 是 2,283 ms。每个任务都新开一个会话并发现工具，p50 升到 3,061 ms，冷路径比复用路径慢 34.1%。建立会话加工具发现平均花 1,016 ms，本地工具本身不到 5 ms。</p>
+<p>这是应用生命周期层面的优化，不是模型层面的优化，结果也不会自动适用于服务托管的 MCP。</p>
+<p>可以在多个任务之间复用一个兼容的会话和已经发现的工具目录。一个会话无法安全支撑预期并发时，就用一个有上限的连接池。复用要按身份和租户划定范围，并且要考虑过期、重连、凭据轮换、目录刷新、健康检查和故障隔离。</p>
+<p>仓库里附有<a href="https://github.com/yelghali/foundy-ai-perf-testing/blob/main/src/ai_perf/mcp_client.py?WT.mc_id=AI-MVP-5003172#L51-L96">完整的 MCP 连接辅助代码</a>。</p>
+<h2 id="三去掉串行等待和不必要的模型请求">三、去掉串行等待和不必要的模型请求</h2>
+<h3 id="并发处理相互独立的页面请求">并发处理相互独立的页面请求</h3>
+<p>单变量里效果最大、且有证据支持的，是并发处理三个相互独立的文档页面。</p>
+<p>两种配置发出的模型请求都是三个。串行版本要等一个响应回来才发起下一个，并发版本是三个请求都发出去之后再等结果。</p>
+<p>中位延迟从 2,811 ms 降到 1,216 ms，提升 56.8%。</p>
+<p>这是调度层面的结果，只在请求相互独立、模型配额也撑得住突发流量时才成立。生产代码还是需要有上限的并发、超时和部分失败的处理。</p>
+<h3 id="去掉函数工作流里可避免的一轮模型调用">去掉函数工作流里可避免的一轮模型调用</h3>
+<p>这个函数工具任务需要同时查天气和当地时间：</p>
+<pre tabindex="0"><code>Slower: model -&gt; weather -&gt; model -&gt; time -&gt; model -&gt; final answer
+Faster: model -&gt; weather + time -&gt; model -&gt; final answer
+</code></pre><p>更快的设计让一次模型响应同时请求两个函数，把工作流从三次模型请求减到两次，p50 从 3,646 ms 降到 2,617 ms，提升 28.2%。</p>
+<p>合成的处理函数都在 5 ms 内完成，所以收益大部分来自少了一次模型请求。让处理函数并发执行是另一种机制。</p>
+<p>对于由应用执行的函数：</p>
+<ul>
+<li>允许模型请求多个调用</li>
+<li>校验工具名称和参数</li>
+<li>确认这些调用相互独立，且可以安全地重叠执行</li>
+<li>把异步 I/O 放在一起跑</li>
+<li>为每个原始调用 ID 返回一个输出</li>
+<li>所有必需的结果都到齐后，再让模型生成最终回答</li>
+</ul>
+<p><code>parallel_tool_calls=True</code> 只是允许多个调用，并不保证模型会选出每个必需的工具。<code>asyncio.gather</code> 能让异步 I/O 重叠，但不会让阻塞的同步代码变成并行。</p>
+<p>28.2% 这个结果只适用于由应用执行的函数工具。没有单独的基准测试，也没有能说明实际执行行为的 trace，就不要把它套到服务托管的 MCP 或 Foundry Agent Service 上。</p>
+<h2 id="四限制每个请求可用的工具">四、限制每个请求可用的工具</h2>
+<p>工具定义也是模型输入的一部分。即使函数本身几毫秒就跑完，工具选择和最终生成仍然可能要花几秒。</p>
+<p>把活跃的工具目录从 20 个函数工具减到 5 个，p50 降了 16.8%。使用最简描述，p50 降了 14.4%。</p>
+<p>可以参考的设计模式是：</p>
+<ol>
+<li>先把请求路由到某个领域</li>
+<li>只暴露该领域相关的工具</li>
+<li>名称、描述和 schema 保持简洁，但要有区分度</li>
+<li>校验工具选择和参数，不能只看 token 数</li>
+</ol>
+<p>其他针对工具 schema 的处理，在这个样本量下结论都不确定。暴露 50 个工具、加入复杂 schema、把描述写得含糊、调整定义顺序，都没有产生有统计支持的中位延迟变化。有些描述性的 p95 更慢，但 30 次尝试不足以断定这些处理会稳定地损害尾部延迟。</p>
+<h3 id="toolbox-能改善工具选择但多了一轮搜索">Toolbox 能改善工具选择，但多了一轮搜索</h3>
+<p>Microsoft Foundry Toolbox 的 tool search 会把庞大的工具目录挡在初始 prompt 之外，需要时再去发现相关工具。</p>
+<p>在这个合成的 50 工具测试里，它把平均输入 token 降低了 26%，正确完成了 30/30 次，直连 MCP 是 29/30。不过多出来的搜索这一轮，把 p50 从 2,528 ms 提高到 3,614 ms，增加了 43.0%。</p>
+<p>单个测试不能证明 Toolbox 总体上能提高准确率，它展示的是一种取舍：目录规模、上下文压力或工具选择是主要问题时，用 tool search。如果首次响应的延迟最重要，而且应用已经知道相关的子集，直接暴露这个更小的子集可能更快。</p>
+<p>参见 <a href="https://learn.microsoft.com/azure/foundry/agents/how-to/tools/tool-search?WT.mc_id=AI-MVP-5003172">Tool search</a> 和 <a href="https://learn.microsoft.com/azure/foundry/agents/concepts/toolbox-overview?WT.mc_id=AI-MVP-5003172">Toolbox overview</a>。</p>
+<h2 id="五软件优化之后再测-priority-processing">五、软件优化之后再测 Priority Processing</h2>
+<p>作者最早那批标注为 Priority Processing 的请求，给了他们一个重要的验证教训：所选的模型并不支持请求的那个 tier，每个响应报告的都是 <code>service_tier=default</code>。</p>
+<p>这些观测留在了审计记录里，但不作为 Priority Processing 的证据。</p>
+<p>和 <code>gpt-4.1-mini</code> 上的单项优化测试不同，组合基准用了支持该 tier 的 <code>gpt-4.1</code> 部署。每个成功的 Priority Processing 响应报告的都是 <code>service_tier=priority</code>。</p>
+<p>对比的是三种配置：</p>
+<ol>
+<li>未优化的 Standard 按量付费</li>
+<li>优化后的 Standard 按量付费</li>
+<li>同样的优化配置，加上 Priority Processing</li>
+</ol>
+<table>
+	<thead>
+			<tr>
+					<th>工作负载</th>
+					<th>未优化 Standard</th>
+					<th>优化后 Standard</th>
+					<th>优化 + Priority Processing</th>
+					<th>组合提升</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>文本</td>
+					<td>2,070 ms</td>
+					<td>2,125 ms</td>
+					<td>1,222 ms</td>
+					<td>快 41.0%</td>
+			</tr>
+			<tr>
+					<td>图片</td>
+					<td>2,872 ms</td>
+					<td>2,234 ms</td>
+					<td>1,448 ms</td>
+					<td>快 49.6%</td>
+			</tr>
+			<tr>
+					<td>文件</td>
+					<td>1,512 ms</td>
+					<td>1,245 ms</td>
+					<td>1,165 ms</td>
+					<td>快 23.0%</td>
+			</tr>
+			<tr>
+					<td>函数工具</td>
+					<td>3,817 ms</td>
+					<td>2,824 ms</td>
+					<td>2,393 ms</td>
+					<td>快 37.3%</td>
+			</tr>
+	</tbody>
+</table>
+<p>表里每个值都是 AI 路径延迟的中位数。组合提升比较的是&quot;优化后的软件加 Priority Processing&quot;与&quot;未优化的 Standard&quot;。</p>
+<p>单靠软件优化，图片、文件和函数工具三类工作负载都有明确改善。优化后的文本配置在 <code>gpt-4.1</code> 上结果不确定，延迟甚至略高了一点（2,070 ms 对 2,125 ms）。</p>
+<p>在优化配置上再加 Priority Processing，四类工作负载观测到的 p50 都降了。文本和图片的配对区间不包含零，文件和函数工具的区间跨过了零，所以这两类上的增量效果不确定。</p>
+<p>Standard 的 240 次运行全部正确完成，Priority Processing 是 119/120，有一次函数工具失败。文件和函数工具的描述性 p95，在这次运行里 Priority Processing 比优化后的 Standard 更慢。每组只有 30 次尝试，这只能说明在定 SLO 之前该多收集一些尾部观测，不是确定的尾部延迟结论。</p>
+<p>Priority Processing 是按量付费，有自己的价格。Provisioned Throughput 则是预留以 PTU 计量的专用容量，不在这次对比范围内。作者没有算具体的货币成本，所以需要另外评估当前各区域的定价。选处理方式之前，先看一下当前的 <a href="https://learn.microsoft.com/azure/foundry/openai/concepts/provisioned-throughput?WT.mc_id=AI-MVP-5003172#deployment-categories-compared">deployment categories</a> 和 <a href="https://learn.microsoft.com/azure/foundry/openai/concepts/priority-processing?WT.mc_id=AI-MVP-5003172">Priority Processing 文档</a>。</p>
+<h2 id="没有产生明确中位数改善的做法">没有产生明确中位数改善的做法</h2>
+<p>负面和不确定的发现，同样是结果的一部分：</p>
+<ul>
+<li><code>gpt-4.1-nano</code> 并没有稳定地比 <code>gpt-4.1-mini</code> 快，在测试的图片任务上反而慢了 25.0%</li>
+<li>去掉 12 轮无关的文本历史，对延迟的影响不确定</li>
+<li>重新创建 SDK 客户端，影响不确定</li>
+<li>只选一页 PDF 而不是三页，影响不确定</li>
+<li>在测试的文件和函数工具任务上，prompt caching 的影响不确定</li>
+<li>多参数和嵌套的 schema、含糊的描述、重新排序的工具定义，影响都不确定</li>
+</ul>
+<p>这些发现并不证明这些改动永远没用。它们说明的是，模型名称、token 数和架构上的直觉都不算性能证据。要在真实任务上测，给正确性打分，保留失败记录，并找出真正占大头的是哪个环节。</p>
+<h2 id="实用决策指南">实用决策指南</h2>
+<table>
+	<thead>
+			<tr>
+					<th>可能的延迟来源</th>
+					<th>该测什么</th>
+					<th>必须仍然成立的条件</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>生成的回答太长</td>
+					<td>只请求需要的输出</td>
+					<td>回答仍然完整且正确</td>
+			</tr>
+			<tr>
+					<td>重复的长 prompt 内容</td>
+					<td>把稳定内容放前面并保持一致</td>
+					<td>响应报告了缓存 token</td>
+			</tr>
+			<tr>
+					<td>图片处理</td>
+					<td>试试低细节</td>
+					<td>细小文字和必需的视觉证据仍然准确</td>
+			</tr>
+			<tr>
+					<td>文档的表示方式</td>
+					<td>对比原生 PDF 和提取后的文本</td>
+					<td>计入提取时间，需要时保留视觉证据</td>
+			</tr>
+			<tr>
+					<td>相互独立的页面请求</td>
+					<td>并发运行</td>
+					<td>请求之间确实独立，配额撑得住突发</td>
+			</tr>
+			<tr>
+					<td>工具之间多出来的模型轮次</td>
+					<td>在一次模型响应里请求必需的函数</td>
+					<td>选出的函数和参数相同</td>
+			</tr>
+			<tr>
+					<td>慢的、相互独立的应用端函数</td>
+					<td>让异步 I/O 重叠</td>
+					<td>副作用、配额、超时和失败都能安全处理</td>
+			</tr>
+			<tr>
+					<td>庞大的静态工具集</td>
+					<td>路由到更小的相关目录</td>
+					<td>正确的工具仍然可用</td>
+			</tr>
+			<tr>
+					<td>庞大的动态目录</td>
+					<td>测试 Toolbox tool search</td>
+					<td>token 和选择上的收益值得多花那一轮搜索</td>
+			</tr>
+			<tr>
+					<td>重复的 MCP 建立过程</td>
+					<td>复用由应用管理的会话</td>
+					<td>认证、过期、重连和隔离仍然安全</td>
+			</tr>
+			<tr>
+					<td>服务端的处理时间</td>
+					<td>测试 Priority Processing</td>
+					<td>返回的 tier、p50、p95、可靠性、质量、成本和数据驻留都满足目标</td>
+			</tr>
+	</tbody>
+</table>
+<p>每个实验可以按下面的顺序来做：</p>
+<ol>
+<li>定义一个正确答案必须包含什么</li>
+<li>写明计时器确切的开始和结束位置</li>
+<li>在有代表性的 fixture 上配对对照组和处理组</li>
+<li>随机决定谁先运行</li>
+<li>把失败保留在可靠性结果里</li>
+<li>只用正确完成的运行来计算延迟</li>
+<li>把兼容的优化放在一起测试，不要把各自孤立的百分比加起来</li>
+</ol>
+<h2 id="复现或查看这个实验">复现或查看这个实验</h2>
+<p><a href="https://github.com/yelghali/foundy-ai-perf-testing?WT.mc_id=AI-MVP-5003172">AI response performance benchmark 仓库</a>里有基准的实现、Terraform 环境、确定性 fixture、原始结果的处理脚本和报告。</p>
+<p>照着仓库 README 配置好 Azure 环境，就能运行自带的 smoke、单变量和组合基准配置。在跑要花钱的基准轮次之前，先从 smoke 配置开始。使用合成数据或经批准的数据，先确认配额和预期成本，再把自带的 fixture 换成能代表你生产工作负载的样例。</p>
+<p>仓库里还有：</p>
+<ul>
+<li>一份 <a href="https://github.com/yelghali/foundy-ai-perf-testing/blob/main/docs/ai-response-performance-guidelines.md?WT.mc_id=AI-MVP-5003172">AI response performance testing guide</a></li>
+<li>完整的 <a href="https://github.com/yelghali/foundy-ai-perf-testing/blob/main/docs/lab-report.md?WT.mc_id=AI-MVP-5003172">lab report</a></li>
+<li>可审计的 <a href="https://github.com/yelghali/foundy-ai-perf-testing/blob/main/docs/publication-results.md?WT.mc_id=AI-MVP-5003172">publication result ledger</a></li>
+<li>一个 <a href="https://github.com/yelghali/foundy-ai-perf-testing/blob/main/.github/skills/ai-response-performance/SKILL.md?WT.mc_id=AI-MVP-5003172">AI response performance Copilot skill</a>，可以把这套方法用到别的仓库上</li>
+</ul>
+<p>我自己最想带走的是顺序：先定义什么叫正确，把每个阶段的耗时量出来，砍掉能避免的工作，最后才轮到平台选项，去优化关键路径上还剩下的那段时间。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-10-05-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/">https://beanhsiang.github.io/post/2026-10-05-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a></li>
+        
+        <li><a href="/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a></li>
+        
+        <li><a href="/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a></li>
+        
+        <li><a href="/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a></li>
+        
+        <li><a href="/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+                <li><a href='/tags/Azure-OpenAI' target="_blank">Azure OpenAI</a></li>
+                
+                <li><a href='/tags/Performance' target="_blank">Performance</a></li>
+                
+                <li><a href='/tags/AI-Agents' target="_blank">AI Agents</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-05-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" title="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/" title="深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流" target="_blank">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-02-mbml-asthma/" title="[译]基于模型的机器学习 - 6 理解哮喘" target="_blank">[译]基于模型的机器学习 - 6 理解哮喘</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" title="[译]基于模型的机器学习 - 5.4 我们的首次推荐" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" title="[译]基于模型的机器学习 - 5.3 训练我们的推荐系统" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (45)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (37)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Evaluation/">Evaluation</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Performance/">Performance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

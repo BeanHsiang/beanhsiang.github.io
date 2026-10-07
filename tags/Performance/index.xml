@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Performance on Innovation with tech</title>
+		<link>https://beanhsiang.github.io/tags/Performance/</link>
+		<description>Recent content in Performance on Innovation with tech</description>
+		<generator>Hugo</generator>
+		<language>zh-Hans</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 05 Oct 2026 12:00:00 +0800</lastBuildDate>
+		
+			<atom:link href="https://beanhsiang.github.io/tags/Performance/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</title>
+				<link>https://beanhsiang.github.io/post/2026-10-05-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/</link>
+				<pubDate>Mon, 05 Oct 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-10-05-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/20261007113827-foundry-faster-responses-title.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;How to make AI responses faster on Microsoft Foundry&#34; src=&#34;https://beanhsiang.github.io/uploads/20261007113827-foundry-faster-responses-title.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;题图来自 Microsoft Foundry 博客的 &lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measureme/4560073?WT.mc_id=AI-MVP-5003172&#34;&gt;How to make AI responses faster on Microsoft Foundry: lessons from 2,040 measurements&lt;/a&gt;，作者是 Yassine El Ghali。&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;模型换得更快，应用不一定就更快。这篇文章的作者在 Microsoft Foundry 上把文本、图片、文件、工具和 MCP 几类工作负载都测了一遍，想知道哪些改动真能降低延迟，又不牺牲正确性。我读下来最大的感受是，延迟的来源比我平时想的杂得多：输出长度、重复的 prompt 内容、图片和文档处理、工具选择、连接建立、串行等待，还有多出来的模型请求，都会占时间。&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

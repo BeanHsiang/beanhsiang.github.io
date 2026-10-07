@@ -82,6 +82,38 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-10-06T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月6日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20261007113827-foundry-faster-responses-title.png">
+            <img class="mx-auto" alt="How to make AI responses faster on Microsoft Foundry" src="/uploads/20261007113827-foundry-faster-responses-title.png" />
+        </a>
+    </p>
+<p><em>题图来自 Microsoft Foundry 博客的 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measureme/4560073?WT.mc_id=AI-MVP-5003172">How to make AI responses faster on Microsoft Foundry: lessons from 2,040 measurements</a>，作者是 Yassine El Ghali。</em></p>
+<p>模型换得更快，应用不一定就更快。这篇文章的作者在 Microsoft Foundry 上把文本、图片、文件、工具和 MCP 几类工作负载都测了一遍，想知道哪些改动真能降低延迟，又不牺牲正确性。我读下来最大的感受是，延迟的来源比我平时想的杂得多：输出长度、重复的 prompt 内容、图片和文档处理、工具选择、连接建立、串行等待，还有多出来的模型请求，都会占时间。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
             </h1>
         </header>
@@ -108,38 +140,6 @@
 <p><em>题图来自 Microsoft Foundry 博客的 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/evaluate-more-spend-less-batching-microsoft-foundry-evaluators-for-efficient-eva/4560841?WT.mc_id=AI-MVP-5003172">Evaluate More, Spend Less: Batching Microsoft Foundry Evaluators for Efficient Evaluation</a>，作者是 Salma Elshafey、Ali Mahmoudzadeh、Kayla Ames、Ahmad Qardahji、Vivek Bhadauria、Morteza Ziyadi 和 April Kwong。</em></p>
 <p>给 Agent 做评估时，同一段对话往往要分别发给好几个评估器。这篇文章讲的是微软 Foundry 团队的一项实验：用一次 Judge 调用同时跑五六个 Microsoft Foundry 评估器，总输入 token 少了 61.25% 到 71.07%，实测运行耗时少了 35.74% 到 46.10%，而且在几个价值较高的评估维度上，前沿 Judge 模型的质量没有明显波动。我把它读完后觉得，数字好看是一回事，更有用的是它顺带给出了哪些评估器适合合并、哪些得留着单独跑。</p>……
             <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-10-05-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-10-05T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年10月5日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>
-        <a data-fancybox="gallery" href="/uploads/20261007113827-foundry-faster-responses-title.png">
-            <img class="mx-auto" alt="How to make AI responses faster on Microsoft Foundry" src="/uploads/20261007113827-foundry-faster-responses-title.png" />
-        </a>
-    </p>
-<p><em>题图来自 Microsoft Foundry 博客的 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measureme/4560073?WT.mc_id=AI-MVP-5003172">How to make AI responses faster on Microsoft Foundry: lessons from 2,040 measurements</a>，作者是 Yassine El Ghali。</em></p>
-<p>模型换得更快，应用不一定就更快。这篇文章的作者在 Microsoft Foundry 上把文本、图片、文件、工具和 MCP 几类工作负载都测了一遍，想知道哪些改动真能降低延迟，又不牺牲正确性。我读下来最大的感受是，延迟的来源比我平时想的杂得多：输出长度、重复的 prompt 内容、图片和文档处理、工具选择、连接建立、串行等待，还有多出来的模型请求，都会占时间。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-05-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" target="_blank">阅读全文</a></p>
         </div>
     </article>
     
@@ -475,11 +475,11 @@
 <ul class="widget-list">
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
+        <a href="https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" title="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
     </li>
     
     <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-05-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" title="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
+        <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
     </li>
     
     <li>

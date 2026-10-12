@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>语音 Agent 评估：Foundry 多轮评估器到底有多可靠？ | Innovation with tech</title>
+    <meta property="og:title" content="语音 Agent 评估：Foundry 多轮评估器到底有多可靠？ - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-10-09T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-10-09T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="语音 Agent 评估：Foundry 多轮评估器到底有多可靠？">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</h1>
+        </header>
+        
+  <time datetime="2026-10-09T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月9日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p><em>本文整理自 Microsoft Foundry 博客的 <a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/evaluating-voice-agents-how-reliable-are-foundrys-multi-turn-evaluators/4559697?WT.mc_id=AI-MVP-5003172">Evaluating Voice Agents: How Reliable Are Foundry&rsquo;s Multi-turn Evaluators?</a>，作者是 Sheng Liu、Shivank Goel 和 Morteza Ziyadi。</em></p>
+<p>做语音 Agent 的团队迟早会撞上一个现实：每天几千通电话，Agent 还隔三差五更新，光靠人工听录音根本跟不上，只能上自动评估。Microsoft Foundry 给的办法是多轮评估器，它会看完整段对话，评估 Agent 的行为和结果。</p>
+<p>问题是，这些评估器放到语音 Agent 的 trace 上到底靠不靠谱？微软团队拿 Task Completion 和 Generated Rubric 两个评估器，在基准对话和一个 Foundry 语音 Agent 的 trace 上做了一轮测试，结论围绕四件事展开：单通电话的判断准确率、Agent 之间的排名、同一批数据重复评估时的一致性，以及基于 rubric 的打分。我把数据过了一遍，下面按原文的结构整理。</p>
+<h2 id="两个评估器">两个评估器</h2>
+<p>Task Completion 和 Generated Rubric 的输入都是一段完整的多轮对话，由一个 Judge 模型自动评估。差别在评估标准和输出。</p>
+<p>Task Completion 判断用户的任务有没有被成功、完整地完成。输出是一个二元结果（true 或 false），外加一段解释，说明为什么判定为完成或未完成。</p>
+<p>Generated Rubric 则根据用户提供的评估要求生成一套标准，再按这套标准评估对话。输出是 0 到 1 之间的加权总分、通过或不通过的结果，以及每条标准各自的得分和解释。</p>
+<h2 id="研究设计">研究设计</h2>
+<h3 id="task-completion">Task Completion</h3>
+<p>Task Completion 在两个 trace 数据集上做了评估。</p>
+<p>第一个是 τ-Voice 基准 trace，包含 3000 多通模拟电话，覆盖航空、零售和电信三类任务，由 12 种语音 Agent 配置产生，其中既有 audio-native 的系统，也有级联（cascaded）的系统。图 1 只展示本文保留的 9 种配置：gpt-realtime、Gemini Live 和级联配置。数据只保留了 τ-Voice 的用户模拟器确实遵循了所收到指令的那些对话。</p>
+<p>第二个是 Foundry Agent trace，由一个基于 gpt-realtime-2 的 Foundry 语音 Agent 在 τ-Voice 任务上产生，同样只保留用户模拟器遵循指令的对话。</p>
+<p>Judge 这边，Task Completion 评估器保持不变，结果来自 7 种 GPT Judge 配置。对每通电话，研究者把评估器的结论和研究数据中的参考通过/不通过标签做对比。Agent 排名和重复评估一致性则是在 τ-Voice 基准 trace 上测量的。</p>
+<h3 id="generated-rubric">Generated Rubric</h3>
+<p>Generated Rubric 的评估对象是电信类对话，仍由那个基于 gpt-realtime-2 的 Foundry 语音 Agent 在 τ-Voice 任务上产生。rubric 由 gpt-5.4-mini 根据描述预期行为的要求生成。gpt-5.4 和 gpt-5.6-sol 各自用 Generated Rubric 给同样的 114 段对话打分，再把预测结果和参考标签做比较。</p>
+<h2 id="指标">指标</h2>
+<p>两个评估器的核心正确性指标都是平衡准确率（balanced accuracy）。Task Completion 另外还看原始准确率、排名一致性和可重复性。</p>
+<ul>
+<li>平衡准确率是成功召回率与失败召回率的平均值，即（成功召回率 + 失败召回率）/ 2。每个召回率指对应结果的通话被正确标注的比例。两类等权，可以避免多数类把分数拉偏。</li>
+<li>原始准确率是评估结论与参考标签一致的通话占比。和平衡准确率不同，它会反映数据集中成功与失败通话的比例。</li>
+<li>Kendall&rsquo;s τ 衡量评估器给出的 Agent 排名和基准排名之间的一致程度。取值范围是 -1（完全倒序）到 1（顺序完全相同），0 表示整体上没有排名关联。数值越高，排名越一致。</li>
+<li>配对顺序一致率（pairwise order agreement）是评估器与基准对 Agent 配对排序相同的百分比。12 个 Agent 共构成 66 对。研究同时报告了全部配对的一致率，以及基准通过率相差超过 10 个百分点的&quot;明显分开&quot;配对的一致率。</li>
+<li>可重复性是指对 4 个 Agent 在相同设置下评估两次时的一致程度。报告内容包括预测结果不变的百分比、平衡准确率的绝对变化，以及 Agent 排名是否保持不变。一致率越高、准确率变化越小，说明判断越稳定。</li>
+</ul>
+<h2 id="task-completion-的结果">Task Completion 的结果</h2>
+<h3 id="单通电话的准确率">单通电话的准确率</h3>
+<p>在微软内部研究中，以 gpt-5.6-terra 作为 Judge，Task Completion 在保留下来的 τ-Voice 基准通话上取得约 83% 的平衡准确率和 85% 的原始准确率。表 1 汇总了本文保留的 7 个 Judge 在各项指标上的一个报告值。</p>
+<table>
+	<thead>
+			<tr>
+					<th>指标</th>
+					<th>取整后的研究数值</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>平衡准确率</td>
+					<td>83%</td>
+			</tr>
+			<tr>
+					<td>原始准确率</td>
+					<td>85%</td>
+			</tr>
+			<tr>
+					<td>Kendall&rsquo;s τ</td>
+					<td>0.818</td>
+			</tr>
+			<tr>
+					<td>配对一致率：全部配对</td>
+					<td>91%</td>
+			</tr>
+			<tr>
+					<td>配对一致率：差距 &gt; 10 pp</td>
+					<td>100%</td>
+			</tr>
+			<tr>
+					<td>预测一致率</td>
+					<td>97%</td>
+			</tr>
+	</tbody>
+</table>
+<p>表 1：来自微软内部研究的 7 种 GPT Judge 配置的跨 Judge 指标汇总。百分比取整到整数，Kendall&rsquo;s τ 保留三位小数。不同行的数值可能来自不同的 Judge，不能当作同一个配置的结果来读。研究没有做统计显著性检验。</p>
+<p>图 1 给出了研究中每个 Judge 与 Agent 组合的平衡准确率。9 行是本文保留的 gpt-realtime、Gemini Live 和级联语音 Agent 配置，7 列是保留的 GPT Judge 配置。这张矩阵只是描述性的，研究没有检验不同 Judge 之间的差异是否显著，也没有检验结果能否推广到这些 trace 之外。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/20261012140500-voice-agent-evaluators-fig1.png">
+            <img class="mx-auto" alt="按语音 Agent 与 GPT Judge 配置划分的平衡准确率热力图" src="/uploads/20261012140500-voice-agent-evaluators-fig1.png" />
+        </a>
+    </p>
+<p>图 1：微软内部研究中 63 个 Judge 与 Agent 组合的描述性平衡准确率。</p>
+<h3 id="agent-排名">Agent 排名</h3>
+<p>很多评估决策关心的是 Agent 之间的先后顺序，而不只是某一通电话有没有通过。研究者按评估器得出的通过率给 τ-Voice 基准数据集中的 12 个 Agent 排序，再和基准排序对比。在本文保留的 7 个 GPT Judge 上，Kendall&rsquo;s τ 的范围是 0.758 到 0.818。全部 66 个 Agent 配对上观察到的配对一致率最高为 90.9%，7 个 Judge 的平均值是 89.8%。</p>
+<table>
+	<thead>
+			<tr>
+					<th>Judge</th>
+					<th>Kendall&rsquo;s τ</th>
+					<th>全部配对一致率 (%)</th>
+					<th>差距 &gt; 10 pp 配对一致率 (%)</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>gpt-5.4-mini</td>
+					<td>0.818</td>
+					<td>90.9</td>
+					<td>100.0</td>
+			</tr>
+			<tr>
+					<td>gpt-5.4-nano</td>
+					<td>0.818</td>
+					<td>90.9</td>
+					<td>100.0</td>
+			</tr>
+			<tr>
+					<td>gpt-5.6-luna</td>
+					<td>0.818</td>
+					<td>90.9</td>
+					<td>100.0</td>
+			</tr>
+			<tr>
+					<td>gpt-5.1</td>
+					<td>0.788</td>
+					<td>89.4</td>
+					<td>100.0</td>
+			</tr>
+			<tr>
+					<td>gpt-5.4</td>
+					<td>0.788</td>
+					<td>89.4</td>
+					<td>100.0</td>
+			</tr>
+			<tr>
+					<td>gpt-5.6-sol</td>
+					<td>0.788</td>
+					<td>89.4</td>
+					<td>100.0</td>
+			</tr>
+			<tr>
+					<td>gpt-5.6-terra</td>
+					<td>0.758</td>
+					<td>87.9</td>
+					<td>100.0</td>
+			</tr>
+	</tbody>
+</table>
+<p>表 2：来自微软内部研究的 7 种 GPT Judge 的描述性 Agent 排名结果。&ldquo;全部配对&quot;覆盖 12 个 Agent 的全部 66 对。&ldquo;差距 &gt; 10 pp&quot;只统计基准通过率相差超过 10 个百分点的配对。没有对 Judge 之间的差异做显著性分析。</p>
+<p>对于基准通过率相差超过 10 个百分点的配对，7 个 Judge 排出的方向全都和基准一致。出现分歧的，多半是基准通过率本来就接近的配对。这些观察只适用于被测的 Agent、trace、Judge 和排名流程。</p>
+<h3 id="不同-judge-之间的结果">不同 Judge 之间的结果</h3>
+<p>以 gpt-5.6-terra 作为 Judge 时，Task Completion 在 τ-Voice 基准 trace 上的平衡准确率是 82.7%。换成 gpt-5.6-luna 是 80.3%，观察到的差距为 2.4 个百分点。两者对应的 Kendall&rsquo;s τ 分别是 0.758 和 0.818，配对一致率分别是 87.9% 和 90.9%。这些描述性数据反映的是被测配置的不同侧面。研究没有评估价格、延迟、调用量或经济价值，也没有检验观察到的差异是否显著或等效，所以这些数值并不能推出该用哪个 Judge 作默认选择。</p>
+<table>
+	<thead>
+			<tr>
+					<th>Agent</th>
+					<th>Judge</th>
+					<th>平衡准确率 (%)</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>全部 Agent</td>
+					<td>gpt-5.6-terra</td>
+					<td>82.7</td>
+			</tr>
+			<tr>
+					<td>另一项实测结果</td>
+					<td>gpt-5.6-luna</td>
+					<td>80.3</td>
+			</tr>
+			<tr>
+					<td>gpt-realtime</td>
+					<td>gpt-5.6-terra</td>
+					<td>82.0</td>
+			</tr>
+			<tr>
+					<td>另一项实测结果</td>
+					<td>gpt-5.4-mini</td>
+					<td>77.4</td>
+			</tr>
+			<tr>
+					<td>Cascaded</td>
+					<td>gpt-5.6-terra</td>
+					<td>80.8</td>
+			</tr>
+	</tbody>
+</table>
+<p>表 3：微软内部研究中，按保留的语音 Agent 分组、选取的 GPT Judge 描述性结果。</p>
+<p>表 3 里的分数会随语音 Agent 分组而变。使用 gpt-5.6-terra 时，全部基准 Agent 的值是 82.7%，gpt-realtime 是 82.0%，Gemini Live 是 78.6%，级联配置是 80.8%。另外两项实测值是：gpt-5.6-luna 在全部 Agent 上为 80.3%，gpt-5.4-mini 在 gpt-realtime 上为 77.4%。这些描述性差异不能说明某个 Judge 普遍更强，也不能说明是 Agent 架构造成了这些数值。图 1 给出了 9 种语音 Agent 配置对应的完整测量值。</p>
+<h3 id="可重复性">可重复性</h3>
+<p>为了衡量重复评估的一致性，研究者用本文保留的 7 个 GPT Judge，在设置不变的前提下，对同样 4 种基准语音 Agent 配置各评估了两次。这个子集每个 Judge 恰好包含 1,109 通电话，其中既有 audio-native 配置，也有级联配置。某条判定在两次运行之间发生变化，称为一次预测翻转（prediction flip），一个 Judge 的翻转率就是出现翻转的通话占比。7 个 Judge 的平均预测一致率是 95.1%，平衡准确率的平均绝对变化是 0.8%，观察到的最大变化是 2.4%。</p>
+<table>
+	<thead>
+			<tr>
+					<th>Judge</th>
+					<th>第 1 次平衡准确率 (%)</th>
+					<th>第 2 次平衡准确率 (%)</th>
+					<th>变化 (%)</th>
+					<th>预测翻转 (%)</th>
+					<th>Agent 排名是否相同</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>gpt-5.6-terra</td>
+					<td>82.4</td>
+					<td>80.9</td>
+					<td>1.5</td>
+					<td>6.0</td>
+					<td>是</td>
+			</tr>
+			<tr>
+					<td>gpt-5.6-sol</td>
+					<td>81.8</td>
+					<td>82.0</td>
+					<td>0.2</td>
+					<td>3.4</td>
+					<td>是</td>
+			</tr>
+			<tr>
+					<td>gpt-5.4</td>
+					<td>79.2</td>
+					<td>78.9</td>
+					<td>0.3</td>
+					<td>4.0</td>
+					<td>是</td>
+			</tr>
+			<tr>
+					<td>gpt-5.6-luna</td>
+					<td>78.9</td>
+					<td>79.9</td>
+					<td>1.0</td>
+					<td>4.2</td>
+					<td>是</td>
+			</tr>
+			<tr>
+					<td>gpt-5.4-mini</td>
+					<td>78.1</td>
+					<td>75.7</td>
+					<td>2.4</td>
+					<td>8.8</td>
+					<td>否</td>
+			</tr>
+			<tr>
+					<td>gpt-5.1</td>
+					<td>77.8</td>
+					<td>77.6</td>
+					<td>0.2</td>
+					<td>4.1</td>
+					<td>是</td>
+			</tr>
+			<tr>
+					<td>gpt-5.4-nano</td>
+					<td>74.6</td>
+					<td>74.5</td>
+					<td>0.1</td>
+					<td>4.1</td>
+					<td>是</td>
+			</tr>
+	</tbody>
+</table>
+<p>表 4：在相同设置下对同一批通话运行两次的结果。平衡准确率的变化根据表中显示的分数计算。预测翻转是单条判定发生变化的百分比。</p>
+<p>7 个 Judge 里有 6 个复现了相同的 Agent 排名。gpt-5.6-sol 的翻转率是 3.4%，排名保持不变。gpt-5.4-mini 的准确率变化为 2.4%，翻转率 8.8%，排名发生了变化。这两个例子正好说明为什么预测一致率和排名稳定性要分开报告，它们是两个不同的描述性指标。它们也不能推出模型之间有一个普遍成立的可重复性高低顺序。</p>
+<h3 id="foundry-agent-的结果">Foundry Agent 的结果</h3>
+<p>研究者把同一个 Task Completion 评估器和同一组 Judge 用到了 278 条 Foundry Agent trace 上，数据集的来源见前面的研究设计。这些通话由一个基于 gpt-realtime-2 的 Foundry 语音 Agent 在 τ-Voice 任务上产生，并通过 Foundry 的可观测性管道采集。</p>
+<table>
+	<thead>
+			<tr>
+					<th>Judge</th>
+					<th>平衡准确率 (%)</th>
+					<th>原始准确率 (%)</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>gpt-5.6-terra</td>
+					<td>80.7</td>
+					<td>80.2</td>
+			</tr>
+			<tr>
+					<td>gpt-5.6-luna</td>
+					<td>79.4</td>
+					<td>76.4</td>
+			</tr>
+			<tr>
+					<td>gpt-5.4</td>
+					<td>79.3</td>
+					<td>77.5</td>
+			</tr>
+			<tr>
+					<td>gpt-5.6-sol</td>
+					<td>78.2</td>
+					<td>77.8</td>
+			</tr>
+			<tr>
+					<td>gpt-5.4-nano</td>
+					<td>76.9</td>
+					<td>73.5</td>
+			</tr>
+			<tr>
+					<td>gpt-5.4-mini</td>
+					<td>76.7</td>
+					<td>76.3</td>
+			</tr>
+			<tr>
+					<td>gpt-5.1</td>
+					<td>76.6</td>
+					<td>74.7</td>
+			</tr>
+			<tr>
+					<td>平均（列出的 7 个 Judge）</td>
+					<td>78.3</td>
+					<td>76.6</td>
+			</tr>
+	</tbody>
+</table>
+<p>表 5：微软内部研究中 7 种 GPT Judge 在保留下来的、来自一个基于 gpt-realtime-2 的 Foundry 语音 Agent 的 τ-Voice 任务 trace 上的 Task Completion 描述性结果。平均行是列出的 7 个 Judge 的平均值。没有计算置信区间，也没有做显著性检验。</p>
+<p>在这 278 条 Foundry Agent trace 上，7 个 Judge 的平衡准确率平均为 78.3%，范围是 76.6% 到 80.7%。用 gpt-5.6-terra 时，平衡准确率是 80.7%，原始准确率是 80.2%；而在 τ-Voice 基准 trace 的 gpt-realtime 子集上，平衡准确率是 82.0%。用 gpt-5.6-luna 时，对应的两个平衡准确率分别是 79.4% 和 79.2%。这些数字描述的是两个被测数据集。没有显著性或等效性检验，就不能据此说两者表现相当，也不能据此推荐某个 Judge。</p>
+<h2 id="generated-rubric-的结果">Generated Rubric 的结果</h2>
+<p>Task Completion 用的是一套统一的&quot;任务是否成功解决&quot;的定义，Generated Rubric 则把用户提供的评估要求翻译成打分标准。研究者在同一批电信对话上测了这两个评估器，描述它们在两种 Judge 配置下的观察得分。</p>
+<p>表 6 在同一批保留的 τ-Voice 电信对话上报告了两个评估器的结果，这些对话由一个基于 gpt-realtime-2 的 Foundry 语音 Agent 产生。gpt-5.4 和 gpt-5.6-sol 各自把两个评估器应用到同样的通话上。</p>
+<table>
+	<thead>
+			<tr>
+					<th>Judge</th>
+					<th>Rubric 平衡准确率 (%)</th>
+					<th>Task Completion 平衡准确率 (%)</th>
+					<th>差值 (%)</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>gpt-5.4</td>
+					<td>74.5</td>
+					<td>76.8</td>
+					<td>−2.3</td>
+			</tr>
+			<tr>
+					<td>gpt-5.6-sol</td>
+					<td>78.5</td>
+					<td>76.3</td>
+					<td>+2.2</td>
+			</tr>
+	</tbody>
+</table>
+<p>表 6：Generated Rubric 与内置 Task Completion 在同一批保留的 τ-Voice 电信对话上的对比，对话由一个基于 gpt-realtime-2 的 Foundry 语音 Agent 产生。rubric 由 gpt-5.4-mini 生成。差值等于 Generated Rubric 的平衡准确率减去 Task Completion 的平衡准确率。</p>
+<p>微软内部研究里，以 gpt-5.4 作 Judge 时，Generated Rubric 的平衡准确率是 74.5%，Task Completion 是 76.8%，差值为 −2.3%。换成 gpt-5.6-sol，两者分别是 78.5% 和 76.3%，差值为 +2.2%。研究没有做显著性或等效性检验，所以这些差异既不能说明哪个评估器更好，也不能说明两者准确率相当。</p>
+<p>Generated Rubric 的价值在于，团队不用从零写 rubric，就能把自己提供的评估要求转成打分标准。这些要求可以涉及任务结果、预期行为，或者对应用来说重要的其他质量维度。在被测的电信对话上，表 6 给出了观察到的分数。这项研究不能证明它与内置的 Task Completion 准确率相当。</p>
+<h2 id="观察结果与研究范围">观察结果与研究范围</h2>
+<p>在这项微软内部研究里，Task Completion 和 Generated Rubric 在特定的 τ-Voice 基准通话、Foundry Agent trace、保留的 GPT Judge 配置和评估器设置下，给出了上面这些描述性数据。这些发现不能证明评估器普遍可靠，不能证明某个 Judge 更优，也不能证明两个评估器等效。它们能做的，是示范在一套明确的评估设置里，怎样去检视单通电话准确率、Agent 排名、重复评估一致性，以及 rubric 特有的标准。</p>
+<p>读完我的感受是，这篇文章最诚实的地方就在于反复强调自己没有做显著性检验。80% 出头的平衡准确率对自动化评估来说可以用，但它离&quot;可以完全替代人工抽检&quot;还有距离。在排名上，基准通过率差距超过 10 个百分点的配对，7 个 Judge 全部排对了，真正容易出错的是水平接近的 Agent。所以如果要用这类评估器比较两个版本的语音 Agent，差距很小的时候，我会保留人工复核。</p>
+<h2 id="动手试试">动手试试</h2>
+<p>想评估自己的语音 Agent，可以在 <a href="https://ai.azure.com/nextgen/r/,-,,-/allresources?WT.mc_id=AI-MVP-5003172">Microsoft Foundry</a> 里打开项目，挑选能代表你想评估的任务和行为的对话。按照<a href="https://learn.microsoft.com/azure/foundry/observability/how-to/cloud-evaluation-conversations?WT.mc_id=AI-MVP-5003172">对话评估指南</a>，对完整对话运行 task completion。如果想按自己的要求评估，可以用 <a href="https://learn.microsoft.com/azure/foundry/concepts/evaluation-evaluators/rubric-evaluators?WT.mc_id=AI-MVP-5003172">rubric 评估器指南</a>生成 rubric，再套用到这些对话上。查看得分和解释，就能知道 Agent 在哪些地方达到预期、哪些地方还需要改进。<a href="https://learn.microsoft.com/azure/foundry/agents/concepts/voice-agent-observability?WT.mc_id=AI-MVP-5003172">语音 Agent 可观测性指南</a>介绍了怎样采集和查看对话 trace。</p>
+<p>要注意，这里讨论的语音 Agent 可观测性和评估工作流目前处于预览阶段，不提供服务级别协议（SLA），也不建议用于生产工作负载。不同区域和版本的可用性与界面路径可能有差异。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/">https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a></li>
+        
+        <li><a href="/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a></li>
+        
+        <li><a href="/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a></li>
+        
+        <li><a href="/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a></li>
+        
+        <li><a href="/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+                <li><a href='/tags/AI-Agents' target="_blank">AI Agents</a></li>
+                
+                <li><a href='/tags/Evaluation' target="_blank">Evaluation</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/" title="语音 Agent 评估：Foundry 多轮评估器到底有多可靠？" target="_blank">语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" title="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/" title="深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流" target="_blank">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-02-mbml-asthma/" title="[译]基于模型的机器学习 - 6 理解哮喘" target="_blank">[译]基于模型的机器学习 - 6 理解哮喘</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (47)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (37)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Evaluation/">Evaluation</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Governance/">Governance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Performance/">Performance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

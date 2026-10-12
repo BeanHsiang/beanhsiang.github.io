@@ -3,27 +3,33 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://beanhsiang.github.io/tags/AI-Agents/</loc>
-    <lastmod>2026-10-08T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-10-08T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-09T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/tags/Governance/</loc>
-    <lastmod>2026-10-08T12:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/tags/Evaluation/</loc>
+    <lastmod>2026-10-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2026-10-08T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
-    <lastmod>2026-10-08T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
-    <lastmod>2026-10-08T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-10-08T12:00:00+08:00</lastmod>
+    <lastmod>2026-10-09T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-10-09T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/</loc>
+    <lastmod>2026-10-09T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Governance/</loc>
     <lastmod>2026-10-08T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/</loc>
@@ -37,9 +43,6 @@
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/</loc>
     <lastmod>2026-10-06T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Evaluation/</loc>
-    <lastmod>2026-10-05T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/</loc>
     <lastmod>2026-10-05T12:00:00+08:00</lastmod>

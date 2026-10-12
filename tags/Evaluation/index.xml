@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Mon, 05 Oct 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Fri, 09 Oct 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/tags/Evaluation/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</title>
+				<link>https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/</link>
+				<pubDate>Fri, 09 Oct 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/</guid>
+				<description>&lt;p&gt;&lt;em&gt;本文整理自 Microsoft Foundry 博客的 &lt;a href=&#34;https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/evaluating-voice-agents-how-reliable-are-foundrys-multi-turn-evaluators/4559697?WT.mc_id=AI-MVP-5003172&#34;&gt;Evaluating Voice Agents: How Reliable Are Foundry&amp;rsquo;s Multi-turn Evaluators?&lt;/a&gt;，作者是 Sheng Liu、Shivank Goel 和 Morteza Ziyadi。&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;做语音 Agent 的团队迟早会撞上一个现实：每天几千通电话，Agent 还隔三差五更新，光靠人工听录音根本跟不上，只能上自动评估。Microsoft Foundry 给的办法是多轮评估器，它会看完整段对话，评估 Agent 的行为和结果。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</title>
 				<link>https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/</link>

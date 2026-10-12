@@ -75,6 +75,53 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" title="[译]基于模型的机器学习 - 5.4 我们的首次推荐" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-09-18T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月18日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/thumbsup_down_74932468_small.jpg">
+            <img class="mx-auto" alt="竖起或放下大拇指" src="/uploads/thumbsup_down_74932468_small.jpg" />
+        </a>
+    </p>
+<p>有了我们训练好的两特质<a href="/post/2025-04-21-mbml-introduction">模型</a>，我们现在准备好做一些推荐了！在训练期间，我们学到了每部电影和每个人在<a href="/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people">特质空间</a>中（不确定的）位置。我们现在可以为验证集中每一条被留出的评分做预测。我们一次做一条评分——也就是说，一次针对一个人和一部电影。首先，我们把电影 <code>trait</code> 和人的 <code>preference</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>设为训练期间学到的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>。然后我们运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>来推断 <code>likesMovie</code> 上的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>，以计算这个人会喜欢这部电影的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。在<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">验证集</a>中所有评分上重复这一过程，就得到了每个人喜欢每部电影的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，如图 5.15a 所示。图 5.15b 显示了对应的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>喜欢/不喜欢的值。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_4OurFirstRecommendationsPredictions_[2]-Value.png">
+            <img class="mx-auto" alt="图 5.15a 推断的喜欢概率" src="/uploads/Recommender_4OurFirstRecommendationsPredictions_[2]-Value.png" />
+        </a>
+    </p>
+<p><em>(a) 推断的喜欢<a href="/post/2025-04-22-mbml-murder-mystery">概率</a></em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_4OurFirstRecommendationsGroundTruth_.png">
+            <img class="mx-auto" alt="图 5.15b 真实标签喜欢/不喜欢" src="/uploads/Recommender_4OurFirstRecommendationsGroundTruth_.png" />
+        </a>
+    </p>
+<p><em>(b) <a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>喜欢/不喜欢</em></p>
+<p><em>图 5.15：我们推荐<a href="/post/2025-04-21-mbml-introduction">模型</a>的初步结果。(a) 计算得到的每个人喜欢每部电影的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。白色方块对应<a href="/post/2025-04-22-mbml-murder-mystery">概率</a> 1.0，黑色对应<a href="/post/2025-04-22-mbml-murder-mystery">概率</a> 0.0，灰色的深浅表示介于两者之间的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>值。(b) <a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>——白色表示这个人喜欢这部电影，黑色表示他不喜欢。</em></p>
+<p>从图 5.15b 中最先引人注意的一点是，人们大多喜欢电影，而不是不喜欢它们。因此从某种意义上说，我们给推荐系统设定的任务，是试图找出一个人不喜欢的少数几部电影。看图 5.15a 中预测的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，我们可以在这个任务上看到一些成功——因为某些较暗的方块确实与<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>中的黑色方块正确对齐了。此外，某些行总体上比平均更暗或更亮，表明我们能够学到每个人总体上有多可能喜欢或不喜欢电影。然而，这些预测并不完美——有许多不喜欢的电影被漏掉了，也有一些不喜欢的预测是错误的。但在我们对<a href="/post/2025-04-21-mbml-introduction">模型</a>做任何改进之前，我们需要先决定用哪些<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">评估指标</a>来度量和追踪这些改进。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" title="[译]基于模型的机器学习 - 5.3 训练我们的推荐系统" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
             </h1>
         </header>
@@ -351,48 +398,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" title="[译]基于模型的机器学习 - 4.6 随邮件到达而学习" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-08-31T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年8月31日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>到目前为止，我们能够一次性在大量邮件上训练我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>。但对我们的应用而言，我们需要能够在用户回复一封新邮件时、或在明确用户不会回复它时，立即从这封邮件中学习。我们不能等到收到大量邮件后，再一次性在它们上面训练、然后永远使用训练好的<a href="/post/2025-04-21-mbml-introduction">模型</a>。相反，我们必须随着新邮件的到来持续训练<a href="/post/2025-04-21-mbml-introduction">模型</a>，并始终使用最新训练好的<a href="/post/2025-04-21-mbml-introduction">模型</a>来做预测。</p>
-<p>正如我们在上一章<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">第 3.3 节</a>中看到的，我们可以使用<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>在收到新训练数据时持续更新我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>。在我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>中，<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>很直接：对每一批自上次训练以来到达的邮件，我们把之前对 <code>weight</code> 和 <code>threshold</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>用作训练的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。一旦对这一批的训练完成，对 <code>weight</code> 和 <code>threshold</code> 的新<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>就可以用来做预测。之后当训练下一批邮件时，这些<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>将充当新的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。我们可以通过把训练数据分成若干批、并在每一批到来时运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>，来检查这个过程工作得如何。然后我们可以把这种方法与离线训练相比较，离线训练一次性呈现到该时间点为止见过的所有训练数据。图 4.20 显示了使用离线训练、或使用不同批量大小的在线训练时，在全部 10 个用户上平均的 AUC 和 <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">AP</a>。</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AreaUnderCurve.png">
-            <img class="mx-auto" alt="图 4.20a 曲线下面积" src="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AreaUnderCurve.png" />
-        </a>
-    </p>
-<p><em>(a) 曲线下面积</em></p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AveragePrecision.png">
-            <img class="mx-auto" alt="图 4.20b 平均精确率" src="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AveragePrecision.png" />
-        </a>
-    </p>
-<p><em>(b) <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">平均精确率</a></em></p>
-<p><em>图 4.20：随着越来越多训练邮件变得可用时的预测准确性，在全部 10 个用户上平均。对每个指标，离线曲线显示如果我们在到该时间点为止收到的所有邮件上从头重新训练<a href="/post/2025-04-21-mbml-introduction">模型</a>的准确性。另外四条曲线显示如果我们改为在每 1、5、10 或 50 封邮件后做在线训练以增量更新<a href="/post/2025-04-21-mbml-introduction">模型</a>的准确性。</em></p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -512,6 +517,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/" title="语音 Agent 评估：Foundry 多轮评估器到底有多可靠？" target="_blank">语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
     </li>
     
@@ -547,10 +556,6 @@
         <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" title="Microsoft Foundry 智能体的 A2A 端点与 A2A 工具" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" title="[译]基于模型的机器学习 - 5.4 我们的首次推荐" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -570,7 +575,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (46)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (47)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

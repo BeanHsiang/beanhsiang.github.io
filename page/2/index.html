@@ -75,6 +75,42 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" title="[译]基于模型的机器学习 - 5.3 训练我们的推荐系统" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-09-14T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月14日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>在能够训练我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>之前，我们需要一些数据来训练它。好消息是，有一些高质量的公开数据集可以用来训练推荐<a href="/post/2025-04-21-mbml-introduction">模型</a>。我们将使用明尼苏达大学 GroupLens Research 提供的、极为出色的 <a href="https://grouplens.org/datasets/movielens/">MovieLens 数据集</a>之一 [Harper and Konstan, 2015]。我们将使用一个已经免费提供、供教育和开发用途的数据集——谢谢你，MovieLens！你可以自己使用<a href="http://files.grouplens.org/datasets/movielens/ml-latest-small.zip">这个链接</a>下载该数据集。</p>
+<h3 id="认识我们的数据">认识我们的数据</h3>
+<p>与任何新数据集一样，我们的首要任务是认识数据。首先，这里是数据集中 10 条评分的样本：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_3TrainingOurRecommenderRatings_[15_to_24].png">
+            <img class="mx-auto" alt="表 5.3" src="/uploads/Recommender_3TrainingOurRecommenderRatings_[15_to_24].png" />
+        </a>
+    </p>
+<p><em>表 5.3：来自 MovieLens 数据集的评分样本。</em></p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-09-11-evaluating-agentic-ai-in-microsoft-foundry-beyond-final-answer-quality/" title="评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”" target="_blank">评估智能体 AI：Microsoft Foundry 如何超越“最终答案质量”</a>
             </h1>
         </header>
@@ -357,49 +393,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" title="[译]基于模型的机器学习 - 4.5 评估与改进特征集" target="_blank">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-08-26T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年8月26日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>使用我们新完成的<a href="/post/2025-04-21-mbml-introduction">模型</a>和<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>，我们可以为数据集中的每个用户训练一个个性化的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类器</a>。确切地说，对每个用户的<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">训练集</a>，我们为每封邮件计算活跃的<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a> <code>featureIndices</code> 以及它们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值 <code>featureValue</code>。给定这些已观测变量，我们随后可以应用<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>来学习每个桶的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a> <code>weight</code> 分布，以及对 <code>threshold</code> 值的单个<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。但首先我们需要看看如何为我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>安排消息传递。</p>
-<h3 id="并行调度与顺序调度">并行调度与顺序调度</h3>
-<p><strong>推断深入</strong></p>
-<p>在这个可选小节中，我们看看如何为我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>安排<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>消息的调度。如果你想直接去看运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>的结果，尽可跳过本节。</p>
-<p>在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>时，选择一个好的<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>很重要。在这种<a href="/post/2025-04-21-mbml-introduction">模型</a>中，糟糕的调度很容易导致消息传递<a href="/post/2025-04-21-mbml-introduction">算法</a>无法<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>或收敛得非常慢。当你有一个带重复结构的<a href="/post/2025-04-21-mbml-introduction">模型</a>（例如我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">模型</a>）时，可以使用两种主要的<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>：顺序调度或并行调度。为理解这两种调度，让我们看看在一个简化形式的<a href="/post/2025-04-21-mbml-introduction">模型</a>上的消息传递，它有两个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>和两个权重：</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/EmailClassifier_TwoSchedules.png">
-            <img class="mx-auto" alt="图 4.13 两种调度" src="/uploads/EmailClassifier_TwoSchedules.png" />
-        </a>
-    </p>
-<p>在这幅图中，我们没有使用跨越各桶的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>，而是为每个权重复制了<a href="/post/2025-04-21-mbml-introduction">模型</a>的相应部分。在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中做消息传递时，两种调度选择是：</p>
-<ul>
-<li><strong>顺序调度</strong>，依次处理两个权重。对第一个权重，这种调度按 A、A1、B1、B 的顺序传递消息。处理完这个权重后，消息传递在图的下半部分发生（未显示）。然后调度转到第二个权重，按 A、A2、B2、B 的顺序传递消息。</li>
-<li><strong>并行调度</strong>，一次处理两个权重。在这种调度中，首先传递标记为 A 的消息。然后同时传递两组消息（A1 和 B1）与（A2 和 B2），其中来自加号<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的消息使用之前的 B1 和 B2 消息来计算。最后，传递标记为 B 的消息。</li>
-</ul>
-<p>为看出两种调度的差异，看看从加号<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>出来的第一条 A2 消息是如何计算的。在顺序调度中，它使用本次调度迭代中刚刚更新的 B1 消息来计算。在并行调度中，它使用上一次迭代中计算的 B1 消息，换句话说，是一个较旧版本的消息。因此，并行调度比顺序调度收敛得更慢，也更可能完全无法<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>。那么我们为什么会想使用并行调度呢？主要原因是如果你想把<a href="/post/2025-04-21-mbml-introduction">推断</a>计算并行分布到若干台机器上以加速它。在这种情况下，最好的选择是使用一种组合调度：在每台机器内部处理的<a href="/post/2025-04-21-mbml-introduction">模型</a>部分上是顺序的，但跨机器是并行的。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -455,7 +448,7 @@
         
         
         <li >
-            <a href="https://beanhsiang.github.io/page/15/">15</a>
+            <a href="https://beanhsiang.github.io/page/16/">16</a>
         </li>
         
     
@@ -519,6 +512,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" title="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
     </li>
     
@@ -554,10 +551,6 @@
         <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" title="[译]基于模型的机器学习 - 5.4 我们的首次推荐" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" title="[译]基于模型的机器学习 - 5.3 训练我们的推荐系统" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -577,7 +570,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (45)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (46)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
@@ -627,6 +620,8 @@
     <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Governance/">Governance</a>
     
     <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
     

@@ -75,6 +75,43 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" title="[译]基于模型的机器学习 - 3.4 核心模型的扩展" target="_blank">[译]基于模型的机器学习 - 3.4 核心模型的扩展</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-07-30T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年7月30日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>到目前为止，我们已经为两名玩家之间、以其中一方获胜告终的一局游戏构建了一个<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">概率模型</a>。为处理 Xbox Live 所需的各种各样的游戏，我们需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>以应对若干额外的复杂性。具体而言，真实游戏可能以平局结束、可能涉及超过两名玩家、并且可能在多支队伍之间进行。现在我们将展示如何扩展最初的<a href="/post/2025-04-21-mbml-introduction">模型</a>以考虑这些复杂性。这种灵活性很好地说明了<a href="/post/2025-04-21-mbml-introduction">基于模型</a>的机器学习方法的强大之处。</p>
+<p>具体来说，我们需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>，使它能够：</p>
+<ul>
+<li>在结果为平局时更新技能；</li>
+<li>对团队游戏，更新各个团队成员的技能；</li>
+<li>适用于超过两名玩家的游戏。</li>
+</ul>
+<p><a href="/post/2025-04-21-mbml-introduction">基于模型</a>的方法允许以透明的方式并入这些扩展，从而产生一个能够处理上述所有复杂性、同时仍保持可理解、可维护的解决方案。</p>
+<h3 id="如果一局游戏可能以平局结束怎么办">如果一局游戏可能以平局结束怎么办？</h3>
+<p>在我们当前的<a href="/post/2025-04-21-mbml-introduction">模型</a>中，在某一局游戏中表现值较高的玩家就是那局的赢家。对于也可能以平局结束的游戏，我们可以引入<strong>平局边界</strong>（draw margin）这一概念来修改这个假设：只有当一名玩家的表现超过另一名玩家至少一个平局边界的值时，他才是赢家。数学上这可以表达为</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-30-mbml-trueskill_extensions_to_the_core_model/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation/" title="[译]基于模型的机器学习 - 3.3 一个解法：期望传播" target="_blank">[译]基于模型的机器学习 - 3.3 一个解法：期望传播</a>
             </h1>
         </header>
@@ -461,40 +498,6 @@ $$g = \frac{\text{Proj}\left( ce \right)}{c}. \tag{3.15}$$<p>如何做到这一�
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" title="[译]基于模型的机器学习 - 2.5 诊断问题" target="_blank">[译]基于模型的机器学习 - 2.5 诊断问题</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-07-10T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年7月10日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>当一个机器学习系统不工作时，通常有三个可能的原因：<strong>坏数据</strong>、<strong>坏模型</strong>或<strong>坏推断</strong>。以下是这三个类别下各自一些常见的问题成因：</p>
-<ul>
-<li><strong>坏数据（Bad data）</strong>：数据项被错误地录入、存储或加载；数据项不完整或标注错误；数据值噪声太大而无用；数据有偏或不能代表系统将被使用的方式；这是任务的错误数据；数据不足以做出准确预测。</li>
-<li><strong>坏模型（Bad model）</strong>：一个或多个建模假设是错的——即与实际生成数据的过程不一致；<a href="/post/2025-04-21-mbml-introduction">模型</a>做了太多简化假设；给定可用数据量，<a href="/post/2025-04-21-mbml-introduction">模型</a>包含的假设不足以做出准确预测。</li>
-<li><strong>坏推断（Bad inference）</strong>：<a href="/post/2025-04-21-mbml-introduction">推断</a>代码含有 bug；<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>不好；<a href="/post/2025-04-21-mbml-introduction">推断</a>尚未<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>；存在数值问题（例如舍入、溢出）；<a href="/post/2026-06-16-mbml-learning-skills_loopiness">近似推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>不够准确。</li>
-</ul>
-<p>在我们的情形中，我们可以相当有信心地认为数据是好的，因为我们已经仔细地检查和可视化过它。所以看起来问题很可能出在<a href="/post/2025-04-21-mbml-introduction">模型</a>或<a href="/post/2025-04-21-mbml-introduction">推断</a>上。我们将从检查<a href="/post/2025-04-21-mbml-introduction">推断</a><a href="/post/2025-04-21-mbml-introduction">算法</a>——即<a href="/post/2026-06-16-mbml-learning-skills_loopiness">循环置信传播</a>——是否正确工作开始。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -571,7 +574,7 @@ $$g = \frac{\text{Proj}\left( ce \right)}{c}. \tag{3.15}$$<p>如何做到这一�
         
         
         <li >
-            <a href="https://beanhsiang.github.io/post/page/15/">15</a>
+            <a href="https://beanhsiang.github.io/post/page/16/">16</a>
         </li>
         
     
@@ -635,6 +638,10 @@ $$g = \frac{\text{Proj}\left( ce \right)}{c}. \tag{3.15}$$<p>如何做到这一�
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" title="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
     </li>
     
@@ -670,10 +677,6 @@ $$g = \frac{\text{Proj}\left( ce \right)}{c}. \tag{3.15}$$<p>如何做到这一�
         <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" title="[译]基于模型的机器学习 - 5.4 我们的首次推荐" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" title="[译]基于模型的机器学习 - 5.3 训练我们的推荐系统" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -693,7 +696,7 @@ $$g = \frac{\text{Proj}\left( ce \right)}{c}. \tag{3.15}$$<p>如何做到这一�
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (45)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (46)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
@@ -743,6 +746,8 @@ $$g = \frac{\text{Proj}\left( ce \right)}{c}. \tag{3.15}$$<p>如何做到这一�
     <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
     
     <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Governance/">Governance</a>
     
     <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
     

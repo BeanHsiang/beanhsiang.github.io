@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟 | Innovation with tech</title>
+    <meta property="og:title" content="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-10-06T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-10-06T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-10-06-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</h1>
+        </header>
+        
+  <time datetime="2026-10-06T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月6日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>原文：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-aud/4560813?WT.mc_id=AI-MVP-5003172">Voice agents in Foundry Agent Service: architecture, trust boundaries, and real-audio latency</a></p>
+<p>以前做企业语音智能体，得自己把语音服务、实时模型、轮次检测和工具编排拼在一起，每个环节出问题也都得自己兜底。Foundry Agent Service 里的语音智能体（voice agents）把这一整套多服务方案收拢成一个带版本的托管智能体，运行时的工程量少了很多，但身份、授权、数据、网络、留存和运维这些事仍然得企业自己扛。</p>
+<p>这篇文章的作者 Yassine El Ghali 先前有一篇<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-voice-agents-in-microsoft-foundry/4557276?WT.mc_id=AI-MVP-5003172">发布公告</a>讲产品能力，这一篇换了个角度：<strong>这个功能能不能作为企业语音架构的起点？</strong> 他用了自己<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/choosing-a-real-time-voice-architecture-on-microsoft-foundry-three-enterprise-pa/4552676?WT.mc_id=AI-MVP-5003172">早先那篇架构对比</a>里的六条标准，又补了一轮覆盖六种配置、共 300 个轮次的真实音频测试。</p>
+<p>读完这篇文章你会知道：</p>
+<ul>
+<li>Foundry 托管了什么，哪些仍然是解决方案团队的责任；</li>
+<li>怎么评估数据、网络、身份、成本和运维这几条边界；</li>
+<li>六种配置下，300 轮真实音频测试的延迟结果说明了什么。</li>
+</ul>
+<p>需要先说明时间：截至 2026 年 9 月 29 日，语音智能体仍处于公开预览阶段。文中的产品表述核对于当天，测量数据采集于 2026 年 9 月 26 日。</p>
+<h2 id="总体评估">总体评估</h2>
+<p>现在一个语音智能体把模型、指令、音频配置、轮次检测、工具、临时回复和存储策略都封装在一个托管的实时端点后面。团队可以少花精力拼运行时，多花精力治理整个工作负载。</p>
+<blockquote>
+<p>Foundry 接管了语音运行时的大部分工作，但身份、授权、数据位置、网络设计、留存策略和运维可用性，依然由客户负责。</p>
+</blockquote>
+<table>
+	<thead>
+			<tr>
+					<th>标准</th>
+					<th>微软托管或提供</th>
+					<th>客户责任</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>功能与工作量</td>
+					<td>托管的实时语音运行时、语音与模型编排、轮次检测、智能体版本管理、工具编排、渠道、追踪、监控和评估界面。</td>
+					<td>客户端与渠道集成、业务工作流、工具实现、来电者控制、治理、回归测试、容量规划和事件管理。</td>
+			</tr>
+			<tr>
+					<td>数据驻留</td>
+					<td>已发布的服务与模型地理承诺、平台加密，以及文档化的存储和留存行为。</td>
+					<td>选择部署类型和区域；梳理语音、模型、存储、工具、遥测和渠道各自的处理位置；配置留存策略并记录合规依据。</td>
+			</tr>
+			<tr>
+					<td>私有网络</td>
+					<td>Agent Service 的网络隔离能力、私有终结点，以及与客户自管的 Storage、Azure AI Search、Azure Cosmos DB 的集成。</td>
+					<td>客户端连接、私有 DNS、路由、工具访问、遥测与电话出口、防火墙策略，以及端到端的可达性测试。</td>
+			</tr>
+			<tr>
+					<td>身份验证与授权</td>
+					<td>面向受支持访问模式的 Microsoft Entra 身份验证、托管身份与智能体身份、基于角色的访问控制，以及委托身份的基础能力。</td>
+					<td>来电者登录与准入、按用户的数据授权、工具权限、委托访问、审批与升级验证，以及重复操作的防护。</td>
+			</tr>
+			<tr>
+					<td>成本</td>
+					<td>服务计量、用量信号、预估成本遥测，以及 Azure Cost Management 的账单记录。</td>
+					<td>选择模型托管方式和容量，度量完整工作负载，设置预算与预测，核对费用并优化用量。</td>
+			</tr>
+			<tr>
+					<td>延迟</td>
+					<td>托管运行时，加上服务端的延迟指标、追踪和监控视图。</td>
+					<td>模型、语音、轮次检测、工具、检索、网络和渠道的选择；真实音频与并发测试；面向用户的延迟目标和启动体验。</td>
+			</tr>
+	</tbody>
+</table>
+<blockquote>
+<p><strong>连接启动时间：</strong> 这次测试里，建立一个新的语音智能体连接需要 3.72 到 12.37 秒。要么在对话开始前先把连接建好，要么在界面上告诉用户智能体还在连接。</p>
+</blockquote>
+<p>这个数字我印象很深。后面的延迟结果看上去都是一两秒的事，可用户在听到第一句话之前，可能已经干等了十秒。</p>
+<h2 id="架构上新在哪里">架构上新在哪里</h2>
+<p>新 API 把整个体验表示为一个 <a href="https://learn.microsoft.com/azure/foundry/agents/how-to/configure-voice-agent?WT.mc_id=AI-MVP-5003172"><code>VoiceAgentDefinition</code></a>。它的 <code>kind</code> 是 <code>voice</code>，每次创建或更新都会在稳定的智能体名称下生成一个不可变的智能体版本。这个定义里要选定：</p>
+<ul>
+<li>模型托管方式、模型、指令和可选的问候语；</li>
+<li>输入音频、转写、增强和轮次检测；</li>
+<li>输出音频、声音、语言、语速和可选的虚拟形象；</li>
+<li>工具、工具策略、临时回复和对话存储。</li>
+</ul>
+<p>运行时通过一条持久的实时连接访问。Foundry Agent Service 负责智能体生命周期和工具编排，Voice Live 提供语音运行时。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/voice-agents-foundry-architecture.png">
+            <img class="mx-auto" alt="Foundry Agent Service 中的语音智能体架构" src="/uploads/voice-agents-foundry-architecture.png" />
+        </a>
+    </p>
+<p><em>托管的语音运行时减少了实现工作，但并不会把它周围的身份、数据、网络和留存边界合并成一个。</em></p>
+<h3 id="一个功能两条模型路径">一个功能，两条模型路径</h3>
+<p>Foundry 会根据所选模型推导出语音架构。</p>
+<p><strong>原生语音到语音</strong></p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>caller audio -&gt; realtime speech model -&gt; spoken response
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这条路径面向自然、低延迟的对话。模型直接接收和输出音频，可用的声音和音频控制取决于所选模型。</p>
+<p><strong>级联文本模型</strong></p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>caller audio -&gt; speech recognition -&gt; text model -&gt; speech synthesis -&gt; spoken response
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这条路径可选的文本模型和 Azure 声音范围更广，还提供明确的转写、短语列表和语音合成控制。代价是多个串行阶段都落在延迟的关键路径上。</p>
+<p>另外，服务托管（<code>managed</code>）和客户自部署（<code>self_deployed</code>）是一个独立的决策，它决定模型在哪里托管、在哪里计量。至于最终走的是原生路径还是级联路径，由模型本身决定。</p>
+<h2 id="标准-1功能与实现工作量">标准 1：功能与实现工作量</h2>
+<p>这是该功能在架构上最实在的价值。Foundry 把实时会话、轮次切换、转写、声音、智能体版本、模型、知识库、工具、渠道、追踪、监控、评估和可选的虚拟形象放到了一起。门户支持无代码测试，客户端库和 Azure Developer CLI 则能让定义从源代码管理里直接部署。</p>
+<h3 id="仍由客户负责的部分">仍由客户负责的部分</h3>
+<p>企业依然要管：客户端或获批的电话渠道、来电者准入与滥用控制、按用户的检索与操作授权、重要工具的审批和重复操作防护、转人工、留存策略、回归测试、容量和事件管理。</p>
+<p>渠道支持也比通用的智能体发布要窄。目前语音渠道体验提供一个预览版 Web 应用，以及通过 Teams Phone 扩展或 Twilio 接入的电话号码集成。标准的 Microsoft Teams 或 Microsoft 365 智能体发布不能替代 Teams Phone 扩展。</p>
+<h2 id="标准-2数据驻留">标准 2：数据驻留</h2>
+<p>数据驻留不是一个区域字段能回答的问题。一轮语音对话会经过多个处理和存储面：</p>
+<table>
+	<thead>
+			<tr>
+					<th>环节</th>
+					<th>驻留问题</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>语音与模型</td>
+					<td>轮次检测、识别、合成和模型推理在哪里处理？模型是全局、数据区域还是区域部署？</td>
+			</tr>
+			<tr>
+					<td>智能体状态与对话</td>
+					<td>服务状态存在哪里？转写文本和原始音频有没有启用 <code>store</code>？</td>
+			</tr>
+			<tr>
+					<td>知识与工具</td>
+					<td>文件、索引、检索到的段落、工具请求和输出在哪里处理？</td>
+			</tr>
+			<tr>
+					<td>可观测性</td>
+					<td>Application Insights 把遥测存在哪里？是否开启了敏感内容采集？</td>
+			</tr>
+			<tr>
+					<td>渠道</td>
+					<td>Azure Communication Services、Teams Phone 或 Twilio 又引入了哪些额外处理？</td>
+			</tr>
+	</tbody>
+</table>
+<p><a href="https://learn.microsoft.com/azure/foundry/responsible-ai/speech-service/voice-live/data-privacy-security?WT.mc_id=AI-MVP-5003172">Voice Live 的数据隐私文档</a>说，Voice Live 本身默认不保留客户数据，但与之相连的功能可能会保留。如果客户选择开启支持日志，微软可以在资源所在区域保留相关语音数据，最长 30 天。<a href="https://learn.microsoft.com/azure/foundry/responsible-ai/agents/data-privacy-security?WT.mc_id=AI-MVP-5003172">Agent Service 文档</a>则规定，有状态服务功能的静态数据存放在 Azure OpenAI 资源所在的地理范围内，而模型推理和工具遵循各自的配置与托管位置。</p>
+<p>对于 <code>self_deployed</code> 配置，模型推理遵循所选的全局、数据区域或区域部署类型，但这个选择并不决定语音、存储、工具或渠道的位置。<code>managed</code> 配置则使用服务托管的模型。光看项目所在区域，回答不了完整的驻留问题，需要在微软文档里逐一核对所选语音、模型、存储、遥测和渠道组件当前的处理与存储承诺。</p>
+<h2 id="标准-3私有网络">标准 3：私有网络</h2>
+<p>Foundry Agent Service 支持网络受保护的标准（Standard）配置：委托子网、私有终结点、客户提供的 Azure Storage、Azure AI Search 和 Azure Cosmos DB，并关闭公网访问。项目托管身份会获得这些依赖项的数据平面访问权限。不过这只是起点，并不能证明一个语音方案端到端都是私有的。下面这些路径要分别审查：</p>
+<table>
+	<thead>
+			<tr>
+					<th>连接</th>
+					<th>需要证明什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>客户端到语音智能体终结点</td>
+					<td>私有 DNS、实时连接能否成功建立、可达性，以及已部署客户端环境下的空闲超时行为；或者是一个带身份验证的公共边缘</td>
+			</tr>
+			<tr>
+					<td>语音运行时到所选模型</td>
+					<td>所选语音配置实际使用的托管或自部署路由</td>
+			</tr>
+			<tr>
+					<td>智能体到数据与工具</td>
+					<td>私有终结点、DNS、基于角色的访问控制、路由、凭据，以及运行时能否成功访问</td>
+			</tr>
+			<tr>
+					<td>遥测与电话</td>
+					<td>获批的 Application Insights 出口，以及各提供商特有的媒体与信令路径</td>
+			</tr>
+	</tbody>
+</table>
+<p><a href="https://learn.microsoft.com/azure/foundry/agents/how-to/virtual-networks?WT.mc_id=AI-MVP-5003172">Agent Service 私有网络指南</a>描述了通用的私有部署方式。但某个资源上有私有终结点，并不能证明语音特有的每一跳托管链路都是私有的。</p>
+<h2 id="标准-4身份验证与授权">标准 4：身份验证与授权</h2>
+<p>语音智能体的安全可以拆成四层身份来理解：</p>
+<ol>
+<li>来电者身份。托管 Web 体验的访问权限可以分配给组织用户和组。自定义客户端仍然需要登录、会话准入、限流和业务权益校验。</li>
+<li>会话调用身份。公开的 SDK 和门户访问方式使用 Microsoft Entra ID 来访问 Foundry 项目和智能体终结点。电话渠道集成还要加上提供商特有的身份验证和连接配置：Teams Phone 扩展用到 Azure Communication Services、Event Grid 和应用注册，Twilio 则使用由 Twilio 凭据支撑的项目连接。应用应该使用合适的工作负载身份，不能把长期凭据放进浏览器代码。</li>
+<li>智能体身份。<a href="https://learn.microsoft.com/azure/foundry/agents/concepts/agent-identity?WT.mc_id=AI-MVP-5003172">Foundry 智能体身份模型</a>同样适用于语音智能体，用来向下游工具进行身份验证。把智能体发布成通用的 Agent Application 会创建一个独立的身份，所以项目权限不会自动转移过去。</li>
+<li>委托用户身份。对于有人值守的场景，OAuth 代理（on-behalf-of）流程让下游服务可以同时评估智能体身份和用户的委托权限。</li>
+</ol>
+<p>有效的令牌只能证明身份，不能证明请求的操作是安全的。智能体可能有权查询某个索引，而来电者只能看到其中一部分文档；它也可能能调用某个工具，但来电者无权授权这个操作。所以在内容到达模型之前，就应该先按来电者的文档权限做过滤。对有实际后果的操作，需要应用层策略、必要时的升级验证、口头确认，以及重复操作防护，免得重连之后副作用被执行两次。也别把识别出的声音或一个电话号码当成身份证明。</p>
+<h2 id="标准-5成本">标准 5：成本</h2>
+<p>现在已经有了官方的<a href="https://learn.microsoft.com/azure/foundry/agents/concepts/voice-agent-pricing?WT.mc_id=AI-MVP-5003172">语音智能体定价指南</a>，但它更适合拿来理解计费结构，而不是当作一张长期有效的价格表。</p>
+<p>文档里列出了五个影响成本的因素：</p>
+<ul>
+<li>音频输入和输出的 token；</li>
+<li>托管与自部署的模型托管方式；</li>
+<li>连接会话的时长；</li>
+<li>工具调用以及背后的服务；</li>
+<li>虚拟形象、对话存储等可选功能。</li>
+</ul>
+<p>完整架构还可能包括语音识别与合成、自定义声音托管、Application Insights、Azure Storage、Azure AI Search、Azure Cosmos DB、电话、应用入口、身份和网络基础设施。</p>
+<p>使用 <code>model_type: managed</code> 时，用量作为语音智能体的一部分计费。使用 <code>model_type: self_deployed</code> 时，模型用量则记在客户自己的 Foundry 模型部署上，按该部署的标准或预配容量定价模式收费。</p>
+<p>调优期间，语音追踪可以暴露 token 用量和预估成本属性。微软明确表示这些是估算值，不是账单记录，真正的计费依据仍然是 Azure Cost Management。</p>
+<h3 id="为什么这篇文章没有给出美元估算">为什么这篇文章没有给出美元估算</h3>
+<p>给出单次对话的估算会造成虚假的精确感，因为区域、协议、模型、音频量、会话时长、工具和可选服务都会改变结果。更稳妥的做法是：记录每一轮的用量和会话时长，在 Cost Management 里核对实际费用，再用真实的通话时长、并发、转接和重试去建模。</p>
+<p>别忘了把运维成本算进去。托管功能省掉的是语音运行时的代码，治理、身份、网络和渠道运维一样不会少。</p>
+<h2 id="标准-6延迟">标准 6：延迟</h2>
+<p>来电者只关心一个延迟指标：<strong>我说完之后，智能体多久开口？</strong> 模型路径决定了有哪些处理阶段，但最终结果取决于模型选择、轮次检测设置、网络距离、工具、检索、回复长度和渠道缓冲。</p>
+<h3 id="测了什么">测了什么</h3>
+<p>配套的测试工具把之前的三种模式和新功能放在同一个真实音频测试里重跑了一遍：</p>
+<ul>
+<li>Realtime API 直连和使用自有模型的 Voice Live，都用同一个客户部署的 <code>gpt-realtime-1.5</code> 模型。</li>
+<li>先前的 Voice Live + 提示词智能体路径，和新的级联语音智能体，都用 <code>gpt-4o-mini</code>、同一个 Azure 神经网络声音，并且不带工具。这是架构变量控制得最严的一对。</li>
+<li>新功能还跑了托管的 <code>gpt-realtime-2.1</code> 和级联的 <code>gpt-5</code>。</li>
+</ul>
+<p>每条路径收到的都是同一段 1.33 秒的 “Say hello briefly” 录音，按实时速度播放，使用同样的简短回答指令，以及同样的服务端轮次检测设置，包括 500 毫秒的静音等待。每种配置在五个全新会话里测 50 个轮次，每个会话排除一次预热，并按随机顺序依次运行。知识库和工具都被关闭，第一方智能体也不存储对话。</p>
+<p>主指标的计时从来电者说完话开始，到第一段响应音频到达客户端为止：</p>
+<ul>
+<li>“典型轮次”是中位数，也就是一半轮次比它快，一半比它慢。</li>
+<li>“95% 在此之前开始”是慢端结果，只有二十分之一的轮次比它更慢。</li>
+</ul>
+<p>
+        <a data-fancybox="gallery" href="/uploads/voice-agents-foundry-latency.png">
+            <img class="mx-auto" alt="真实音频延迟对比图" src="/uploads/voice-agents-foundry-latency.png" />
+        </a>
+    </p>
+<p><em>从来电者说完话到响应音频到达客户端的时间。越低越好，结果只适用于这个测试环境。</em></p>
+<table>
+	<thead>
+			<tr>
+					<th>架构与配置</th>
+					<th>典型轮次</th>
+					<th>95% 在此之前开始</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>先前模式：Realtime API 直连，<code>gpt-realtime-1.5</code></td>
+					<td>1.03 s</td>
+					<td>1.10 s</td>
+			</tr>
+			<tr>
+					<td>先前模式：Voice Live 搭配自有模型，<code>gpt-realtime-1.5</code></td>
+					<td>1.24 s</td>
+					<td>1.43 s</td>
+			</tr>
+			<tr>
+					<td>先前模式：Voice Live + 提示词智能体，<code>gpt-4o-mini</code></td>
+					<td>1.90 s</td>
+					<td>2.37 s</td>
+			</tr>
+			<tr>
+					<td>新功能：托管 <code>gpt-realtime-2.1</code></td>
+					<td>1.47 s</td>
+					<td>1.61 s</td>
+			</tr>
+			<tr>
+					<td>新功能：级联 <code>gpt-4o-mini</code></td>
+					<td>1.31 s</td>
+					<td>1.52 s</td>
+			</tr>
+			<tr>
+					<td>新功能：级联 <code>gpt-5</code></td>
+					<td>3.45 s</td>
+					<td>5.32 s</td>
+			</tr>
+	</tbody>
+</table>
+<p>全部 300 个测量轮次都返回了响应音频和预期的转写结果。</p>
+<p>最有参考价值的是同模型、同声音的级联对比。第一方的 <code>gpt-4o-mini</code> 语音智能体，在典型轮次上比 Voice Live 搭配无工具提示词智能体快 0.59 秒，在 95% 边界上快 0.85 秒。这是这两种配置之间观察到的端到端差异，没法说明是内部哪个阶段造成的。</p>
+<p>Realtime API 直连在这个环境里最快。Voice Live 搭配自有模型在典型轮次上慢 0.21 秒，在 95% 边界上慢 0.32 秒。两者用的是同一个实时部署，但直连用的是模型原生声音，Voice Live 用的是 Azure 神经网络声音，所以这个差距衡量的是两套配置，并不是单独的 Voice Live 开销。</p>
+<p>在新功能内部，托管的 <code>gpt-realtime-2.1</code> 和级联的 <code>gpt-4o-mini</code> 非常接近，这一轮结果还不足以给它们定一个长期的先后顺序。而把级联模型换成 <code>gpt-5</code> 影响就大得多，典型结果从 1.31 秒升到 3.45 秒。模型选择始终是架构决策的一部分。</p>
+<h3 id="为什么服务监控里能看到亚秒级的结果">为什么服务监控里能看到亚秒级的结果</h3>
+<p><a href="https://learn.microsoft.com/azure/foundry/agents/concepts/voice-agent-observability?WT.mc_id=AI-MVP-5003172">Foundry Agent Service 语音智能体监控视图</a>里的“整体延迟”图表，测的是语音活动检测判定来电者说完<strong>之后</strong>到第一段音频的时间。而基准测试的图表从来电者真正停止说话时就开始计时，所以包含了配置的半秒静音等待。</p>
+<p>按服务侧这个较晚的边界来算：</p>
+<ul>
+<li>托管的语音到语音，典型值 0.88 秒，95% 的轮次在 1.02 秒内开始。</li>
+<li><code>gpt-4o-mini</code> 级联，典型值 0.78 秒，95% 在 0.99 秒内开始。</li>
+<li><code>gpt-5</code> 级联，典型值 2.92 秒，95% 在 4.78 秒内开始。</li>
+</ul>
+<p>两种计时都成立，只是回答的问题不同。文中的图表用的是来电者视角，因为它更接近用户的真实感受。服务边界较晚，所以运维指标可以是亚秒级，而来电者那边的时间却超过一秒，差出来的就是检测轮次结束和跨网络传送音频所需的时间。</p>
+<h3 id="和之前那组测量的关系">和之前那组测量的关系</h3>
+<p><a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/choosing-a-real-time-voice-architecture-on-microsoft-foundry-three-enterprise-pa/4552676?WT.mc_id=AI-MVP-5003172">先前那篇文章</a>用的是十个预热过的、文本注入的轮次，不包含真实语音和轮次结束检测。那里的数值不要和这张图直接比。这次统一重跑才是跨模式的对比，因为每条路径用的是同样的音频、来电者侧计时边界、预热策略、样本数、区域、网络和无工具负载。</p>
+<h3 id="测试范围与复现">测试范围与复现</h3>
+<p>测试包含真实语音、轮次结束检测、模型处理和返回的音频。它不包括设备缓冲、电话、工具、检索、并发、私有网络和生产客户端，所以结果描述的只是这个环境，并不是一个通用目标。</p>
+<p>想复现的话，可以看这些资源：<a href="https://github.com/yelghali/live-voice-agent-demo/blob/main/scripts/bench_voice_patterns_audio.py?WT.mc_id=AI-MVP-5003172">统一基准测试工具</a>、<a href="https://github.com/yelghali/live-voice-agent-demo/blob/main/agent/create_voice_benchmark_agent.py?WT.mc_id=AI-MVP-5003172">仅用于基准测试的提示词智能体创建脚本</a>、<a href="https://github.com/yelghali/live-voice-agent-demo/blob/main/agent/create_foundry_voice_agents.py?WT.mc_id=AI-MVP-5003172">第一方语音智能体创建脚本</a>、<a href="https://github.com/yelghali/live-voice-agent-demo/blob/main/scripts/generate_voice_benchmark_audio.ps1?WT.mc_id=AI-MVP-5003172">音频生成脚本</a>、<a href="https://github.com/yelghali/live-voice-agent-demo/blob/main/docs/benchmarks/voice-patterns-real-audio-2026-09-26.json?WT.mc_id=AI-MVP-5003172">原始轮次数据与方法</a>，以及<a href="https://github.com/yelghali/live-voice-agent-demo/blob/main/docs/diagrams/voice-patterns-real-audio-latency.excalidraw?WT.mc_id=AI-MVP-5003172">可编辑的图表源文件</a>。</p>
+<h2 id="企业架构检查清单">企业架构检查清单</h2>
+<p>做工作负载决策时，建议逐项确认：</p>
+<ul>
+<li>平台适配：所在区域支持所选的模型、声音、音频功能、工具和渠道，服务配额能覆盖预期的并发。</li>
+<li>数据与网络：每个处理和存储位置都有记录，每条路由在目标客户端和网络拓扑下都能走通。</li>
+<li>身份与授权：来电者已通过身份验证，检索遵守他们的文档权限，工具身份、委托、审批和重复操作防护都经过测试。</li>
+<li>留存：对话存储、追踪采集、音频访问、删除、用户同意和法定留存期限都已获批。</li>
+<li>性能：用真实音频、工具、目标网络和并发做过测试，并且为典型轮次和最慢的 5% 都定了目标。</li>
+<li>运维：配额、错误、重连、转人工、依赖项故障、监控和回滚都演练过。</li>
+</ul>
+<h2 id="结论">结论</h2>
+<p>如果要在 Microsoft Foundry 上从头做一个企业语音方案，又能接受预览状态，Foundry Agent Service 里的语音智能体值得优先评估。它把语音变成托管的、带版本的智能体生命周期，运行时、渠道、追踪、监控和评估都在一处。与其默认自己重搭这些层，从它起步要省事得多。</p>
+<p>作者也说得很清楚，它不一定更快，也不一定更便宜。这次测试里 Realtime API 直连最快，<code>gpt-5</code> 的结果则说明模型选择可以左右最终体验。托管功能同样没有消除周围的信任边界，身份、授权、数据位置、网络、留存和运维，仍然要企业自己设计。</p>
+<p>所以之前的几种模式依然成立，只是新建项目时，它们应当是经过考量的备选，而不是默认起点。作者的建议大致是这样：</p>
+<blockquote>
+<p>先评估 Foundry Agent Service 里的语音智能体功能。当它的预览状态、区域、模型、声音、渠道、身份、数据、网络、成本和实测性能都符合工作负载时再采用它。只有当某项有文档依据的需求需要更多控制、更多能力或某个托管定义不提供的处理边界时，才选择 Realtime API 或更底层的 Voice Live 模式。</p>
+</blockquote>
+<p>想了解这些底层替代方案，以及自己掌控运行时和使用托管层之间的取舍，可以看<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/choosing-a-real-time-voice-architecture-on-microsoft-foundry-three-enterprise-pa/4552676?WT.mc_id=AI-MVP-5003172">先前那篇三模式架构对比</a>。产品功能概览和发展方向则可以读<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-voice-agents-in-microsoft-foundry/4557276?WT.mc_id=AI-MVP-5003172">发布公告</a>。</p>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-voice-agents-in-microsoft-foundry/4557276?WT.mc_id=AI-MVP-5003172">Introducing voice agents in Microsoft Foundry</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/overview?WT.mc_id=AI-MVP-5003172">Agents in Microsoft Foundry</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/quickstarts/prompt-voice-agent?WT.mc_id=AI-MVP-5003172">Create a voice-based prompt agent</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/how-to/configure-voice-agent?WT.mc_id=AI-MVP-5003172">Configure a voice agent</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/concepts/voice-agent-best-practice?WT.mc_id=AI-MVP-5003172">Voice-agent design best practices</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/concepts/voice-agent-observability?WT.mc_id=AI-MVP-5003172">Voice-agent tracing, monitoring, and evaluation</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/concepts/voice-agent-pricing?WT.mc_id=AI-MVP-5003172">Pricing for voice-based agents</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/concepts/limits-quotas-regions?WT.mc_id=AI-MVP-5003172">Foundry Agent Service regions and limits</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/how-to/virtual-networks?WT.mc_id=AI-MVP-5003172">Private networking for Foundry Agent Service</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/concepts/agent-identity?WT.mc_id=AI-MVP-5003172">Agent identity concepts</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/responsible-ai/speech-service/voice-live/data-privacy-security?WT.mc_id=AI-MVP-5003172">Data, privacy, and security for Voice Live</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/responsible-ai/agents/data-privacy-security?WT.mc_id=AI-MVP-5003172">Data, privacy, and security for Agent Service</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/how-to/voice-agent-channels-publish?WT.mc_id=AI-MVP-5003172">Publish and share a voice-based agent</a></li>
+<li><a href="https://learn.microsoft.com/azure/foundry/agents/how-to/voice-agent-telephony-channels?WT.mc_id=AI-MVP-5003172">Integrate telephony channels with a voice agent</a></li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-10-06-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/">https://beanhsiang.github.io/post/2026-10-06-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a></li>
+        
+        <li><a href="/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a></li>
+        
+        <li><a href="/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a></li>
+        
+        <li><a href="/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a></li>
+        
+        <li><a href="/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/" title="语音 Agent 评估：Foundry 多轮评估器到底有多可靠？" target="_blank">语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-06-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" title="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/" title="深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流" target="_blank">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-02-mbml-asthma/" title="[译]基于模型的机器学习 - 6 理解哮喘" target="_blank">[译]基于模型的机器学习 - 6 理解哮喘</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (48)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (37)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Evaluation/">Evaluation</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Governance/">Governance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Performance/">Performance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

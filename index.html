@@ -75,6 +75,77 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" title="[译]基于模型的机器学习 - 6.3 比较可选模型" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-10-17T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月17日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>在前面所有章节中，我们都假设数据源自单一的潜在过程。但现在我们不能再这样假定了，因为我们预期：会发展出过敏和哮喘的孩子与不会发展出的孩子，遵循的是不同的过程。为了处理这类可选过程，我们需要引入一种新的建模技术。</p>
+<p>这种技术将使我们能够：</p>
+<ul>
+<li>在单个<a href="/post/2025-04-21-mbml-introduction">模型</a>中表示多个可选过程；</li>
+<li>评估每个可选过程产生某个特定数据项（例如某个特定孩子的数据）的概率；</li>
+<li>比较两个或更多不同的<a href="/post/2025-04-21-mbml-introduction">模型</a>，看看哪一个最能解释某些数据。</li>
+</ul>
+<p>为了介绍这项新技术，我们暂时把哮喘项目放在一边，转而看一个双过程情形的简单例子（如果你更愿意继续聚焦于哮喘项目，可以直接跳到<a href="/post/2026-10-27-mbml-asthma_discovering_sensitization_classes">第 6.5 节</a>）。既然我们身处医学领域，有一个绝佳的双过程情形可用：<strong>随机对照试验</strong>。随机对照试验是一种临床试验，常用于检验各类医疗干预（如新药）的有效性。在这类试验中，每个受试者被随机分配到治疗组（接受实验性干预）或对照组（不接受干预）。试验的目的是判断实验性干预是否对一个或多个关注的结局有影响，并理解这种影响的性质。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-10-12T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月12日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>现在我们有了一个完整的<a href="/post/2025-04-21-mbml-introduction">模型</a>，可以在一些研究数据上试验它了。正如本书前面多次强调的，在使用真实数据集时，务必仔细查看数据集，确保它是完整、正确且符合你预期的形式。请记住，许多常见的机器学习问题都是由数据问题引起的（例如<a href="/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem">第 2.5 节</a>中列举的那些）。检查数据集的一个好办法是构建<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">可视化</a>，让你一眼就能看清它的样子。在本例中，我们需要为每个孩子、每种<a href="/post/2026-10-07-mbml-asthma_a_model_of_allergies">过敏原</a>和每个时间点创建检测结果的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">可视化</a>。然而，这个研究数据集包含私密的医疗数据，因此我们无法在本书中公开分享这些数据，哪怕是以可视化的形式。从这次可视化中我们学到的最重要一点是：数据集中有大量检测结果缺失。</p>
+<p>当存在<strong>缺失数据</strong>时，总是值得分析一下它们为什么缺失。在图 6.6 中，我们绘制了数据集中每个年龄、每种检测类型的检测结果数量（无论阳性还是阴性）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_DataCounts_.png">
+            <img class="mx-auto" alt="图 6.6" src="/uploads/Asthma_DataCounts_.png" />
+        </a>
+    </p>
+<p><em>图 6.6：为两类检测各自记录的检测结果，按孩子的年龄拆分。</em></p>
+<p>你可以在图 6.6 中看到几种不同的缺失数据模式。首先，图中显示某些年龄和检测类型对特定<a href="/post/2026-10-07-mbml-asthma_a_model_of_allergies">过敏原</a>完全没有数据。例如，花生在 1 岁和 3 岁完全没有结果，5 岁时只有 IgE 结果。霉菌完全没有 IgE 结果，1 岁时也没有皮肤试验结果。其次，越早的年龄缺失数据越多，尤其是 1 岁。第三，图中显示 IgE 检测总体上比皮肤试验缺失得多。我们需要把所有这些缺失数据点的影响考虑进来。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
             </h1>
         </header>
@@ -156,6 +227,35 @@
 <p>这篇文章讲的是如何借助 Azure 的现有服务，为 AI 资产建立可见性、护栏和成本归属。读完我最大的感受是，它并没有让你另起炉灶，而是把大多数组织手上已经有的身份、网络和合规控制，接到 Agent 这套新东西上。</p>……
         </div>
         <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/" title="[译]基于模型的机器学习 - 6.1 过敏模型" target="_blank">[译]基于模型的机器学习 - 6.1 过敏模型</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-10-07T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月7日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>我们的首要目标是通过在 MAAS 数据中寻找规律，来加深对过敏发展（及其与儿童哮喘之间关系）的理解。为了理解本研究中的相关数据，我们需要先了解一点关于过敏诊断的知识。研究中的医生使用两类检测来尝试判断一个人是否对某种特定的过敏原（如猫毛或花生）过敏。这两类检测是：</p>
+<p><strong>皮肤点刺试验</strong>，即把一滴过敏原溶液滴在患者的皮肤上（见下图），然后用针刺破皮肤。如果皮肤出现免疫反应，表现为一定大小的红色隆起，则该检测为阳性，否则为阴性。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/" target="_blank">阅读全文</a></p>
     </article>
     
     
@@ -299,106 +399,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-10-01T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年10月1日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>本文参考了 Microsoft Community Hub 上 Robin Lester 的文章 <a href="https://techcommunity.microsoft.com/blog/azuredevcommunityblog/using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/4559851?WT.mc_id=AI-MVP-5003172">Using Jev with Agents in Microsoft Foundry for Model Evaluation</a>，下面是我整理的理解和步骤。</p>
-<h2 id="jev-是什么">Jev 是什么</h2>
-<p>Jev 是 TypeSafe AI 推出的新模型，2026 年 9 月 15 日开放了抢先体验。TypeSafe 把它称为自家第一个“System One”模型，它不写长篇文字，只负责又快又结构化地做判断。</p>
-<p>用法很直接：把一段状态或上下文交给它，再说明你想让它做什么判断，它会返回一个带类型的概率化结果。结果有三种形式：</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-09-26T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年9月26日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>当我们绘制电影在<a href="/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people">特质空间</a>中的位置时（之前的图 5.14），我们只展示了那些位置能被合理准确地知道的电影（也就是<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a><a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>较低的那些）。由此可知，有许多电影的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a><a href="/post/2026-07-27-mbml-trueskill_modelling_the_outcome_of_games">方差</a>较大，甚至可能大得多。这意味着我们基本上不知道某些电影在<a href="/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people">特质空间</a>中的位置。我们可能会预期这些是那些没有很多评分的电影。如果我们不知道某些电影在<a href="/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people">特质空间</a>中的位置，那么我们可能会预期与这些电影相关的推荐准确性会很低。我们该如何诊断是否属于这种情况呢？</p>
-<p>首先，了解每部电影通常有多少评分会很有用。图 5.25 展示了整个数据集中每部电影的评分数量，电影从左边评分最多到右边评分最少排序。</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/Recommender_6AnotherColdStartProblemTheNumberOfRatingsGivenForEachMovieInTheDataSetAsAWhole_.png">
-            <img class="mx-auto" alt="图 5.25" src="/uploads/Recommender_6AnotherColdStartProblemTheNumberOfRatingsGivenForEachMovieInTheDataSetAsAWhole_.png" />
-        </a>
-    </p>
-<p><em>图 5.25：整个数据集中为每部电影给出的评分数量。电影从左边评分最多到右边评分最少排序。</em></p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-09-22T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年9月22日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>
-        <a data-fancybox="gallery" href="/uploads/stars_404623879.jpg">
-            <img class="mx-auto" alt="星级评分" src="/uploads/stars_404623879.jpg" />
-        </a>
-    </p>
-<p>我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>把完整的星级评分范围变成了简单的喜欢或不喜欢，这意味着它丢弃了大量有用的信息。给一部电影打 3 星和打 5 星之间有天壤之别，然而我们却把这两种情况同等对待。为了利用不同的星级评分，我们需要改变<a href="/post/2025-04-21-mbml-introduction">模型</a>，使其能够处理完整的评分范围，而不是二值的喜欢/不喜欢。这不仅让我们能够在星级评分上训练，还让我们能够预测星级评分——一举两得！</p>
-<p>我们可以在已经设计好的二值喜欢/不喜欢<a href="/post/2025-04-21-mbml-introduction">模型</a>的基础上做出这一改变。在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中，我们有一个 affinity（好感度）变量，它是一个连续的数字，表示一个人对一部电影的喜欢程度。目前我们在零处对这个好感度取阈值，说大于零的值意味着这个人喜欢这部电影，小于零的值意味着他们不喜欢这部电影。为了<a href="/post/2025-04-21-mbml-introduction">建模</a>不同的星级评分，我们可以假设更高的好感度意味着一个人会给出更高的星级评分。更确切地说，我们现在不再只在零处取阈值，而是为每一个星级评分引入一个阈值。如果一个人对一部电影的好感度高于某个特定星数的阈值，那么我们就预期他们会给这部电影至少那么多星。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -507,6 +507,14 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" title="[译]基于模型的机器学习 - 6.3 比较可选模型" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
     </li>
     
@@ -516,6 +524,10 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/" title="[译]基于模型的机器学习 - 6.1 过敏模型" target="_blank">[译]基于模型的机器学习 - 6.1 过敏模型</a>
     </li>
     
     <li>
@@ -532,18 +544,6 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-10-02-mbml-asthma/" title="[译]基于模型的机器学习 - 6 理解哮喘" target="_blank">[译]基于模型的机器学习 - 6 理解哮喘</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
     </li>
     
 </ul>
@@ -569,7 +569,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (37)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (40)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
     

@@ -10,9 +10,30 @@
 		
 		
 		
-			<lastBuildDate>Fri, 02 Oct 2026 10:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Sat, 17 Oct 2026 10:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/tags/Machine-Learning/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>[译]基于模型的机器学习 - 6.3 比较可选模型</title>
+				<link>https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/</link>
+				<pubDate>Sat, 17 Oct 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/</guid>
+				<description>&lt;p&gt;在前面所有章节中，我们都假设数据源自单一的潜在过程。但现在我们不能再这样假定了，因为我们预期：会发展出过敏和哮喘的孩子与不会发展出的孩子，遵循的是不同的过程。为了处理这类可选过程，我们需要引入一种新的建模技术。&lt;/p&gt;&#xA;&lt;p&gt;这种技术将使我们能够：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;在单个&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;模型&lt;/a&gt;中表示多个可选过程；&lt;/li&gt;&#xA;&lt;li&gt;评估每个可选过程产生某个特定数据项（例如某个特定孩子的数据）的概率；&lt;/li&gt;&#xA;&lt;li&gt;比较两个或更多不同的&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;模型&lt;/a&gt;，看看哪一个最能解释某些数据。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;为了介绍这项新技术，我们暂时把哮喘项目放在一边，转而看一个双过程情形的简单例子（如果你更愿意继续聚焦于哮喘项目，可以直接跳到&lt;a href=&#34;https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes&#34;&gt;第 6.5 节&lt;/a&gt;）。既然我们身处医学领域，有一个绝佳的双过程情形可用：&lt;strong&gt;随机对照试验&lt;/strong&gt;。随机对照试验是一种临床试验，常用于检验各类医疗干预（如新药）的有效性。在这类试验中，每个受试者被随机分配到治疗组（接受实验性干预）或对照组（不接受干预）。试验的目的是判断实验性干预是否对一个或多个关注的结局有影响，并理解这种影响的性质。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 6.2 试验模型</title>
+				<link>https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/</link>
+				<pubDate>Mon, 12 Oct 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/</guid>
+				<description>&lt;p&gt;现在我们有了一个完整的&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;模型&lt;/a&gt;，可以在一些研究数据上试验它了。正如本书前面多次强调的，在使用真实数据集时，务必仔细查看数据集，确保它是完整、正确且符合你预期的形式。请记住，许多常见的机器学习问题都是由数据问题引起的（例如&lt;a href=&#34;https://beanhsiang.github.io/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem&#34;&gt;第 2.5 节&lt;/a&gt;中列举的那些）。检查数据集的一个好办法是构建&lt;a href=&#34;https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data&#34;&gt;可视化&lt;/a&gt;，让你一眼就能看清它的样子。在本例中，我们需要为每个孩子、每种&lt;a href=&#34;https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies&#34;&gt;过敏原&lt;/a&gt;和每个时间点创建检测结果的&lt;a href=&#34;https://beanhsiang.github.io/post/2026-06-26-mbml-learning-skills_moving_to_real_data&#34;&gt;可视化&lt;/a&gt;。然而，这个研究数据集包含私密的医疗数据，因此我们无法在本书中公开分享这些数据，哪怕是以可视化的形式。从这次可视化中我们学到的最重要一点是：数据集中有大量检测结果缺失。&lt;/p&gt;&#xA;&lt;p&gt;当存在&lt;strong&gt;缺失数据&lt;/strong&gt;时，总是值得分析一下它们为什么缺失。在图 6.6 中，我们绘制了数据集中每个年龄、每种检测类型的检测结果数量（无论阳性还是阴性）。&lt;/p&gt;&#xA;&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/Asthma_DataCounts_.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;图 6.6&#34; src=&#34;https://beanhsiang.github.io/uploads/Asthma_DataCounts_.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;图 6.6：为两类检测各自记录的检测结果，按孩子的年龄拆分。&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;你可以在图 6.6 中看到几种不同的缺失数据模式。首先，图中显示某些年龄和检测类型对特定&lt;a href=&#34;https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies&#34;&gt;过敏原&lt;/a&gt;完全没有数据。例如，花生在 1 岁和 3 岁完全没有结果，5 岁时只有 IgE 结果。霉菌完全没有 IgE 结果，1 岁时也没有皮肤试验结果。其次，越早的年龄缺失数据越多，尤其是 1 岁。第三，图中显示 IgE 检测总体上比皮肤试验缺失得多。我们需要把所有这些缺失数据点的影响考虑进来。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 6.1 过敏模型</title>
+				<link>https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/</link>
+				<pubDate>Wed, 07 Oct 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/</guid>
+				<description>&lt;p&gt;我们的首要目标是通过在 MAAS 数据中寻找规律，来加深对过敏发展（及其与儿童哮喘之间关系）的理解。为了理解本研究中的相关数据，我们需要先了解一点关于过敏诊断的知识。研究中的医生使用两类检测来尝试判断一个人是否对某种特定的过敏原（如猫毛或花生）过敏。这两类检测是：&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;皮肤点刺试验&lt;/strong&gt;，即把一滴过敏原溶液滴在患者的皮肤上（见下图），然后用针刺破皮肤。如果皮肤出现免疫反应，表现为一定大小的红色隆起，则该检测为阳性，否则为阴性。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>[译]基于模型的机器学习 - 6 理解哮喘</title>
 				<link>https://beanhsiang.github.io/post/2026-10-02-mbml-asthma/</link>

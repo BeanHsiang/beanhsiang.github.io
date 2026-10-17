@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 6.1 过敏模型 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 6.1 过敏模型 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-10-07T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-10-07T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 6.1 过敏模型">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 6.1 过敏模型</h1>
+        </header>
+        
+  <time datetime="2026-10-07T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月7日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>我们的首要目标是通过在 MAAS 数据中寻找规律，来加深对过敏发展（及其与儿童哮喘之间关系）的理解。为了理解本研究中的相关数据，我们需要先了解一点关于过敏诊断的知识。研究中的医生使用两类检测来尝试判断一个人是否对某种特定的过敏原（如猫毛或花生）过敏。这两类检测是：</p>
+<p><strong>皮肤点刺试验</strong>，即把一滴过敏原溶液滴在患者的皮肤上（见下图），然后用针刺破皮肤。如果皮肤出现免疫反应，表现为一定大小的红色隆起，则该检测为阳性，否则为阴性。</p>
+<p><strong>过敏原特异性 IgE 检测</strong>——这是一种血液检测，用于寻找一种叫做免疫球蛋白 E（IgE）的抗体，它专门针对某种特定的过敏原。这种抗体的存在是患者对该过敏原过敏的一个指标。如果这种抗体的含量足够高，检测即为阳性，否则为阴性。</p>
+<p>如果一个孩子对某种过敏原的皮肤点刺试验或 IgE 检测为阳性，我们就说他对该过敏原<strong>致敏</strong>（sensitized）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/shutterstock_520194895_small.jpg">
+            <img class="mx-auto" alt="皮肤点刺试验" src="/uploads/shutterstock_520194895_small.jpg" />
+        </a>
+    </p>
+<p>对参加本研究的孩子，这两种检测都针对八种过敏原进行：尘螨、猫、狗、花粉、霉菌、牛奶、鸡蛋和花生。为了能够随时间追踪过敏的发展，这些检测在不同年龄（1 岁、3 岁、5 岁和 8 岁）重复进行。因此，可用的数据点就是每个孩子、每种过敏原、每个年龄下的两项检测结果。</p>
+<p>参与研究的临床医生相信，不同的过敏模式会使孩子易患不同的疾病，其中一些可能对孩子的健康产生重大影响（如严重哮喘），另一些则可能较为良性（如轻度花粉症）。项目的目标是识别出这些模式，看看它们是否能指示某些特定疾病的发展以及疾病的严重程度。我们的任务是开发一个能够实现这一点的过敏原数据集<a href="/post/2025-04-21-mbml-introduction">模型</a>。</p>
+<h3 id="对检测结果建模">对检测结果建模</h3>
+<p>首先，让我们考虑一个孩子在某个时间点、针对某一种过敏原的检测结果模型。我们需要为每项检测的结果设置变量——我们把它们称为 <code>skinTest</code> 和 <code>igeTest</code>。如果对应的检测为阳性，这些变量为 true；为阴性则为 false。</p>
+<p>请记住，这些检测的目的是尝试判断孩子是否真的对某种特定过敏原<strong>致敏</strong>（过敏）。然而，检测并非完全一致——例如，一个孩子出现 IgE 检测阳性但皮肤试验阴性的情况并不罕见。为了应对这种不一致，我们可以设置一个变量来表示孩子是否真正对该过敏原致敏，我们把它称为 <code>sensitized</code>。如果孩子确实对该过敏原致敏，这个变量为 true，否则为 false。然后我们允许检测结果偶尔与这个变量的取值不一致。换句话说，我们假设每项检测都可能给出假阳性（检测为阳性但孩子并未致敏）或假阴性（检测为阴性但孩子实际致敏）。</p>
+<p>如果一个孩子对某种特定过敏原致敏（<code>sensitized = true</code>），那么皮肤点刺试验将以某个<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>为阳性（<code>skinTest = true</code>），我们把这个概率称为 <code>probSkinIfSens</code>。由于我们预期检测大多数时候是正确的，我们会预期这个概率较高但小于 1，因为皮肤点刺试验可能出现假阴性。反过来，即使孩子对某种特定过敏原并未致敏（<code>sensitized = false</code>），我们偶尔也可能预期皮肤点刺试验出现阳性，但概率较低，我们称之为 <code>probSkinIfNotSens</code>。尽管这个概率很低，我们仍预期它大于零，因为皮肤点刺试验可能出现假阳性。</p>
+<p>这两个概率共同定义了 <code>skinTest</code> 以 <code>sensitized</code> 为条件的<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">条件概率表</a>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_SkinTestCPT_Table.png">
+            <img class="mx-auto" alt="表 6.1" src="/uploads/Asthma_SkinTestCPT_Table.png" />
+        </a>
+    </p>
+<p><em>表 6.1：$P(\text{skinTest} \mid \text{sensitized})$ 的<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">条件概率表</a>。表的列对应被条件变量 <code>skinTest</code> 的取值，行对应条件变量 <code>sensitized</code> 的取值，表格单元中包含条件<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>值。</em></p>
+<p>我们把这两个概率作为<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>引入模型，是因为我们希望从数据中学习它们，以确定皮肤点刺试验的假阳性率和假阴性率。为了学习它们的取值，我们必须为每个变量提供合适的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>，用以编码我们对它们的假设。让我们把这些假设写下来：</p>
+<blockquote>
+<p><strong>1</strong> 如果一个孩子对某种特定过敏原致敏，那么他得到阳性检测结果的概率很高。</p>
+</blockquote>
+<blockquote>
+<p><strong>2</strong> 如果一个孩子对某种特定过敏原<strong>不</strong>致敏，那么他得到阳性检测结果的概率很低。</p>
+</blockquote>
+<p>正如<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">第 2.6 节</a>所述，我们可以使用 <a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">beta 分布</a>作为概率上的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>来表示这些假设。假设 6.1 说我们预期 <code>probSkinIfSens</code> 较高，因此我们可以使用偏好较高概率值的 Beta(2,1) 先验。假设 6.2 说我们预期 <code>probSkinIfNotSens</code> 较低，因此我们可以使用偏好较低概率值的 Beta(1,2) 先验。有了这些<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验概率</a>，我们现在就可以为皮肤试验画一张<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，用到我们早在<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">第 2.6 节</a>中引入的 Table <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_SkinTestModelTable.png">
+            <img class="mx-auto" alt="图 6.1" src="/uploads/Asthma_SkinTestModelTable.png" />
+        </a>
+    </p>
+<p><em>图 6.1：一个把皮肤点刺试验结果（<code>skinTest</code>）与潜在的过敏致敏状态（<code>sensitized</code>）关联起来的<a href="/post/2025-04-21-mbml-introduction">模型</a>。<code>skinTest</code> 变量被观测为等于检测的实际结果，因此以阴影表示。</em></p>
+<p>现在我们有了皮肤试验的模型，可以再加入对应的 IgE 检测模型。我们同样需要为“致敏时阳性的概率” <code>probIgeIfSens</code> 和“未致敏时阳性的概率” <code>probIgeIfNotSens</code> 设置概率变量，并配以相应的 beta 分布<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。<code>sensitized</code> 变量在两项检测之间共享，因为两项检测都在尝试检测同一个潜在的致敏状态。由此得到的、包含两项检测的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>如图 6.2 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_TwoTests.png">
+            <img class="mx-auto" alt="图 6.2" src="/uploads/Asthma_TwoTests.png" />
+        </a>
+    </p>
+<p><em>图 6.2：一个把两种过敏检测的结果与潜在过敏致敏状态关联起来的<a href="/post/2025-04-21-mbml-introduction">模型</a>。每类检测都有自己的概率变量，这意味着每项检测可以有不同的假阳性率和假阴性率。检测结果是被观测的，因此以阴影表示。</em></p>
+<p>在这个模型中做<a href="/post/2025-04-21-mbml-introduction">推断</a>使我们能够把两项检测的结果融合成单一的潜在致敏状态。学习真阳性和假阳性的概率将让模型学会该更关注哪项检测。例如，如果某项检测的假阳性概率很高，那么它的阳性结果对致敏状态推断的影响，就会小于假阳性概率较低的检测的阳性结果。</p>
+<h3 id="对随时间变化的检测建模">对随时间变化的检测建模</h3>
+<p>对每个孩子，我们在多个时间点（1、3、5 和 8 岁）都有检测测量结果。这样一组测量结果被称为<a href="https://www.mbmlbook.com/Asthma_A_model_of_allergies.html#time_serie">时间序列</a>，而对这类数据的分析被称为<strong>时间序列分析</strong>。为了理解过敏的发展，我们需要构建一个关于过敏检测结果时间序列的模型。</p>
+<p>我们可以从在每个时间点复制图 6.2 的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>开始来构建时间序列模型。这会在每个年龄引入一个独立的 <code>sensitized</code> 变量，我们可以把它们叫做 <code>sensitized1</code>、<code>sensitized3</code>、<code>sensitized5</code> 和 <code>sensitized8</code>。它也会在每个年龄引入独立的检测结果变量，我们同样可以叫它们 <code>skinTest1</code>、<code>igeTest1</code>、<code>skinTest3</code>、<code>igeTest3</code>，依此类推。然而，在每个时间点直接复制“给定致敏/未致敏时阳性检测概率”的变量，会带来一个问题。我们真的预期检测的假阳性率和假阴性率会随时间变化吗？如果每个年龄做的是完全相同的检测，那么假设假阳性率和假阴性率不随时间改变是合理的。让我们把这个假设写下来：</p>
+<blockquote>
+<p><strong>3</strong> 对每一类检测，研究中进行的所有此类检测的假阳性率和假阴性率都相同。</p>
+</blockquote>
+<p>这个假设的结果是，皮肤试验的概率变量（<code>probSkinIfSens</code>、<code>probSkinIfNotSens</code>）和 IgE 检测的概率变量（<code>probIgeIfSens</code>、<code>probIgeIfNotSens</code>）将在所有时间点之间共享。这种共享的结果就是图 6.3 的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_FirstTimeSeriesModel.png">
+            <img class="mx-auto" alt="图 6.3" src="/uploads/Asthma_FirstTimeSeriesModel.png" />
+        </a>
+    </p>
+<p><em>图 6.3：过敏检测结果时间序列的一个初始模型，这些结果由一系列潜在的致敏状态来解释。每项检测的假阳性/假阴性概率变量在所有时间点之间共享。</em></p>
+<p>你也许会疑惑，为什么我们把每个时间点的变量都画了出来，而不是用一个<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>（plate）把它们全部折叠在一起。这是因为，在对时间序列建模时，我们预期时间上较晚的变量会依赖于较早变量的取值。通过把所有变量都画出来，我们现在就可以添加连接跨时间变量的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。但这些因子应该是什么呢？</p>
+<p>在 1 岁时，孩子已经对某种特定过敏原致敏存在某个初始概率——我们把它称为 <code>probSens1</code>。现在，假设孩子在 1 岁时未致敏（<code>sensitized1 = false</code>），那么他到 3 岁时变为致敏存在某个概率——我们把它称为 <code>probGain3</code>。反过来，如果孩子在 1 岁时已致敏（<code>sensitized1 = true</code>），那么他到 3 岁时保持这种致敏存在某个概率——我们把它称为 <code>probRetain3</code>。我们可以用一个 Table <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>来对此建模，就像我们为皮肤试验和 IgE 检测建模时所做的那样。</p>
+<p>当我们考虑 5 岁时，需要问自己一个问题：我们认为 5 岁时的致敏取决于之前两个致敏状态（1 岁和 3 岁），还是只取决于最近的那个（3 岁）？类似地，我们认为 8 岁时的致敏取决于之前全部三个致敏状态（1、3 和 5 岁），还是只取决于最近的那个（5 岁）？这两种假设中的任何一种都可能是合理的，具体取决于免疫系统运作的细节。目前，我们将假设只有最近的那个致敏状态是相关的，因为这样能把模型简化到最大程度：</p>
+<blockquote>
+<p><strong>4</strong> 一个孩子在某个时间点是否对某过敏原致敏，只取决于他在前一个时间点是否对该过敏原致敏。</p>
+</blockquote>
+<p>这类假设在时间序列建模中非常常见，以至于它有一个名字——为纪念俄国数学家安德烈·马尔可夫（Andrey Markov），它被称为<strong>马尔可夫假设</strong>。我们的马尔可夫假设意味着，我们可以像在 3 岁时那样，对 5 岁和 8 岁的致敏建模。因此，对于 5 岁，我们有变量 <code>probGain5</code> 和 <code>probRetain5</code>，表示 3 岁到 5 岁之间获得或保持致敏的概率。类似地，对于 8 岁，我们有变量 <code>probGain8</code> 和 <code>probRetain8</code>，表示 5 岁到 8 岁之间获得或保持致敏的概率。和 3 岁一样，我们可以用 Table <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>来对 5 岁和 8 岁的致敏建模，从而得到图 6.4 的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_SecondTimeSeriesModel.png">
+            <img class="mx-auto" alt="图 6.4" src="/uploads/Asthma_SecondTimeSeriesModel.png" />
+        </a>
+    </p>
+<p><em>图 6.4：一个改进后的时间序列模型，其中每个时间点的过敏致敏状态取决于前一个时间点的致敏状态。与检测假阳性/假阴性率相关的变量和因子被淡化处理，以突出模型中新加入的因子。</em></p>
+<p>看看图 6.4，你可以看到一条连接各致敏变量、贯穿时间的因子链，从 <code>sensitized1</code> 一直到 <code>sensitized8</code>。这种链式结构是做出<a href="https://www.mbmlbook.com/Asthma_A_model_of_allergies.html#Markov_assumption">马尔可夫假设</a>的时间序列模型的常见特征，因此被称为<strong>马尔可夫链</strong>。</p>
+<h3 id="完善模型">完善模型</h3>
+<p>为了完善我们的时间序列模型，我们需要把它扩展到覆盖多种过敏原和多个孩子。我们可以为过敏原和孩子分别添加<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>，并把致敏变量以及皮肤/IgE 检测变量放入这两个板块内，因为每个孩子、每种过敏原都有检测和致敏状态。假设 6.3 说我们检测的假阳性率和假阴性率在整个研究中都相同，因此变量 <code>probSkinIfSens</code>、<code>probIgeIfSens</code>、<code>probSkinIfNotSens</code> 和 <code>probIgeIfNotSens</code> 位于两个<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>之外。这样就只剩下与初始拥有、获得和保持致敏的概率相关的变量了。我们希望这些变量能够在不同过敏原之间变化，以便我们能够学习不同过敏是否在不同时间点被获得或失去。因此这些变量必须位于过敏原<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>之内。但如果我们想要学习多个孩子共有的、获得或失去致敏的模式，就必须让这些概率变量在孩子之间共享。目前，做到这一点的唯一办法是把它们放在孩子<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>之外。这对应于下面这个假设，也是本模型的最后一个假设：</p>
+<blockquote>
+<p><strong>5</strong> 与初始拥有、获得或保持对某种特定过敏原致敏相关的概率，对所有孩子都相同。</p>
+</blockquote>
+<p>有了这个假设，我们现在就可以画出带<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>了，其中的变量被恰当地放置在每个板块的内部或外部（见图 6.5）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_ThirdTimeSeriesModel.png">
+            <img class="mx-auto" alt="图 6.5" src="/uploads/Asthma_ThirdTimeSeriesModel.png" />
+        </a>
+    </p>
+<p><em>图 6.5：一个针对多个孩子和多种过敏原的完整过敏检测<a href="/post/2025-04-21-mbml-introduction">模型</a>。<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>用于在孩子和过敏原之间复制某些变量（讨论见正文）。与图 6.4 一样，与检测假阳性/假阴性率相关的变量和因子被淡化处理。</em></p>
+<p>在图 6.5 中，你可以看到：</p>
+<ul>
+<li>检测的假阳性/假阴性概率位于两个板块之外，因此在所有孩子和所有过敏原之间共享；</li>
+<li>初始拥有、获得和保持致敏的概率位于过敏原板块之内、孩子板块之外，因此在孩子之间共享，但可以在过敏原之间不同；</li>
+<li>检测结果和致敏状态位于两个板块之内，因为每个孩子、每种过敏原都有检测和致敏状态。</li>
+</ul>
+<p>有了这些<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>，我们现在就有了一个完整的模型，可以用于我们的皮肤和 IgE 检测结果数据集。</p>
+<h3 id="回顾我们的假设">回顾我们的假设</h3>
+<p>和前几章一样，我们应该花点时间回顾一下我们的建模假设。它们汇总在表 6.2 中。</p>
+<table>
+	<thead>
+			<tr>
+					<th>假设</th>
+					<th>内容</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>6.1</td>
+					<td>如果一个孩子对某种特定过敏原致敏，那么他得到阳性检测结果的概率很高。</td>
+			</tr>
+			<tr>
+					<td>6.2</td>
+					<td>如果一个孩子对某种特定过敏原<strong>不</strong>致敏，那么他得到阳性检测结果的概率很低。</td>
+			</tr>
+			<tr>
+					<td>6.3</td>
+					<td>对每一类检测，研究中进行的所有此类检测的假阳性率和假阴性率都相同。</td>
+			</tr>
+			<tr>
+					<td>6.4</td>
+					<td>一个孩子在某个时间点是否对某过敏原致敏，只取决于他在前一个时间点是否对该过敏原致敏。</td>
+			</tr>
+			<tr>
+					<td>6.5</td>
+					<td>与初始拥有、获得或保持对某种特定过敏原致敏相关的概率，对所有孩子都相同。</td>
+			</tr>
+	</tbody>
+</table>
+<p><em>表 6.2：我们的过敏<a href="/post/2025-04-21-mbml-introduction">模型</a>所编码的五个假设。</em></p>
+<p>假设 6.1 和假设 6.2 看起来是安全的假设——如果这些检测在大多数时候都不正确，医生也就不会使用它们了。假设 6.3 看起来是一个合理的假设，但我们可能会担心检测对不同过敏原有不同的假阳性/假阴性率。也有可能检测在研究过程中被改进或更新，从而使这些比率随时间变化。为了核实这一点，我们咨询了 MAAS 的临床医生，他们确认整个研究过程中检测的执行方式完全相同——相同的检测方法、相同的过敏原溶液，甚至是同一个人来做检测！因此这个假设看来相对安全。</p>
+<p>假设 6.4 是我们的马尔可夫假设——这是一个常见的简化假设，但也常被批评过于简单。例如，在我们的情形中，它意味着获得/保持致敏的概率只取决于前一个时间点的致敏状态，而不取决于（比如说）孩子已经致敏（或未致敏）了多长时间。尽管如此，这个假设让模型保持简单，因此我们会沿用它。</p>
+<p>最后，假设 6.5 说所有孩子都有相同的获得和失去致敏的模式。这个假设与项目的根本目的背道而驰，因为项目的目的正是要识别这些模式如何在不同孩子之间变化。本章其余的大部分内容都将用于探讨如何改进这个假设，但暂时保留它是有用的，这样我们可以先探索新模型的行为。</p>
+<h3 id="本页引入的概念回顾">本页引入的概念回顾</h3>
+<p><strong>过敏原（allergen）</strong> 某人可能过敏的一种物质，例如猫毛或花生。</p>
+<p><strong>皮肤点刺试验（skin prick test）</strong> 一种把一滴过敏原溶液滴在患者皮肤上、然后用针刺破皮肤的检测。如果皮肤出现免疫反应，表现为一定大小的红色隆起，则检测为阳性，否则为阴性。</p>
+<p><strong>IgE 检测（IgE test）</strong> 一种血液检测，用于寻找一种叫做免疫球蛋白 E（IgE）的抗体，它专门针对某种特定过敏原。如果这种抗体含量足够高，检测为阳性，否则为阴性。</p>
+<p><strong>时间序列（time series）</strong> 一系列按时间顺序排列的数据点，表示某个量随时间的测量值——例如股价、血压或人口计数。</p>
+<p><strong>时间序列分析（time series analysis）</strong> 对<a href="https://www.mbmlbook.com/Asthma_A_model_of_allergies.html#time_serie">时间序列</a>的分析，以理解时间序列数据背后随时间变化的过程。</p>
+<p><strong>马尔可夫假设（Markov assumption）</strong> 假定一个过程的某个状态只依赖于该过程的前一个状态，而不依赖任何更早的状态。以俄国数学家安德烈·马尔可夫命名。</p>
+<p><strong>马尔可夫链（Markov chain）</strong> 一个随机过程，其下一个状态的概率分布只依赖于前一个状态，而不依赖任何更早的状态。在<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>中，马尔可夫链表现为一条时间序列变量组成的链，相邻变量之间用<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>连接。</p>
+<hr>
+<p>下一节：<a href="/post/2026-10-12-mbml-asthma_trying_out_the_model">试验模型</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/">https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-10-02-mbml-asthma/">[译]基于模型的机器学习 - 6 理解哮喘</a></li>
+        
+        <li><a href="/post/2026-09-26-mbml-recommender_another_cold_start_problem/">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a></li>
+        
+        <li><a href="/post/2026-09-22-mbml-recommender_modelling_star_ratings/">[译]基于模型的机器学习 - 5.5 建模星级评分</a></li>
+        
+        <li><a href="/post/2026-09-18-mbml-recommender_our_first_recommendations/">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a></li>
+        
+        <li><a href="/post/2026-09-14-mbml-recommender_training_our_recommender/">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" title="[译]基于模型的机器学习 - 6.3 比较可选模型" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/" title="语音 Agent 评估：Foundry 多轮评估器到底有多可靠？" target="_blank">语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/" title="[译]基于模型的机器学习 - 6.1 过敏模型" target="_blank">[译]基于模型的机器学习 - 6.1 过敏模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" title="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/" title="深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流" target="_blank">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-02-mbml-asthma/" title="[译]基于模型的机器学习 - 6 理解哮喘" target="_blank">[译]基于模型的机器学习 - 6 理解哮喘</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (48)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (40)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Evaluation/">Evaluation</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Governance/">Governance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Performance/">Performance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

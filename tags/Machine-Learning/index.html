@@ -82,6 +82,100 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-10-17T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月17日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>在前面所有章节中，我们都假设数据源自单一的潜在过程。但现在我们不能再这样假定了，因为我们预期：会发展出过敏和哮喘的孩子与不会发展出的孩子，遵循的是不同的过程。为了处理这类可选过程，我们需要引入一种新的建模技术。</p>
+<p>这种技术将使我们能够：</p>
+<ul>
+<li>在单个<a href="/post/2025-04-21-mbml-introduction">模型</a>中表示多个可选过程；</li>
+<li>评估每个可选过程产生某个特定数据项（例如某个特定孩子的数据）的概率；</li>
+<li>比较两个或更多不同的<a href="/post/2025-04-21-mbml-introduction">模型</a>，看看哪一个最能解释某些数据。</li>
+</ul>
+<p>为了介绍这项新技术，我们暂时把哮喘项目放在一边，转而看一个双过程情形的简单例子（如果你更愿意继续聚焦于哮喘项目，可以直接跳到<a href="/post/2026-10-27-mbml-asthma_discovering_sensitization_classes">第 6.5 节</a>）。既然我们身处医学领域，有一个绝佳的双过程情形可用：<strong>随机对照试验</strong>。随机对照试验是一种临床试验，常用于检验各类医疗干预（如新药）的有效性。在这类试验中，每个受试者被随机分配到治疗组（接受实验性干预）或对照组（不接受干预）。试验的目的是判断实验性干预是否对一个或多个关注的结局有影响，并理解这种影响的性质。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-10-12T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月12日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>现在我们有了一个完整的<a href="/post/2025-04-21-mbml-introduction">模型</a>，可以在一些研究数据上试验它了。正如本书前面多次强调的，在使用真实数据集时，务必仔细查看数据集，确保它是完整、正确且符合你预期的形式。请记住，许多常见的机器学习问题都是由数据问题引起的（例如<a href="/post/2026-07-10-mbml-learning-skills_diagnosing_the_problem">第 2.5 节</a>中列举的那些）。检查数据集的一个好办法是构建<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">可视化</a>，让你一眼就能看清它的样子。在本例中，我们需要为每个孩子、每种<a href="/post/2026-10-07-mbml-asthma_a_model_of_allergies">过敏原</a>和每个时间点创建检测结果的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">可视化</a>。然而，这个研究数据集包含私密的医疗数据，因此我们无法在本书中公开分享这些数据，哪怕是以可视化的形式。从这次可视化中我们学到的最重要一点是：数据集中有大量检测结果缺失。</p>
+<p>当存在<strong>缺失数据</strong>时，总是值得分析一下它们为什么缺失。在图 6.6 中，我们绘制了数据集中每个年龄、每种检测类型的检测结果数量（无论阳性还是阴性）。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_DataCounts_.png">
+            <img class="mx-auto" alt="图 6.6" src="/uploads/Asthma_DataCounts_.png" />
+        </a>
+    </p>
+<p><em>图 6.6：为两类检测各自记录的检测结果，按孩子的年龄拆分。</em></p>
+<p>你可以在图 6.6 中看到几种不同的缺失数据模式。首先，图中显示某些年龄和检测类型对特定<a href="/post/2026-10-07-mbml-asthma_a_model_of_allergies">过敏原</a>完全没有数据。例如，花生在 1 岁和 3 岁完全没有结果，5 岁时只有 IgE 结果。霉菌完全没有 IgE 结果，1 岁时也没有皮肤试验结果。其次，越早的年龄缺失数据越多，尤其是 1 岁。第三，图中显示 IgE 检测总体上比皮肤试验缺失得多。我们需要把所有这些缺失数据点的影响考虑进来。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/" target="_blank">[译]基于模型的机器学习 - 6.1 过敏模型</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-10-07T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月7日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>我们的首要目标是通过在 MAAS 数据中寻找规律，来加深对过敏发展（及其与儿童哮喘之间关系）的理解。为了理解本研究中的相关数据，我们需要先了解一点关于过敏诊断的知识。研究中的医生使用两类检测来尝试判断一个人是否对某种特定的过敏原（如猫毛或花生）过敏。这两类检测是：</p>
+<p><strong>皮肤点刺试验</strong>，即把一滴过敏原溶液滴在患者的皮肤上（见下图），然后用针刺破皮肤。如果皮肤出现免疫反应，表现为一定大小的红色隆起，则该检测为阳性，否则为阴性。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-10-02-mbml-asthma/" target="_blank">[译]基于模型的机器学习 - 6 理解哮喘</a>
             </h1>
         </header>
@@ -315,114 +409,6 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-09-02-mbml-recommender/" target="_blank">[译]基于模型的机器学习 - 5 做出推荐</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-09-02T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年9月2日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>无论你钟情于音乐、书籍、电影还是电子游戏，一条好的推荐都能带来实实在在的乐趣——还能帮助那些名气不大的作品走入聚光灯下。但一个人眼中的新经典，另一个人可能会一口断定为烂作。能否用一个<a href="/post/2025-04-21-mbml-introduction">模型</a>来理解一个人的喜好与厌恶，理解得足够透彻，从而提供量身定制的推荐呢？</p>
-<p>各行各业的零售商都渴望向他们的顾客做出准确、个性化的推荐。然而，开发一套自动推荐系统所需的专业能力和投入，超出了许多零售商——尤其是较小的零售商——的承受范围。作为替代方案，这类零售商可以转向云端，利用在线推荐服务。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-02-mbml-recommender/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" target="_blank">[译]基于模型的机器学习 - 4.6 随邮件到达而学习</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-08-31T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年8月31日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>到目前为止，我们能够一次性在大量邮件上训练我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>。但对我们的应用而言，我们需要能够在用户回复一封新邮件时、或在明确用户不会回复它时，立即从这封邮件中学习。我们不能等到收到大量邮件后，再一次性在它们上面训练、然后永远使用训练好的<a href="/post/2025-04-21-mbml-introduction">模型</a>。相反，我们必须随着新邮件的到来持续训练<a href="/post/2025-04-21-mbml-introduction">模型</a>，并始终使用最新训练好的<a href="/post/2025-04-21-mbml-introduction">模型</a>来做预测。</p>
-<p>正如我们在上一章<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">第 3.3 节</a>中看到的，我们可以使用<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>在收到新训练数据时持续更新我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>。在我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>中，<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>很直接：对每一批自上次训练以来到达的邮件，我们把之前对 <code>weight</code> 和 <code>threshold</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>用作训练的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。一旦对这一批的训练完成，对 <code>weight</code> 和 <code>threshold</code> 的新<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>就可以用来做预测。之后当训练下一批邮件时，这些<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>将充当新的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。我们可以通过把训练数据分成若干批、并在每一批到来时运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">在线学习</a>，来检查这个过程工作得如何。然后我们可以把这种方法与离线训练相比较，离线训练一次性呈现到该时间点为止见过的所有训练数据。图 4.20 显示了使用离线训练、或使用不同批量大小的在线训练时，在全部 10 个用户上平均的 AUC 和 <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">AP</a>。</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AreaUnderCurve.png">
-            <img class="mx-auto" alt="图 4.20a 曲线下面积" src="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AreaUnderCurve.png" />
-        </a>
-    </p>
-<p><em>(a) 曲线下面积</em></p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AveragePrecision.png">
-            <img class="mx-auto" alt="图 4.20b 平均精确率" src="/uploads/EmailClassifier_6LearningAsEmailsArriveSingleUserOnline_SingleUserOnline-AveragePrecision.png" />
-        </a>
-    </p>
-<p><em>(b) <a href="/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set">平均精确率</a></em></p>
-<p><em>图 4.20：随着越来越多训练邮件变得可用时的预测准确性，在全部 10 个用户上平均。对每个指标，离线曲线显示如果我们在到该时间点为止收到的所有邮件上从头重新训练<a href="/post/2025-04-21-mbml-introduction">模型</a>的准确性。另外四条曲线显示如果我们改为在每 1、5、10 或 50 封邮件后做在线训练以增量更新<a href="/post/2025-04-21-mbml-introduction">模型</a>的准确性。</em></p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-31-mbml-emailclassifier_learning_as_emails_arrive/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" target="_blank">[译]基于模型的机器学习 - 4.5 评估与改进特征集</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-08-26T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年8月26日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>使用我们新完成的<a href="/post/2025-04-21-mbml-introduction">模型</a>和<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征集</a>，我们可以为数据集中的每个用户训练一个个性化的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类器</a>。确切地说，对每个用户的<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">训练集</a>，我们为每封邮件计算活跃的<a href="/post/2026-08-21-mbml-emailclassifier_designing_a_feature_set">特征桶</a> <code>featureIndices</code> 以及它们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>值 <code>featureValue</code>。给定这些已观测变量，我们随后可以应用<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>来学习每个桶的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a> <code>weight</code> 分布，以及对 <code>threshold</code> 值的单个<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。但首先我们需要看看如何为我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>安排消息传递。</p>
-<h3 id="并行调度与顺序调度">并行调度与顺序调度</h3>
-<p><strong>推断深入</strong></p>
-<p>在这个可选小节中，我们看看如何为我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>安排<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>消息的调度。如果你想直接去看运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>的结果，尽可跳过本节。</p>
-<p>在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>时，选择一个好的<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>很重要。在这种<a href="/post/2025-04-21-mbml-introduction">模型</a>中，糟糕的调度很容易导致消息传递<a href="/post/2025-04-21-mbml-introduction">算法</a>无法<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>或收敛得非常慢。当你有一个带重复结构的<a href="/post/2025-04-21-mbml-introduction">模型</a>（例如我们的<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">分类</a><a href="/post/2025-04-21-mbml-introduction">模型</a>）时，可以使用两种主要的<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>：顺序调度或并行调度。为理解这两种调度，让我们看看在一个简化形式的<a href="/post/2025-04-21-mbml-introduction">模型</a>上的消息传递，它有两个<a href="/post/2026-08-11-mbml-emailclassifier_a_model_for_classification">特征</a>和两个权重：</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/EmailClassifier_TwoSchedules.png">
-            <img class="mx-auto" alt="图 4.13 两种调度" src="/uploads/EmailClassifier_TwoSchedules.png" />
-        </a>
-    </p>
-<p>在这幅图中，我们没有使用跨越各桶的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板</a>，而是为每个权重复制了<a href="/post/2025-04-21-mbml-introduction">模型</a>的相应部分。在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中做消息传递时，两种调度选择是：</p>
-<ul>
-<li><strong>顺序调度</strong>，依次处理两个权重。对第一个权重，这种调度按 A、A1、B1、B 的顺序传递消息。处理完这个权重后，消息传递在图的下半部分发生（未显示）。然后调度转到第二个权重，按 A、A2、B2、B 的顺序传递消息。</li>
-<li><strong>并行调度</strong>，一次处理两个权重。在这种调度中，首先传递标记为 A 的消息。然后同时传递两组消息（A1 和 B1）与（A2 和 B2），其中来自加号<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>的消息使用之前的 B1 和 B2 消息来计算。最后，传递标记为 B 的消息。</li>
-</ul>
-<p>为看出两种调度的差异，看看从加号<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>出来的第一条 A2 消息是如何计算的。在顺序调度中，它使用本次调度迭代中刚刚更新的 B1 消息来计算。在并行调度中，它使用上一次迭代中计算的 B1 消息，换句话说，是一个较旧版本的消息。因此，并行调度比顺序调度收敛得更慢，也更可能完全无法<a href="/post/2026-06-16-mbml-learning-skills_loopiness">收敛</a>。那么我们为什么会想使用并行调度呢？主要原因是如果你想把<a href="/post/2025-04-21-mbml-introduction">推断</a>计算并行分布到若干台机器上以加速它。在这种情况下，最好的选择是使用一种组合调度：在每台机器内部处理的<a href="/post/2025-04-21-mbml-introduction">模型</a>部分上是顺序的，但跨机器是并行的。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-26-mbml-emailclassifier_evaluating_and_improving_the_feature_set/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
@@ -505,6 +491,14 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" title="[译]基于模型的机器学习 - 6.3 比较可选模型" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
     </li>
     
@@ -514,6 +508,10 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/" title="[译]基于模型的机器学习 - 6.1 过敏模型" target="_blank">[译]基于模型的机器学习 - 6.1 过敏模型</a>
     </li>
     
     <li>
@@ -530,18 +528,6 @@
     
     <li>
         <a href="https://beanhsiang.github.io/post/2026-10-02-mbml-asthma/" title="[译]基于模型的机器学习 - 6 理解哮喘" target="_blank">[译]基于模型的机器学习 - 6 理解哮喘</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-26-mbml-recommender_another_cold_start_problem/" title="[译]基于模型的机器学习 - 5.6 另一个冷启动问题" target="_blank">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
     </li>
     
 </ul>
@@ -567,7 +553,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (37)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (40)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
     

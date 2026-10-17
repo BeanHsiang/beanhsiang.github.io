@@ -2,25 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-10-11T12:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/</loc>
+    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
   </url><url>
-    <loc>https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/</loc>
-    <lastmod>2026-10-11T12:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/categories/</loc>
+    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
+    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
+    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Model-Based/</loc>
+    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
+    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/</loc>
+    <lastmod>2026-10-12T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/</loc>
     <lastmod>2026-10-11T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
     <lastmod>2026-10-11T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
-    <lastmod>2026-10-11T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-10-11T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
     <lastmod>2026-10-11T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/AI-Agents/</loc>
@@ -37,6 +52,9 @@
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/</loc>
     <lastmod>2026-10-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/</loc>
+    <lastmod>2026-10-07T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Azure-OpenAI/</loc>
     <lastmod>2026-10-06T12:00:00+08:00</lastmod>
@@ -63,15 +81,6 @@
     <lastmod>2026-10-03T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-10-02-mbml-asthma/</loc>
-    <lastmod>2026-10-02T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
-    <lastmod>2026-10-02T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Model-Based/</loc>
-    <lastmod>2026-10-02T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
     <lastmod>2026-10-02T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/</loc>

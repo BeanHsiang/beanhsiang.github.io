@@ -2,28 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/</loc>
-    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/</loc>
+    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
-    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Model-Based/</loc>
-    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
-    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-10-17T10:00:00+08:00</lastmod>
+    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/</loc>
+    <lastmod>2026-10-22T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/</loc>
     <lastmod>2026-10-17T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/</loc>

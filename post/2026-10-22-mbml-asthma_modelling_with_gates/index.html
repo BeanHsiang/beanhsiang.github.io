@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 6.4 用门建模 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 6.4 用门建模 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-10-22T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-10-22T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 6.4 用门建模">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 6.4 用门建模</h1>
+        </header>
+        
+  <time datetime="2026-10-22T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月22日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/shutterstock_326319896_small.jpg">
+            <img class="mx-auto" alt="门" src="/uploads/shutterstock_326319896_small.jpg" />
+        </a>
+    </p>
+<p><em>门允许<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>的一部分被打开或关闭。</em></p>
+<p>在上一节中，我们看到了如何通过手工推断一个“在多个可选过程之间做选择”的<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>上的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>，来比较这些可选过程。现在我们将看到如何通过定义一个合适的<a href="/post/2025-04-21-mbml-introduction">模型</a>、并在该模型内执行<a href="/post/2025-04-21-mbml-introduction">推断</a>来完成同样的计算。为此，我们需要一种新的建模结构，它允许在模型中表示各种可选项。我们可以用来做这件事的建模结构称为<strong>门</strong>（gate），如 Minka and Winn [2009] 所述。</p>
+<p>门把<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>的一部分包围起来，并根据一个称为<strong>选择变量</strong>（selector variable）的随机变量的状态来打开或关闭这部分。当选择变量取某个特定值（称为<strong>键</strong>，key）时，门是打开的；对所有其他取值，门是关闭的。图 6.11 的因子图中展示了一个门的例子。门以一个虚线矩形表示，键值（<code>true</code>）位于左上角。选择变量 <code>selector</code> 有一条边连接到门——边上的箭头表明门被视为选择变量的子节点。当 <code>selector</code> 等于 <code>true</code> 时，门是打开的，于是 <code>x</code> 服从 Bernoulli(0.2) 分布。否则门是关闭的，<code>x</code> 服从<a href="/post/2025-04-22-mbml-murder-mystery">均匀分布</a>，因为此时它没有连接到任何<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_GateExample.png">
+            <img class="mx-auto" alt="图 6.11" src="/uploads/Asthma_GateExample.png" />
+        </a>
+    </p>
+<p><em>图 6.11：一个包含门（以虚线矩形表示）的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>示例。当 <code>selector</code> 等于键值 <code>true</code>（显示在门的左上角）时，门是打开的，变量 <code>x</code> 服从 Bernoulli(0.2) 分布。当 <code>selector</code> 为 <code>false</code> 时，门是关闭的，<code>x</code> 服从均匀分布，因为它没有连接到任何因子。</em></p>
+<p>在为带门的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>写<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">联合分布</a>时，所有与门内那部分图相关的项，都需要根据选择变量是否取键值而被打开或关闭。这类项可以通过取零次幂来关闭，通过取一次幂来保持打开。例如，图 6.11 的联合分布为：</p>
+$$P(\text{selector}, \text{x}) \propto \text{Bernoulli}(x;0.2)^{\delta(\text{selector}=\text{true})} \tag{6.12}$$<p>其中函数 $\delta()$ 在括号中的表达式为真时等于 1，否则等于 0。如果 <code>selector</code> 不为 <code>true</code>，那么 $\text{Bernoulli}(x;0.2)$ 这一项将被取零次幂，使该项等于 1——这相当于把它从乘积中移除（即把它关闭）。</p>
+<p>在模型中使用门时，常见的做法是为选择变量的每个取值各设一个门。在这种情况下，由此得到的一组门称为<strong>门块</strong>（gate block）。因为选择变量只能取一个值，所以一个门块中一次只能有一个门是打开的。图 6.12 的因子图中展示了一个门块的例子。在这个例子中，选择变量是二值的，因此门块中有两个门，一个键值为 <code>true</code>，另一个键值为 <code>false</code>。选择变量也可以有任意多个取值，从而得到包含相应数量的门的门块。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_GateBlockExample.png">
+            <img class="mx-auto" alt="图 6.12" src="/uploads/Asthma_GateBlockExample.png" />
+        </a>
+    </p>
+<p><em>图 6.12：一个包含门块的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>示例。当 <code>selector</code> 等于 <code>true</code> 时，左门打开、右门关闭，因此 <code>x</code> 服从 Bernoulli(0.2) 分布。当 <code>selector</code> 等于 <code>false</code> 时，左门关闭、右门打开，因此 <code>x</code> 服从 Bernoulli(0.9) 分布。</em></p>
+<p>这个因子图的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">联合概率分布</a>为：</p>
+$$P(\text{selector}, \text{x}) \propto \text{Bernoulli}(x;0.2)^{\delta(\text{selector}=\text{true})} \; \text{Bernoulli}(x;0.9)^{\delta(\text{selector}=\text{false})}. \tag{6.13}$$<p>观察这个<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">联合概率</a>，你也许能发现：<code>selector</code> 和 <code>x</code> 之间的门块表示一个<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">条件概率表</a>，如下所示：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_ExampleCPT_Table.png">
+            <img class="mx-auto" alt="表 6.4" src="/uploads/Asthma_ExampleCPT_Table.png" />
+        </a>
+    </p>
+<p><em>表 6.4：图 6.12 中的门块所表示的<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">条件概率表</a>。</em></p>
+<p>再举一个例子，我们可以用门这样来表示皮肤测试（图 6.1）的<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">条件概率表</a>：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_SkinTestModel.png">
+            <img class="mx-auto" alt="图 6.13" src="/uploads/Asthma_SkinTestModel.png" />
+        </a>
+    </p>
+<p><em>图 6.13：用门块表示的皮肤测试（图 6.1）<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">条件概率表</a>。如果 <code>sensitised</code> 为 <code>true</code>，则左门打开、右门关闭。皮肤测试结果 <code>skinTest</code> 此时服从 Bernoulli 分布，取 <code>true</code> 的概率由 <code>probSkinIfSens</code> 给出。如果 <code>sensitised</code> 为 <code>false</code>，则 <code>skinTest</code> 服从 Bernoulli 分布，取 <code>true</code> 的概率由 <code>probSkinIfNotSens</code> 给出。</em></p>
+<p>用门块来表示这个<a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">条件概率表</a>，比用一个 Table 因子（如我们在图 6.1 中所做）要不那么紧凑，但其优点是让<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">父变量</a>与<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">子变量</a>之间的关系更加清晰和精确。当一个变量有多个父节点时，用门块来表示条件概率表还能带来更准确或更高效的<a href="/post/2025-04-21-mbml-introduction">推断</a>。</p>
+<h3 id="用门做模型选择">用门做模型选择</h3>
+<p>表示条件概率表只是用门所能实现之事的开端。例如，门还可以用来做模型选择。为了说明如何做到这一点，让我们回到上一节的模型选择问题。记得我们希望通过推断一个叫做 <code>model</code> 的随机变量的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>，来在“有效”模型和“无效”模型之间做选择。使用门，我们可以把这个<a href="/post/2026-10-17-mbml-asthma_comparing_alternative_models">模型选择</a>问题表示为一个单一的大型<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，其中使用一个以 <code>model</code> 为选择变量的门块。然后我们把整个“无效”模型放进一个键值为 <code>NoEffect</code> 的门里，把整个“有效”模型放进该门块中另一个键值为 <code>HasEffect</code> 的门里。观测变量留在两个门之外，因为它们对两个模型都是公共的，因此始终是打开的。其结果就是图 6.14 中的因子图。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_ClinicalTrial.png">
+            <img class="mx-auto" alt="图 6.14" src="/uploads/Asthma_ClinicalTrial.png" />
+        </a>
+    </p>
+<p><em>图 6.14：一个使用门在两个<a href="/post/2025-04-21-mbml-introduction">模型</a>之间做模型选择的因子图。“有效”模型在上方的门中，“无效”模型在下方的门中。观测数据变量位于两个门之外，因为它们对两个模型都是公共的。当选择变量 <code>model</code> 取值 <code>HasEffect</code> 时，上门打开、下门关闭，因此“有效”模型生效。当 <code>model</code> 取值 <code>NoEffect</code> 时，上门关闭、下门打开，因此“无效”模型生效。因为 <code>model</code> 是一个取值未知的随机变量，推断它的后验分布就等价于在两个模型之间做<a href="/post/2026-10-17-mbml-asthma_comparing_alternative_models">贝叶斯模型选择</a>。</em></p>
+<p>这个因子图看起来也许有点吓人，但它可以被拆分理解。上方的门恰好包含图 6.10 中的模型，观测变量在门外。下方的门恰好包含图 6.9 中的模型，只是上下颠倒地画出，并共享相同的观测变量。最后我们有一个新变量，也就是用来做模型选择的 <code>model</code> 变量。</p>
+<p>给定这个因子图，我们只需运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>来推断 <code>model</code> 上的后验分布。对吧？嗯，差不多——事实证明，我们首先需要对期望传播做一些扩展，才能处理门。好消息是，这些修改使得期望传播可以应用于任何包含门的因子图。</p>
+<h3 id="带门因子图中的期望传播">带门因子图中的期望传播</h3>
+<blockquote>
+<p><strong>推断深入探究</strong></p>
+<p>在这个可选的小节中，我们将看到如何用期望传播来计算模型证据，然后如何扩展期望传播以在含门的图上工作。如果你想聚焦于建模，可以放心跳过本节。</p>
+</blockquote>
+<p>要在包含门的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>中运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>，我们首先需要能够为一个不含门的因子图计算<a href="/post/2026-10-17-mbml-asthma_comparing_alternative_models">模型证据</a>。事实证明，我们可以用现有的 EP 消息，单独为每个变量和因子计算证据贡献，然后把它们相乘，从而得到模型证据的一个近似。例如，变量 <code>x</code> 的证据贡献由下式给出：</p>
+$$\text{evidence}_x = \sum_x (\text{进入 } x \text{ 的所有消息之积}) \tag{6.14}$$<p>这个方程表示：要计算变量 <code>x</code> 的证据，先取连接到该变量的各边上所有传入<a href="/post/2026-06-06-mbml-learning-skills_testing_out_the_model">消息之积</a>，然后对 <code>x</code> 可能取的各个值求和（这正是记号 $\sum_x$ 的含义）。由于有这个求和，其结果是一个单一的数而不是一个分布——这个数就是对模型证据的局部贡献。</p>
+<p>连接到多个变量 $Y$ 的因子 <code>f</code> 的证据贡献由下式给出：</p>
+$$\text{evidence}_f = \frac{\sum_Y f(Y) \times (\text{进入因子 } f \text{ 的所有消息之积})}{\sum_Y (\text{进入或离开因子 } f \text{ 的所有消息之积})} \tag{6.15}$$<p>在这个方程中，记号 $\sum_Y$ 表示对相连变量 $Y$ 的所有联合配置求和。</p>
+<p>我们可以用方程 (6.14) 和 (6.15) 来计算因子图中每个变量和每个因子的证据贡献。所有这些贡献之积给出模型证据的 EP 近似。对于一个模型 $M$，这给出：</p>
+$$\text{evidence}_M = \prod_{x \text{ 在 } M \text{ 中}} \text{evidence}_x \times \prod_{f \text{ 在 } M \text{ 中}} \text{evidence}_f \tag{6.16}$$<p>在方程 (6.16) 中，第一项表示模型 $M$ 中每个变量的证据贡献之积，第二项表示模型 $M$ 中每个因子的证据贡献之积。</p>
+<h4 id="加入门">加入门</h4>
+<p>如果我们现在转向包含门的因子图，就会出现一种新的证据贡献，它来自任何穿越门边界的边。如果这样一条边连接一个变量 <code>x</code> 和一个因子 <code>f</code>，那么其证据贡献为：</p>
+$$\text{evidence}_{fx} = \sum_x (\text{从 } x \text{ 到 } f \text{ 的消息}) \times (\text{从 } f \text{ 到 } x \text{ 的消息}) \tag{6.17}$$<p>换句话说，我们取在这条边上双向传递的两个消息之积，然后对变量 <code>x</code> 的各个取值求和。</p>
+<p>在因子图的局部部分上计算证据贡献的好处在于：除了能为整个模型计算证据外，我们还能为任何特定的门计算证据。一个门的证据，是门内所有变量和因子的证据贡献、连同任何穿越门边界的边的贡献之积。对于一个门 <code>g</code>，这个积由下式给出：</p>
+$$\text{evidence}_g = \prod_{x \text{ 在 } g \text{ 中}} \text{evidence}_x \times \prod_{f \text{ 在 } g \text{ 中}} \text{evidence}_f \times \prod_{fx \text{ 穿越 } g} \text{evidence}_{fx} \tag{6.18}$$<p>如果没有边穿越门边界——换句话说，门包含一个与图其余部分断开的完整模型——那么这个方程就退化为上面的模型证据方程 (6.16)，从而给出所含模型的证据。</p>
+<p>有了这些证据贡献，我们现在可以定义一个扩展版本的<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>，它适用于包含门的因子图。该算法要求门只出现在门块中，并且要求：任何连接到门块某个门中某因子的变量，也要连接到该门块所有其他门中的因子。这种“门平衡”可以通过在任何该变量尚未连接因子的门中，把它连接到均匀因子来实现。我们需要这种门平衡，是因为消息将被定义为往返于门块，而不是往返于单个门。</p>
+<p>当从一个门 <code>g</code> 内的因子 <code>f</code> 向门外的一个变量 <code>x</code> 发送消息时，我们需要对该消息适当加权，权重定义为：</p>
+$$\text{weight}_{gfx} = \frac{\text{evidence}_g}{\text{evidence}_{fx}} \times (\text{来自选择变量的消息})[\text{key}] \tag{6.19}$$<p>其中记号 $[\text{key}]$ 表示：我们在选择变量传来的消息所给出的分布下，评估该门的键值的概率。利用这些权重，我们可以定义扩展的期望传播算法，如算法 6.1 所示。</p>
+<blockquote>
+<p><strong>算法 6.1　带门的期望传播</strong></p>
+<p><strong>输入：</strong> 带门块的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>、要计算边缘分布的目标变量列表、<a href="/post/2026-06-16-mbml-learning-skills_loopiness">消息传递调度</a>、初始消息值（可选）、每条边的近似分布类型选择。</p>
+<p><strong>输出：</strong> 目标变量的边缘分布。</p>
+<ol>
+<li>把所有消息初始化为均匀分布（若提供了初始值则用初始值）。</li>
+<li>对消息传递调度中的每条边，按下面的规则发送相应消息：
+<ul>
+<li><strong>选择变量 → 门块：</strong> 选择变量其他各连接边上收到的所有消息之积；</li>
+<li><strong>门块 → 选择变量：</strong> 选择变量上的一个分布，其中每个取值的概率与“键值为该值的门”的证据成正比；</li>
+<li><strong>门块中的因子 → 门块外的变量：</strong> 用 (6.19) 给出的权重，计算各门中因子消息的加权和。再乘以上下文消息（即从该变量发往门块的消息）。用矩匹配投影到所需的分布类型。最后除掉上下文消息。</li>
+<li><strong>所有其他消息：</strong> 常规 EP 消息（定义于<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">算法 3.1</a>）。</li>
+</ul>
+</li>
+<li>直到所有消息收敛为止。</li>
+<li>在每个目标变量节点处，把所有传入消息相乘，计算其边缘分布。</li>
+</ol>
+</blockquote>
+<p>该算法的完整推导见 Minka and Winn [2009]，其中还包含一些我们在此省略的额外细节（例如如何处理嵌套的门）。</p>
+<p>现在我们有了一个适用于带门图的通用<a href="/post/2025-04-21-mbml-introduction">推断算法</a>，就可以用它来同时做<a href="/post/2026-10-17-mbml-asthma_comparing_alternative_models">贝叶斯模型选择</a>、并推断我们所关心变量上的后验分布了！例如，回想<a href="/post/2026-10-17-mbml-asthma_comparing_alternative_models">第 6.3 节</a>中的示例试验。在那个试验中，治疗组 20 人中有 13 人康复，而对照组 20 人中有 8 人康复。把这些数据附加到图 6.14 的带门因子图上，我们可以应用期望传播来计算 <code>model</code> 选择变量以及 <code>probTreated</code>、<code>probControl</code> 等其他变量上的后验。结果展示在图 6.15 中。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_ClinicalTrialPlots_ProbOfGoodOutcomeCharts[0]-Value.png">
+            <img class="mx-auto" alt="图 6.15 左" src="/uploads/Asthma_ClinicalTrialPlots_ProbOfGoodOutcomeCharts[0]-Value.png" />
+        </a>
+    </p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_ClinicalTrialPlots_ProbHasEffect[0]-Value.png">
+            <img class="mx-auto" alt="图 6.15 右" src="/uploads/Asthma_ClinicalTrialPlots_ProbHasEffect[0]-Value.png" />
+        </a>
+    </p>
+<p><em>图 6.15：每组 20 人的示例试验的推断后验分布。左图展示 HasEffect 模型中 <code>probControl</code> 和 <code>probTreated</code> 的后验。右图展示 <code>model</code> 变量上的后验分布。</em></p>
+<p>图 6.15 显示，<code>model</code> 上的后验分布给“有效”模型的概率略高于“无效”模型。确切的取值是 model = HasEffect 为 0.5555，model = NoEffect 为 0.4445。这两个概率的比值就是<a href="/post/2026-10-17-mbml-asthma_comparing_alternative_models">贝叶斯因子</a>，此处为 1.25。这与我们在第 6.3 节中手工计算的值相同，表明对于这个模型，期望传播的后验是精确的。<code>probControl</code> 和 <code>probTreated</code> 上的后验分布说明了为什么贝叶斯因子这么小。图中显示两个分布有大量重叠，这意味着两个概率有可能是同一个值，换句话说，“无效”模型可能成立。</p>
+<p>让我们看看当我们增大试验规模、但保持每组中康复者比例不变时会发生什么。对于一个三倍规模的试验，这将是治疗组 60 人中有 39 人康复，而对照组 60 人中有 24 人康复。把这些新数据代入我们的模型，得到图 6.16 所示的结果。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_ClinicalTrialPlots_ProbOfGoodOutcomeCharts[1]-Value.png">
+            <img class="mx-auto" alt="图 6.16 左" src="/uploads/Asthma_ClinicalTrialPlots_ProbOfGoodOutcomeCharts[1]-Value.png" />
+        </a>
+    </p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_ClinicalTrialPlots_ProbHasEffect[1]-Value.png">
+            <img class="mx-auto" alt="图 6.16 右" src="/uploads/Asthma_ClinicalTrialPlots_ProbHasEffect[1]-Value.png" />
+        </a>
+    </p>
+<p><em>图 6.16：每组 60 人的示例试验的推断后验分布。左图展示 HasEffect 模型中 <code>probControl</code> 和 <code>probTreated</code> 的后验。右图展示 <code>model</code> 变量上的后验分布。</em></p>
+<p>图 6.16 显示，在把试验规模扩大三倍后，“有效”模型有了高得多的概率 0.904，给出 9.41 的贝叶斯因子。由于这个因子落在 3–20 的区间内，这次试验的结果现在可以被视为支持“有效”模型的正面证据。<code>probControl</code> 和 <code>probTreated</code> 上的后验分布说明了为什么贝叶斯因子现在大了很多：两条曲线的重叠少了很多，意味着两个概率相同的可能性大大降低了。我们可以更进一步，再次增大试验规模，使之达到原始试验的五倍。在这个更大的试验中，治疗组 100 人中有 65 人康复，而对照组 100 人中有 40 人康复，给出图 6.17 所示的结果。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_ClinicalTrialPlots_ProbOfGoodOutcomeCharts[2]-Value.png">
+            <img class="mx-auto" alt="图 6.17 左" src="/uploads/Asthma_ClinicalTrialPlots_ProbOfGoodOutcomeCharts[2]-Value.png" />
+        </a>
+    </p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Asthma_ClinicalTrialPlots_ProbHasEffect[2]-Value.png">
+            <img class="mx-auto" alt="图 6.17 右" src="/uploads/Asthma_ClinicalTrialPlots_ProbHasEffect[2]-Value.png" />
+        </a>
+    </p>
+<p><em>图 6.17：每组 100 人的示例试验的推断后验分布。左图展示 HasEffect 模型中 <code>probControl</code> 和 <code>probTreated</code> 的后验。右图展示 <code>model</code> 变量上的后验分布。</em></p>
+<p>在图 6.17 中，<code>probControl</code> 和 <code>probTreated</code> 上的后验分布几乎完全不重叠。因此，“有效”模型现在的概率为 0.989，给出 92.4 的贝叶斯因子。由于这个因子落在 20–150 的区间内，这次试验的结果现在可以被视为支持“有效”模型的强证据。这些结果表明：如果你想证明新药的有效性，运行一个足够大的临床试验是多么重要！</p>
+<p>既然我们理解了如何用门在随机对照试验模型中建模可选项，我们就准备好用门来在过敏模型中建模可选的致敏类别了，我们将在下一节看到这一点。</p>
+<h3 id="本页引入的概念回顾">本页引入的概念回顾</h3>
+<p><strong>门（gate）</strong> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>中的一个容器，它允许所包含的那部分图根据图中另一个随机变量（称为<strong>选择变量</strong>）的取值被打开或关闭。门可以用来在模型中创建可选项，也可以用来做<a href="/post/2026-10-17-mbml-asthma_comparing_alternative_models">模型选择</a>。关于门的更多细节见 Minka and Winn [2009]，或其扩展版本 Minka and Winn [2008]。</p>
+<p><strong>选择变量（selector variable）</strong> 一个控制门打开或关闭的随机变量。门会指定一个特定的键值——当选择变量取该值时门是打开的，取任何其他值时门是关闭的。选择变量的一个例子见图 6.11。</p>
+<p><strong>门块（gate block）</strong> 一组门，每个门有一个不同的键值，对应选择变量的各个可能取值。对于选择变量的任何取值，门块中会有一个门打开、其他所有门关闭。图 6.12 的因子图中展示了一个门块的例子。</p>
+<h3 id="参考文献">参考文献</h3>
+<p>[Minka and Winn, 2009] Minka, T. and Winn, J. (2009). Gates. In <em>Advances in Neural Information Processing Systems 21</em>.</p>
+<p>[Minka and Winn, 2008] Minka, T. and Winn, J. (2008). Gates: A graphical notation for mixture models. Technical report, Microsoft Research.</p>
+<hr>
+<p>下一节：<a href="/post/2026-10-27-mbml-asthma_discovering_sensitization_classes">发现致敏类别</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/">https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-10-17-mbml-asthma_comparing_alternative_models/">[译]基于模型的机器学习 - 6.3 比较可选模型</a></li>
+        
+        <li><a href="/post/2026-10-12-mbml-asthma_trying_out_the_model/">[译]基于模型的机器学习 - 6.2 试验模型</a></li>
+        
+        <li><a href="/post/2026-10-07-mbml-asthma_a_model_of_allergies/">[译]基于模型的机器学习 - 6.1 过敏模型</a></li>
+        
+        <li><a href="/post/2026-10-02-mbml-asthma/">[译]基于模型的机器学习 - 6 理解哮喘</a></li>
+        
+        <li><a href="/post/2026-09-26-mbml-recommender_another_cold_start_problem/">[译]基于模型的机器学习 - 5.6 另一个冷启动问题</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/" title="[译]基于模型的机器学习 - 6.5 发现致敏类别" target="_blank">[译]基于模型的机器学习 - 6.5 发现致敏类别</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/" title="[译]基于模型的机器学习 - 6.4 用门建模" target="_blank">[译]基于模型的机器学习 - 6.4 用门建模</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" title="[译]基于模型的机器学习 - 6.3 比较可选模型" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/" title="语音 Agent 评估：Foundry 多轮评估器到底有多可靠？" target="_blank">语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/" title="[译]基于模型的机器学习 - 6.1 过敏模型" target="_blank">[译]基于模型的机器学习 - 6.1 过敏模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" title="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (48)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (42)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Evaluation/">Evaluation</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Governance/">Governance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Performance/">Performance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -10,9 +10,23 @@
 		
 		
 		
-			<lastBuildDate>Sat, 17 Oct 2026 10:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Tue, 27 Oct 2026 10:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/tags/Machine-Learning/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>[译]基于模型的机器学习 - 6.5 发现致敏类别</title>
+				<link>https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/</link>
+				<pubDate>Tue, 27 Oct 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/</guid>
+				<description>&lt;p&gt;既然我们的建模工具箱里有了&lt;a href=&#34;https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates&#34;&gt;门&lt;/a&gt;，我们就可以扩展过敏&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;模型&lt;/a&gt;，让不同的孩子能够拥有不同的过敏获得与丢失模式。你也许还记得，在&lt;a href=&#34;https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model&#34;&gt;第 6.2 节&lt;/a&gt;中，我们想要做的模型改动是编码这个修改后的假设：&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;5&lt;/strong&gt; 与特定&lt;a href=&#34;https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies&#34;&gt;过敏原&lt;/a&gt;初始致敏、获得致敏或保持致敏相关的&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery&#34;&gt;概率&lt;/a&gt;，对每个&lt;strong&gt;致敏类别&lt;/strong&gt;中的所有孩子都是相同的。&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;p&gt;这个假设要求每个孩子都属于某个致敏类别，但我们并不知道每个孩子属于哪个类别。我们可以用一个针对每个孩子的 &lt;code&gt;sensClass&lt;/code&gt; &lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery&#34;&gt;随机变量&lt;/a&gt;来表示这种未知的类别归属，它取值为 $0, 1, 2, \dots$，取决于孩子在类别 0、类别 1，等等。因为这个变量可以取多于两个的值，我们不能用 &lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery&#34;&gt;Bernoulli 分布&lt;/a&gt;来表示它的不确定取值。相反，我们需要一个&lt;strong&gt;离散分布&lt;/strong&gt;（discrete distribution），它是 Bernoulli 分布向“取多于两个值的变量”的推广。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 6.4 用门建模</title>
+				<link>https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/</link>
+				<pubDate>Thu, 22 Oct 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/shutterstock_326319896_small.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;门&#34; src=&#34;https://beanhsiang.github.io/uploads/shutterstock_326319896_small.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;门允许&lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder&#34;&gt;因子图&lt;/a&gt;的一部分被打开或关闭。&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;在上一节中，我们看到了如何通过手工推断一个“在多个可选过程之间做选择”的&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery&#34;&gt;随机变量&lt;/a&gt;上的&lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs&#34;&gt;后验分布&lt;/a&gt;，来比较这些可选过程。现在我们将看到如何通过定义一个合适的&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;模型&lt;/a&gt;、并在该模型内执行&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;推断&lt;/a&gt;来完成同样的计算。为此，我们需要一种新的建模结构，它允许在模型中表示各种可选项。我们可以用来做这件事的建模结构称为&lt;strong&gt;门&lt;/strong&gt;（gate），如 Minka and Winn [2009] 所述。&lt;/p&gt;&#xA;&lt;p&gt;门把&lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder&#34;&gt;因子图&lt;/a&gt;的一部分包围起来，并根据一个称为&lt;strong&gt;选择变量&lt;/strong&gt;（selector variable）的随机变量的状态来打开或关闭这部分。当选择变量取某个特定值（称为&lt;strong&gt;键&lt;/strong&gt;，key）时，门是打开的；对所有其他取值，门是关闭的。图 6.11 的因子图中展示了一个门的例子。门以一个虚线矩形表示，键值（&lt;code&gt;true&lt;/code&gt;）位于左上角。选择变量 &lt;code&gt;selector&lt;/code&gt; 有一条边连接到门——边上的箭头表明门被视为选择变量的子节点。当 &lt;code&gt;selector&lt;/code&gt; 等于 &lt;code&gt;true&lt;/code&gt; 时，门是打开的，于是 &lt;code&gt;x&lt;/code&gt; 服从 Bernoulli(0.2) 分布。否则门是关闭的，&lt;code&gt;x&lt;/code&gt; 服从&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-22-mbml-murder-mystery&#34;&gt;均匀分布&lt;/a&gt;，因为此时它没有连接到任何&lt;a href=&#34;https://beanhsiang.github.io/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder&#34;&gt;因子&lt;/a&gt;。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>[译]基于模型的机器学习 - 6.3 比较可选模型</title>
 				<link>https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/</link>

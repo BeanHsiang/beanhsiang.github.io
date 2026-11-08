@@ -21,6 +21,13 @@
 				<description>&lt;p&gt;在海地地震期间发送的消息，是按照表 7.1 所示的九个主要类别来标注的。每个类别又被进一步细分为若干子类别——例如，&amp;ldquo;基础设施损毁&amp;quot;下设有&amp;quot;建筑物倒塌&amp;quot;&amp;ldquo;结构不稳&amp;quot;&amp;ldquo;道路封堵&amp;quot;&amp;ldquo;桥梁受损&amp;quot;和&amp;quot;通信线路中断&amp;quot;等子类别。其结果是，可以为任何一条给定消息赋予的子类别标签多达 50 个，不过消息也可以只用一个主类别来标注。&lt;/p&gt;</description>
 			</item>
 			<item>
+				<title>通过 Azure API Management 在 Microsoft Foundry 上接入 Claude Code：工程实践指南</title>
+				<link>https://beanhsiang.github.io/post/2026-11-04-an-engineering-guide-to-claude-code-on-microsoft-foundry-with-azure-api-management/</link>
+				<pubDate>Wed, 04 Nov 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-11-04-an-engineering-guide-to-claude-code-on-microsoft-foundry-with-azure-api-management/</guid>
+				<description>&lt;p&gt;本文根据 Naveen Gopalakrishna 发表于 Microsoft Foundry Blog 的&lt;a href=&#34;https://techcommunity.microsoft.com/t5/microsoft-foundry-blog/an-engineering-guide-to-claude-code-on-microsoft-foundry-with/ba-p/4569334?WT.mc_id=AI-MVP-5003172&#34;&gt;工程指南&lt;/a&gt;整理，原文发布日期为 2026 年 11 月 3 日。&lt;/p&gt;&#xA;&lt;p&gt;企业接入 Claude Code 时，还要管理登录身份、可用模型、预算和私有网络。Naveen 开发的 Claude Code on Foundry（CCOF）处理的就是这些问题。据原作者介绍，这套架构已在多家企业上线；代码公开在 &lt;a href=&#34;https://github.com/naveenneog/CCOF?WT.mc_id=AI-MVP-5003172&#34;&gt;CCOF 仓库&lt;/a&gt;，但它不是微软产品。&lt;/p&gt;&#xA;&lt;p&gt;接入时，先部署环境、验证一名用户，再考虑扩大范围。文中配图来自作者记录的实验室运行，名称和标识符已替换或遮蔽，并非客户生产环境。已有企业部署经验不能代替具体工作负载的容量验证。&lt;/p&gt;</description>
+			</item>
+			<item>
 				<title>[译]基于模型的机器学习 - 7 众包的力量</title>
 				<link>https://beanhsiang.github.io/post/2026-11-02-mbml-crowdsourcing/</link>
 				<pubDate>Mon, 02 Nov 2026 10:00:00 +0800</pubDate>

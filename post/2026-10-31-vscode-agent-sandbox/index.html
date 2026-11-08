@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>VS Code Agent 沙箱：从被拦截到会使用、会配置 | Innovation with tech</title>
+    <meta property="og:title" content="VS Code Agent 沙箱：从被拦截到会使用、会配置 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-10-31T22:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-10-31T22:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="VS Code Agent 沙箱：从被拦截到会使用、会配置">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    <style type="text/css">
+    .post-toc {
+        position: fixed;
+        width: 200px;
+        margin-left: -210px;
+        padding: 5px 10px;
+        font-family: Athelas, STHeiti, Microsoft Yahei, serif;
+        font-size: 12px;
+        border: 1px solid rgba(0, 0, 0, .07);
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.98);
+        background-clip: padding-box;
+        -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, .125);
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, .125);
+        word-wrap: break-word;
+        white-space: nowrap;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        z-index: 999;
+        cursor: pointer;
+        max-height: 70%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .post-toc .post-toc-title {
+        width: 100%;
+        margin: 0 auto;
+        font-size: 20px;
+        font-weight: 400;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .post-toc .post-toc-content {
+        font-size: 15px;
+    }
+
+    .post-toc .post-toc-content>nav>ul {
+        margin: 10px 0;
+    }
+
+    .post-toc .post-toc-content ul {
+        padding-left: 20px;
+        list-style: square;
+        margin: 0.5em;
+        line-height: 1.8em;
+    }
+
+    .post-toc .post-toc-content ul ul {
+        padding-left: 15px;
+        display: none;
+    }
+
+    @media print,
+    screen and (max-width:1057px) {
+        .post-toc {
+            display: none;
+        }
+    }
+</style>
+<div class="post-toc" style="position: absolute; top: 188px;">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-vs-code-agent-沙箱是什么">1. VS Code Agent 沙箱是什么</a>
+      <ul>
+        <li><a href="#11-它限制的是-agent-进程的活动范围">1.1 它限制的是 Agent 进程的活动范围</a></li>
+        <li><a href="#12-沙箱和审批是两层机制">1.2 沙箱和审批是两层机制</a></li>
+        <li><a href="#13-默认不一定启用而且启用不等于断网">1.3 默认不一定启用，而且“启用”不等于断网</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-平台和执行位置先确认你改的是哪台机器">2. 平台和执行位置：先确认你改的是哪台机器</a></li>
+    <li><a href="#3-开启沙箱并确认是否真的生效">3. 开启沙箱并确认是否真的生效</a>
+      <ul>
+        <li><a href="#31-在-settingsjson-中开启">3.1 在 <code>settings.json</code> 中开启</a></li>
+        <li><a href="#32-用-sandbox-policy-查看有效策略">3.2 用 <code>/sandbox policy</code> 查看有效策略</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-遇到拦截时按这个顺序排查">4. 遇到拦截时，按这个顺序排查</a>
+      <ul>
+        <li><a href="#第一步识别拦截类型">第一步：识别拦截类型</a></li>
+        <li><a href="#第二步给资源加最小权限">第二步：给资源加最小权限</a></li>
+        <li><a href="#第三步确认组织策略">第三步：确认组织策略</a></li>
+        <li><a href="#第四步最后才考虑沙箱外执行">第四步：最后才考虑沙箱外执行</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-文件系统配置读写只读拒绝">5. 文件系统配置：读写、只读、拒绝</a>
+      <ul>
+        <li><a href="#allowdevtoolaccess-的取舍"><code>allowDevToolAccess</code> 的取舍</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-网络配置允许出站不代表允许所有目标">6. 网络配置：允许出站不代表允许所有目标</a></li>
+    <li><a href="#7-mcp语言服务器和凭据">7. MCP、语言服务器和凭据</a></li>
+    <li><a href="#8-证书错误和依赖问题怎么处理">8. 证书错误和依赖问题怎么处理</a>
+      <ul>
+        <li><a href="#81-linux在真正运行-agent-的环境里安装依赖">8.1 Linux：在真正运行 Agent 的环境里安装依赖</a></li>
+        <li><a href="#82-macos-和-windows先更新系统">8.2 macOS 和 Windows：先更新系统</a></li>
+        <li><a href="#83-sandbox-trusted-ca-is-not-installed">8.3 <code>Sandbox trusted CA is not installed</code></a></li>
+      </ul>
+    </li>
+    <li><a href="#9-一套可直接采用的配置模板">9. 一套可直接采用的配置模板</a></li>
+    <li><a href="#10-最后的检查清单">10. 最后的检查清单</a></li>
+    <li><a href="#参考资料">参考资料</a></li>
+  </ul>
+</nav>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var postToc = $(".post-toc");
+        if (postToc.length) {
+            var leftPos = $("#main").offset().left;
+            if (leftPos < 220) {
+                postToc.css({ "width": leftPos - 10, "margin-left": (0 - leftPos) })
+            }
+
+            var t = postToc.offset().top - 20,
+                a = {
+                    start: {
+                        position: "absolute",
+                        top: t
+                    },
+                    process: {
+                        position: "fixed",
+                        top: 20
+                    },
+                };
+            $(window).scroll(function () {
+                var e = $(window).scrollTop();
+                e < t ? postToc.css(a.start) : postToc.css(a.process)
+            })
+        }
+
+        if ($("#TableOfContents").children().length < 1) {
+            $(".post-toc").remove();
+        }
+    })
+</script>
+    <article class="post">
+        <header>
+            <h1 class="post-title">VS Code Agent 沙箱：从被拦截到会使用、会配置</h1>
+        </header>
+        
+  <time datetime="2026-10-31T14:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月31日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/GitHub-Copilot' target="_blank">GitHub Copilot</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="clear" style="display: none">
+            <div class="toc-article">
+                <div class="toc-title">文章目录</div>
+            </div>
+        </div>
+        
+        <div class="post-content">
+            <p>VS Code 最近把 Agent 的执行安全问题摆到了更显眼的位置：Copilot Agent 不再只是生成文本，它还可能执行终端命令、启动语言服务器、调用 MCP Server，并访问网络。于是，很多人第一次遇到 <code>Permission denied</code>、命令无法启动、依赖下载失败，或者看到“Allow Outside Sandbox”时，往往不知道这是权限问题、沙箱策略问题，还是运行环境缺少依赖。</p>
+<p>本文以 VS Code 的 <strong>Copilot harness sessions</strong>（使用共享运行时默认工具的 Agent 会话）为范围，目标不是只解释概念，而是让你能完成三件事：</p>
+<ol>
+<li>知道沙箱保护什么、不保护什么；</li>
+<li>遇到拦截时，能按证据定位并用最小权限修复；</li>
+<li>能在 <code>settings.json</code> 中配置文件系统、网络、MCP、语言服务器和凭据访问。</li>
+</ol>
+<blockquote>
+<p>文中设置名称和默认值以 VS Code 官方文档当前版本为准。不同版本、远程主机和组织策略可能导致可见选项不同。</p>
+</blockquote>
+<h2 id="1-vs-code-agent-沙箱是什么">1. VS Code Agent 沙箱是什么</h2>
+<h3 id="11-它限制的是-agent-进程的活动范围">1.1 它限制的是 Agent 进程的活动范围</h3>
+<p>Agent 沙箱会约束终端命令及其子进程可以访问的：</p>
+<ul>
+<li><strong>文件系统</strong>：哪些目录可读写、只读或完全拒绝；</li>
+<li><strong>网络</strong>：是否允许出站访问、是否允许访问本地网络、哪些域名可访问；</li>
+<li><strong>附属进程</strong>：由 Agent Host 启动或管理的 MCP Server、语言服务器；</li>
+<li><strong>凭据代理</strong>：是否向沙箱内的 Git 和 GitHub CLI 操作提供认证能力。</li>
+</ul>
+<p>沙箱是“进程级限制”，不是虚拟机，也不是新的操作系统用户。沙箱中的程序仍然以你的账户运行在当前执行主机上，因此它不能替代终端安全软件、容器或云端隔离。尤其要注意：允许网络、额外目录、凭据或“沙箱外执行”，都会扩大信任边界。</p>
+<h3 id="12-沙箱和审批是两层机制">1.2 沙箱和审批是两层机制</h3>
+<p>这两个概念很容易混在一起：</p>
+<table>
+	<thead>
+			<tr>
+					<th>机制</th>
+					<th>解决的问题</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>审批（Approvals）</td>
+					<td>这一次操作是否需要你确认，或者是否可以自动执行</td>
+			</tr>
+			<tr>
+					<td>沙箱（Sandboxing）</td>
+					<td>即使操作执行，它能看到哪些文件和网络资源</td>
+			</tr>
+	</tbody>
+</table>
+<p>例如，选择 <code>Allow all</code> 只改变审批层，并不意味着沙箱会自动放开文件系统和网络限制。反过来，给命令加了沙箱外执行的批准，也不等于给所有后续命令永久开放权限；是否允许会受到会话选择和组织策略影响。</p>
+<h3 id="13-默认不一定启用而且启用不等于断网">1.3 默认不一定启用，而且“启用”不等于断网</h3>
+<p>官方设置 <code>chat.agent.sandbox.enabled</code> 的默认值是 <code>off</code>。启用后，沙箱默认仍允许出站网络（<code>chat.agent.sandbox.network.allowNetwork</code> 默认是 <code>true</code>），所以它不是“联网开关”，而是“限制联网范围的基础设施”。需要断网或限制域名时，还要显式配置网络设置。</p>
+<h2 id="2-平台和执行位置先确认你改的是哪台机器">2. 平台和执行位置：先确认你改的是哪台机器</h2>
+<p>沙箱在哪里生效，取决于 Agent 实际运行命令的主机：</p>
+<ul>
+<li>本地窗口：通常是本机；</li>
+<li>SSH、WSL、Dev Container 或 Codespace：通常是远端主机、Linux 子系统或容器；</li>
+<li>远程会话：路径和设置都以执行主机为准，不是你操作 VS Code 的那台电脑。</li>
+</ul>
+<p>因此，“我已经在 macOS 上安装了依赖”并不能证明 WSL 或远程容器里也满足条件。</p>
+<p>官方平台要求大致如下：</p>
+<ul>
+<li><strong>macOS</strong>：macOS 15 或更高版本，使用系统内置 Seatbelt，不需要额外安装沙箱包；</li>
+<li><strong>glibc Linux / WSL2</strong>：需要 <code>bubblewrap</code> 0.5.0+、<code>slirp4netns</code>、<code>util-linux</code> 2.35+ 和兼容的 <code>iptables</code> 工具；</li>
+<li><strong>Windows</strong>：Windows 11 的 BaseContainer 能力和对应更新基线，当前支持为 Experimental；</li>
+<li><strong>Alpine 等 musl Linux</strong>：当前运行时不支持沙箱 Shell；</li>
+<li><strong>WSL1</strong>：不支持，因为缺少 <code>bubblewrap</code> 所需的 Linux 内核能力。</li>
+</ul>
+<h2 id="3-开启沙箱并确认是否真的生效">3. 开启沙箱并确认是否真的生效</h2>
+<h3 id="31-在-settingsjson-中开启">3.1 在 <code>settings.json</code> 中开启</h3>
+<p>打开命令面板，执行 <strong>Preferences: Open User Settings (JSON)</strong>，加入：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.enabled&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;on&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以在设置界面搜索 <code>chat.agent.sandbox.enabled</code>，选择 <code>on</code>。新建一个 Copilot Agent 会话后再验证，不要只看旧会话的状态。</p>
+<p>沙箱是按执行主机解析的。远程会话应该在远程主机对应的 VS Code 设置中配置，组织策略也可能覆盖本地设置。</p>
+<h3 id="32-用-sandbox-policy-查看有效策略">3.2 用 <code>/sandbox policy</code> 查看有效策略</h3>
+<p>在 Copilot 会话输入：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>/sandbox policy
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>VS Code 会生成 <code>sandbox-policy.md</code>，其中包括：</p>
+<ul>
+<li>执行主机和操作系统；</li>
+<li>沙箱是否启用；</li>
+<li>使用的系统实现；</li>
+<li>文件系统的读写、只读和拒绝路径；</li>
+<li>网络访问及域名策略；</li>
+<li>组织策略和运行时默认值。</li>
+</ul>
+<p>这是排障时最有价值的证据。设置文件只能说明“你想配置什么”，策略报告才能说明“当前会话最终得到什么”。改完设置后重新运行一次；报告会更新为该会话的最新状态。</p>
+<h2 id="4-遇到拦截时按这个顺序排查">4. 遇到拦截时，按这个顺序排查</h2>
+<p>不要一看到拦截就关闭沙箱。建议按下面的顺序处理。</p>
+<h3 id="第一步识别拦截类型">第一步：识别拦截类型</h3>
+<p>先看报错里涉及的资源：</p>
+<table>
+	<thead>
+			<tr>
+					<th>现象</th>
+					<th>优先检查</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>Permission denied</code>、无法读写某个目录</td>
+					<td>文件系统路径和路径优先级</td>
+			</tr>
+			<tr>
+					<td><code>Could not resolve host</code>、下载包失败</td>
+					<td><code>allowNetwork</code>、允许/拒绝域名</td>
+			</tr>
+			<tr>
+					<td>MCP 或语言服务器无法启动</td>
+					<td>对应服务器是否纳入沙箱、执行主机依赖</td>
+			</tr>
+			<tr>
+					<td>Git push 或 <code>gh</code> 认证失败</td>
+					<td>Git/GitHub 凭据代理和 CA 信任</td>
+			</tr>
+			<tr>
+					<td>提示缺少 <code>bwrap</code>、<code>slirp4netns</code> 等</td>
+					<td>远程执行主机的系统依赖</td>
+			</tr>
+			<tr>
+					<td>出现 <code>Allow Outside Sandbox</code></td>
+					<td>沙箱内策略阻止了命令，正在请求一次回退</td>
+			</tr>
+	</tbody>
+</table>
+<p>然后运行 <code>/sandbox policy</code>，确认不是“看错了设置作用域”。</p>
+<h3 id="第二步给资源加最小权限">第二步：给资源加最小权限</h3>
+<p>如果任务只需要访问一个构建目录，就只授权那个目录；如果只需要访问一个 API，就只允许那个域名。不要用“允许整个主目录”和“允许所有网络”来掩盖定位问题。</p>
+<h3 id="第三步确认组织策略">第三步：确认组织策略</h3>
+<p>带有“可由组织策略配置”的设置，可能被管理员锁定或收紧。此时本地 <code>settings.json</code> 不能放宽限制，需要让管理员调整 Copilot managed settings。</p>
+<h3 id="第四步最后才考虑沙箱外执行">第四步：最后才考虑沙箱外执行</h3>
+<p><code>chat.agent.sandbox.allowUnsandboxedCommands</code> 默认是 <code>true</code>，表示 Agent 可以在沙箱内失败后请求你批准在沙箱外运行。沙箱外运行会移除该操作的文件系统和网络限制，因此只应在以下条件同时满足时批准：</p>
+<ol>
+<li>你理解命令会做什么；</li>
+<li>命令来源可信；</li>
+<li>你确认沙箱策略本身无法满足任务；</li>
+<li>该操作不包含不必要的破坏性命令、凭据操作或不受控脚本。</li>
+</ol>
+<p>如果设置为 <code>false</code>，界面不会提供 <code>Allow Outside Sandbox</code>，不符合沙箱策略的命令会直接失败：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.allowUnsandboxedCommands&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="5-文件系统配置读写只读拒绝">5. 文件系统配置：读写、只读、拒绝</h2>
+<p>工作区当前目录会自动获得读写访问。额外路径通过 <code>chat.agent.sandbox.fileSystem.userConfiguredPaths</code> 配置：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.fileSystem.userConfiguredPaths&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;readwritePaths&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0a3069">&#34;/Users/me/projects/build-output&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;readonlyPaths&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0a3069">&#34;/Users/me/shared/source&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;deniedPaths&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0a3069">&#34;/Users/me/private-data&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>三类路径的含义是：</p>
+<ul>
+<li><code>readwritePaths</code>：允许读写；</li>
+<li><code>readonlyPaths</code>：允许读取，但禁止写入；</li>
+<li><code>deniedPaths</code>：完全拒绝访问。</li>
+</ul>
+<p>如果同一路径出现在多个数组中，优先级是：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>deniedPaths &gt; readonlyPaths &gt; readwritePaths
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="allowdevtoolaccess-的取舍"><code>allowDevToolAccess</code> 的取舍</h3>
+<p><code>chat.agent.sandbox.fileSystem.allowDevToolAccess</code> 默认是 <code>true</code>。它会自动授予常用开发工具目录、工具链目录、开发工具配置和缓存的读取权限，并允许访问共享构建缓存。这样能减少 Node、Python、Git 等工具在沙箱内失效的情况，但也可能让工具配置中的 registry token 等敏感信息更接近 Agent 进程。</p>
+<p>更严格的配置可以关闭自动授权，再按任务需要补充路径：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.fileSystem.allowDevToolAccess&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="6-网络配置允许出站不代表允许所有目标">6. 网络配置：允许出站不代表允许所有目标</h2>
+<p>网络相关设置如下：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.network.allowNetwork&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.network.allowLocalNetwork&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.network.allowedDomains&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;api.github.com&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;registry.npmjs.org&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.network.deniedDomains&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;example.com&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>allowNetwork</code>：是否允许出站网络；</li>
+<li><code>allowLocalNetwork</code>：是否允许访问局域网和本机网络服务，默认 <code>false</code>；</li>
+<li><code>allowedDomains</code>：允许的网络目标；</li>
+<li><code>deniedDomains</code>：明确拒绝的网络目标。</li>
+</ul>
+<p>实际使用时，可以先保持 <code>allowNetwork: true</code>，再以 <code>allowedDomains</code> 收窄范围。网络权限不只是“读取网页”：允许访问的服务可能接受写操作，也可能接触工作区内容或凭据，所以域名白名单应按任务建立，而不是长期使用通配式放行。</p>
+<p>Windows 上还有一个常见陷阱：代理、主机名限制或凭据掩码可能需要沙箱访问本机代理监听端口。这时 <code>allowLocalNetwork</code> 必须为 <code>true</code>，否则命令可能还没开始就无法启动。只有确实使用这类代理时才打开它。</p>
+<h2 id="7-mcp语言服务器和凭据">7. MCP、语言服务器和凭据</h2>
+<p>沙箱不仅影响终端：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.mcpServers&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.lspServers&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.credentials.authenticategit&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.credentials.authenticategh&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>mcpServers</code>：是否将 Agent Host 启动或管理的 MCP Server 放入沙箱；</li>
+<li><code>lspServers</code>：是否将语言服务器放入沙箱；</li>
+<li><code>authenticategit</code>：是否为沙箱内 HTTPS Git 操作提供 Git 认证；</li>
+<li><code>authenticategh</code>：是否为沙箱内 <code>gh</code> 命令提供 GitHub 账户认证。</li>
+</ul>
+<p>这些选项默认都是 <code>true</code>。如果任务不需要推送代码、创建 PR 或调用 GitHub API，可以关闭对应凭据能力，缩小影响范围：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.credentials.authenticategit&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.credentials.authenticategh&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意，这里的服务器控制只覆盖 <strong>Agent Host 管理的进程</strong>。你从系统终端独立启动的服务器，不会因为这些设置自动进入沙箱。</p>
+<h2 id="8-证书错误和依赖问题怎么处理">8. 证书错误和依赖问题怎么处理</h2>
+<h3 id="81-linux在真正运行-agent-的环境里安装依赖">8.1 Linux：在真正运行 Agent 的环境里安装依赖</h3>
+<p>Debian/Ubuntu 示例：</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt-get update
+</span></span><span style="display:flex;"><span>sudo apt-get install bubblewrap slirp4netns util-linux iptables
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Fedora、Arch 等发行版使用各自包管理器安装同类组件。除了软件包，还要确认：</p>
+<ul>
+<li><code>bwrap</code> 版本至少为 0.5.0；</li>
+<li><code>slirp4netns</code> 可用；</li>
+<li><code>unshare</code>、<code>nsenter</code> 来自符合要求的 <code>util-linux</code>；</li>
+<li><code>iptables</code>、<code>ip6tables</code> 及 restore 命令可用；</li>
+<li>用户和网络 namespace 未被环境禁用；</li>
+<li><code>/dev/net/tun</code> 具备所需读写能力。</li>
+</ul>
+<p>容器或企业环境即使装了软件包，也可能因为内核能力被禁用而失败。此时需要调整容器运行参数或请管理员处理，而不是反复安装。</p>
+<h3 id="82-macos-和-windows先更新系统">8.2 macOS 和 Windows：先更新系统</h3>
+<p>macOS 不需要额外沙箱包，优先安装系统更新。Windows 也没有单独的沙箱安装包，应安装符合文档要求的 Windows 11 更新并重启。</p>
+<h3 id="83-sandbox-trusted-ca-is-not-installed">8.3 <code>Sandbox trusted CA is not installed</code></h3>
+<p>启用凭据掩码时，Copilot 可能通过本地凭据代理连接批准的服务。代理需要用自己的 CA 证书与工具建立 TLS 连接，因此依赖操作系统证书存储的工具可能报 HTTPS 或认证错误。</p>
+<p>这不代表所有沙箱命令都必须安装 CA；只有依赖系统证书存储、且需要通过凭据代理访问服务的工具才可能需要。按 VS Code 的系统提示安装对应 CA，并只在可信机器上这样做。</p>
+<h2 id="9-一套可直接采用的配置模板">9. 一套可直接采用的配置模板</h2>
+<p>下面是一个偏保守、适合个人项目的起点：允许常规联网，但只声明必要域名；限制额外目录；不允许自动回退到沙箱外。</p>
+<div class="highlight"><div style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="background-color:#f7f7f7;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.enabled&#34;</span><span style="color:#1f2328">:</span> <span style="color:#0a3069">&#34;on&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.allowUnsandboxedCommands&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.network.allowNetwork&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.network.allowLocalNetwork&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.network.allowedDomains&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;api.github.com&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;github.com&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;registry.npmjs.org&#34;</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0a3069">&#34;pypi.org&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.network.deniedDomains&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[],</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.fileSystem.userConfiguredPaths&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;readwritePaths&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0a3069">&#34;/Users/me/.cache/my-build&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;readonlyPaths&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0a3069">&#34;/Users/me/shared/schemas&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">],</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#0550ae">&#34;deniedPaths&#34;</span><span style="color:#1f2328">:</span> <span style="color:#1f2328">[</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#0a3069">&#34;/Users/me/private-data&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#1f2328">]</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#1f2328">},</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.fileSystem.allowDevToolAccess&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.mcpServers&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.lspServers&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.credentials.authenticategit&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">true</span><span style="color:#1f2328">,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#0550ae">&#34;chat.agent.sandbox.credentials.authenticategh&#34;</span><span style="color:#1f2328">:</span> <span style="color:#cf222e">false</span>
+</span></span><span style="display:flex;"><span><span style="color:#1f2328">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>把 <code>/Users/me</code> 替换为执行主机上的真实路径。远程会话不要直接复制本机路径。</p>
+<h2 id="10-最后的检查清单">10. 最后的检查清单</h2>
+<p>当 Copilot Agent 报告“命令被拦截”时，可以按下面的清单快速处理：</p>
+<ol>
+<li>当前会话运行在本机、WSL、容器还是远程主机？</li>
+<li><code>/sandbox policy</code> 是否显示沙箱已启用，实际策略是什么？</li>
+<li>被拦截的是路径、域名、本地网络、MCP/LSP，还是系统依赖？</li>
+<li>是否只需要添加一个目录或一个域名，而不是关闭沙箱？</li>
+<li>是否被组织策略锁定？</li>
+<li>是否真的需要 Git/GitHub 凭据？</li>
+<li>是否能用一次性、可审查的沙箱外批准替代永久放宽？</li>
+<li>修复后是否重新运行了原始命令，并再次查看策略报告？</li>
+</ol>
+<p>沙箱的价值不在于让 Agent “什么都不能做”，而在于把“能做什么”变成可见、可配置、可审查的边界。把权限配置成任务需要的最小集合，通常比遇到问题后直接选择 <code>Allow Outside Sandbox</code> 更稳定，也更安全。</p>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://code.visualstudio.com/docs/agents/run/agent-sandboxing">Sandbox Copilot agent sessions</a></li>
+<li><a href="https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode#_trust-and-safety">Understand trust and safety for AI agents</a></li>
+<li><a href="https://docs.github.com/en/copilot">GitHub Copilot documentation</a></li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/">https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-10-03-hydrafusion-deep-dive-multi-model-orchestration-in-github-copilot/">深入理解 GitHub Copilot HydraFusion：从选模型到编排工作流</a></li>
+        
+        <li><a href="/post/2025-07-03-introducing-awesome-github-copilot-customizations-repo/">介绍 Awesome GitHub Copilot 自定义配置仓库：让 AI 编程助手更懂你的团队</a></li>
+        
+        <li><a href="/post/2023-11-27-coding-with-github-copilot-in-vs-code/">在 VS Code 里用 GitHub Copilot 编写代码</a></li>
+        
+        <li><a href="/post/2023-06-07-enhancing-debugging-with-github-copilot/">使用 GitHub Copilot 的自动错误检测和纠正增强调试</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/VS-Code' target="_blank">VS Code</a></li>
+                
+                <li><a href='/tags/GitHub-Copilot' target="_blank">GitHub Copilot</a></li>
+                
+                <li><a href='/tags/Agent' target="_blank">Agent</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/" title="[译]基于模型的机器学习 - 7.1 众包工作者模型" target="_blank">[译]基于模型的机器学习 - 7.1 众包工作者模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-02-mbml-crowdsourcing/" title="[译]基于模型的机器学习 - 7 众包的力量" target="_blank">[译]基于模型的机器学习 - 7 众包的力量</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/" title="VS Code Agent 沙箱：从被拦截到会使用、会配置" target="_blank">VS Code Agent 沙箱：从被拦截到会使用、会配置</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/" title="[译]基于模型的机器学习 - 6.5 发现致敏类别" target="_blank">[译]基于模型的机器学习 - 6.5 发现致敏类别</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/" title="[译]基于模型的机器学习 - 6.4 用门建模" target="_blank">[译]基于模型的机器学习 - 6.4 用门建模</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" title="[译]基于模型的机器学习 - 6.3 比较可选模型" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/" title="语音 Agent 评估：Foundry 多轮评估器到底有多可靠？" target="_blank">语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (4)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (48)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (44)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agent/">Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Evaluation/">Evaluation</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Governance/">Governance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Performance/">Performance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VS-Code/">VS Code</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

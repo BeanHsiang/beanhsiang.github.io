@@ -82,6 +82,85 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" target="_blank">[译]基于模型的机器学习 - 5.4 我们的首次推荐</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-09-18T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月18日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/thumbsup_down_74932468_small.jpg">
+            <img class="mx-auto" alt="竖起或放下大拇指" src="/uploads/thumbsup_down_74932468_small.jpg" />
+        </a>
+    </p>
+<p>有了我们训练好的两特质<a href="/post/2025-04-21-mbml-introduction">模型</a>，我们现在准备好做一些推荐了！在训练期间，我们学到了每部电影和每个人在<a href="/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people">特质空间</a>中（不确定的）位置。我们现在可以为验证集中每一条被留出的评分做预测。我们一次做一条评分——也就是说，一次针对一个人和一部电影。首先，我们把电影 <code>trait</code> 和人的 <code>preference</code> 的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>设为训练期间学到的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验</a>。然后我们运行<a href="/post/2026-07-29-mbml-trueskill_a_solution_expectation_propagation">期望传播</a>来推断 <code>likesMovie</code> 上的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>，以计算这个人会喜欢这部电影的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。在<a href="/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data">验证集</a>中所有评分上重复这一过程，就得到了每个人喜欢每部电影的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，如图 5.15a 所示。图 5.15b 显示了对应的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>喜欢/不喜欢的值。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_4OurFirstRecommendationsPredictions_[2]-Value.png">
+            <img class="mx-auto" alt="图 5.15a 推断的喜欢概率" src="/uploads/Recommender_4OurFirstRecommendationsPredictions_[2]-Value.png" />
+        </a>
+    </p>
+<p><em>(a) 推断的喜欢<a href="/post/2025-04-22-mbml-murder-mystery">概率</a></em></p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_4OurFirstRecommendationsGroundTruth_.png">
+            <img class="mx-auto" alt="图 5.15b 真实标签喜欢/不喜欢" src="/uploads/Recommender_4OurFirstRecommendationsGroundTruth_.png" />
+        </a>
+    </p>
+<p><em>(b) <a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>喜欢/不喜欢</em></p>
+<p><em>图 5.15：我们推荐<a href="/post/2025-04-21-mbml-introduction">模型</a>的初步结果。(a) 计算得到的每个人喜欢每部电影的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。白色方块对应<a href="/post/2025-04-22-mbml-murder-mystery">概率</a> 1.0，黑色对应<a href="/post/2025-04-22-mbml-murder-mystery">概率</a> 0.0，灰色的深浅表示介于两者之间的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>值。(b) <a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>——白色表示这个人喜欢这部电影，黑色表示他不喜欢。</em></p>
+<p>从图 5.15b 中最先引人注意的一点是，人们大多喜欢电影，而不是不喜欢它们。因此从某种意义上说，我们给推荐系统设定的任务，是试图找出一个人不喜欢的少数几部电影。看图 5.15a 中预测的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>，我们可以在这个任务上看到一些成功——因为某些较暗的方块确实与<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">真实标签</a>中的黑色方块正确对齐了。此外，某些行总体上比平均更暗或更亮，表明我们能够学到每个人总体上有多可能喜欢或不喜欢电影。然而，这些预测并不完美——有许多不喜欢的电影被漏掉了，也有一些不喜欢的预测是错误的。但在我们对<a href="/post/2025-04-21-mbml-introduction">模型</a>做任何改进之前，我们需要先决定用哪些<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">评估指标</a>来度量和追踪这些改进。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-18-mbml-recommender_our_first_recommendations/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" target="_blank">[译]基于模型的机器学习 - 5.3 训练我们的推荐系统</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-09-14T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年9月14日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>在能够训练我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>之前，我们需要一些数据来训练它。好消息是，有一些高质量的公开数据集可以用来训练推荐<a href="/post/2025-04-21-mbml-introduction">模型</a>。我们将使用明尼苏达大学 GroupLens Research 提供的、极为出色的 <a href="https://grouplens.org/datasets/movielens/">MovieLens 数据集</a>之一 [Harper and Konstan, 2015]。我们将使用一个已经免费提供、供教育和开发用途的数据集——谢谢你，MovieLens！你可以自己使用<a href="http://files.grouplens.org/datasets/movielens/ml-latest-small.zip">这个链接</a>下载该数据集。</p>
+<h3 id="认识我们的数据">认识我们的数据</h3>
+<p>与任何新数据集一样，我们的首要任务是认识数据。首先，这里是数据集中 10 条评分的样本：</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/Recommender_3TrainingOurRecommenderRatings_[15_to_24].png">
+            <img class="mx-auto" alt="表 5.3" src="/uploads/Recommender_3TrainingOurRecommenderRatings_[15_to_24].png" />
+        </a>
+    </p>
+<p><em>表 5.3：来自 MovieLens 数据集的评分样本。</em></p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-14-mbml-recommender_training_our_recommender/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-09-10-mbml-recommender_multiple_traits_and_multiple_people/" target="_blank">[译]基于模型的机器学习 - 5.2 多重特质与多人</a>
             </h1>
         </header>
@@ -346,64 +425,6 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" target="_blank">[译]基于模型的机器学习 - 4.1 收集与管理电子邮件数据</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-08-06T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年8月6日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>为了撰写本章，我们开发了一个工具，用于收集某个人在给定时间段内收到的全部电子邮件。随后我们用这个工具从 10 位志愿者那里收集了邮件，他们慷慨地同意分享自己的邮件数据——以匿名化的形式，我们稍后会讨论这一点。这是一个相当耗时的过程，因此我们需要仔细规划将如何使用这些宝贵的邮件数据。例如，我们需要决定用哪些数据来训练、用哪些数据来评估系统的准确率。极其重要的一点是，用于训练的数据不能用于评估。如果训练数据被用于评估，它会给出误导性的偏高准确率结果——因为当你已经被告知正确答案时，对一封邮件做出预测要容易得多！为避免这一点，我们需要把数据划分为不同的数据集：</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-06-mbml-emailclassifier_collecting_and_managing_email_data/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" target="_blank">[译]基于模型的机器学习 - 4 清理你的收件箱</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-08-01T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年8月1日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>收发电子邮件的庞大数量意味着，一名典型的办公室职员每天要花好几个小时来处理自己的收件箱。源源不断涌入的新邮件很容易让人应接不暇。同时，一封重要邮件淹没在杂乱信息中的可能性也比以往任何时候都大。<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>能否帮助减轻这种信息过载呢？</p>
-<p>
-        <a data-fancybox="gallery" href="/uploads/PileOfMail_80130295.jpg">
-            <img class="mx-auto" alt="一堆邮件" src="/uploads/PileOfMail_80130295.jpg" />
-        </a>
-    </p>
-<p>普通办公室职员每天花在处理电子邮件上的时间将近三个小时。这些时间中约 90% 花在阅读收到的邮件或管理已有的邮件上——只有剩下的 10% 用于撰写或回复邮件 [Outlook team, 2008]。一个能加快阅读和管理邮件速度的自动工具，将为人们腾出大量时间，让他们能够专注于重要任务，避免信息过载带来的压力。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-08-01-mbml-emailclassifier/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
@@ -494,6 +515,18 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/" title="[译]基于模型的机器学习 - 7.1 众包工作者模型" target="_blank">[译]基于模型的机器学习 - 7.1 众包工作者模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-02-mbml-crowdsourcing/" title="[译]基于模型的机器学习 - 7 众包的力量" target="_blank">[译]基于模型的机器学习 - 7 众包的力量</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/" title="VS Code Agent 沙箱：从被拦截到会使用、会配置" target="_blank">VS Code Agent 沙箱：从被拦截到会使用、会配置</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/" title="[译]基于模型的机器学习 - 6.5 发现致敏类别" target="_blank">[译]基于模型的机器学习 - 6.5 发现致敏类别</a>
     </li>
     
@@ -521,18 +554,6 @@
         <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/" title="[译]基于模型的机器学习 - 6.1 过敏模型" target="_blank">[译]基于模型的机器学习 - 6.1 过敏模型</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" title="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -548,7 +569,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (3)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (4)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
@@ -556,7 +577,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (42)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (44)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
     
@@ -570,6 +591,8 @@
     <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
     
     <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agent/">Agent</a>
     
     <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
     
@@ -668,6 +691,8 @@
     <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
     
     <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VS-Code/">VS Code</a>
     
     <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
     

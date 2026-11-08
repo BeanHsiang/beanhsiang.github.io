@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>[译]基于模型的机器学习 - 7.1 众包工作者模型 | Innovation with tech</title>
+    <meta property="og:title" content="[译]基于模型的机器学习 - 7.1 众包工作者模型 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-11-07T10:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-11-07T10:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="[译]基于模型的机器学习 - 7.1 众包工作者模型">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">[译]基于模型的机器学习 - 7.1 众包工作者模型</h1>
+        </header>
+        
+  <time datetime="2026-11-07T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年11月7日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>在海地地震期间发送的消息，是按照表 7.1 所示的九个主要类别来标注的。每个类别又被进一步细分为若干子类别——例如，&ldquo;基础设施损毁&quot;下设有&quot;建筑物倒塌&quot;&ldquo;结构不稳&quot;&ldquo;道路封堵&quot;&ldquo;桥梁受损&quot;和&quot;通信线路中断&quot;等子类别。其结果是，可以为任何一条给定消息赋予的子类别标签多达 50 个，不过消息也可以只用一个主类别来标注。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/CrowdSourcing_LabelSets_Crisis.png">
+            <img class="mx-auto" alt="表 7.1" src="/uploads/CrowdSourcing_LabelSets_Crisis.png" />
+        </a>
+    </p>
+<p>表 7.1：可用于标注每条消息的九个主要类别。主要类别又被进一步细分为总共 50 个次级类别（详见 Morrow 等人 [2011]）。</p>
+<p>此外，每条消息还允许拥有多个标签，例如&quot;缺水&quot;和&quot;医疗紧急情况&rdquo;——它们可以是主类别和次类别的混合。这些标注上的复杂性会使得开发<a href="/post/2025-04-21-mbml-introduction">模型</a>更加困难，却不会带来太多价值。与其去处理这些复杂性，不如在开发<a href="/post/2025-04-21-mbml-introduction">模型</a>时采用一种更简单的设定：每条消息从一组可能的标签中获得单一一个标签。</p>
+<h3 id="一种更简单的设定">一种更简单的设定</h3>
+<p>从大量带噪声的众包标注中推断出高质量标签的问题，出现在许多应用中。为了考察不同方法在大规模场景下的效果，一家名为 CrowdFlower（现更名为 Appen）的公司早在 2013 年就举办了 CrowdScale 共享任务挑战赛（CrowdScale Shared Task Challenge）。在这场竞赛中，不同的系统相互比拼，看谁能在给定大量带噪声标注的情况下，为一组消息推断出最好的标签。为了这场竞赛，CrowdFlower 创建了一个关于天气的推文数据集，附带约 55 万条来自不同众包工作者的标注（这在当时是一个前所未有的数量）。为了评估所推断标签的质量，CrowdFlower 还提供了一组高质量的标签用作基准真值。在众包的语境下，这样的标签常被称为<strong>金标签</strong>（gold labels），以区别于工作者提供的标签。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/WeatherDiagram.png">
+            <img class="mx-auto" alt="图 7.2" src="/uploads/WeatherDiagram.png" />
+        </a>
+    </p>
+<p>图 7.2：在 CrowdFlower 竞赛中，众包工作者将推文标注为对天气持正面态度、对天气持负面态度、对天气持中性态度，或与天气无关。请注意这个设定与图 7.1 的设定之间的相似性。</p>
+<p>图 7.2 展示了 CrowdFlower 为其竞赛创建的设定。众包工作者被呈现的推文经过挑选，使其大多与天气相关。每个众包工作者被赋予的任务是：阅读一条推文，并用表 7.2 中的某个标签对其进行标注。众包工作者还有一个&quot;无法判断&quot;的选项——我们不会把它当作一个标签，而是把它理解为该工作者无法提供有意义的标签，因此我们会丢弃这类标签。这类旨在从一段文字推断作者情感的任务，被称为<strong>情感分析</strong>（sentiment analysis）[Liu, 2012]。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/CrowdSourcing_LabelSets_Weather.png">
+            <img class="mx-auto" alt="表 7.2" src="/uploads/CrowdSourcing_LabelSets_Weather.png" />
+        </a>
+    </p>
+<p>表 7.2：可用于标注 CrowdFlower 数据集中一条推文的类别。相比表 7.1 的标签，这是一组简单得多的标签。</p>
+<p>完整的 CrowdFlower 数据集包含：</p>
+<ul>
+<li>98,920 条推文，经过挑选使得其中很高比例与天气相关；</li>
+<li>由 1,958 名众包工作者提供的 540,021 个标签；</li>
+<li>由专家标注员提供的 975 个金标签。</li>
+</ul>
+<p>数据集的一个小样本如表 7.3 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/CrowdSourcing_SampleData_Tweets.png">
+            <img class="mx-auto" alt="表 7.3(a) 示例推文" src="/uploads/CrowdSourcing_SampleData_Tweets.png" />
+        </a>
+    </p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/CrowdSourcing_SampleData_Labels.png">
+            <img class="mx-auto" alt="表 7.3(b) 示例众包工作者标签" src="/uploads/CrowdSourcing_SampleData_Labels.png" />
+        </a>
+    </p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/CrowdSourcing_SampleData_Gold.png">
+            <img class="mx-auto" alt="表 7.3(c) 示例金标签" src="/uploads/CrowdSourcing_SampleData_Gold.png" />
+        </a>
+    </p>
+<p>表 7.3：来自 CrowdFlower 数据集的样本数据，包含 (a) 经挑选后很可能与天气相关的推文，(b) 工作者标签，以及 (c) 金标签。</p>
+<h3 id="使用两个以上的标签">使用两个以上的标签</h3>
+<p>在这个天气设定中，每条推文的真实标签可以取四个可能值之一：正面、负面、中性或无关。我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>中需要有一个变量来表示这个真实标签，我们把它称为 <code>trueLabel</code>。像往常一样，我们会记录下构建这个<a href="/post/2025-04-21-mbml-introduction">模型</a>时所做的所有假设。于是我们的第一个假设是：</p>
+<ul>
+<li>每条推文都有一个真实标签，它是以下集合之一：正面、负面、中性或无关。</li>
+</ul>
+<p>由于 <code>trueLabel</code> 可以取多于两个的值，我们需要使用<a href="https://www.mbmlbook.com/Asthma_Discovering_sensitization_classes.html#discrete_distribution">离散分布</a>作为该变量的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>或<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">后验分布</a>。回想一下，我们第一次遇到<a href="https://www.mbmlbook.com/Asthma_Discovering_sensitization_classes.html#discrete_distribution">离散分布</a>是在 6.5 节，当时我们处理的是一个同样可以取多于两个值的致敏类别变量。需要记住的重要一点是，<a href="https://www.mbmlbook.com/Asthma_Discovering_sensitization_classes.html#discrete_distribution">离散分布</a>是 <a href="/post/2025-04-22-mbml-murder-mystery">Bernoulli 分布</a>针对具有多于两个可能值的变量的扩展。</p>
+<p>在推断一条推文具有哪个标签时，知道某些标签是否比其他标签更常见是非常有用的。例如，如果这组推文经过挑选使其尽可能相关，那么我们可能会预期&quot;无关&quot;标签会较少出现。我们可以把这一知识纳入<a href="/post/2025-04-21-mbml-introduction">模型</a>，方法是学习一条推文取每个标签的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>——实际上这意味着学习一个<a href="https://www.mbmlbook.com/Asthma_Discovering_sensitization_classes.html#discrete_distribution">离散分布</a>的参数。我们此前在 <a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">2.6 节</a>遇到过类似情形，当时我们用一个 <a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">beta 分布</a>来学习一个 Bernoulli 分布取真的<a href="/post/2025-04-22-mbml-murder-mystery">概率</a>。在这里，我们想要学习与一个<a href="https://www.mbmlbook.com/Asthma_Discovering_sensitization_classes.html#discrete_distribution">离散分布</a>中每个可能值相关联的概率。我们需要一种 beta 分布的扩展形式，它能够处理学习一组加起来等于 1 的概率值。幸运的是，这样的分布确实存在：它被称为 <strong>Dirichlet 分布</strong>（Dirichlet distribution）——其<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">概率密度函数</a>由下式给出：</p>
+$$\mathit{Dirichlet}(\mathbf{x}; \boldsymbol{\alpha}) = \frac{x_1^{\alpha_1} x_2^{\alpha_2} \dots x_K^{\alpha_K}}{\mathrm{B}(\boldsymbol{\alpha})} \quad (7.1)$$<p>其中 $K$ 是该变量可以取值的个数，$\mathbf{x}$ 是一个加起来等于 1 的概率值数组，$\boldsymbol{\alpha}$ 是作为该分布参数的计数数组。这里的 $\mathrm{B}(\boldsymbol{\alpha})$ 是我们在 <a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">beta 分布</a>密度中遇到过的 beta 函数的多变量形式（见 <a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">2.6 节</a>）。当 $K$ 为 2 时，式 (7.1) 就与式 (2.22) 给出的 beta 密度完全相同——这意味着 beta 分布恰好等同于 $K=2$ 的 Dirichlet 分布。</p>
+<p>对于我们的设定，我们有四个可能的标签，因此 $K$ 等于 4。我们想要为这四个可能的标签各学习一个概率，即一个包含四个概率的数组。既然我们想要学习这个数组，就需要为它创建一个<a href="/post/2025-04-22-mbml-murder-mystery">随机变量</a>——我们把它称为 <code>probLabel</code>。注意，这个变量的取值是一个概率值数组，而不仅仅是一个值。我们需要为 <code>probLabel</code> 选择一个<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>，以便在看到任何数据之前，把我们关于这个概率数组的知识编码进去。既然我们不想事先对这些概率做任何假设，我们可以选择一个均匀的 Dirichlet 分布，它对任何加起来等于 1 的概率值数组都赋予相等的概率。这样一个均匀 Dirichlet 分布可以通过把所有计数参数都设为 1 来创建，写作 $\mathit{Dirichlet}(1,1,1,1)$。</p>
+<p>我们现在已经为<a href="/post/2025-04-21-mbml-introduction">模型</a>定义了两个变量：为每条推文定义的 <code>trueLabel</code> 变量，以及给出每个标签概率的一个单一的、全局的 <code>probLabel</code> 变量。我们可以把这些变量连接成一个如图 7.3 所示的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>，其中 <code>Discrete</code> <a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子</a>定义了 <code>trueLabel</code> 上的一个<a href="https://www.mbmlbook.com/Asthma_Discovering_sensitization_classes.html#discrete_distribution">离散分布</a>，其参数是概率数组 <code>probLabel</code>。由于每条推文都有一个标签，<code>trueLabel</code> 变量位于跨越所有推文的一个<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>（plate）之内。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/CrowdSourcing_DirichletDiscrete.png">
+            <img class="mx-auto" alt="图 7.3" src="/uploads/CrowdSourcing_DirichletDiscrete.png" />
+        </a>
+    </p>
+<p>图 7.3：一个<a href="/post/2025-04-21-mbml-introduction">模型</a>，其中一条推文的真实标签取每个可能值的概率由概率数组 <code>probLabel</code> 给出。</p>
+<p>在图 7.3 的<a href="/post/2025-04-21-mbml-introduction">模型</a>中，两个变量都没有被观测。特别是，我们并不观测 <code>trueLabel</code>，因为我们需要从工作者的标签来推断它。因此，我们需要扩展我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>，把众包工作者及其标签也包含进来。</p>
+<h3 id="纳入众包工作者的标签">纳入众包工作者的标签</h3>
+<p>
+        <a data-fancybox="gallery" href="/uploads/blocks-159778631-crop.jpg">
+            <img class="mx-auto" alt="积木" src="/uploads/blocks-159778631-crop.jpg" />
+        </a>
+    </p>
+<p>我们可以把前几章中<a href="/post/2025-04-21-mbml-introduction">模型</a>的组成部分当作构建新<a href="/post/2025-04-21-mbml-introduction">模型</a>的积木来使用。</p>
+<p>在本章中，我们会发现自己在复用前几章开发的<a href="/post/2025-04-21-mbml-introduction">模型</a>片段。能够借用已有的模型组件，是<a href="/post/2025-04-21-mbml-introduction">基于模型的机器学习</a>一个非常有用的优势。这意味着，我们往往可以用大块的、预先存在的部件来构建<a href="/post/2025-04-21-mbml-introduction">模型</a>，而不必每次都从零开始设计。</p>
+<p>我们需要对这样一种情形建模：一个众包工作者正试图弄清一条推文的正确标签。这与第 2 章中的情形类似，当时一名考生正试图弄清一道题目的正确答案。在那个<a href="/post/2025-04-21-mbml-introduction">模型</a>中，我们假设考生要么具备回答某道题所需的技能，要么不具备。在这里，我们将做一个类似的假设：</p>
+<ul>
+<li>当一个工作者查看一条推文时，他要么能够弄清真实标签是什么，要么不能。</li>
+</ul>
+<p>为了对这一假设建模，我们将为&quot;工作者能否弄清真实标签&quot;使用一个变量。我们把它称为 <code>isCorrect</code>，当工作者能够弄清正确标签时它为真，否则为假。</p>
+<p>接下来我们需要决定工作者会做什么来为推文选择一个标签。我们把这个标签称为 <code>workerLabel</code>，并允许它取四个标签值中的任意一个，就像 <code>trueLabel</code> 一样。在我们前一个假设的基础上，如果工作者能够弄清真实标签，那么我们可以合理地假设，这就是他将提供的标签。</p>
+<ul>
+<li>如果一个工作者能够确定真实标签，他将把这个标签作为自己的标签给出。</li>
+</ul>
+<p>如果他们无法弄清真实标签，那么他们仍然需要提供某个标签——所以我们需要决定他们在这种情况下会怎么做。在第 2 章中，我们假设如果某人不知道一道题的答案，他们就会随机猜测。我们在这里可以做同样的假设：</p>
+<ul>
+<li>如果一个工作者无法确定真实标签，他将均匀随机地选择一个标签。</li>
+</ul>
+<p>根据假设 7.3，如果 <code>isCorrect</code> 为真，那么 <code>workerLabel</code> 就只是 <code>trueLabel</code> 的一份拷贝。但根据假设 7.4，如果 <code>isCorrect</code> 为假，那么 <code>workerLabel</code> 必须转而服从均匀分布。为了在这两种建模 <code>workerLabel</code> 的方式之间切换，我们可以使用<a href="https://www.mbmlbook.com/Asthma_Modelling_with_gates.html#gate">门</a>（gate），就像我们在上一章（6.4 节）所做的那样。对于假设 7.3，我们需要一个在 <code>isCorrect</code> 为真时开启的门，其中包含一个 <code>Copy</code> 因子，把 <code>trueLabel</code> 的值拷贝到 <code>workerLabel</code> 中。<code>Copy</code> 因子是一个<a href="/post/2026-05-19-mbml-learning-skills_a_model_is_a_set_of_assumptions">确定性因子</a>，它赋予子变量取与父变量相同值的概率 1.0，赋予所有其他值的概率 0.0。为了对假设 7.4 建模，我们需要第二个门，它在 <code>isCorrect</code> 为假时开启，并包含一个 <code>Uniform</code> 因子，赋予 <code>workerLabel</code> 一个均匀的<a href="https://www.mbmlbook.com/Asthma_Discovering_sensitization_classes.html#discrete_distribution">离散分布</a>。针对单条推文得到的<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>如图 7.4 所示。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/CrowdSourcing_SingleTweetLabel.png">
+            <img class="mx-auto" alt="图 7.4" src="/uploads/CrowdSourcing_SingleTweetLabel.png" />
+        </a>
+    </p>
+<p>图 7.4：针对单条推文的所有工作者标签的<a href="/post/2025-04-21-mbml-introduction">模型</a>。每个工作者要么能正确地弄清真实标签，要么不能，如 <code>isCorrect</code> 所示。如果他们能弄清真实标签，就把它拷贝到自己的标签中（右侧的门），否则就均匀随机地挑选一个标签（左侧的门）。得到的标签存储在 <code>workerLabel</code> 中——它显示为阴影，因为这些标签的取值对系统而言是已知的。</p>
+<h3 id="完善模型">完善模型</h3>
+<p>图 7.4 的<a href="/post/2025-04-21-mbml-introduction">模型</a>没有为 <code>isCorrect</code> 变量提供<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验</a>。我们本可以直接选一个，并假设，比如说，工作者在一定比例的时间里是正确的。但我们会做得更精细一些，让<a href="/post/2025-04-21-mbml-introduction">模型</a>去学习每个工作者正确的概率。我们把它称为该工作者的<strong>能力</strong>（ability），并把它放进一个跨越所有工作者的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>中，以便为每个工作者赋予各自的能力。我们要做的假设是：</p>
+<ul>
+<li>一些工作者能够比其他人更经常地确定真实标签，但大多数工作者在大多数时候都能做到。</li>
+</ul>
+<p>由于我们预期大多数工作者在大多数时候都能确定真实标签，我们将给 <code>ability</code> 一个偏好高于 50% 的概率的<a href="/post/2025-05-12-mbml-murder-mystery_updating_our_beliefs">先验分布</a>。$\mathit{Beta}(2,1)$ 分布在这里是一个合理的选择。现在我们可以把<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>图 7.3 和图 7.4，连同这个新的 <code>ability</code> 变量，组合起来，得到图 7.5 的总体<a href="/post/2025-05-19-mbml-murder-mystery_a_model_of_a_murder">因子图</a>。在这里，我们把图 7.4 的单条推文<a href="/post/2025-04-21-mbml-introduction">模型</a>放进了一个跨越推文的<a href="/post/2026-06-26-mbml-learning-skills_moving_to_real_data">板块</a>之内，加入了来自图 7.3 的 <code>probLabel</code>，并把 <code>ability</code> 变量作为 <code>isCorrect</code> 的父节点添加进来。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/CrowdSourcing_HonestWorker.png">
+            <img class="mx-auto" alt="图 7.5" src="/uploads/CrowdSourcing_HonestWorker.png" />
+        </a>
+    </p>
+<p>图 7.5：一组众包工作者标注一组推文的总体<a href="/post/2025-04-21-mbml-introduction">模型</a>。每个工作者有不同的能力，表示他们会正确标注的推文所占的比例。</p>
+<p>像往常一样，我们现在应当花点时间回顾一下我们的建模假设。它们汇总在表 7.4 中。</p>
+<ul>
+<li>每条推文都有一个真实标签，它是以下集合之一：正面、负面、中性或无关。</li>
+<li>当一个工作者查看一条推文时，他要么能够弄清真实标签是什么，要么不能。</li>
+<li>如果一个工作者能够确定真实标签，他将把这个标签作为自己的标签给出。</li>
+<li>如果一个工作者无法确定真实标签，他将均匀随机地选择一个标签。</li>
+<li>一些工作者能够比其他人更经常地确定真实标签，但大多数工作者在大多数时候都能做到。</li>
+</ul>
+<p>表 7.4：我们的众包工作者<a href="/post/2025-04-21-mbml-introduction">模型</a>中所编码的五个假设。</p>
+<p>假设 7.1 是由设定给定的，因此是一个安全的假设。假设 7.2 看起来也很安全，因为工作者要么能弄清正确标签，要么不能。假设 7.3 是一个合理的假设——如果我们相信工作者是真心想要提供帮助、而非故意提供错误的值。如果我们转而相信存在一些试图破坏正确标注的工作者，那么我们就需要重新审视这个假设。假设 7.4 是一个简化假设——在实践中，工作者很少会随机挑选，而更可能做出最佳猜测——这个假设很可能值得日后加以改进。最后，假设 7.5 看起来是一个合理的假设，只要我们相信这项标注任务对大多数工作者在大多数时候来说足够容易。如果并非如此，那么无论如何我们大概都会陷入麻烦！</p>
+<p>我们现在有了一个完整的<a href="/post/2025-04-21-mbml-introduction">模型</a>，准备好试用它了——请继续阅读，看看它效果如何。</p>
+<h4 id="概念回顾">概念回顾</h4>
+<p><strong>金标签</strong>（gold labels）：在判断众包工作者提供的标签是否正确时，用作&quot;金标准&quot;的、质量非常高的标签。</p>
+<p><strong>情感分析</strong>（sentiment analysis）：从一段书面文字中确定一个人的情感、态度或观点的任务。</p>
+<p><strong>Dirichlet 分布</strong>（Dirichlet distribution）：定义在一组加起来等于 1 的连续概率值上的一种概率分布。Dirichlet 分布是 beta 分布的一种扩展，能够处理具有多于两个值的变量。Dirichlet 分布的<a href="/post/2026-07-24-mbml-learning-skills_learning_the_guess_probabilities">概率密度函数</a>为：</p>
+$$\mathit{Dirichlet}(\mathbf{x}; \boldsymbol{\alpha}) = \frac{x_1^{\alpha_1} x_2^{\alpha_2} \dots x_K^{\alpha_K}}{\mathrm{B}(\boldsymbol{\alpha})} \quad (7.1)$$<p>其中 $K$ 是该变量可以取值的个数，$\mathbf{x}$ 是一个加起来等于 1 的概率值数组，$\boldsymbol{\alpha}$ 是作为该分布参数的计数数组。这里的 $\mathrm{B}(\boldsymbol{\alpha})$ 是我们在 beta 分布密度中遇到过的 beta 函数的多变量形式（见 2.6 节）。当 $K$ 为 2 时，Dirichlet 分布退化为 beta 分布。</p>
+<p>Dirichlet 分布的均值是经过缩放、使其各元素之和等于 1 的计数数组——换句话说，它是 $\boldsymbol{\alpha} / \sum_k \alpha_k$。均值给出了分布质心的位置，而计数之和控制着分布的分散程度，其中更大的和意味着更窄的分布。</p>
+<h4 id="参考文献">参考文献</h4>
+<p>[Morrow et al., 2011] Morrow, N., Mock, N., Papendieck, A., and Kocmich, N. (2011). <a href="/post/2025-04-28-mbml-murder-mystery_incorporating_evidence">Independent</a> Evaluation of the Ushahidi Haiti Project.</p>
+<p>[Liu, 2012] Liu, B. (2012). Sentiment Analysis and Opinion Mining. Synthesis Lectures on Human Language Technologies, 5(1):1–167.</p>
+<hr>
+<p>下一节：<a href="/post/2026-11-12-mbml-crowdsourcing_trying_out_the_worker_model">试用工作者模型</a></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/">https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-11-02-mbml-crowdsourcing/">[译]基于模型的机器学习 - 7 众包的力量</a></li>
+        
+        <li><a href="/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/">[译]基于模型的机器学习 - 6.5 发现致敏类别</a></li>
+        
+        <li><a href="/post/2026-10-22-mbml-asthma_modelling_with_gates/">[译]基于模型的机器学习 - 6.4 用门建模</a></li>
+        
+        <li><a href="/post/2026-10-17-mbml-asthma_comparing_alternative_models/">[译]基于模型的机器学习 - 6.3 比较可选模型</a></li>
+        
+        <li><a href="/post/2026-10-12-mbml-asthma_trying_out_the_model/">[译]基于模型的机器学习 - 6.2 试验模型</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Model-Based' target="_blank">Model-Based</a></li>
+                
+                <li><a href='/tags/Machine-Learning' target="_blank">Machine Learning</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/" title="[译]基于模型的机器学习 - 7.1 众包工作者模型" target="_blank">[译]基于模型的机器学习 - 7.1 众包工作者模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-02-mbml-crowdsourcing/" title="[译]基于模型的机器学习 - 7 众包的力量" target="_blank">[译]基于模型的机器学习 - 7 众包的力量</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/" title="VS Code Agent 沙箱：从被拦截到会使用、会配置" target="_blank">VS Code Agent 沙箱：从被拦截到会使用、会配置</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/" title="[译]基于模型的机器学习 - 6.5 发现致敏类别" target="_blank">[译]基于模型的机器学习 - 6.5 发现致敏类别</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/" title="[译]基于模型的机器学习 - 6.4 用门建模" target="_blank">[译]基于模型的机器学习 - 6.4 用门建模</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" title="[译]基于模型的机器学习 - 6.3 比较可选模型" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/" title="语音 Agent 评估：Foundry 多轮评估器到底有多可靠？" target="_blank">语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (4)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (48)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (44)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agent/">Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Evaluation/">Evaluation</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Governance/">Governance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Performance/">Performance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VS-Code/">VS Code</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

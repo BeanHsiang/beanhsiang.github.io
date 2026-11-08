@@ -75,6 +75,98 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/" title="Agent Framework (Python) 完全指南" target="_blank">Agent Framework (Python) 完全指南</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-01-19T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年1月19日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p><strong>agent_framework</strong> 是微软推出的 Python 库,专门用于构建 AI 代理应用程序。我在研究这个框架时发现,它为聊天代理、工作流、工具调用和中间件提供了非常优雅的抽象。核心类包括实现 <code>AgentProtocol</code> 协议的<strong>代理</strong>、用于在工作流中运行代理的<strong>执行器</strong>、用于聊天输入/输出的<strong>消息</strong>,以及用于定义工作流拓扑的<strong>构建器</strong>。例如,<code>AgentProtocol</code> 是一个结构化接口,任何代理都必须遵循它(比如 ChatAgent 就实现了这个接口)。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-01-19-agent-framework-python-overview/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/" title="我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色" target="_blank">我用后端替换了推理模型:成本降低 96.9%,速度提升 93.8%,准确性依然出色</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-01-13T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年1月13日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>在研究 AI Agent 的过程中,我发现了一个有趣的现象:虽然质量至关重要,但成本和执行时间(推理时间)往往成为 Agent 管道中最大的争议点。</p>
+<p>像 GPT-5.2 或 Gemini 3 Pro 这样的&quot;推理&quot;大语言模型确实可以提高质量。然而,我注意到它们往往存在生成时间长和 token 使用量增加的问题,从而推高了成本和延迟。当 Agent 需要在每个任务中做出大量决策时,这种权衡就会成为一个重大瓶颈。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-01-13-i-replaced-a-reasoning-model-with-a-backend-96-9-cheaper-93-8-faster-still-accurate/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/" title="如何通过 Entra ID 身份验证使用 Microsoft Foundry" target="_blank">如何通过 Entra ID 身份验证使用 Microsoft Foundry</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-01-10T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年1月10日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/20260114150426-5e9b445b7c284d47820bd38456e71c9a.jpeg">
+            <img class="mx-auto" alt="Microsoft Foundry" src="/uploads/20260114150426-5e9b445b7c284d47820bd38456e71c9a.jpeg" />
+        </a>
+    </p>
+<p>Microsoft Foundry(2025 年 11 月之前称为 Azure AI Foundry)在使用服务时提供两种身份验证方式,包括 LLM 推理:基于密钥的身份验证和 Entra ID 身份验证。虽然基于密钥的身份验证更容易使用,但我想在这里分享使用 Entra ID 身份验证的优势,以及如何开始使用它的分步说明!</p>
+<h2 id="entra-id-身份验证的优势">Entra ID 身份验证的优势</h2>
+<p>基于密钥的身份验证快速简单……只需从 Foundry 门户获取 API 密钥,将其作为 header 插入 <code>api-key</code> 名称下,就可以开始使用了!然而,由于其简单性,基于密钥的身份验证也存在一些限制。主要限制之一是安全性。虽然基于密钥的身份验证很简单,但它是&quot;全有或全无&quot;的访问方式——任何拥有该密钥的人都可以执行资源允许的任何操作。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-01-10-how-to-use-microsoft-foundry-via-entra-id-authentication/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-01-07-agentic-ai-trends-2026/" title="2026 年值得关注的 7 个 Agentic AI 趋势" target="_blank">2026 年值得关注的 7 个 Agentic AI 趋势</a>
             </h1>
         </header>
@@ -396,102 +488,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2025-12-12-observability-for-multi-agent-systems-with-microsoft-agent-framework-and-azure-ai-foundry/" title="使用 Microsoft Agent Framework 与 Azure AI Foundry 为多智能体系统构建可观测性" target="_blank">使用 Microsoft Agent Framework 与 Azure AI Foundry 为多智能体系统构建可观测性</a>
-            </h1>
-        </header>
-        
-  <time datetime="2025-12-12T04:00:00Z" class="post-meta meta-date dt-published">
-    2025年12月12日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>智能体（Agentic）应用正在重塑企业自动化，但它们动态的工具链和“隐式推理”也让线上运行与排障变得格外棘手。本文整理并改写自 Microsoft Foundry Blog 的一篇文章，内容聚焦于：如何为基于 Microsoft Agent Framework 的服务接入 <strong>OpenTelemetry</strong>，将 trace 投递到 <strong>Azure AI Foundry</strong> 的可观测能力中，并建立一套实用工作流，用于在生产环境中调试、评估并持续改进多智能体行为。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-12-12-observability-for-multi-agent-systems-with-microsoft-agent-framework-and-azure-ai-foundry/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2025-12-08-monitoring-generative-ai-applications-with-azure-ai-foundry/" title="使用 Azure AI Foundry 监控生成式 AI 应用" target="_blank">使用 Azure AI Foundry 监控生成式 AI 应用</a>
-            </h1>
-        </header>
-        
-  <time datetime="2025-12-08T04:00:00Z" class="post-meta meta-date dt-published">
-    2025年12月8日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <h2 id="-引言">🧭 引言</h2>
-<p>监控 AI 应用，早就不只是盯着「是否在线」和「有没有报错」这么简单了。面对生成式 AI 的工作负载，团队还需要持续回答三个更关键的问题：</p>
-<ul>
-<li>AI 的输出到底“好不好”（质量、准确性、帮助性）</li>
-<li>运行成本是多少（尤其是 token 消耗与推理成本）</li>
-<li>是否足够安全、合规、可控（有无有害输出、策略违规等）</li>
-</ul>
-<p>Microsoft 在 Azure AI Foundry 中提供了一套集成式的可观测能力，把 Application Insights、持续评估（continuous evaluation）与可自定义仪表板串起来，从而实现对 AI 应用端到端的可见性；同时也与 Azure Baseline Monitoring Alerts 的思路保持一致。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-12-08-monitoring-generative-ai-applications-with-azure-ai-foundry/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/" title="使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文" target="_blank">使用 Foundry Local、Microsoft Foundry 与 Agent Framework 构建混合 AI（下）：云端 agent 安全回拨本地私密上下文</a>
-            </h1>
-        </header>
-        
-  <time datetime="2025-11-22T04:00:00Z" class="post-meta meta-date dt-published">
-    2025年11月22日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>
-        <a data-fancybox="gallery" href="/uploads/20260105115726-e614221e771e45749f7fc050ae0a4293.png">
-            <img class="mx-auto" alt="" src="/uploads/20260105115726-e614221e771e45749f7fc050ae0a4293.png" />
-        </a>
-    </p>
-<p>原文链接：https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework&mdash;part-2/4471983?WT.mc_id=AI-MVP-5003172</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2025-11-22-hybrid-ai-using-foundry-local-microsoft-foundry-and-the-agent-framework-part-2/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -568,7 +564,7 @@
         
         
         <li >
-            <a href="https://beanhsiang.github.io/page/16/">16</a>
+            <a href="https://beanhsiang.github.io/page/17/">17</a>
         </li>
         
     
@@ -632,6 +628,18 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/" title="[译]基于模型的机器学习 - 7.1 众包工作者模型" target="_blank">[译]基于模型的机器学习 - 7.1 众包工作者模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-02-mbml-crowdsourcing/" title="[译]基于模型的机器学习 - 7 众包的力量" target="_blank">[译]基于模型的机器学习 - 7 众包的力量</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/" title="VS Code Agent 沙箱：从被拦截到会使用、会配置" target="_blank">VS Code Agent 沙箱：从被拦截到会使用、会配置</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/" title="[译]基于模型的机器学习 - 6.5 发现致敏类别" target="_blank">[译]基于模型的机器学习 - 6.5 发现致敏类别</a>
     </li>
     
@@ -659,18 +667,6 @@
         <a href="https://beanhsiang.github.io/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/" title="补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏" target="_blank">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-07-mbml-asthma_a_model_of_allergies/" title="[译]基于模型的机器学习 - 6.1 过敏模型" target="_blank">[译]基于模型的机器学习 - 6.1 过敏模型</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/" title="如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验" target="_blank">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a>
-    </li>
-    
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/" title="评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用" target="_blank">评估更多，花费更少：把 Microsoft Foundry 评估器合并成一次调用</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -686,7 +682,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (3)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (4)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
@@ -694,7 +690,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (42)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (44)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
     
@@ -708,6 +704,8 @@
     <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
     
     <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agent/">Agent</a>
     
     <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
     
@@ -806,6 +804,8 @@
     <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
     
     <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VS-Code/">VS Code</a>
     
     <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
     

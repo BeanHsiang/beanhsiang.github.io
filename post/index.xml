@@ -10,9 +10,30 @@
 		
 		
 		
-			<lastBuildDate>Tue, 27 Oct 2026 10:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Sat, 07 Nov 2026 10:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>[译]基于模型的机器学习 - 7.1 众包工作者模型</title>
+				<link>https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/</link>
+				<pubDate>Sat, 07 Nov 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/</guid>
+				<description>&lt;p&gt;在海地地震期间发送的消息，是按照表 7.1 所示的九个主要类别来标注的。每个类别又被进一步细分为若干子类别——例如，&amp;ldquo;基础设施损毁&amp;quot;下设有&amp;quot;建筑物倒塌&amp;quot;&amp;ldquo;结构不稳&amp;quot;&amp;ldquo;道路封堵&amp;quot;&amp;ldquo;桥梁受损&amp;quot;和&amp;quot;通信线路中断&amp;quot;等子类别。其结果是，可以为任何一条给定消息赋予的子类别标签多达 50 个，不过消息也可以只用一个主类别来标注。&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>[译]基于模型的机器学习 - 7 众包的力量</title>
+				<link>https://beanhsiang.github.io/post/2026-11-02-mbml-crowdsourcing/</link>
+				<pubDate>Mon, 02 Nov 2026 10:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-11-02-mbml-crowdsourcing/</guid>
+				<description>&lt;p&gt;2010 年，一场 7.0 级地震袭击了海地，造成大量人员伤亡和大范围破坏。随后展开的人道主义援助工作因通信系统、交通设施和电力网络的损毁而受阻。来自受灾地区人们发出的消息，成为救援人员至关重要的信息来源。但这些消息需要经过分诊和归类——而承担这项工作的志愿者，其能力、偏见和细心程度各不相同。在未来的危机中，&lt;a href=&#34;https://beanhsiang.github.io/post/2025-04-21-mbml-introduction&#34;&gt;基于模型的机器学习&lt;/a&gt;能否利用这些相互矛盾且充满噪声的信息，来推断出地面上的真实状况呢？&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>VS Code Agent 沙箱：从被拦截到会使用、会配置</title>
+				<link>https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/</link>
+				<pubDate>Sat, 31 Oct 2026 22:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/</guid>
+				<description>&lt;p&gt;VS Code 最近把 Agent 的执行安全问题摆到了更显眼的位置：Copilot Agent 不再只是生成文本，它还可能执行终端命令、启动语言服务器、调用 MCP Server，并访问网络。于是，很多人第一次遇到 &lt;code&gt;Permission denied&lt;/code&gt;、命令无法启动、依赖下载失败，或者看到“Allow Outside Sandbox”时，往往不知道这是权限问题、沙箱策略问题，还是运行环境缺少依赖。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>[译]基于模型的机器学习 - 6.5 发现致敏类别</title>
 				<link>https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/</link>

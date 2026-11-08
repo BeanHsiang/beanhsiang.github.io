@@ -2,28 +2,49 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/</loc>
-    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
+    <loc>https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/</loc>
+    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
+    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
-    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
+    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
-    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
+    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Model-Based/</loc>
-    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
+    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
-    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
+    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-10-27T10:00:00+08:00</lastmod>
+    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-11-02-mbml-crowdsourcing/</loc>
+    <lastmod>2026-11-02T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Agent/</loc>
+    <lastmod>2026-10-31T22:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/GitHub-Copilot/</loc>
+    <lastmod>2026-10-31T22:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/GitHub-Copilot/</loc>
+    <lastmod>2026-10-31T22:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/VS-Code/</loc>
+    <lastmod>2026-10-31T22:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/</loc>
+    <lastmod>2026-10-31T22:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/</loc>
     <lastmod>2026-10-27T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/</loc>
@@ -73,12 +94,6 @@
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-10-05-evaluate-more-spend-less-batching-microsoft-foundry-evaluators/</loc>
     <lastmod>2026-10-05T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/GitHub-Copilot/</loc>
-    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/GitHub-Copilot/</loc>
-    <lastmod>2026-10-03T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/HydraFusion/</loc>
     <lastmod>2026-10-03T12:00:00+08:00</lastmod>

@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Sun, 08 Nov 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Tue, 10 Nov 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>从 Python Agent 到 Copilot Harness：把 Microsoft Foundry 真跑一遍</title>
+				<link>https://beanhsiang.github.io/post/2026-11-10-from-python-agents-to-copilot-harness-putting-microsoft-foundry-to-the-test/</link>
+				<pubDate>Tue, 10 Nov 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-11-10-from-python-agents-to-copilot-harness-putting-microsoft-foundry-to-the-test/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/foundry-copilot-harness-cover.jpg&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;Microsoft Foundry Blog 文章题图&#34; src=&#34;https://beanhsiang.github.io/uploads/foundry-copilot-harness-cover.jpg&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;&lt;em&gt;题图来源：Microsoft Foundry Blog&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;Agent 写完了，Python 写完了，数据接上了，模块之间怎么通信也调通了。然后话题转到了 harness 上。&lt;/p&gt;&#xA;&lt;p&gt;GitHub、Microsoft Foundry 和 Copilot Studio（CPS）三家正在往同一套 harness 上收敛，也就是 GitHub Copilot harness。这件事落到具体做项目的人身上，问题就变得很具体：&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程</title>
 				<link>https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/</link>

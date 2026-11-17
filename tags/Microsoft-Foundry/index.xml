@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Wed, 04 Nov 2026 12:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Fri, 06 Nov 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/tags/Microsoft-Foundry/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验</title>
+				<link>https://beanhsiang.github.io/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/</link>
+				<pubDate>Fri, 06 Nov 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/</guid>
+				<description>&lt;p&gt;&#xA;        &lt;a data-fancybox=&#34;gallery&#34; href=&#34;https://beanhsiang.github.io/uploads/fal-foundry-video-models.png&#34;&gt;&#xA;            &lt;img class=&#34;mx-auto&#34; alt=&#34;fal 与 Microsoft Foundry 联合横幅（图片来源：Microsoft / fal 原文）&#34; src=&#34;https://beanhsiang.github.io/uploads/fal-foundry-video-models.png&#34; /&gt;&#xA;        &lt;/a&gt;&#xA;    &lt;/p&gt;&#xA;&lt;p&gt;微软和 fal 最近宣布了一项合作：Kling、LTX、MiniMax 三个系列的视频模型进入 &lt;a href=&#34;https://ai.azure.com/?WT.mc_id=AI-MVP-5003172&#34;&gt;Microsoft Foundry&lt;/a&gt; 公共预览，以 Azure 第一方服务的形式提供，覆盖 text-to-video 和 image-to-video 两类生成方式。我把公告梳理了一遍，下面是值得关注的点。&lt;/p&gt;&#xA;&lt;p&gt;视频生成的需求并不统一。创意团队拿到一份文字简报，想多试几种演绎；零售商要把一张定稿的产品图变成几秒钟的动态概念；做应用的开发者则想把图像生成和视频生成串成一条工作流，从描述到画面再到场景。这些场景对画质、运动控制、交付时间和成本的要求各不相同，单靠一个模型撑不起完整的愿景。这也是多模型方案逐渐成为共识的原因。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>通过 Azure API Management 在 Microsoft Foundry 上接入 Claude Code：工程实践指南</title>
 				<link>https://beanhsiang.github.io/post/2026-11-04-an-engineering-guide-to-claude-code-on-microsoft-foundry-with-azure-api-management/</link>

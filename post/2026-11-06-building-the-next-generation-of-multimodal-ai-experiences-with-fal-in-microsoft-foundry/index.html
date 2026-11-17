@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验 | Innovation with tech</title>
+    <meta property="og:title" content="微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-11-06T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-11-06T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验</h1>
+        </header>
+        
+  <time datetime="2026-11-06T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年11月6日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/fal-foundry-video-models.png">
+            <img class="mx-auto" alt="fal 与 Microsoft Foundry 联合横幅（图片来源：Microsoft / fal 原文）" src="/uploads/fal-foundry-video-models.png" />
+        </a>
+    </p>
+<p>微软和 fal 最近宣布了一项合作：Kling、LTX、MiniMax 三个系列的视频模型进入 <a href="https://ai.azure.com/?WT.mc_id=AI-MVP-5003172">Microsoft Foundry</a> 公共预览，以 Azure 第一方服务的形式提供，覆盖 text-to-video 和 image-to-video 两类生成方式。我把公告梳理了一遍，下面是值得关注的点。</p>
+<p>视频生成的需求并不统一。创意团队拿到一份文字简报，想多试几种演绎；零售商要把一张定稿的产品图变成几秒钟的动态概念；做应用的开发者则想把图像生成和视频生成串成一条工作流，从描述到画面再到场景。这些场景对画质、运动控制、交付时间和成本的要求各不相同，单靠一个模型撑不起完整的愿景。这也是多模型方案逐渐成为共识的原因。</p>
+<blockquote>
+<p>&ldquo;fal 今年在生成式媒体上的采用增长非常快，覆盖广告、营销、游戏等所有行业。与微软合作，我们双方才能真正服务好整个创意生态，并确保所有依赖生成式媒体的 AI 方案走向多模型化。&rdquo; —— Burkay Gur，fal 联合创始人</p>
+</blockquote>
+<h2 id="fal-的生成式媒体平台">fal 的生成式媒体平台</h2>
+<p>fal 是面向创作者和开发者的生成式媒体全栈平台，通过 API 提供超过 1500 个模型，覆盖图像、视频、音频、3D 和生成式世界。平台同时提供推理、训练和生产环境运行所需的基础设施，还有自研的后训练（post-trained）模型，在速度和质量上做了优化。</p>
+<p>这种专注是有道理的。生成式媒体既是创意活，也是工程活：一个吸引人的 demo 只是起点，生产环境的应用还要扛得住真实流量、随需求扩展，并在画质、延迟和成本之间找平衡。</p>
+<p>通过这次合作，开发者可以在 Microsoft Foundry 里访问由 fal 提供服务的一批视频模型，模型本身来自各自的研发公司。初期阵容让团队能按创意需求选模型，而不是所有任务都压在同一个模型上，后续还会增加更多模型。</p>
+<h2 id="面向不同场景的模型阵容">面向不同场景的模型阵容</h2>
+<p>初期阵容包括 Kling v3 Pro、LTX-2.5 Fast、LTX-2.5 Pro、MiniMax H3 Max 和 MiniMax H3 Max Turbo，起点各异。快速探索创意概念的团队会优先考虑速度和成本；产出少量高保真资产的团队更看重输出质量。应用是从文字还是从既有图像出发，以及画质和成本上的要求，同样影响选择。</p>
+<p><strong>Kling：从静态图到有导演感的镜头</strong></p>
+<p>Kling v3 Pro 把电影级画面和流畅运动，与原生音频生成、自定义元素支持放到了一起。它的 image-to-video 能力让开发者控制一张起始图如何变成运动场景，适合重视视觉调度和运动表现的应用。</p>
+<p><strong>LTX：草稿和成片各用一个模型</strong></p>
+<p>LTX-2.5 Fast 面向快速迭代和预览，LTX-2.5 Pro 面向高保真成片。两者都支持 text-to-video 和 image-to-video，并带同步音频。</p>
+<p><strong>MiniMax：另一条路线</strong></p>
+<p>MiniMax H3 Max 和 H3 Max Turbo 是 MiniMax H3 的后训练变体，重点优化提示词遵循、美学表现和推理性能。对开发者来说，这是多一组可以拿创意简报、质量要求和性能需求去对照评估的选项。</p>
+<blockquote>
+<p>&ldquo;用视频模型做东西时，细节很关键：输出跟提示词贴得多紧、对参考图像/视频/音频保留得多好、换个想法再试一轮有多快。Kling 给开发者对参考素材到视频生成的精细控制；LTX 用 Fast 和 Pro 两个版本兼顾快速迭代和高质量输出；H3 Max 带来 fal 的后训练和推理优化，提升质量和速度。这些模型能通过 Microsoft Foundry 使用，给了开发者更多灵活性去选适合自己应用的方案。&rdquo; —— Gökay Aydoğan，fal 创意工程师</p>
+</blockquote>
+<h2 id="企业场景要考虑的事">企业场景要考虑的事</h2>
+<p>把视频生成放进企业应用，选对模型只是第一步。团队还需要一个平台来评估不同选项、用符合要求的模型做构建，再和应用的其余部分一起运维。</p>
+<p>初期模型阵容托管在美国，Microsoft Foundry 是第一个提供美国托管 Kling 3 端点的服务商。企业团队需要注意：</p>
+<ul>
+<li>数据驻留：对有数据驻留要求的组织，托管位置是权衡因素之一，还要逐个核对各模型文档写明的数据处理和存储条款。</li>
+<li>模型评估：团队可以评估质量、性能和成本，再把视频生成与应用所需的其他模型和能力连接起来。</li>
+<li>生产就绪：走向生产时，可以使用所选服务支持的评估、优化、治理、安全、可观测性和基础设施能力。</li>
+</ul>
+<h2 id="价格">价格</h2>
+<p>价格按模型和输出分辨率区分，可以按应用预算做取舍。下表是 LTX 和 MiniMax 各档的定价，单位是美元/视频秒：</p>
+<table>
+	<thead>
+			<tr>
+					<th><strong>模型名称</strong></th>
+					<th><strong>部署类型</strong></th>
+					<th><strong>格式</strong></th>
+					<th><strong>分辨率</strong></th>
+					<th><strong>每视频秒价格（美元）</strong></th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>MiniMax H3 Max</td>
+					<td>Global Standard</td>
+					<td>Text to video / Image to video / Reference to video</td>
+					<td>480p</td>
+					<td>$0.05</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>768p</td>
+					<td>$0.08</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>1080p</td>
+					<td>$0.16</td>
+			</tr>
+			<tr>
+					<td>MiniMax H3 Max Turbo</td>
+					<td>Global Standard</td>
+					<td>Text to video / Image to video</td>
+					<td>480p</td>
+					<td>$0.025</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>768p</td>
+					<td>$0.04</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>1080p</td>
+					<td>$0.08</td>
+			</tr>
+			<tr>
+					<td>LTX-2.5 Fast</td>
+					<td>Global Standard</td>
+					<td>Text to video / Image to video</td>
+					<td>720p</td>
+					<td>$0.09</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>1080p</td>
+					<td>$0.13</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>1440p</td>
+					<td>$0.19</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>4K</td>
+					<td>$0.30</td>
+			</tr>
+			<tr>
+					<td>LTX-2.5 Pro</td>
+					<td>Global Standard</td>
+					<td>Text to video / Image to video</td>
+					<td>720p</td>
+					<td>$0.12</td>
+			</tr>
+			<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>1080p</td>
+					<td>$0.17</td>
+			</tr>
+			<tr>
+					<td>Kling v3 Pro</td>
+					<td>US Data Zone</td>
+					<td>Text to video / Image to video</td>
+					<td>audio off</td>
+					<td>$0.1232</td>
+			</tr>
+			<tr>
+					<td>Kling v3 Pro</td>
+					<td>US Data Zone</td>
+					<td>Text to video / Image to video</td>
+					<td>audio on</td>
+					<td>$0.1848</td>
+			</tr>
+			<tr>
+					<td>Kling v3 Pro</td>
+					<td>US Data Zone</td>
+					<td>Text to video / Image to video</td>
+					<td>audio + voice control</td>
+					<td>$0.2156</td>
+			</tr>
+	</tbody>
+</table>
+<p>这些价格会在未来几周内更新到 Azure 定价页面。</p>
+<h2 id="上手">上手</h2>
+<p>如果正好在关注这块，可以留意 Ignite 上的 <strong>BRK256: Video AI at Scale with fal on Microsoft Foundry</strong> 场次：微软的 Naomi Moneypenny、Alexander Hughes 和 fal 的 Burkay Gur、Lovis Odin 会一起上台聊这次合作，时间是 11 月 19 日（周四）11:00–11:45（美国中部时间），可以<a href="https://ignite.microsoft.com/en-US/sessions/1787856612005001EK31-1791588245510001C1B2?source=sessions&amp;WT.mc_id=AI-MVP-5003172">提前注册</a>。</p>
+<ul>
+<li>在 <a href="https://ai.azure.com/?WT.mc_id=AI-MVP-5003172">Microsoft Foundry</a> 里试用 Kling v3 Pro、LTX-2.5 Fast、LTX-2.5 Pro、MiniMax H3 Max、MiniMax H3 Max Turbo</li>
+<li>了解更多 <a href="https://fal.ai/learn?WT.mc_id=AI-MVP-5003172">fal</a> 的信息</li>
+<li>fal 模型配合 ComfyUI 的快速入门：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/direct-your-next-shot-with-fal-on-microsoft-foundry-and-comfyui/4570230?WT.mc_id=AI-MVP-5003172">Direct your next shot with fal on Microsoft Foundry and ComfyUI</a></li>
+<li>想抢先测新模型的话，看 <a href="https://aka.ms/model-releases?WT.mc_id=AI-MVP-5003172">Microsoft Foundry Model Releases Repository</a></li>
+</ul>
+<p>原文：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-/4570032?WT.mc_id=AI-MVP-5003172">Building the next generation of multimodal AI experiences with fal in Microsoft Foundry</a>，Naomi Moneypenny 写于 2026 年 11 月 5 日。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/">https://beanhsiang.github.io/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-11-04-an-engineering-guide-to-claude-code-on-microsoft-foundry-with-azure-api-management/">通过 Azure API Management 在 Microsoft Foundry 上接入 Claude Code：工程实践指南</a></li>
+        
+        <li><a href="/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a></li>
+        
+        <li><a href="/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/">语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</a></li>
+        
+        <li><a href="/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a></li>
+        
+        <li><a href="/post/2026-10-06-how-to-make-ai-responses-faster-on-microsoft-foundry-lessons-from-2040-measurements/">如何让 Microsoft Foundry 上的 AI 响应更快：来自 2,040 次测量的经验</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/" title="[译]基于模型的机器学习 - 7.1 众包工作者模型" target="_blank">[译]基于模型的机器学习 - 7.1 众包工作者模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/" title="微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验" target="_blank">微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-04-an-engineering-guide-to-claude-code-on-microsoft-foundry-with-azure-api-management/" title="通过 Azure API Management 在 Microsoft Foundry 上接入 Claude Code：工程实践指南" target="_blank">通过 Azure API Management 在 Microsoft Foundry 上接入 Claude Code：工程实践指南</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-02-mbml-crowdsourcing/" title="[译]基于模型的机器学习 - 7 众包的力量" target="_blank">[译]基于模型的机器学习 - 7 众包的力量</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/" title="VS Code Agent 沙箱：从被拦截到会使用、会配置" target="_blank">VS Code Agent 沙箱：从被拦截到会使用、会配置</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/" title="[译]基于模型的机器学习 - 6.5 发现致敏类别" target="_blank">[译]基于模型的机器学习 - 6.5 发现致敏类别</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/" title="[译]基于模型的机器学习 - 6.4 用门建模" target="_blank">[译]基于模型的机器学习 - 6.4 用门建模</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" title="[译]基于模型的机器学习 - 6.3 比较可选模型" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (4)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (50)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (44)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agent/">Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Evaluation/">Evaluation</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Governance/">Governance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Performance/">Performance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VS-Code/">VS Code</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

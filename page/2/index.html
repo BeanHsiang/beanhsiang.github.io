@@ -75,6 +75,41 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" title="[译]基于模型的机器学习 - 6.3 比较可选模型" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-10-17T02:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月17日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>在前面所有章节中，我们都假设数据源自单一的潜在过程。但现在我们不能再这样假定了，因为我们预期：会发展出过敏和哮喘的孩子与不会发展出的孩子，遵循的是不同的过程。为了处理这类可选过程，我们需要引入一种新的建模技术。</p>
+<p>这种技术将使我们能够：</p>
+<ul>
+<li>在单个<a href="/post/2025-04-21-mbml-introduction">模型</a>中表示多个可选过程；</li>
+<li>评估每个可选过程产生某个特定数据项（例如某个特定孩子的数据）的概率；</li>
+<li>比较两个或更多不同的<a href="/post/2025-04-21-mbml-introduction">模型</a>，看看哪一个最能解释某些数据。</li>
+</ul>
+<p>为了介绍这项新技术，我们暂时把哮喘项目放在一边，转而看一个双过程情形的简单例子（如果你更愿意继续聚焦于哮喘项目，可以直接跳到<a href="/post/2026-10-27-mbml-asthma_discovering_sensitization_classes">第 6.5 节</a>）。既然我们身处医学领域，有一个绝佳的双过程情形可用：<strong>随机对照试验</strong>。随机对照试验是一种临床试验，常用于检验各类医疗干预（如新药）的有效性。在这类试验中，每个受试者被随机分配到治疗组（接受实验性干预）或对照组（不接受干预）。试验的目的是判断实验性干预是否对一个或多个关注的结局有影响，并理解这种影响的性质。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
             </h1>
         </header>
@@ -364,37 +399,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" title="在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估" target="_blank">在 Microsoft Foundry 的 Agent 中使用 Jev 做模型评估</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-10-01T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年10月1日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>本文参考了 Microsoft Community Hub 上 Robin Lester 的文章 <a href="https://techcommunity.microsoft.com/blog/azuredevcommunityblog/using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/4559851?WT.mc_id=AI-MVP-5003172">Using Jev with Agents in Microsoft Foundry for Model Evaluation</a>，下面是我整理的理解和步骤。</p>
-<h2 id="jev-是什么">Jev 是什么</h2>
-<p>Jev 是 TypeSafe AI 推出的新模型，2026 年 9 月 15 日开放了抢先体验。TypeSafe 把它称为自家第一个“System One”模型，它不写长篇文字，只负责又快又结构化地做判断。</p>
-<p>用法很直接：把一段状态或上下文交给它，再说明你想让它做什么判断，它会返回一个带类型的概率化结果。结果有三种形式：</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-01-using-jev-with-agents-in-microsoft-foundry-for-model-evaluation/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -514,6 +518,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-11-new-microsoft-copilot-harness-more-power-token-efficiency-and-control-for-agents-in-foundry/" title="Microsoft Copilot Harness：让 Foundry 的 agent 能干活、省 token、还管得住" target="_blank">Microsoft Copilot Harness：让 Foundry 的 agent 能干活、省 token、还管得住</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-11-10-from-python-agents-to-copilot-harness-putting-microsoft-foundry-to-the-test/" title="从 Python Agent 到 Copilot Harness：把 Microsoft Foundry 真跑一遍" target="_blank">从 Python Agent 到 Copilot Harness：把 Microsoft Foundry 真跑一遍</a>
     </li>
     
@@ -549,10 +557,6 @@
         <a href="https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/" title="[译]基于模型的机器学习 - 6.4 用门建模" target="_blank">[译]基于模型的机器学习 - 6.4 用门建模</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" title="[译]基于模型的机器学习 - 6.3 比较可选模型" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -572,7 +576,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (52)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (53)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

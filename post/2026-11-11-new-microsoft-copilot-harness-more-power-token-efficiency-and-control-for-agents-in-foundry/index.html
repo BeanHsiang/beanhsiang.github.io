@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>Microsoft Copilot Harness：让 Foundry 的 agent 能干活、省 token、还管得住 | Innovation with tech</title>
+    <meta property="og:title" content="Microsoft Copilot Harness：让 Foundry 的 agent 能干活、省 token、还管得住 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-11-11T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-11-11T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="Microsoft Copilot Harness：让 Foundry 的 agent 能干活、省 token、还管得住">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-11-11-new-microsoft-copilot-harness-more-power-token-efficiency-and-control-for-agents-in-foundry/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">Microsoft Copilot Harness：让 Foundry 的 agent 能干活、省 token、还管得住</h1>
+        </header>
+        
+  <time datetime="2026-11-11T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年11月11日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>
+        <a data-fancybox="gallery" href="/uploads/harness-cover.png">
+            <img class="mx-auto" alt="Microsoft Mechanics 文章题图" src="/uploads/harness-cover.png" />
+        </a>
+    </p>
+<p><em>题图来源：<a href="https://techcommunity.microsoft.com/blog/microsoftmechanicsblog/new-microsoft-copilot-harness--more-power-token-efficiency--control-for-agents-i/4572063?WT.mc_id=AI-MVP-5003172">Microsoft Mechanics Blog</a></em></p>
+<p>agent 要在公司数据、应用和资源上干活，信任问题最后都落在 harness 上。Microsoft Mechanics 这期视频请来了 Microsoft Foundry 的 <a href="https://x.com/jeffhollan?WT.mc_id=AI-MVP-5003172">Jeff Hollan</a>，把这条线从头到尾演示了一遍：一个全托管的 prompt agent 怎么升级到 Microsoft Copilot harness，怎么自带 harness（比如 Claude Agent SDK）跑成 hosted agent，以及 toolbox 加 tool search 怎么把 token 用量压下来。我把演示里的关键点整理成这篇笔记，原文和视频链接在文末。</p>
+<h2 id="harness-到底包了什么">harness 到底包了什么</h2>
+<p>harness 是包在模型和 agent 外面的那层运行环境。五件事是标配：</p>
+<ul>
+<li><strong>agent loop</strong>：每一步推理、执行、观察结果，循环往复，直到撞上你设的上限，或者它对结果满意为止</li>
+<li><strong>上下文管理</strong>：上下文变大时做压缩、排优先级，把最相关的信息留在工作上下文里</li>
+<li><strong>skills 和 tools</strong>：告诉 agent 任务怎么做，并给它真正动手的能力，读写文件、调 MCP server、跑命令、执行代码</li>
+<li><strong>subagents</strong>：把大问题拆出去并行跑，最后把结果收回来</li>
+<li><strong>memory</strong>：跨轮次、必要时跨会话保持状态</li>
+</ul>
+<p>Copilot harness 是模型无关的，针对企业任务完成做了优化，GitHub 和 Microsoft 365 背后跑的就是它。放进 Foundry 之后，它会尊重你已有的权限和数据保护控制，每个 agent 实例跑在独立沙箱里。</p>
+<p>Jeff 打了个比方：harness 有点像强化学习环境。自由度给少了 agent 没用，给多了它会去做你从来不想要它做的事。这个平衡不好拿捏，也是后面所有控制机制存在的理由。</p>
+<h2 id="没有-harness复杂任务一步都走不动">没有 harness，复杂任务一步都走不动</h2>
+<p>演示的场景是团队天天在问的财务问题：收入、支出、预测。起步版是 Foundry Responses API 上的 prompt agent，配了模型、instructions 和 Fabric IQ 工具，不用部署任何代码和基础设施。</p>
+<p>问「九月的按类目支出」，它能查数，也能做简单计算。换成「预测下季度支出、跟前几个季度对比、再出一份给管理层的 PDF 报告」，它就直接停了，还给出一些替代建议，甚至没开始就放弃了。</p>
+<p>原因都指向 harness 的缺失：没有真正的 agent loop，没有持久化，一次尝试就收手，也没有 skills 和 subagents 可以搬救兵。</p>
+<h2 id="同一个-agent换上-copilot-harness">同一个 agent，换上 Copilot harness</h2>
+<p>agent 定义完全不变，托管运行时也不变，只把 harness 换成 Microsoft Copilot harness。同一个问题再问一次，它先做规划，然后取数、跑分析，缺数据时回头调 skills 补，需要时拉 subagent，中途碰上的问题也能自己绕过去。最后交付的东西完全不是一个量级：附件里有一份 PDF 报告和单独的 forecast 文件，PDF 里是逐年对比的预测支出，还附了变化细节的说明。</p>
+<p>全程跑在安全沙箱里。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/harness-same-agent.png">
+            <img class="mx-auto" alt="同一个 agent 换上 Copilot harness 后自己规划、取数并产出报告" src="/uploads/harness-same-agent.png" />
+        </a>
+    </p>
+<h2 id="能力放开之前先把闸门装上">能力放开之前，先把闸门装上</h2>
+<p>官方没有回避这个 agent 太能干的问题。演示里专门放了一段 trace：agent 尝试访问一个未授权的 web endpoint，请求还没到目标就被拦下了。多数时候 agent 不是故意使坏，它只是在变通，但控制必须留在我手里。</p>
+<p>整理下来是三件事：</p>
+<ol>
+<li><strong>它是谁</strong>：Entra Agent ID，agent 一部署就有自己的企业身份</li>
+<li><strong>它能做什么</strong>：显式声明。比如给这个 agent 加 egress 规则，除了允许的路径一律不许出网</li>
+<li><strong>它做过什么</strong>：每一次决策都进 trace 日志，你和安全团队可以事后追查</li>
+</ol>
+<p>要规模化看这件事，可以用 Agent 365 的 registry 汇总所有 agent，不管它们在哪里构建；配合 Microsoft Security stack，还能识别和响应安全事件。</p>
+<h2 id="想自己写循环hosted-agents-等着你">想自己写循环？hosted agents 等着你</h2>
+<p>让平台跑 loop 是一种选择，另一种是自己写。演示里的同一个财务 agent 这次是照着 Claude Agent SDK 手写的，loop、tools、middleware 都在自己手里，用 Foundry 的 Visual Studio Code Toolkit 部署托管。</p>
+<p>代码是我的，托管是 Foundry 的：每个会话拿到独立的 VM 隔离沙箱，有持久文件系统，启动快，自动扩缩，没人用的时候零闲置成本。SDK 变成了可选项，Claude、Hermes、OpenClaw 或者完全自定义的 harness，都能以一等公民身份被托管，拿到同样的 Entra 身份、遥测、guardrails 和伸缩行为。</p>
+<p>最近给 hosted agents 补的企业治理能力值得单独记一笔：</p>
+<ul>
+<li>自带 VNet，可以完全关掉公网出口，agent 只能到达你批准并配好路由的 endpoint。就算它拿到了恶意代码或 skill，也出不了你画的圈</li>
+<li>区域扩到 North Central US、East US、Japan East、Southeast Asia 和 Sweden Central，agent 可以搬到数据旁边</li>
+<li>容器镜像可以用自己的 registry，你的基础镜像审批和扫描管线都能接进来</li>
+<li>单个 agent 的并发会话上限提高，能撑住更大规模的用量</li>
+</ul>
+<p>
+        <a data-fancybox="gallery" href="/uploads/harness-hosted-agents.png">
+            <img class="mx-auto" alt="hosted agents 支持自带 harness，并保留企业控制" src="/uploads/harness-hosted-agents.png" />
+        </a>
+    </p>
+<h2 id="工具一多token-先爆">工具一多，token 先爆</h2>
+<p>真实部署里工具可能是几百个，每个团队接线方式还都不一样。同一个工具出现好几个版本、带着不同的安全模型，是常态，重复的集成工作也是。</p>
+<p>Foundry 的 toolbox 就是对着这个问题来的：工具只配置一次，挂到一个 toolbox 上，全部工具收在统一的托管 MCP 兼容 endpoint 后面，认证、版本、治理都是集中管。演示里的财务 toolbox 接了知识源，Fabric IQ、报表、web、Work IQ 这些 Microsoft 365 工作负载，都走同一个 endpoint 调用。</p>
+<p>token 的问题交给 tool search：不再每一轮把几千条工具描述全塞给模型，只按当前任务检索出相关的描述。官方引用了最近发布的 ToolRet 评测数字：50 个工具时 token 用量降 60% 以上，1000 个工具时降 97% 以上，对比的是把完整工具目录一次性发给 agent 的做法。</p>
+<p>有个细节官方特意说在明面上：这些节省来自 tool search，不是光把工具收进 toolbox 就能拿到。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/harness-tool-search.png">
+            <img class="mx-auto" alt="tool search 按任务取工具，上下文保持精简" src="/uploads/harness-tool-search.png" />
+        </a>
+    </p>
+<h2 id="部署完才是活儿的开始">部署完才是活儿的开始</h2>
+<p>上线只是起跑线。Jeff 在 Foundry 里演示了一套持续改进的流程，起点是拿自己的真实任务建私有 benchmark，而不是对着通用榜单调。</p>
+<p>benchmark 不用从零写：平台给出不少现成测量，内置评估器有 latency、relevance、intent resolution、task adherence，也可以带上自己的样例 prompt 测特定场景。每次评估结果都链回产生它的那条 trace，看到差分，点一下就到那次运行的现场。</p>
+<p>Agent Optimizer 拿这些证据做自动调参：生成一批候选（改 instructions、换 skills、改工具描述、换模型），拿候选跑你的私有数据集，然后排序。演示里基准分数涨了几点，优化目标可以选质量、延迟，也可以选 token 减少。点开候选详情能看到它改了什么，选分数最好的那个部署就行，不用手工拧每个 prompt 和旋钮。</p>
+<h2 id="我的几点观察">我的几点观察</h2>
+<ul>
+<li>演示里最有说服力的不是 agent 多能干，而是那次被拦截的未授权访问。能力演示谁都会做，把「agent 会变通出界」这件事主动摆出来，才说明控制链路是真的</li>
+<li>tool search 那 60% 和 97% 是官方评测口径，跟自己业务的工具集合、任务分布未必对得上，值不值得上还是得拿自己的数据测</li>
+<li>Agent Optimizer 和私有 benchmark 是一对：没有反映真实任务的 benchmark，自动调参优化的是别人的目标</li>
+<li>区域扩张和自带 registry 这两件事放在一起看，指向的是数据驻留和合规场景，agent 平台开始认真对待「数据在哪，agent 就在哪」</li>
+</ul>
+<h2 id="这期内容适合谁">这期内容适合谁</h2>
+<p>构建生产级 agent 的开发者和 AI 工程师、设计 agent 平台的架构师，以及负责 agent 身份、访问和出网管控的 IT 与安全团队。</p>
+<h2 id="视频章节">视频章节</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;WT.mc_id=AI-MVP-5003172">00:00</a> 为什么 harness 决定 agent 的可信度</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=59s&amp;WT.mc_id=AI-MVP-5003172">00:59</a> harness 到底做什么</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=82s&amp;WT.mc_id=AI-MVP-5003172">01:22</a> 每个 harness 都有的五个组件</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=135s&amp;WT.mc_id=AI-MVP-5003172">02:15</a> Copilot harness 与 Foundry 控制的结合</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=208s&amp;WT.mc_id=AI-MVP-5003172">03:28</a> prompt agent 在哪里掉链子</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=297s&amp;WT.mc_id=AI-MVP-5003172">04:57</a> 同一个 agent 换上 Copilot harness</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=370s&amp;WT.mc_id=AI-MVP-5003172">06:10</a> guardrails 拦下越权的 agent 操作</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=449s&amp;WT.mc_id=AI-MVP-5003172">07:29</a> Entra Agent ID 与 egress 规则</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=485s&amp;WT.mc_id=AI-MVP-5003172">08:05</a> 自带 harness 跑成 hosted agent</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=546s&amp;WT.mc_id=AI-MVP-5003172">09:06</a> 私有网络、区域与自己的 registry</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=613s&amp;WT.mc_id=AI-MVP-5003172">10:13</a> 用 Foundry toolbox 一次性治理工具</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=673s&amp;WT.mc_id=AI-MVP-5003172">11:13</a> tool search 让上下文保持精简</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=714s&amp;WT.mc_id=AI-MVP-5003172">11:54</a> 用真实任务给 agent 定 benchmark</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=774s&amp;WT.mc_id=AI-MVP-5003172">12:54</a> 用 Agent Optimizer 自动调优</li>
+<li><a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;t=833s&amp;WT.mc_id=AI-MVP-5003172">13:53</a> 到 Foundry 开始构建</li>
+</ul>
+<h2 id="相关链接">相关链接</h2>
+<ul>
+<li>原文与完整视频：<a href="https://techcommunity.microsoft.com/blog/microsoftmechanicsblog/new-microsoft-copilot-harness--more-power-token-efficiency--control-for-agents-i/4572063?WT.mc_id=AI-MVP-5003172">New Microsoft Copilot Harness</a>，视频也在 <a href="https://www.youtube.com/watch?v=4vCbQMUVV-I&amp;WT.mc_id=AI-MVP-5003172">YouTube</a>，演示者是 Foundry AI Agentic Platform 团队负责人 Jeff Hollan</li>
+<li>上手 Foundry，建第一个项目：<a href="https://ai.azure.com?WT.mc_id=AI-MVP-5003172">ai.azure.com</a></li>
+<li>hosted agent 模板和各 agent SDK 示例：<a href="https://github.com/foundry-samples?WT.mc_id=AI-MVP-5003172">github.com/foundry-samples</a></li>
+</ul>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-11-11-new-microsoft-copilot-harness-more-power-token-efficiency-and-control-for-agents-in-foundry/">https://beanhsiang.github.io/post/2026-11-11-new-microsoft-copilot-harness-more-power-token-efficiency-and-control-for-agents-in-foundry/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-11-10-from-python-agents-to-copilot-harness-putting-microsoft-foundry-to-the-test/">从 Python Agent 到 Copilot Harness：把 Microsoft Foundry 真跑一遍</a></li>
+        
+        <li><a href="/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/">用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程</a></li>
+        
+        <li><a href="/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/">微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验</a></li>
+        
+        <li><a href="/post/2026-11-04-an-engineering-guide-to-claude-code-on-microsoft-foundry-with-azure-api-management/">通过 Azure API Management 在 Microsoft Foundry 上接入 Claude Code：工程实践指南</a></li>
+        
+        <li><a href="/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-11-new-microsoft-copilot-harness-more-power-token-efficiency-and-control-for-agents-in-foundry/" title="Microsoft Copilot Harness：让 Foundry 的 agent 能干活、省 token、还管得住" target="_blank">Microsoft Copilot Harness：让 Foundry 的 agent 能干活、省 token、还管得住</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-10-from-python-agents-to-copilot-harness-putting-microsoft-foundry-to-the-test/" title="从 Python Agent 到 Copilot Harness：把 Microsoft Foundry 真跑一遍" target="_blank">从 Python Agent 到 Copilot Harness：把 Microsoft Foundry 真跑一遍</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/" title="用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程" target="_blank">用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/" title="[译]基于模型的机器学习 - 7.1 众包工作者模型" target="_blank">[译]基于模型的机器学习 - 7.1 众包工作者模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/" title="微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验" target="_blank">微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-04-an-engineering-guide-to-claude-code-on-microsoft-foundry-with-azure-api-management/" title="通过 Azure API Management 在 Microsoft Foundry 上接入 Claude Code：工程实践指南" target="_blank">通过 Azure API Management 在 Microsoft Foundry 上接入 Claude Code：工程实践指南</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-02-mbml-crowdsourcing/" title="[译]基于模型的机器学习 - 7 众包的力量" target="_blank">[译]基于模型的机器学习 - 7 众包的力量</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/" title="VS Code Agent 沙箱：从被拦截到会使用、会配置" target="_blank">VS Code Agent 沙箱：从被拦截到会使用、会配置</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/" title="[译]基于模型的机器学习 - 6.5 发现致敏类别" target="_blank">[译]基于模型的机器学习 - 6.5 发现致敏类别</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/" title="[译]基于模型的机器学习 - 6.4 用门建模" target="_blank">[译]基于模型的机器学习 - 6.4 用门建模</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (4)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (53)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (44)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agent/">Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Evaluation/">Evaluation</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Governance/">Governance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Performance/">Performance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VS-Code/">VS Code</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

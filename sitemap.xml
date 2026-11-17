@@ -2,13 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/</loc>
-    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
-  </url><url>
     <loc>https://beanhsiang.github.io/categories/</loc>
-    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
+    <lastmod>2026-11-08T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/</loc>
+    <lastmod>2026-11-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
+    <lastmod>2026-11-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
+    <lastmod>2026-11-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/</loc>
+    <lastmod>2026-11-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/tags/</loc>
+    <lastmod>2026-11-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/</loc>
+    <lastmod>2026-11-08T12:00:00+08:00</lastmod>
+  </url><url>
+    <loc>https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/</loc>
     <lastmod>2026-11-07T10:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/tags/Machine-Learning/</loc>
@@ -19,18 +34,6 @@
   </url><url>
     <loc>https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/</loc>
     <lastmod>2026-11-07T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/post/</loc>
-    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/</loc>
-    <lastmod>2026-11-07T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/categories/Microsoft-Foundry/</loc>
-    <lastmod>2026-11-06T12:00:00+08:00</lastmod>
-  </url><url>
-    <loc>https://beanhsiang.github.io/tags/Microsoft-Foundry/</loc>
-    <lastmod>2026-11-06T12:00:00+08:00</lastmod>
   </url><url>
     <loc>https://beanhsiang.github.io/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/</loc>
     <lastmod>2026-11-06T12:00:00+08:00</lastmod>

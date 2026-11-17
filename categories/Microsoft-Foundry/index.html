@@ -82,6 +82,33 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/" target="_blank">用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-11-08T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年11月8日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>线上 Agent 的退化往往没有代码变更做前兆。流量一涨，新类型的请求就会把指令里没写清的地方翻出来，分数掉下去，账单反而涨上来。另一边，新模型的报价更低、效果可能更好，可手工改 prompt 或者原地换个模型，很容易把本来跑得通的工作流弄坏。</p>
+<p>缺的是一套能在上线前拦住坏版本的机制。我把微软 Foundry 官方博客里的做法拆成六步来看：生产 trace 喂给连续评估，Agent Optimizer 在训练集上搜候选版本，留出套件卡发布门禁，CI/CD 通过后走灰度，最后把新版本记为基线。每一步都有对应的命令和检查项，不靠感觉。</p>……
+            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/" target="_blank">阅读全文</a></p>
+        </div>
+    </article>
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/" target="_blank">微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验</a>
             </h1>
         </header>
@@ -348,37 +375,6 @@
         </div>
     </article>
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" target="_blank">Microsoft Foundry 智能体的 A2A 端点与 A2A 工具</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-09-19T04:00:00Z" class="post-meta meta-date dt-published">
-    2026年9月19日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>
-        <a data-fancybox="gallery" href="/uploads/a2a-hero.png">
-            <img class="mx-auto" alt="A2A Endpoints and A2A Tool in Microsoft Foundry agents" src="/uploads/a2a-hero.png" />
-        </a>
-    </p>
-<p>最近我在研究 Microsoft Foundry 的多智能体能力时，注意到一个变化：智能体之间的协作终于不用再靠一堆自定义 API 拼凑了。A2A 工具和新的入站 A2A 端点现在支持 A2A 协议 1.0 版本，这个版本已经正式发布（GA）。之前预览阶段用的 a2a_preview 工具类型和 0.3 版协议依然保留，给已有的集成留了一条兼容路径。托管智能体（Hosted Agents）也可以通过暴露在 MCP 上的 Foundry 工具箱来使用 A2A 工具。</p>……
-            <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-19-a2a-endpoints-and-a2a-tool-in-microsoft-foundry-agents/" target="_blank">阅读全文</a></p>
-        </div>
-    </article>
-    
 
     
 
@@ -406,6 +402,10 @@
     
     <li >
         <a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/page/5/">5</a>
+    </li>
+    
+    <li >
+        <a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/page/6/">6</a>
     </li>
     
 
@@ -465,6 +465,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/" title="用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程" target="_blank">用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/" title="[译]基于模型的机器学习 - 7.1 众包工作者模型" target="_blank">[译]基于模型的机器学习 - 7.1 众包工作者模型</a>
     </li>
     
@@ -500,10 +504,6 @@
         <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -523,7 +523,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (50)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (51)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

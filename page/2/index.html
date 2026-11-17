@@ -75,6 +75,35 @@
     <article class="post">
         <header>
             <h1 class="post-title">
+                <a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
+            </h1>
+        </header>
+        
+  <time datetime="2026-10-11T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年10月11日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        <div class="post-content">
+            <p>原文：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-aud/4560813?WT.mc_id=AI-MVP-5003172">Voice agents in Foundry Agent Service: architecture, trust boundaries, and real-audio latency</a></p>
+<p>以前做企业语音智能体，得自己把语音服务、实时模型、轮次检测和工具编排拼在一起，每个环节出问题也都得自己兜底。Foundry Agent Service 里的语音智能体（voice agents）把这一整套多服务方案收拢成一个带版本的托管智能体，运行时的工程量少了很多，但身份、授权、数据、网络、留存和运维这些事仍然得企业自己扛。</p>……
+        </div>
+        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" target="_blank">阅读全文</a></p>
+    </article>
+    
+    
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">
                 <a href="https://beanhsiang.github.io/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/" title="语音 Agent 评估：Foundry 多轮评估器到底有多可靠？" target="_blank">语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</a>
             </h1>
         </header>
@@ -365,40 +394,6 @@
     
     
     
-    <article class="post">
-        <header>
-            <h1 class="post-title">
-                <a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" title="[译]基于模型的机器学习 - 5.5 建模星级评分" target="_blank">[译]基于模型的机器学习 - 5.5 建模星级评分</a>
-            </h1>
-        </header>
-        
-  <time datetime="2026-09-22T02:00:00Z" class="post-meta meta-date dt-published">
-    2026年9月22日
-  </time>
-
-
-<div class="post-meta meta-category">
-  <span>&nbsp;|</span>
-  
-    <a href='/categories/Model-Based-Machine-Learning' target="_blank">Model-Based Machine Learning</a>
-  
-</div>
-
-
-        <div class="post-content">
-            <p>
-        <a data-fancybox="gallery" href="/uploads/stars_404623879.jpg">
-            <img class="mx-auto" alt="星级评分" src="/uploads/stars_404623879.jpg" />
-        </a>
-    </p>
-<p>我们的<a href="/post/2025-04-21-mbml-introduction">模型</a>把完整的星级评分范围变成了简单的喜欢或不喜欢，这意味着它丢弃了大量有用的信息。给一部电影打 3 星和打 5 星之间有天壤之别，然而我们却把这两种情况同等对待。为了利用不同的星级评分，我们需要改变<a href="/post/2025-04-21-mbml-introduction">模型</a>，使其能够处理完整的评分范围，而不是二值的喜欢/不喜欢。这不仅让我们能够在星级评分上训练，还让我们能够预测星级评分——一举两得！</p>
-<p>我们可以在已经设计好的二值喜欢/不喜欢<a href="/post/2025-04-21-mbml-introduction">模型</a>的基础上做出这一改变。在这个<a href="/post/2025-04-21-mbml-introduction">模型</a>中，我们有一个 affinity（好感度）变量，它是一个连续的数字，表示一个人对一部电影的喜欢程度。目前我们在零处对这个好感度取阈值，说大于零的值意味着这个人喜欢这部电影，小于零的值意味着他们不喜欢这部电影。为了<a href="/post/2025-04-21-mbml-introduction">建模</a>不同的星级评分，我们可以假设更高的好感度意味着一个人会给出更高的星级评分。更确切地说，我们现在不再只在零处取阈值，而是为每一个星级评分引入一个阈值。如果一个人对一部电影的好感度高于某个特定星数的阈值，那么我们就预期他们会给这部电影至少那么多星。</p>……
-        </div>
-        <p class="readmore"><a href="https://beanhsiang.github.io/post/2026-09-22-mbml-recommender_modelling_star_ratings/" target="_blank">阅读全文</a></p>
-    </article>
-    
-    
-    
 
 
 
@@ -518,6 +513,10 @@
 <ul class="widget-list">
     
     <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/" title="用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程" target="_blank">用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程</a>
+    </li>
+    
+    <li>
         <a href="https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/" title="[译]基于模型的机器学习 - 7.1 众包工作者模型" target="_blank">[译]基于模型的机器学习 - 7.1 众包工作者模型</a>
     </li>
     
@@ -553,10 +552,6 @@
         <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
     </li>
     
-    <li>
-        <a href="https://beanhsiang.github.io/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/" title="Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟" target="_blank">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a>
-    </li>
-    
 </ul>
     </section>
 
@@ -576,7 +571,7 @@
     
     <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
     
-    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (50)</a></li>
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (51)</a></li>
     
     <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
     

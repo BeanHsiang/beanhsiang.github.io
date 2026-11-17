@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+
+    <title>用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程 | Innovation with tech</title>
+    <meta property="og:title" content="用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程 - Innovation with tech">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2026-11-08T12:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2026-11-08T12:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="C#,.Net,Python,Nodejs,Java,Golang,博客,软件架构,云原生,机器学习,数据分析,RPA,自动化,技术管理">
+    <meta name="description" content="用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程">
+    <meta name="author" content="">
+    <meta property="og:url" content="https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/">
+    <link rel="shortcut icon" href='/favicon.ico'  type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    
+    
+        <link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
+    
+    
+    
+    
+</head>
+
+<body>
+    <header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://beanhsiang.github.io/">
+                        Innovation with tech
+                    </a>
+                
+                <p class="description">一个技术老兵工作的点滴记录，专注、沟通、乐在分享!</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://beanhsiang.github.io/">首页</a>
+                    
+                    <a  href="https://beanhsiang.github.io/tools/" title="工具">工具</a>
+                    
+                    <a  href="https://beanhsiang.github.io/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://beanhsiang.github.io/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div id="body">
+        <div class="container">
+            <div class="col-group">
+
+                <div class="col-8" id="main">
+                    
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程</h1>
+        </header>
+        
+  <time datetime="2026-11-08T04:00:00Z" class="post-meta meta-date dt-published">
+    2026年11月8日
+  </time>
+
+
+<div class="post-meta meta-category">
+  <span>&nbsp;|</span>
+  
+    <a href='/categories/Microsoft-Foundry' target="_blank">Microsoft Foundry</a>
+  
+</div>
+
+
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">&nbsp;|
+                <span id="busuanzi_value_page_pv"></span> <span>阅读</span>
+            </span>
+        </div>
+        
+        
+        <div class="post-content">
+            <p>线上 Agent 的退化往往没有代码变更做前兆。流量一涨，新类型的请求就会把指令里没写清的地方翻出来，分数掉下去，账单反而涨上来。另一边，新模型的报价更低、效果可能更好，可手工改 prompt 或者原地换个模型，很容易把本来跑得通的工作流弄坏。</p>
+<p>缺的是一套能在上线前拦住坏版本的机制。我把微软 Foundry 官方博客里的做法拆成六步来看：生产 trace 喂给连续评估，Agent Optimizer 在训练集上搜候选版本，留出套件卡发布门禁，CI/CD 通过后走灰度，最后把新版本记为基线。每一步都有对应的命令和检查项，不靠感觉。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/foundry-closed-loop-arch.png">
+            <img class="mx-auto" alt="Microsoft Foundry 中的闭环 Agent 发布架构。" src="/uploads/foundry-closed-loop-arch.png" />
+        </a>
+    </p>
+<p>图中的 <code>v1</code> 和 <code>v2</code> 只是指代当前基线与候选版本，真正的版本号由 Microsoft Foundry 分配。</p>
+<h3 id="前置条件与各自的职责">前置条件与各自的职责</h3>
+<p>动手前要确认两边的准备都到位：</p>
+<ul>
+<li><strong>Microsoft Foundry 侧</strong>：部署一个<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/manage-hosted-agent?WT.mc_id=AI-MVP-5003172">托管 Agent</a>，接入 <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/quickstarts/quickstart-optimize-hosted-agent?WT.mc_id=AI-MVP-5003172">Agent Optimizer SDK</a>，连上 <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard?WT.mc_id=AI-MVP-5003172">Application Insights</a>，把模型部署好并拿到批准，再授予 <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/quickstarts/set-up-cicd-hosted-agent?pivots=azd&amp;WT.mc_id=AI-MVP-5003172">Microsoft Entra ID 权限</a>。</li>
+<li><strong>应用团队侧</strong>：沙箱化的工具测试装置、人工复核过的结果标签（<code>ground_truth</code>）、CI/CD 发布策略脚本，以及按会话生效的灰度路由（<code>version_indicator</code>）。这四样平台给不了，得自己写。</li>
+</ul>
+<h3 id="一轮循环怎么跑完">一轮循环怎么跑完</h3>
+<p>触发器是定时 GitHub Actions 工作流，或者 Azure Monitor 告警。每次运行，工作流先读三样东西：最近的连续评估分数、Application Insights 错误指标、刚批准的模型部署。分诊确认是 Agent 质量下滑，或者是计划中的模型评估，才把最近的 trace 采样成数据集，交给人打标签。</p>
+<p>标签回头，Agent Optimizer 开始在指令、技能、工具描述和模型之间搜索组合，训练集和验证集都用上。发布自动化把选中的候选版本落地，提一个 pull request 给工程师看。能不能晋级由留出回归套件说话，过了之后才更新 <code>.agent_configs/baseline/</code>。</p>
+<h2 id="1-用连续评估盯住线上流量">1. 用连续评估盯住线上流量</h2>
+<p>想安全晋级，先得把当前生产配置量出来。它就是那个基准，后面每个候选版本都拿它比。线上流量上跑<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard?WT.mc_id=AI-MVP-5003172">连续评估</a>，打分对象是执行 trace，能看出质量、工具使用、延迟和成本各自往哪个方向走：</p>
+<ul>
+<li><strong>工具输出对回复（<code>groundedness</code>）</strong>。看回复在给定上下文里有没有支撑，没依据的完成声明会被标出来。</li>
+<li><strong>指令对动作（<code>task_adherence</code>）</strong>。看 Agent 在整段对话里有没有守住系统提示的规则。</li>
+<li><strong>查询对工具调用（<code>tool_call_accuracy</code> 与 <code>intent_resolution</code>）</strong>。核对工具选得对不对、参数给得对不对。</li>
+<li><strong>安全与 trace 规则（<code>indirect_attack</code> 加 span 检查）</strong>。前者标注入指令，后者的 span 检查抓工具报错和重复写入。</li>
+</ul>
+<h3 id="先分诊再定目标">先分诊，再定目标</h3>
+<p>告警响了别急着开优化任务。先翻 Application Insights 的 trace 和 Azure Monitor 指标，把 Agent 配置问题从其它运维变动里摘出来：</p>
+<ul>
+<li><strong>后端或工具挂了</strong>。工具超时、API 报错往上走，这时候该修基础设施，不是调 Agent。</li>
+<li><strong>流量结构变了</strong>。某类新请求突然变多，缺的可能是新工具、新策略规则或者测试覆盖。</li>
+<li><strong>评估器或评分规则改过</strong>。grader 的 prompt 或阈值一动，分数就变，Agent 本身的脾气没变。</li>
+</ul>
+<p>确认这次是配置能解决的问题，或者干脆从定时评审、新模型上线起跑。目标最好在跑之前就写下来：</p>
+<table>
+	<thead>
+			<tr>
+					<th>优化目标</th>
+					<th>主要指标</th>
+					<th>强制要求</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>提升质量</td>
+					<td>在失败的任务类别上达到目标分数增益，并满足质量下限</td>
+					<td>现有类别的分数不许掉，关键安全和业务检查全过，成本和延迟待在限内</td>
+			</tr>
+			<tr>
+					<td>降低运行成本</td>
+					<td>压掉整个 Agent 工作负载的 token 与模型成本</td>
+					<td>质量下限要守住，波动幅度不超过允许范围，关键检查全过，延迟也待在限内</td>
+			</tr>
+	</tbody>
+</table>
+<h2 id="2-把生产-trace-变成隔离的能跑的数据集">2. 把生产 trace 变成隔离的、能跑的数据集</h2>
+<p>监控告诉你哪里要改，下一步是给 Agent Optimizer 和 CI/CD 造数据集。<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/traces-to-dataset?WT.mc_id=AI-MVP-5003172">trace 数据集生成</a>（<code>project_client.datasets.begin_create_generation_job</code>）从 Application Insights 里采生产 trace，生成一个在项目内注册、带版本号的数据集。</p>
+<p><code>max_samples</code> 一设，Microsoft Foundry 就用 MinHash 采样把重复消息滤掉，挑出差异大的对话。锁定 <code>agent_version</code> 意味着只采某个已知版本的行为，私有内容默认脱敏（<code>redact_private_content=True</code>）。</p>
+<p>拿一个用工具的订单退款 Agent 举例，被标记的 trace 通常栽在三处：</p>
+<ol>
+<li><strong>工具超时后重试</strong>。Agent 调 <code>submit_refund</code> 这种写入工具，调用超时，返回 <code>outcome_unknown</code>。它没去查第一次的真实状态，直接又提交一遍。后端这时候必须挡住重复交易。</li>
+<li><strong>异步活儿报得太早</strong>。跳过 <code>get_refund_status</code>，退款直接报 <code>completed</code>，后端其实还停在 <code>pending</code>。</li>
+<li><strong>不可信工具数据里的注入</strong>。客户退货备注（<code>untrusted_return_note</code>）里藏了指令，Agent 照着做了，报出一个没有核实过的状态。</li>
+</ol>
+<p>
+        <a data-fancybox="gallery" href="/uploads/foundry-trace-view-refund.jpg">
+            <img class="mx-auto" alt="Foundry trace 视图，筛选出五次退款工具调用。" src="/uploads/foundry-trace-view-refund.jpg" />
+        </a>
+    </p>
+<p><em>图 1. 提交超时之后，Agent 去查退款状态。工具调用序列展示了它怎么处理未知结果。</em></p>
+<h3 id="从录制好的-trace-走到安全的测试执行">从录制好的 trace 走到安全的测试执行</h3>
+<p>生成的 trace 数据集只是把生产对话存下来了。要让它变成安全、可重复的评估用例，还差两样：核实过的预期结果，和一个沙箱化的测试后端。所有评估运行都得跟真实支付 API、客户数据库隔开。</p>
+<ul>
+<li><strong>复核预期结果（<code>ground_truth</code>）</strong>。一条条看采样出来的 trace，把复核后的业务结果（<code>status</code>、<code>order_id</code>、<code>refund_id</code>、<code>reason</code>）写进 <code>ground_truth</code>。原始捕获的 <code>response</code> 别动，留作历史记录。</li>
+<li><strong>把工具执行关进测试装置</strong>。每个评估用例绑一套受控的工具替身，配一个可重置的测试库或账本快照。每次运行都在沙箱里重新发起工具调用。</li>
+<li><strong>优化器的数据和发布回归套件要分开</strong>。复核过的用例拆成训练集和验证集（<code>2a</code>），给 Agent Optimizer 用；另外留一套留出回归套件（<code>2b</code>），专门给 CI/CD 卡门禁。同一次事故里的请求，别拆到不同划分里去。</li>
+</ul>
+<p>
+        <a data-fancybox="gallery" href="/uploads/foundry-dataset-version.jpg">
+            <img class="mx-auto" alt="Foundry 数据集版本，含 request、response、annotation 和 metadata 字段。" src="/uploads/foundry-dataset-version.jpg" />
+        </a>
+    </p>
+<p><em>图 2. 这个示例数据集用合成交互演示生产 trace 的流程。复核者核实预期结果，并给每个用例配上隔离的测试状态。</em></p>
+<h2 id="3-用-evalyaml-把评分口径固定下来">3. 用 <code>eval.yaml</code> 把评分口径固定下来</h2>
+<p>数据集注册完，接着定义每次运行怎么打分。<code>eval.yaml</code> 负责绑定这几件事：基线 Agent 配置、训练集与验证集、评估器、批准过的模型搜索空间。</p>
+<pre tabindex="0"><code>name: Refund agent configuration search
+agent:
+  name: refund-release-loop
+  kind: hosted
+  model: gpt-5.4-mini
+  config: .agent_configs/baseline/metadata.yaml
+dataset:
+  name: refund-loop-training
+  version: &#34;1&#34;
+validation_dataset:
+  name: refund-loop-validation
+  version: &#34;1&#34;
+evaluators:
+  - builtin.task_adherence
+  - name: refund-state
+    version: &#34;3&#34;
+options:
+  eval_model: gpt-5.4-mini
+  optimization_model: gpt-5.4
+  max_candidates: 4
+  optimization_config:
+    model_search_space:
+      - gpt-5.4-mini
+      - gpt-5.4
+</code></pre><p>留出回归套件（<code>refund-loop-release</code>）要放进单独的 CI/CD 评估配置。分开放，Agent Optimizer 搜索时碰不到这些用例，也就没法过拟合它们。</p>
+<h3 id="发布标准不能跟着候选版本的指令走">发布标准不能跟着候选版本的指令走</h3>
+<p><code>builtin.task_adherence</code> 这类 prompt 评估器能发现指令漂移，而 Agent Optimizer 干的活恰恰是改写 <code>instructions.md</code> 和 <code>SKILL.md</code>。所以每个候选版本都要拿一套固定的业务要求去评，这套要求存在可编辑的 Agent 配置之外。</p>
+<table>
+	<thead>
+			<tr>
+					<th>评估器类型</th>
+					<th>每次全新沙箱运行查什么</th>
+					<th>怎么保护发布门禁</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>语义与评分规则评估器</td>
+					<td>按固定的任务级 <code>criteria</code>、映射的 grounding 上下文和 ground truth 给回复打分</td>
+					<td>措辞可以换好、模型可以换，但业务规则和有依据的声明躲不过去</td>
+			</tr>
+			<tr>
+					<td>自定义代码评估器</td>
+					<td>查工具调用序列、结构化 JSON 输出，以及由此产生的沙箱账本状态</td>
+					<td>重复写入、跳过的状态检查、交易状态对不上，都在这里被拦</td>
+			</tr>
+	</tbody>
+</table>
+<p>想在工具支撑的声明上用 <code>builtin.groundedness</code>，得把序列化后的工具输出作为 grounding 上下文传进去，再在评估器输入里映射这个字段。测试之前先定好三件事：质量下限、目标增益（或成本节省）、允许的回归幅度。语义评估容忍无害的措辞变化；回归幅度划出质量损失的上限；采样不确定度要单独算。</p>
+<p><a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/custom-evaluators?WT.mc_id=AI-MVP-5003172">自定义代码评估器</a>能直接看候选版本的工具事件和沙箱状态快照。下面这段示例逻辑会挡住重复退款提交，也会挡住跟核实工具或账本对不上的状态声明：</p>
+<pre tabindex="0"><code># Illustrative custom code evaluator logic
+submissions = [e for e in events if e[&#34;tool&#34;] == &#34;submit_refund&#34;]
+if len(submissions) &gt; 1:
+    failures.append(&#34;repeated_submission&#34;)
+
+verifications = [e[&#34;result&#34;] for e in events if e[&#34;tool&#34;] == &#34;get_refund_status&#34;]
+claimed = output.get(&#34;status&#34;)
+if claimed in {&#34;completed&#34;, &#34;pending&#34;, &#34;failed&#34;}:
+    if not verifications or verifications[-1].get(&#34;status&#34;) != claimed:
+        failures.append(&#34;unverified_claim&#34;)
+    if not ledger or ledger[-1].get(&#34;status&#34;) != claimed:
+        failures.append(&#34;claim_state_mismatch&#34;)
+</code></pre><p>自定义代码评估器跑在没有网络的隔离环境里，所以评估装置会把生成的沙箱状态快照挂到每个评估项上，让评估器有东西可看。</p>
+<h2 id="4-在评估数据集上跑-agent-optimizer">4. 在评估数据集上跑 Agent Optimizer</h2>
+<p><code>eval.yaml</code> 就绪后，在 Agent 项目根目录执行 <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-optimizer-overview?WT.mc_id=AI-MVP-5003172">Agent Optimizer</a>：</p>
+<pre tabindex="0"><code>azd ai agent optimize
+</code></pre><p>命令会自己找 <code>eval.yaml</code>。Agent Optimizer 目前还是预览版，支持的参数和区域看<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/quickstarts/quickstart-optimize-hosted-agent?WT.mc_id=AI-MVP-5003172">优化快速入门</a>。任务跑起来之后，它先给 <code>.agent_configs/baseline/</code> 打分，基于训练任务提出至多 <code>max_candidates</code> 个修订版本，再在 <code>validation_dataset</code> 上排座次：</p>
+<table>
+	<thead>
+			<tr>
+					<th>优化对象</th>
+					<th>基线输入</th>
+					<th>Agent Optimizer 改什么</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>指令调优</td>
+					<td><code>instructions.md</code></td>
+					<td>重写系统提示，补上显式约束、步骤顺序和输出格式规则</td>
+			</tr>
+			<tr>
+					<td>技能改进</td>
+					<td><code>skills/&lt;name&gt;/SKILL.md</code></td>
+					<td>细化领域技能的描述、正文和激活条件，用途不变</td>
+			</tr>
+			<tr>
+					<td>工具优化</td>
+					<td><code>tools.json</code></td>
+					<td>说清函数和参数的含义，但不动可执行的工具 schema</td>
+			</tr>
+			<tr>
+					<td>模型选择</td>
+					<td><code>eval.yaml</code> 里的 <code>model_search_space</code></td>
+					<td>在 Foundry 项目批准的列表里试不同的候选部署</td>
+			</tr>
+	</tbody>
+</table>
+<p>运行时用 <code>load_config()</code> 把选中的指令、技能、模型和工具描述加载进来。应用逻辑、授权、工具契约都不进优化范围，这条线得自己守住。回到 <code>submit_refund</code> 超时那个例子，候选版本可能去改退款技能和工具描述，要求先查 <code>get_refund_status</code>。配置差异告诉你改了什么，评估结果才告诉你 Agent 到底有没有照业务规则办事。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/foundry-optimizer-candidates.jpg">
+            <img class="mx-auto" alt="Agent Optimizer 候选版本表格与选中候选的技能差异。" src="/uploads/foundry-optimizer-candidates.jpg" />
+        </a>
+    </p>
+<p><em>图 3. 这个对比在验证运行上给四个候选版本排序。选中的那个细化了技能和工具描述。</em></p>
+<h2 id="5-在-github-actions-里卡住候选版本">5. 在 GitHub Actions 里卡住候选版本</h2>
+<p>在 Agent Optimizer 里选定候选版本，把配置应用到 <code>.agent_configs/</code>，提 pull request 等人评审：</p>
+<pre tabindex="0"><code>azd ai agent optimize apply --candidate &lt;candidate-id&gt;
+</code></pre><p><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/quickstarts/set-up-cicd-hosted-agent?pivots=azd&amp;WT.mc_id=AI-MVP-5003172">GitHub Actions</a>那边用 Microsoft Entra ID 登录 Azure，然后走四步发布门禁。整个过程线上流量一直待在 <code>v1</code>：</p>
+<ol>
+<li><strong>部署候选版本（<code>v2</code>）</strong>。<code>azd deploy --no-prompt</code> 只注册候选容器，端点选择器还是 <code>v1</code>，线上没人受影响。</li>
+<li><strong>在留出套件（<code>2b</code>）上把两个固定版本都评一遍</strong>。对 <code>refund-loop-release</code> 跑<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/cloud-evaluation?WT.mc_id=AI-MVP-5003172">云评估</a>，<code>v1</code> 和 <code>v2</code> 各评一次（也可以对每个版本分别跑 <code>azd ai agent eval run</code>）。</li>
+<li><strong>把评分和资源指标都取回来</strong>。两次运行的所有评估器分数、延迟指标、模型 token 计数，一个都不能少。</li>
+<li><strong>执行发布策略</strong>。按第 1 步定的目标比 <code>v2</code> 和 <code>v1</code>，不达标就以非零状态退出：</li>
+</ol>
+<table>
+	<thead>
+			<tr>
+					<th>发布检查结果</th>
+					<th>留出回归套件上的表现</th>
+					<th>CI/CD 门禁动作</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>质量目标通过</td>
+					<td>越过质量下限，算上采样不确定性后仍达到所需质量增益，关键检查全过，资源不超限</td>
+					<td>放行，进入灰度验证</td>
+			</tr>
+			<tr>
+					<td>成本目标通过</td>
+					<td>实测模型支出下降（按模型 token 定价算），越过质量下限，待在允许的回归幅度内，关键检查全过</td>
+					<td>放行，进入灰度验证</td>
+			</tr>
+			<tr>
+					<td>增益或节省不够</td>
+					<td>目标质量增益没达到，或实测成本没降下来</td>
+					<td>基线继续跑，不动</td>
+			</tr>
+			<tr>
+					<td>回归或关键失败</td>
+					<td>掉到质量下限以下，或触发 <code>repeated_submission</code>、<code>unverified_claim</code>、<code>claim_state_mismatch</code></td>
+					<td>工作流直接失败，拦住发布</td>
+			</tr>
+	</tbody>
+</table>
+<p>评估任务本身的健康度和 Agent 的表现要分开判断。每个测试用例都得返回完整的评估记录和所有必需的评估器分数，记录缺了、评估器任务挂了，一律拦住发布。而 Agent 自己跑出来的执行错误（比如响应格式不对）要算任务失败，这样候选版本才有机会修掉基线上本来就坏的用例，比如示例里那次 <code>outcome_unknown</code> 超时重试。不过修好一种失败模式不等于满足全部发布要求。图 4 里的门禁就是在运行出现类别回归、token 用量超标、或者基线证据不完整时拦下来的。</p>
+<p>
+        <a data-fancybox="gallery" href="/uploads/github-actions-release-gate.jpg">
+            <img class="mx-auto" alt="GitHub Actions 显示验证和部署完成、发布门禁失败、晋级被跳过。" src="/uploads/github-actions-release-gate.jpg" />
+        </a>
+    </p>
+<p><em>图 4. GitHub Actions 部署候选版本，留出回归套件不通过就拦住发布，跳过端点晋级。</em></p>
+<h2 id="6-灰度晋级然后准备下一轮">6. 灰度、晋级，然后准备下一轮</h2>
+<p>留出回归套件通过，只能说明候选版本满足了这些测试覆盖到的要求。全面晋级之前，还有四步要验证：</p>
+<ol>
+<li><strong>给已部署的版本做冒烟测试</strong>。发几个 <code>version_indicator</code> 设成 <code>v2</code> 的合成会话，看容器起没起来、凭据对不对、工具连得上不上。</li>
+<li><strong>让灰度会话对着线上控制组跑</strong>。<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/manage-hosted-agent?WT.mc_id=AI-MVP-5003172">托管端点</a>默认把 100% 流量给 <code>v1</code>。开跑前先把最小样本数、观察窗口、阈值定好，再通过 <code>version_indicator</code> 把一部分新会话（先 <code>5%</code>，再 <code>25%</code>）分到 <code>v2</code>，同时保留对应的 <code>v1</code> 控制组。</li>
+<li><strong>等结果落定</strong>。<code>v1</code> 和 <code>v2</code> 攒够<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard?WT.mc_id=AI-MVP-5003172">连续评估</a>分数、Azure Monitor 指标，退款也结算完毕，再往下走。</li>
+<li><strong>晋级、保持或者回滚</strong>：</li>
+</ol>
+<table>
+	<thead>
+			<tr>
+					<th>灰度与发布后的证据</th>
+					<th>发布动作</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>灰度窗口内对照线上 <code>v1</code> 控制组，质量、延迟、已结算结果都达标</td>
+					<td>把 Microsoft Foundry 端点版本选择器切到 <code>v2</code>，新默认会话全部走 <code>v2</code></td>
+			</tr>
+			<tr>
+					<td>样本量还不到最小计数，或者异步交易还在结算</td>
+					<td>灰度比例不动，继续收证据</td>
+			</tr>
+			<tr>
+					<td>质量掉到下限以下，或超出对控制组的允许回归幅度，或触发关键工具错误、Azure Monitor 告警</td>
+					<td>新会话路由回 <code>v1</code>，停止或排空还在跑的 <code>v2</code> 会话，核对受影响的记录</td>
+			</tr>
+	</tbody>
+</table>
+<p>回滚要同时管会话路由和后端状态，两头都容易漏。灰度期间清掉 <code>version_indicator</code>，<strong>新会话</strong>就回到默认版本（<code>v1</code>）；而晋级之后再回滚，得去切 Microsoft Foundry 的端点选择器。已经存在的 <code>v2</code> 会话不会自己换过去，它们继续跑在 <code>v2</code> 上，直到你显式停掉（例如 <code>project_client.agents.stop_session</code>）或者让它们自然排空。灰度窗口里已经提交的交易，用后端幂等键加补偿性冲正，把客户记录对上。</p>
+<h3 id="重置基线给下一轮换一批用例">重置基线，给下一轮换一批用例</h3>
+<p><code>v2</code> 拿到 100% 默认流量之后，发布自动化会把它的配置写进 <code>.agent_configs/baseline/</code>，成为新的比较基准。在途的 <code>v1</code> 会话全部结束之前，<code>v1</code> 得留着可用。</p>
+<p>留出回归套件也得跟着流量更新，否则它迟早会变成一套固定不变的老题。定期把新复核过的生产 trace 同时补进训练数据集和发布套件，可以降低反复挑选候选版本、逐渐过拟合某一套固定测试的风险。</p>
+<h2 id="下一步">下一步</h2>
+<p>要在自己的项目里把这套东西搭起来，按这三条路走：</p>
+<ul>
+<li><strong>打开连续评估，攒 trace 数据集</strong>。给已部署的 Agent 配上<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/how-to-monitor-agents-dashboard?WT.mc_id=AI-MVP-5003172">生产监控</a>，再把生产对话转成 <a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/traces-to-dataset?WT.mc_id=AI-MVP-5003172">trace 数据集</a>。</li>
+<li><strong>搭评估套件和自定义评估器</strong>。给 <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/create-optimizer-dataset?WT.mc_id=AI-MVP-5003172">Agent Optimizer</a> 准备 <code>eval.yaml</code> 和数据集，加上<a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-evaluators/custom-evaluators?WT.mc_id=AI-MVP-5003172">自定义评估器</a>，跑<a href="https://learn.microsoft.com/en-us/azure/foundry/observability/how-to/cloud-evaluation?WT.mc_id=AI-MVP-5003172">云评估</a>。</li>
+<li><strong>接上 CI/CD</strong>。参考 <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/agent-optimizer-overview?WT.mc_id=AI-MVP-5003172">Agent Optimizer 概览</a>、<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/quickstarts/quickstart-optimize-hosted-agent?WT.mc_id=AI-MVP-5003172">优化快速入门</a>和<a href="https://learn.microsoft.com/en-us/azure/foundry/agents/quickstarts/set-up-cicd-hosted-agent?pivots=azd&amp;WT.mc_id=AI-MVP-5003172">托管 Agent CI/CD 指南</a>，在 GitHub Actions 里给部署设门禁。</li>
+</ul>
+<blockquote>
+<p>原文：<a href="https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/4569762?WT.mc_id=AI-MVP-5003172">Improve production agents with closed-loop evaluations in Microsoft Foundry</a></p>
+</blockquote>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>本文作者：</strong><a rel="author" href="https://beanhsiang.github.io/">BeanHsiang</a></li>
+        <li style="word-break:break-all"><strong>本文链接：</strong><a href="https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/">https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>. 进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>相关文章</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/">微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验</a></li>
+        
+        <li><a href="/post/2026-11-04-an-engineering-guide-to-claude-code-on-microsoft-foundry-with-azure-api-management/">通过 Azure API Management 在 Microsoft Foundry 上接入 Claude Code：工程实践指南</a></li>
+        
+        <li><a href="/post/2026-10-11-voice-agents-in-foundry-agent-service-architecture-trust-boundaries-and-real-audio-latency/">Foundry Agent Service 中的语音智能体：架构、信任边界与真实音频延迟</a></li>
+        
+        <li><a href="/post/2026-10-09-evaluating-voice-agents-how-reliable-are-foundry-s-multi-turn-evaluators/">语音 Agent 评估：Foundry 多轮评估器到底有多可靠？</a></li>
+        
+        <li><a href="/post/2026-10-08-closing-the-ai-agent-governance-gap-with-microsoft-foundry/">补上 AI Agent 的治理缺口：用 Microsoft Foundry 和 Azure 服务建立可见性与护栏</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='/tags/Microsoft-Foundry' target="_blank">Microsoft Foundry</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "BeanHsiang/Greedy"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+    
+    
+
+</div>
+
+                    <footer id="footer">
+    <div>
+        &copy; 2026 <a href="https://beanhsiang.github.io/">Innovation with tech By BeanHsiang</a>
+        
+    </div>
+    <br />
+    <div>
+        <div class="github-badge">
+            <a href="https://gohugo.io/" target="_black" rel="nofollow"><span class="badge-subject">Powered by</span><span class="badge-value bg-blue">Hugo</span></a>
+        </div>
+        <div class="github-badge">
+            <a href="https://github.com/flysnow-org/maupassant-hugo" target="_black"><span class="badge-subject">Theme</span><span class="badge-value bg-yellowgreen">Maupassant</span></a>
+        </div>
+    </div>
+</footer>
+
+
+    
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                },
+            TeX: {
+                extensions: ["color.js"]
+                }
+            };
+    </script>
+    <script src='//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+<style type="text/css">
+div.highlight {
+    position: relative;
+    margin: 1em 0px;
+}
+
+.copy-code {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(78, 78, 78, 0.8);
+    border-radius: var(--radius);
+    padding: 0 5px;
+    font: inherit;
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+    --radius: 8px;
+}
+
+div.highlight:hover .copy-code,pre:hover .copy-code {
+    display: block;
+}
+
+</style>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+                </div>
+
+                <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://beanhsiang.github.io/search' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://beanhsiang.github.io/">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/" title="用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程" target="_blank">用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/" title="[译]基于模型的机器学习 - 7.1 众包工作者模型" target="_blank">[译]基于模型的机器学习 - 7.1 众包工作者模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-06-building-the-next-generation-of-multimodal-ai-experiences-with-fal-in-microsoft-foundry/" title="微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验" target="_blank">微软携手 fal：在 Microsoft Foundry 中构建下一代多模态 AI 体验</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-04-an-engineering-guide-to-claude-code-on-microsoft-foundry-with-azure-api-management/" title="通过 Azure API Management 在 Microsoft Foundry 上接入 Claude Code：工程实践指南" target="_blank">通过 Azure API Management 在 Microsoft Foundry 上接入 Claude Code：工程实践指南</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-11-02-mbml-crowdsourcing/" title="[译]基于模型的机器学习 - 7 众包的力量" target="_blank">[译]基于模型的机器学习 - 7 众包的力量</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-31-vscode-agent-sandbox/" title="VS Code Agent 沙箱：从被拦截到会使用、会配置" target="_blank">VS Code Agent 沙箱：从被拦截到会使用、会配置</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-27-mbml-asthma_discovering_sensitization_classes/" title="[译]基于模型的机器学习 - 6.5 发现致敏类别" target="_blank">[译]基于模型的机器学习 - 6.5 发现致敏类别</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-22-mbml-asthma_modelling_with_gates/" title="[译]基于模型的机器学习 - 6.4 用门建模" target="_blank">[译]基于模型的机器学习 - 6.4 用门建模</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-17-mbml-asthma_comparing_alternative_models/" title="[译]基于模型的机器学习 - 6.3 比较可选模型" target="_blank">[译]基于模型的机器学习 - 6.3 比较可选模型</a>
+    </li>
+    
+    <li>
+        <a href="https://beanhsiang.github.io/post/2026-10-12-mbml-asthma_trying_out_the_model/" title="[译]基于模型的机器学习 - 6.2 试验模型" target="_blank">[译]基于模型的机器学习 - 6.2 试验模型</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/categories/'>分类</a></h3>
+<ul class="widget-list">
+    
+    <li><a href="https://beanhsiang.github.io/categories/AI-Agent/">AI Agent (3)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Azure-AI/">Azure AI (39)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/FireUG/">FireUG (7)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/GitHub-Copilot/">GitHub Copilot (4)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Machine-Learning/">Machine Learning (1)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Microsoft-Foundry/">Microsoft Foundry (51)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/ML.NET/">ML.NET (8)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/Model-Based-Machine-Learning/">Model-Based Machine Learning (44)</a></li>
+    
+    <li><a href="https://beanhsiang.github.io/categories/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际 (9)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title"><a href='/tags/'>标签</a></h3>
+<div class="tagcloud">
+    
+    <a href="https://beanhsiang.github.io/tags/.NET/">.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/A2A/">A2A</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agent/">Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Agentic-AI/">Agentic AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agent/">AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AI-Agents/">AI Agents</a>
+    
+    <a href="https://beanhsiang.github.io/tags/AutoGen/">AutoGen</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI/">Azure AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Agent/">Azure AI Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-AI-Search/">Azure AI Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Machine-Learning/">Azure Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-OpenAI/">Azure OpenAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Azure-Speech/">Azure Speech</a>
+    
+    <a href="https://beanhsiang.github.io/tags/CSnakes/">CSnakes</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Edge-AI/">Edge AI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Evaluation/">Evaluation</a>
+    
+    <a href="https://beanhsiang.github.io/tags/FireUG/">FireUG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Gemini/">Gemini</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GitHub-Copilot/">GitHub Copilot</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Governance/">Governance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o/">GPT-4o</a>
+    
+    <a href="https://beanhsiang.github.io/tags/GPT-4o-Realtime-Preview/">GPT-4o Realtime Preview</a>
+    
+    <a href="https://beanhsiang.github.io/tags/HydraFusion/">HydraFusion</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Machine-Learning/">Machine Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Magentic-One/">Magentic-One</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MarkItDown/">MarkItDown</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MCP/">MCP</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Entra-ID/">Microsoft Entra ID</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Microsoft-Foundry/">Microsoft Foundry</a>
+    
+    <a href="https://beanhsiang.github.io/tags/ML.NET/">ML.NET</a>
+    
+    <a href="https://beanhsiang.github.io/tags/MLX/">MLX</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Context-Protocol/">Model Context Protocol</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Model-Based/">Model-Based</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Multi-Agent/">Multi-Agent</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Olive/">Olive</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Performance/">Performance</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-3/">Phi-3</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Phi-4/">Phi-4</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Prompt-Engineering/">Prompt Engineering</a>
+    
+    <a href="https://beanhsiang.github.io/tags/PydanticAI/">PydanticAI</a>
+    
+    <a href="https://beanhsiang.github.io/tags/q-learning/">Q-Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAFT/">RAFT</a>
+    
+    <a href="https://beanhsiang.github.io/tags/RAG/">RAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Real-Time-API/">Real-Time API</a>
+    
+    <a href="https://beanhsiang.github.io/tags/reinforcement-learning/">Reinforcement Learning</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Kernel/">Semantic Kernel</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Semantic-Ranking/">Semantic Ranking</a>
+    
+    <a href="https://beanhsiang.github.io/tags/SLM/">SLM</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Speech-Recognition/">Speech Recognition</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Transcribe/">Transcribe</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Vector-Search/">Vector Search</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VoiceRAG/">VoiceRAG</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VS-Code/">VS Code</a>
+    
+    <a href="https://beanhsiang.github.io/tags/VSCode/">VSCode</a>
+    
+    <a href="https://beanhsiang.github.io/tags/Websocket/">Websocket</a>
+    
+    <a href="https://beanhsiang.github.io/tags/%E7%A9%BF%E8%B6%8A%E4%BA%BA%E6%9C%BA%E8%9E%8D%E5%90%88%E4%B9%8B%E9%99%85/">穿越人机融合之际</a>
+    
+</div>
+    </section>
+
+    
+<section class="widget">
+    <h3 class="widget-title">友情链接</h3>
+    <ul class="widget-list">
+        
+        <li>
+            <a target="_blank" href="https://fireusergroup.com/" title="FireUG">FireUG 技术社区</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://space.bilibili.com/545713776" title="FireUG 技术社区 - B 站">FireUG 技术社区 - B 站</a>
+        </li>
+        
+        <li>
+            <a target="_blank" href="https://www.douyin.com/user/MS4wLjABAAAAYGG_Q3--hpBKc7rq2h-slFNFObDCmrxYc8OF2tl_mV4" title="火油鸡">火油鸡</a>
+        </li>
+        
+    </ul>
+</section>
+
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://beanhsiang.github.io/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

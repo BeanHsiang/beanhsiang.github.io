@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Sat, 07 Nov 2026 10:00:00 +0800</lastBuildDate>
+			<lastBuildDate>Sun, 08 Nov 2026 12:00:00 +0800</lastBuildDate>
 		
 			<atom:link href="https://beanhsiang.github.io/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>用闭环评估改进生产环境的 Agent：Microsoft Foundry 的六步发布流程</title>
+				<link>https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/</link>
+				<pubDate>Sun, 08 Nov 2026 12:00:00 +0800</pubDate>
+				<guid>https://beanhsiang.github.io/post/2026-11-08-improve-production-agents-with-closed-loop-evaluations-in-microsoft-foundry/</guid>
+				<description>&lt;p&gt;线上 Agent 的退化往往没有代码变更做前兆。流量一涨，新类型的请求就会把指令里没写清的地方翻出来，分数掉下去，账单反而涨上来。另一边，新模型的报价更低、效果可能更好，可手工改 prompt 或者原地换个模型，很容易把本来跑得通的工作流弄坏。&lt;/p&gt;&#xA;&lt;p&gt;缺的是一套能在上线前拦住坏版本的机制。我把微软 Foundry 官方博客里的做法拆成六步来看：生产 trace 喂给连续评估，Agent Optimizer 在训练集上搜候选版本，留出套件卡发布门禁，CI/CD 通过后走灰度，最后把新版本记为基线。每一步都有对应的命令和检查项，不靠感觉。&lt;/p&gt;</description>
+			</item>
 			<item>
 				<title>[译]基于模型的机器学习 - 7.1 众包工作者模型</title>
 				<link>https://beanhsiang.github.io/post/2026-11-07-mbml-crowdsourcing_a_model_of_a_crowd_worker/</link>
